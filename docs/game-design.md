@@ -14,8 +14,8 @@ This builds on the [research doc](https://claude.ai/artifact/288D72mj429RgxhCALF
 | --- | --- |
 | When trivia comes up | A mix: a regular cadence, captures, and special squares |
 | Wrong answers | Penalty scales with the difficulty you chose |
-| Modes | vs bots, and two players on one device |
-| Questions | Whole Premier League from 2000/01, with West Ham bonus rounds |
+| Modes | vs bots, and two players on one device, each with an optional Chess960 start |
+| Questions | Premier League from 2000/01, plus questions on the club you pick (all 92 league clubs) |
 | Power-ups | Chess-style and football-themed |
 | Bots | Freddie, Ryan and Ollie, each with a strength, a style and trash talk |
 | Tech | Installable web app (PWA), one link for phone, tablet and computer |
@@ -27,11 +27,36 @@ All numbers below (Form costs, timers, bot accuracy) are first guesses to tune i
 There are two ways to play, and both use the same rules.
 
 - **vs Bot.** Pick Freddie, Ryan or Ollie. You answer questions yourself; the bot "answers" using its trivia profile and talks trash throughout.
-- **Pass and Play.** Two people on one device. Whoever triggered the question answers it, and the other player hands over the device without peeking (honour system, as at the pub).
+- **Pass and Play.** Two people on one device. Whoever triggered the question answers it, and the other player hands over the device without peeking (honour system, as at the pub). The screen faces whoever is up. **Hand over** (the default, best on a phone) flips the board each turn. **Face to face** (a tablet flat on the table) keeps the board fixed and turns the question card and controls 180 degrees towards Black. Both can be switched off in Settings.
 
 Each game also has a **Plain Chess** toggle (no trivia) and a **Timed** toggle (10 minutes each), so it works for a quick game or a serious one.
 
 **Winning.** Checkmate wins, as normal. Resigning is allowed. A draw of any kind (stalemate, repetition, 50 moves, agreement) goes to a **Penalty Shootout**: five questions each, alternating, best score wins, sudden death if level. Rules that only exist because of power-ups are listed with each power-up below; nothing can capture or remove a king or queen directly.
+
+## Pawn promotion: "Who am I?"
+
+When a pawn reaches the last rank, you earn your new piece with a **"Who am I?"** about a footballer (Freddie, Nov 4, 2026). Five clues appear one at a time, hardest first, and you get **one guess** from four names. Clues show every 6 seconds, or you can tap Next clue.
+
+| Guess right after | Piece |
+| --- | --- |
+| Clue 1 | Queen |
+| Clue 2 | Rook |
+| Clue 3 | Bishop |
+| Clue 4 or 5 | Knight |
+
+A wrong guess, or no guess by 6 seconds after the fifth clue, gives you a knight **and your opponent +2 Form**. That way a blind early guess is a real gamble. The question replaces any other trigger on that move. If the promotion square is a Hot Spot, the player is a club player for your club where there is one.
+
+Clue sets live in `data/whoami.json`, built by `tools/build_whoami.py`: 30 Premier League players from 2000 onwards, 10 West Ham and 8 Brighton. Every clue was checked against the player's Wikipedia page on 2026-11-04. Bots aim for a piece (Ollie a queen, Ryan a rook, Freddie a knight) and guess with their usual trivia accuracy.
+
+**Chess960.** A toggle on the setup screen, in every mode. The back rank starts in one of 960 arrangements (numbered with the standard scheme; 518 is normal chess), shown on screen with a Reroll button. Castling follows Chess960 rules: king and rook end on the usual squares (tap the king, then the rook). Formation Change on an unmoved rook removes castling on that side.
+
+## Picking your club
+
+Before each game every player picks the club they support from all 92 Premier League and EFL clubs (or none). Landing on a Hot Spot gives a **Club Bonus Round** on your own club for double Form, and about one deal in three swaps a card for a club card at the same difficulty. A club with fewer than 10 questions at a difficulty falls back to general questions. Bots have clubs too: Ryan and Ollie West Ham, Freddie Brighton.
+
+## Menus
+
+The game opens on a **main menu** in the Tactics Board style: Play a bot (pick Freddie, Ryan or Ollie and Easy, Medium or Hard), Pass and Play, High scores, How to play and Settings. The setup screen then takes clubs, colour, and the Trivia, Timed and Chess960 toggles. During a game the **Menu** button (or the title bar) pauses everything, including clocks, question timers and bots, with Resume, Restart, Settings and Quit to menu. High scores keep your record (played, won, drawn, lost, best winning run) against each bot at each level, plus Pass and Play wins by name, on the device.
 
 ## When trivia comes up
 
@@ -39,13 +64,13 @@ A question appears straight after a move that triggers one, and the player who m
 
 | Trigger | Fires when | Question type |
 | --- | --- | --- |
-| Hot Spot | You land on one of 4 marked squares (a football icon) | **West Ham Bonus Round**: West Ham questions, double Form |
+| Hot Spot | You land on one of 4 marked squares (a football icon) | **Club Bonus Round**: questions on your club, double Form |
 | Capture | You take a piece | Normal pick of three cards |
 | Kick-off | Every 3rd move you make with no other question | Normal pick of three cards |
 
 If a move hits two triggers, the higher one in the table wins. The Kick-off counter resets whenever you get a question, so captures don't stack extra questions on top.
 
-**Hot Spots.** Four squares on ranks 3 to 6 are picked at random each game, two on each half of the board. Once a Hot Spot is used it moves to a new random empty square, so nobody can camp on one. Ryan gets his West Ham edge here, and so does anyone brave enough to take him on at it.
+**Hot Spots.** Four squares on ranks 3 to 6 are picked at random each game, two on each half of the board. Once a Hot Spot is used it moves to a new random empty square in the same half, so nobody can camp on one. Hot Spots are never placed where a knight (or, in Chess960, any piece other than a pawn) can land on move one. Pawns are left out of that rule, because between them they reach every square on ranks 3 to 6.
 
 **A turn, step by step:**
 
@@ -70,7 +95,7 @@ You pick your own question, and the harder it is, the more you win and the more 
 - **Quick answer:** +1 Form if you answer correctly in under 5 seconds.
 - **Hat-trick:** three right in a row earns +3 Form and a commentary line.
 - **Yellow card:** two wrong in a row is a yellow (banter only). Four wrong in a row is a red, and your next power-up costs double.
-- **West Ham Bonus Round** (Hot Spots): every card is a West Ham question and Form rewards are doubled. Penalties stay the same.
+- **Club Bonus Round** (Hot Spots): every card is a question on your club and Form rewards are doubled. Penalties stay the same.
 
 **Penalty safety rules,** so trivia never decides a game on its own:
 
@@ -82,21 +107,21 @@ You pick your own question, and the harder it is, the more you win and the more 
 
 Form is spent on one power-up per turn, before you move, plus any number of hints during a question. At about one question every two or three moves, a player earns around 1 Form per move, so cheap items come often and big ones a few times a game.
 
-**Power-ups** (one per turn, used before your move):
+**Power-ups** (one per turn, used before your move). Each has a cooldown: once used, it is locked for that many of your own moves, and every power-up also starts the game locked for its cooldown. The button shows when it's ready.
 
-| Power-up | Style | Cost | Effect | Limit and balance rule |
-| --- | --- | --- | --- | --- |
-| Tactical Foul | Football | 3 | Freeze one enemy piece (not the king) for their next turn | Not a piece that is giving check |
-| Park the Bus | Football | 3 | Your pieces on your own back two ranks can't be captured next turn | Not while in check |
-| VAR Review | Chess | 3 | Undo your last move and the opponent's reply | Twice per game |
-| Counter-Attack | Chess | 4 | One pawn moves two squares from anywhere | Path must be clear; can't promote with it |
-| Substitution | Chess | 4 | Bring one captured pawn back on your second rank | Once per game |
-| Golden Boot | Football | 5 | Your next capture earns +3 Form | Stacks with streaks |
-| Formation Change | Chess | 5 | Swap two of your own pieces (not the king) | Can't give check or leave you in check |
-| Super-Sub | Football | 6 | Upgrade a pawn to a knight | Once per game |
-| Red Card | Football | 7 | Send off one enemy pawn (removed) | Once per game; not a pawn on its 6th or 7th rank |
-| Extra Time | Chess | 8 | Make two moves this turn | Once per game; second move can't capture or check |
-| Fergie Time | Football | 2 | +30 seconds on your clock | Timed games only, twice per game |
+| Power-up | Style | Cost | Cooldown (your moves) | Effect | Balance rule |
+| --- | --- | --- | --- | --- | --- |
+| Fergie Time | Football | 2 | 8 | +30 seconds on your clock | Timed games only |
+| Tactical Foul | Football | 3 | 6 | Freeze one enemy piece (not the king) for their next turn | Not a piece that is giving check |
+| Park the Bus | Football | 3 | 6 | Your pieces on your own back two ranks can't be captured next turn | Not while in check |
+| VAR Review | Chess | 3 | 10 | Undo your last move and the opponent's reply | |
+| Counter-Attack | Chess | 4 | 8 | One pawn may move two squares from anywhere this turn | Path must be clear; can't promote |
+| Substitution | Chess | 4 | 12 | Bring one captured pawn back on your second rank | |
+| Golden Boot | Football | 5 | 8 | Your next capture earns +3 Form | Stacks with streaks |
+| Formation Change | Chess | 5 | 10 | Swap two of your own pieces (not the king) | Can't give check or leave you in check |
+| Super-Sub | Football | 6 | 15 | Upgrade a pawn to a knight | |
+| Red Card | Football | 7 | 20 | Send off one enemy pawn (removed) | Not a pawn on its 6th or 7th rank |
+| Extra Time | Chess | 8 | 20 | Make two moves this turn | Second move can't capture or check |
 
 **Chess hints** (count as your power-up for the turn):
 
@@ -104,7 +129,7 @@ Form is spent on one power-up per turn, before you move, plus any number of hint
 | --- | --- | --- |
 | Assistant's Flag | 1 | Highlights every square the opponent attacks |
 | Scout Report | 2 | Shows the piece the opponent will most likely move next |
-| Manager's Tip | 2 | Shows the engine's best move (twice per game) |
+| Manager's Tip | 2 | Shows the engine's best move (cooldown 8 moves) |
 
 **Trivia hints** (during a question, not allowed on a Worldie):
 
@@ -148,9 +173,9 @@ The game is a static web app with no server: everything, including the bots, run
 | Part | Choice | Why |
 | --- | --- | --- |
 | App framework | Vite + React + TypeScript | Fast to build, easy to deploy as static files |
-| Chess rules | chess.js | Standard move validation, check, mate and draws |
-| Board | react-chessboard | Drag or tap to move, works on touch screens |
-| Power-up rules | Our own layer on top of chess.js | Filters legal moves (frozen pieces), edits the board (Red Card, Super-Sub), flips turns (Extra Time, Free Kick) |
+| Chess rules | chessops | Lichess's rules library: legal moves, check, mate, draws and Chess960 castling |
+| Board | Our own tap-to-move board | Each of the ten styles in themes.css dresses the same squares and pieces |
+| Power-up rules | Our own layer on top of chessops (`src/game/rules.ts`) | Filters legal moves (frozen pieces), edits the board (Red Card, Super-Sub), flips turns (Extra Time, Free Kick) |
 | Engine | Stockfish single-threaded WebAssembly in a Web Worker | Runs the bots and the chess hints on the device; the single-threaded build needs no special server headers |
 | Install and offline | vite-plugin-pwa (manifest, icons, service worker) | "Add to Home Screen" on iPhone, an install button on Android and computers |
 | Questions | JSON file bundled with the app | Works offline; the question bank thread fills it |
@@ -168,12 +193,12 @@ The game is a static web app with no server: everything, including the bots, run
   "answer": 0,
   "difficulty": "easy",
   "topic": "West Ham moments",
-  "westHam": true,
+  "club": "west-ham",
   "verified": true
 }
 ```
 
-`difficulty` is easy, medium or hard (Worldies reuse hard questions). `topic` drives the card labels, and `westHam` decides what can appear in a Bonus Round. Only `verified` questions are shown in the game.
+`difficulty` is easy, medium or hard (Worldies reuse hard questions). `topic` drives the card labels, and `club` (a club id, or null for general questions) decides what can appear in a Club Bonus Round. Only `verified` questions are shown in the game.
 
 ## Build order and open questions
 
@@ -190,4 +215,4 @@ Each step ends with something playable on a phone, so the game can be tested wit
 - [ ] chess.com or Lichess usernames, so the bots can copy real openings and ratings
 - [ ] Real catchphrases and in-jokes to replace the starter trash talk
 - [ ] Is a 15 second question timer about right, or should it be shorter?
-- [ ] Should the Hot Spot bonus round always be West Ham, or each player's own club?
+- [x] Hot Spot bonus rounds use each player's own club

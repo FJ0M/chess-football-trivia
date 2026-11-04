@@ -9,7 +9,12 @@ export interface Settings {
   musicVolume: number;
   /** "match" plays the track that goes with the chosen style. */
   musicTrack: "match" | MusicTrackId;
+  /** Pass and Play: flip the board to whoever is up, keep it fixed and turn the controls (tablet on a table), or neither. */
+  passAndPlayView: PassAndPlayView;
 }
+
+export type PassAndPlayView = "hand-over" | "face-to-face" | "off";
+const VIEWS: PassAndPlayView[] = ["hand-over", "face-to-face", "off"];
 
 export const DEFAULT_SETTINGS: Settings = {
   style: DEFAULT_STYLE,
@@ -18,6 +23,7 @@ export const DEFAULT_SETTINGS: Settings = {
   musicOn: true,
   musicVolume: 0.35,
   musicTrack: "match",
+  passAndPlayView: "hand-over",
 };
 
 const KEY = "cft.settings.v1";
@@ -38,6 +44,7 @@ export function sanitize(raw: unknown): Settings {
     musicOn: typeof r.musicOn === "boolean" ? r.musicOn : d.musicOn,
     musicVolume: clamp01(r.musicVolume, d.musicVolume),
     musicTrack: track,
+    passAndPlayView: VIEWS.includes(r.passAndPlayView as PassAndPlayView) ? (r.passAndPlayView as PassAndPlayView) : d.passAndPlayView,
   };
 }
 
