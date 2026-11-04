@@ -70,10 +70,35 @@ export class QuestionBank {
     return !!club && (this.clubs.get(club)?.get(difficulty)?.length ?? 0) >= THIN_CLUB;
   }
 
+  /** True when a general topic still has a question this player hasn't seen. */
+  private topicHasFresh(difficulty: Difficulty, topic: string): boolean {
+    return (this.general.get(difficulty)!.get(topic) ?? []).some((q) => !this.seen.has(q.id));
+  }
+
+  /**
+   * A general card. Topics are weighted by how many unseen questions they have
+   * left, so small topics don't come round again and again with the same question.
+   */
   private generalCard(difficulty: Difficulty, avoid: string[]): Card {
-    const topics = [...this.general.get(difficulty)!.keys()];
-    const fresh = topics.filter((t) => !avoid.includes(t));
-    return { topic: pick(fresh.length ? fresh : topics, this.rng), difficulty, club: null };
+    const byTopic = this.general.get(difficulty)!;
+    const all = [...byTopic.keys()];
+    const fresh = (ts: string[]) => ts.filter((t) => this.topicHasFresh(difficulty, t));
+    let topics = fresh(all.filter((t) => !avoid.includes(t)));
+    if (!topics.length) topics = fresh(all);
+    if (!topics.length) {
+      // Every question at this difficulty has been seen: start the whole difficulty again.
+      for (const q of [...byTopic.values()].flat()) this.seen.delete(q.id);
+      topics = all.filter((t) => !avoid.includes(t));
+      if (!topics.length) topics = all;
+    }
+    const weights = topics.map((t) => byTopic.get(t)!.filter((q) => !this.seen.has(q.id)).length);
+    const total = weights.reduce((a, b) => a + b, 0);
+    let r = this.rng() * total;
+    for (let i = 0; i < topics.length; i++) {
+      r -= weights[i];
+      if (r < 0 && weights[i] > 0) return { topic: topics[i], difficulty, club: null };
+    }
+    return { topic: pick(topics, this.rng), difficulty, club: null };
   }
 
   private clubCard(club: string, difficulty: Difficulty): Card {
