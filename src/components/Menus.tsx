@@ -65,10 +65,10 @@ export function RulesScreen({ onBack }: { onBack: () => void }) {
       </ul>
       <p>Each card shows a topic and a difficulty. Harder pays more, but costs more if you're wrong:</p>
       <ul>
-        <li>Sunday League: +1 Form, no risk.</li>
-        <li>Championship: +2 Form. Wrong and your opponent gets +2.</li>
-        <li>Premier League: +4 Form. Wrong and the piece you moved is booked (frozen) next turn.</li>
-        <li>Worldie: +6 Form in 8 seconds, no hints. Wrong and you're sent off: you miss a turn and your opponent takes a Free Kick.</li>
+        <li>Tap-in (easy): +1 Form, no risk.</li>
+        <li>Highlight (medium): +2 Form. Wrong and your opponent gets +2.</li>
+        <li>Screamer (hard): +4 Form. Wrong and the piece you moved is booked (frozen) next turn.</li>
+        <li>Puskás (a Screamer you upgrade): +6 Form in 8 seconds, no hints. Wrong and you're sent off: you miss a turn and your opponent takes a Free Kick.</li>
       </ul>
       <p>Answer within 5 seconds for +1, get three in a row for a hat-trick (+3). Form is capped at 12.</p>
       <p><b>Power-ups</b> cost Form, one per turn before you move. Each has a cooldown and starts the game locked. <b>Hints</b> during a question: 50:50, Ask the Crowd, Phone a friend.</p>

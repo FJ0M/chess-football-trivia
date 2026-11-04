@@ -76,9 +76,7 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 .screen .controls { display: grid; gap: 10px; transition: transform .35s; }
 .screen .controls.turned, .screen .player.turned { transform: rotate(180deg); }
 /* Pass and Play "Flip the screen": the whole game card turns to face Black on their turn. */
-.screen.flip-mode { transition: transform .45s ease-in-out; }
 .screen.flip-all { transform: rotate(180deg); }
-@media (prefers-reduced-motion: reduce) { .screen.flip-mode { transition: none; } }
 .screen .player.up .badge { box-shadow: 0 0 0 2px currentColor; }
 .screen .player { position: relative; }
 .screen .player .clock { font-variant-numeric: tabular-nums; margin-left: 6px; padding: 1px 6px; border-radius: 6px; border: 1px solid currentColor; }
@@ -87,7 +85,7 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 .sq .dot.cap { width: 86%; height: 86%; background: transparent; border: 3px solid var(--dot); box-sizing: border-box; }
 .sq.frozen::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(45deg, rgba(120,200,255,.45) 0 4px, rgba(255,255,255,.25) 4px 8px); }
 .sq.target::after { content: ""; position: absolute; inset: 6%; border: 3px dashed #d1342f; border-radius: 50%; box-sizing: border-box; z-index: 2; pointer-events: none; }
-.sq.flagged::before { content: ""; position: absolute; inset: 0; background: rgba(255, 120, 0, .32); }
+.sq.flagged::before { content: ""; position: absolute; inset: 0; background: rgba(255, 140, 0, .5); box-shadow: inset 0 0 0 2px rgba(255, 220, 0, .9); }
 .sq.scout { box-shadow: inset 0 0 0 4px #2e9d4f; }
 .screen .quiz.idle .q.small, .screen .q.small { font-size: 14px; opacity: .85; }
 .screen .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }

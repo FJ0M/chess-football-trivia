@@ -66,10 +66,12 @@ function loadData(): Promise<Data> {
 }
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
-const DIFF_LABEL = { easy: "Sunday League", medium: "Championship", hard: "Premier League" } as const;
+/** Difficulty names, as goals: Tap-in, Highlight, Screamer, and the Puskás (the Worldie upgrade of a Screamer). */
+export const DIFF_LABEL = { easy: "Tap-in", medium: "Highlight", hard: "Screamer" } as const;
+export const TOP_TIER = "Puskás";
 
 export function cardLabel(c: Card, worldie = false): string {
-  return `${c.topic} · ${worldie ? "Worldie" : DIFF_LABEL[c.difficulty]}`;
+  return `${c.topic} · ${worldie ? TOP_TIER : DIFF_LABEL[c.difficulty]}`;
 }
 
 export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused = false) {
