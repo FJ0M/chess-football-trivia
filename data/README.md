@@ -22,7 +22,7 @@ Each question:
 - `club` is a kebab-case club id (e.g. `west-ham`) for club-specific questions, or null for general ones. `club: "west-ham"` questions feed the West Ham bonus rounds (Hot Spot squares).
 - Club questions use the topic form `<club short name> <kind>`, where kind is one of: history, players, bosses, big moments, home & identity (e.g. `York big moments`).
 - `source` is the page each club question was checked against (club questions only). Every club fact was read from that page on 2026-11-04; nothing was written from memory.
-- Clubs: all 92 clubs in the 2026-27 Premier League, Championship, League One and League Two. Each has at least 10 questions per difficulty, so a player who picks their club always gets tailored cards. West Ham's club questions are the 57 West Ham questions in the general bank.
+- Clubs: all 92 clubs in the 2026-27 Premier League, Championship, League One and League Two. Each has at least 10 questions per difficulty, so a player who picks their club always gets tailored cards. West Ham's club questions are the 83 West Ham questions in the general bank.
 - Scope: Premier League from 2000-01 onwards, plus a few all-time records and West Ham history.
 - Facts current to the 2024-25 season. Questions about "records" may go stale; check them each season.
 

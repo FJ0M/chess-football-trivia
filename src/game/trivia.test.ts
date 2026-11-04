@@ -21,6 +21,15 @@ describe("question bank", () => {
     expect(bonus.every((c) => c.club === "york")).toBe(true);
     expect(bank.draw(bonus[2]).club).toBe("york");
   });
+  it("doesn't repeat a general question until every one at that difficulty has been asked", () => {
+    const bank = new QuestionBank(qs);
+    for (const d of ["easy", "medium", "hard"] as const) {
+      const total = qs.filter((q) => !q.club && q.verified && q.difficulty === d).length;
+      const asked = new Set<string>();
+      for (let i = 0; i < total; i++) asked.add(bank.draw(bank.deal(null, false).find((c) => c.difficulty === d)!).id);
+      expect(asked.size).toBe(total);
+    }
+  });
   it("every club has enough questions for its own cards", () => {
     const bank = new QuestionBank(qs);
     for (const c of CLUBS) for (const d of ["easy", "medium", "hard"] as const) expect(bank.hasClub(c.id, d)).toBe(true);
