@@ -148,6 +148,8 @@ export interface PowerUpOffer {
 
 export interface PowerUpRequest {
   fen: string;
+  /** Side the bot plays. Optional: the side to move in `fen` is used. */
+  color?: "white" | "black";
   form: number;
   /** Only power-ups the bot can afford and that are off cooldown. */
   available: PowerUpOffer[];

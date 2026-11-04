@@ -22,7 +22,11 @@ const require = createRequire(import.meta.url);
 const ENGINE_JS = require.resolve("stockfish/src/stockfish-17.1-lite-single-03e3232.js");
 
 export function nodeEngine(): UciEngine {
-  const child = spawn(process.execPath, [ENGINE_JS], { stdio: ["pipe", "pipe", "ignore"] });
+  const child = spawn(process.execPath, [ENGINE_JS], { stdio: ["pipe", "pipe", "pipe"] });
+  child.stderr.on("data", (d: Buffer) => console.log(`ENGINE STDERR ${d.toString().slice(0, 300)}`));
+  child.on("exit", (code, sig) => {
+    if (code !== 0 && sig !== "SIGTERM") console.log(`ENGINE EXIT ${code} ${sig}`);
+  });
   let buf = "";
   const cbs: ((l: string) => void)[] = [];
   child.stdout.on("data", (d: Buffer) => {

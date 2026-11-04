@@ -7,7 +7,7 @@ import type { BotId, BotLevel } from "./types";
 
 export type { Bot } from "./bot";
 export type * from "./types";
-export { BOTS, BOT_IDS, BOT_LEVELS, BOT_PROFILES } from "./profiles";
+export { BOTS, BOT_IDS, BOT_LEVELS, BOT_PROFILES, matchRating, triviaAccuracy, type BotRating } from "./profiles";
 export { TALK } from "./talk";
 
 /** Creates a bot. Stockfish starts in a Web Worker the first time any bot or hint needs it. */

@@ -5,6 +5,7 @@ A chess game where Premier League trivia (2000/01 onwards, with West Ham bonus r
 - [Game design](docs/game-design.md)
 - [Research: existing chess x trivia games](https://claude.ai/artifact/288D72mj429RgxhCALFLa8)
 - [Visual style, sound and music](docs/visual-style.md)
+- [Bots, their ratings and the playtest](docs/bots.md)
 
 ## Run it
 

@@ -118,6 +118,8 @@ const newSide = (): Side => ({
 
 const relRank = (sq: Square, color: Color) => (color === "white" ? squareRank(sq) : 7 - squareRank(sq));
 
+let lastFen = "";
+
 export interface FullResult extends GameResult {
   stats: { white: Side["stats"]; black: Side["stats"] };
 }
@@ -195,6 +197,7 @@ export async function playFullGame(white: FullPlayer, black: FullPlayer, startFe
   const chessMove = async (c: Color, allowed: string[], tip: boolean): Promise<string> => {
     const p = players[c];
     const fen = makeFen(pos.toSetup());
+    lastFen = `${fen} | ${p.name} | ${allowed.join(" ")}`;
     if (p.sf && !tip) {
       const m = await p.sf.go(fen, `movetime 300${allowed.length < legalMoves(pos).length ? ` searchmoves ${allowed.join(" ")}` : ""}`);
       const n = m ? normaliseUci(pos, m) : null;
@@ -381,6 +384,10 @@ function withTurn(pos: Chess, color: Color): Chess | null {
   return next.isOk ? next.value : null;
 }
 
+process.on("unhandledRejection", (e) => {
+  console.log(`UNHANDLED ${(e as Error)?.message} at ${lastFen}`);
+});
+
 async function main() {
   const [configPath, outPath] = process.argv.slice(2).filter((x) => x !== "--");
   const cfg = JSON.parse(readFileSync(configPath, "utf8")) as { pairs: [string, string][]; games: number; seed: number };
@@ -388,14 +395,26 @@ async function main() {
   const judge = nodeEngine();
   const results: FullResult[] = [];
   for (const [a, b] of cfg.pairs) {
-    const pa = await makeFullPlayer(a, Math.floor(rng() * 1e9));
-    const pb = await makeFullPlayer(b, Math.floor(rng() * 1e9));
+    let pa = await makeFullPlayer(a, Math.floor(rng() * 1e9));
+    let pb = await makeFullPlayer(b, Math.floor(rng() * 1e9));
     for (let g = 0; g < cfg.games; g++) {
       const round = Math.floor(g / 2);
       const r2 = mulberry32(cfg.seed * 7919 + round * 104729 + a.length * 31 + b.length);
       const start = round % 2 === 1 ? chess960Fen(r2) : STANDARD;
       const [w, bl] = g % 2 === 0 ? [pa, pb] : [pb, pa];
-      const res = await playFullGame(w, bl, start, r2, judge);
+      let res: FullResult;
+      try {
+        res = await playFullGame(w, bl, start, r2, judge);
+      } catch (e) {
+        console.log(`ERROR ${(e as Error).message} at ${lastFen}`);
+        for (const p of [pa, pb]) {
+          p.engine.close();
+          p.sf?.close();
+        }
+        pa = await makeFullPlayer(a, Math.floor(rng() * 1e9));
+        pb = await makeFullPlayer(b, Math.floor(rng() * 1e9));
+        continue;
+      }
       results.push(res);
       writeFileSync(outPath, JSON.stringify(results));
       const st = res.stats;

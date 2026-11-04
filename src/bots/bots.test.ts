@@ -285,3 +285,15 @@ describe("promotion", () => {
     expect(createBotWith("freddie", "medium", e).promotionPick()).toBe("n");
   });
 });
+
+describe("ratings", () => {
+  it("orders each bot's levels and keeps chess as the main part of the match rating", async () => {
+    const { BOTS, matchRating } = await import("./profiles");
+    for (const b of BOTS) {
+      expect(b.ratings.low.match).toBeLessThan(b.ratings.medium.match);
+      expect(b.ratings.medium.match).toBeLessThan(b.ratings.hard.match);
+    }
+    // 2500 chess with no football knowledge beats perfect trivia with 600 chess.
+    expect(matchRating(2500, 0.25)).toBeGreaterThan(matchRating(600, 1));
+  });
+});

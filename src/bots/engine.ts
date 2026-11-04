@@ -73,27 +73,36 @@ export class UciEngine implements Analyser {
   private listeners: ((line: string) => void)[] = [];
   private ready: Promise<void>;
   private queue: Promise<unknown> = Promise.resolve();
+  private lastSent = "";
 
   constructor(private transport: Transport) {
+    const send = transport.send.bind(transport);
+    transport.send = (cmd: string) => {
+      this.lastSent = `${this.lastSent.split(" || ").slice(-2).join(" || ")} || ${cmd}`;
+      send(cmd);
+    };
     transport.onLine((line) => {
       for (const l of [...this.listeners]) l(line);
     });
     this.ready = (async () => {
       this.transport.send("uci");
-      await this.waitFor((l) => l === "uciok");
+      // Loading the WASM can be slow on an old phone.
+      await this.waitFor((l) => l === "uciok", 90000);
       // Always 960 mode: standard positions work the same, and castling then
       // comes back as king-to-rook, which matches chessops.
       this.transport.send("setoption name UCI_Chess960 value true");
       this.transport.send("setoption name Hash value 16");
       await this.isReady();
     })();
+    // Callers see a failed start when they next use the engine; don't crash on it now.
+    this.ready.catch(() => undefined);
   }
 
   private waitFor(match: (line: string) => boolean, timeoutMs = 30000): Promise<string> {
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
         this.listeners = this.listeners.filter((l) => l !== listener);
-        reject(new Error("Stockfish did not answer in time"));
+        reject(new Error(`Stockfish did not answer in time (last sent: ${this.lastSent})`));
       }, timeoutMs);
       const listener = (line: string) => {
         if (match(line)) {
