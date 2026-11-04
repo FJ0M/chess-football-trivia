@@ -1,0 +1,3014 @@
+{
+  "version": 1,
+  "scope": "Premier League, 2000-01 season onwards (some all-time records included), plus a West Ham bonus round",
+  "questions": [
+    {
+      "id": "tit-0001",
+      "question": "Which team went the entire 2003-04 Premier League season unbeaten?",
+      "options": [
+        "Manchester United",
+        "Chelsea",
+        "Arsenal",
+        "Liverpool"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "Title races",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Arsenal's 'Invincibles' won 26 and drew 12."
+    },
+    {
+      "id": "tit-0002",
+      "question": "Which club won the 2015-16 Premier League as 5,000-1 outsiders?",
+      "options": [
+        "Tottenham Hotspur",
+        "Leicester City",
+        "Southampton",
+        "West Ham United"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "Title races",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Leicester won it by 10 points under Claudio Ranieri."
+    },
+    {
+      "id": "tit-0003",
+      "question": "Who did Manchester City beat on the final day of 2011-12 to snatch the title?",
+      "options": [
+        "Bolton Wanderers",
+        "Queens Park Rangers",
+        "Wigan Athletic",
+        "Sunderland"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "Title races",
+      "westHam": false,
+      "verified": true,
+      "explanation": "City beat QPR 3-2 with Agüero's goal at 93:20."
+    },
+    {
+      "id": "tit-0004",
+      "question": "In which season did Liverpool win their first Premier League title?",
+      "options": [
+        "2019-20",
+        "2021-22",
+        "2018-19",
+        "2013-14"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "Title races",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Liverpool won it by 18 points under Jürgen Klopp."
+    },
+    {
+      "id": "tit-0005",
+      "question": "Which manager won Manchester United's last Premier League title, in 2012-13?",
+      "options": [
+        "Sir Alex Ferguson",
+        "David Moyes",
+        "Louis van Gaal",
+        "José Mourinho"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "Title races",
+      "westHam": false,
+      "verified": true,
+      "explanation": "It was Ferguson's 13th and final league title before retiring."
+    },
+    {
+      "id": "tit-0006",
+      "question": "Which club became the first to reach 100 points in a Premier League season?",
+      "options": [
+        "Chelsea",
+        "Liverpool",
+        "Arsenal",
+        "Manchester City"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Title races",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Pep Guardiola's 'Centurions' got exactly 100 points in 2017-18."
+    },
+    {
+      "id": "tit-0007",
+      "question": "How many points did Chelsea get when winning the title in 2004-05?",
+      "options": [
+        "90",
+        "92",
+        "95",
+        "98"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Title races",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Mourinho's first Chelsea side set a record of 95 points (since beaten by City)."
+    },
+    {
+      "id": "tit-0008",
+      "question": "Who managed Chelsea to the 2016-17 Premier League title?",
+      "options": [
+        "Carlo Ancelotti",
+        "José Mourinho",
+        "Maurizio Sarri",
+        "Antonio Conte"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Title races",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Conte won it in his first season using a back three."
+    },
+    {
+      "id": "tit-0009",
+      "question": "Which club became the first to win four English top-flight titles in a row (2020-21 to 2023-24)?",
+      "options": [
+        "Manchester United",
+        "Chelsea",
+        "Liverpool",
+        "Manchester City"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Title races",
+      "westHam": false,
+      "verified": true,
+      "explanation": "No team had ever won four consecutive top-flight titles before."
+    },
+    {
+      "id": "tit-0010",
+      "question": "Who managed Liverpool to the 2024-25 Premier League title in his first season?",
+      "options": [
+        "Ange Postecoglou",
+        "Xabi Alonso",
+        "Jürgen Klopp",
+        "Arne Slot"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Title races",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Slot took over from Klopp in summer 2024."
+    },
+    {
+      "id": "tit-0011",
+      "question": "Who managed Manchester City to their first Premier League title in 2011-12?",
+      "options": [
+        "Mark Hughes",
+        "Manuel Pellegrini",
+        "Roberto Mancini",
+        "Pep Guardiola"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Title races",
+      "westHam": false,
+      "verified": true,
+      "explanation": "It was City's first top-flight title for 44 years."
+    },
+    {
+      "id": "tit-0012",
+      "question": "Who managed Manchester City to the 2013-14 Premier League title?",
+      "options": [
+        "Pep Guardiola",
+        "Mark Hughes",
+        "Manuel Pellegrini",
+        "Roberto Mancini"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "Title races",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Pellegrini won the title and League Cup in his first season."
+    },
+    {
+      "id": "tit-0013",
+      "question": "Who managed Chelsea to the league and FA Cup double in 2009-10?",
+      "options": [
+        "Guus Hiddink",
+        "Carlo Ancelotti",
+        "José Mourinho",
+        "Avram Grant"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Title races",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Chelsea scored 103 league goals that season."
+    },
+    {
+      "id": "tit-0014",
+      "question": "Who captained Arsenal's 'Invincibles' in 2003-04?",
+      "options": [
+        "Tony Adams",
+        "Sol Campbell",
+        "Thierry Henry",
+        "Patrick Vieira"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "Title races",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Vieira was captain from 2002 to 2005."
+    },
+    {
+      "id": "tit-0015",
+      "question": "How many Premier League titles did Ryan Giggs win?",
+      "options": [
+        "10",
+        "13",
+        "15",
+        "11"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "Title races",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Giggs holds the record for most Premier League titles."
+    },
+    {
+      "id": "tit-0016",
+      "question": "Which of these clubs has NEVER won the Premier League?",
+      "options": [
+        "Blackburn Rovers",
+        "Leicester City",
+        "Chelsea",
+        "Tottenham Hotspur"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Title races",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Spurs' last league title was in 1960-61."
+    },
+    {
+      "id": "tit-0017",
+      "question": "How many points did Derby County finish on in 2007-08, the lowest total in Premier League history?",
+      "options": [
+        "19",
+        "15",
+        "17",
+        "11"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "Title races",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Derby won just one league game all season."
+    },
+    {
+      "id": "goa-0001",
+      "question": "Who is the Premier League's all-time top scorer?",
+      "options": [
+        "Thierry Henry",
+        "Harry Kane",
+        "Alan Shearer",
+        "Wayne Rooney"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "Goals & records",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Shearer scored 260 Premier League goals."
+    },
+    {
+      "id": "goa-0002",
+      "question": "Who is the Premier League's second-highest scorer of all time?",
+      "options": [
+        "Wayne Rooney",
+        "Andy Cole",
+        "Sergio Agüero",
+        "Harry Kane"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Goals & records",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Kane scored 213 for Spurs before joining Bayern Munich."
+    },
+    {
+      "id": "goa-0003",
+      "question": "Who scored 36 league goals in 2022-23 to set a new single-season Premier League record?",
+      "options": [
+        "Sergio Agüero",
+        "Erling Haaland",
+        "Harry Kane",
+        "Mohamed Salah"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Goals & records",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Haaland did it in his first Premier League season."
+    },
+    {
+      "id": "goa-0004",
+      "question": "How many league goals did Mohamed Salah score in 2017-18, a 38-game record at the time?",
+      "options": [
+        "28",
+        "34",
+        "32",
+        "30"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Goals & records",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Salah broke the 31-goal record shared by Shearer, Ronaldo and Suárez."
+    },
+    {
+      "id": "goa-0005",
+      "question": "How many Premier League Golden Boots did Thierry Henry win?",
+      "options": [
+        "5",
+        "3",
+        "4",
+        "2"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "Goals & records",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Henry won it in 2001-02, 2003-04, 2004-05 and 2005-06."
+    },
+    {
+      "id": "goa-0006",
+      "question": "Which Southampton striker scored the fastest Premier League goal ever, after 7.69 seconds?",
+      "options": [
+        "Danny Ings",
+        "Shane Long",
+        "Charlie Austin",
+        "Rickie Lambert"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Goals & records",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Long scored it against Watford in April 2019."
+    },
+    {
+      "id": "goa-0007",
+      "question": "Who scored the fastest Premier League hat-trick, in 2 minutes 56 seconds?",
+      "options": [
+        "Robbie Fowler",
+        "Jamie Vardy",
+        "Sadio Mané",
+        "Sergio Agüero"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Goals & records",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Mané did it for Southampton against Aston Villa in May 2015."
+    },
+    {
+      "id": "goa-0008",
+      "question": "Which Tottenham striker scored five goals against Wigan in a 9-1 win in 2009?",
+      "options": [
+        "Jermain Defoe",
+        "Peter Crouch",
+        "Robbie Keane",
+        "Dimitar Berbatov"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Goals & records",
+      "westHam": false,
+      "verified": true,
+      "explanation": "It is Tottenham's biggest Premier League win."
+    },
+    {
+      "id": "goa-0009",
+      "question": "Jamie Vardy set a record by scoring in how many consecutive Premier League matches in 2015?",
+      "options": [
+        "11",
+        "9",
+        "10",
+        "12"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "Goals & records",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He broke Ruud van Nistelrooy's record of 10."
+    },
+    {
+      "id": "goa-0010",
+      "question": "By what score did Leicester beat Southampton at St Mary's in October 2019?",
+      "options": [
+        "6-1",
+        "9-0",
+        "8-0",
+        "7-0"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Goals & records",
+      "westHam": false,
+      "verified": true,
+      "explanation": "It equalled the record Premier League winning margin."
+    },
+    {
+      "id": "goa-0011",
+      "question": "Which game holds the record for most goals in a Premier League match (11)?",
+      "options": [
+        "Arsenal 7-3 Newcastle",
+        "Tottenham 9-1 Wigan",
+        "Man Utd 8-2 Arsenal",
+        "Portsmouth 7-4 Reading"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "Goals & records",
+      "westHam": false,
+      "verified": true,
+      "explanation": "It was played in September 2007."
+    },
+    {
+      "id": "goa-0012",
+      "question": "Manchester United beat Arsenal by what score in August 2011?",
+      "options": [
+        "7-1",
+        "6-1",
+        "8-2",
+        "5-0"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Goals & records",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Wayne Rooney scored a hat-trick."
+    },
+    {
+      "id": "goa-0013",
+      "question": "Chelsea clinched the 2009-10 title with an 8-0 win against which team?",
+      "options": [
+        "Sunderland",
+        "Stoke City",
+        "Wigan Athletic",
+        "Aston Villa"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "Goals & records",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Didier Drogba's hat-trick won him the Golden Boot."
+    },
+    {
+      "id": "goa-0014",
+      "question": "By what score did Aston Villa beat champions Liverpool in October 2020?",
+      "options": [
+        "6-1",
+        "5-2",
+        "7-2",
+        "4-0"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Goals & records",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Ollie Watkins scored a hat-trick."
+    },
+    {
+      "id": "goa-0015",
+      "question": "Manchester City won 6-1 at Old Trafford in October 2011. Who were they playing?",
+      "options": [
+        "Liverpool",
+        "Tottenham Hotspur",
+        "Manchester United",
+        "Arsenal"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "Goals & records",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Balotelli celebrated his goal with the 'Why always me?' T-shirt."
+    },
+    {
+      "id": "goa-0016",
+      "question": "Which pair shared the 2021-22 Golden Boot with 23 goals each?",
+      "options": [
+        "Salah and Son Heung-min",
+        "Salah and Kane",
+        "Salah and Ronaldo",
+        "Kane and Son Heung-min"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Goals & records",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Son scored all 23 without a single penalty."
+    },
+    {
+      "id": "goa-0017",
+      "question": "Who holds the record for most headed Premier League goals?",
+      "options": [
+        "Peter Crouch",
+        "Duncan Ferguson",
+        "Dion Dublin",
+        "Alan Shearer"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "Goals & records",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Crouch scored 53 headers."
+    },
+    {
+      "id": "goa-0018",
+      "question": "Which Stoke goalkeeper scored after 13 seconds against Southampton in 2013?",
+      "options": [
+        "Asmir Begović",
+        "Shay Given",
+        "Thomas Sørensen",
+        "Jack Butland"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "Goals & records",
+      "westHam": false,
+      "verified": true,
+      "explanation": "The wind carried his clearance into the net."
+    },
+    {
+      "id": "goa-0019",
+      "question": "Frank Lampard scored how many Premier League goals, a record for a midfielder?",
+      "options": [
+        "191",
+        "165",
+        "177",
+        "150"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "Goals & records",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He scored 147 of them for Chelsea."
+    },
+    {
+      "id": "goa-0020",
+      "question": "Which two players share the record for most assists in a Premier League season (20)?",
+      "options": [
+        "Thierry Henry and Frank Lampard",
+        "Cesc Fàbregas and Kevin De Bruyne",
+        "Mohamed Salah and Ryan Giggs",
+        "Thierry Henry and Kevin De Bruyne"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "Goals & records",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Henry did it in 2002-03, De Bruyne in 2019-20."
+    },
+    {
+      "id": "goa-0021",
+      "question": "Who holds the record for most Premier League assists?",
+      "options": [
+        "Wayne Rooney",
+        "Frank Lampard",
+        "Ryan Giggs",
+        "Cesc Fàbregas"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Goals & records",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Giggs made 162 assists."
+    },
+    {
+      "id": "goa-0022",
+      "question": "Who scored 29 league goals to win the 2024-25 Golden Boot?",
+      "options": [
+        "Erling Haaland",
+        "Alexander Isak",
+        "Cole Palmer",
+        "Mohamed Salah"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Goals & records",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Salah also made 18 assists that season."
+    },
+    {
+      "id": "pla-0001",
+      "question": "Who is Manchester United's all-time record goalscorer?",
+      "options": [
+        "Wayne Rooney",
+        "Bobby Charlton",
+        "Ryan Giggs",
+        "Cristiano Ronaldo"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "Legends",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Rooney scored 253 goals, passing Bobby Charlton in 2017."
+    },
+    {
+      "id": "pla-0002",
+      "question": "Who is Arsenal's all-time record goalscorer?",
+      "options": [
+        "Thierry Henry",
+        "Ian Wright",
+        "Dennis Bergkamp",
+        "Robin van Persie"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "Legends",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Henry scored 228 goals for Arsenal."
+    },
+    {
+      "id": "pla-0003",
+      "question": "Who is Manchester City's all-time record goalscorer?",
+      "options": [
+        "Erling Haaland",
+        "Raheem Sterling",
+        "Sergio Agüero",
+        "Eric Brook"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "Legends",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Agüero scored 260 goals for City."
+    },
+    {
+      "id": "pla-0004",
+      "question": "Who is Chelsea's all-time record goalscorer?",
+      "options": [
+        "Frank Lampard",
+        "Bobby Tambling",
+        "Kerry Dixon",
+        "Didier Drogba"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Legends",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Lampard scored 211 goals for Chelsea."
+    },
+    {
+      "id": "pla-0005",
+      "question": "Whose record did Harry Kane break to become Tottenham's all-time top scorer in 2023?",
+      "options": [
+        "Jimmy Greaves",
+        "Gary Lineker",
+        "Martin Chivers",
+        "Bobby Smith"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Legends",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Greaves had held the record with 266 goals."
+    },
+    {
+      "id": "pla-0006",
+      "question": "Which Arsenal forward was nicknamed 'The Non-Flying Dutchman' because of his fear of flying?",
+      "options": [
+        "Marc Overmars",
+        "Dennis Bergkamp",
+        "Giovanni van Bronckhorst",
+        "Robin van Persie"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "Legends",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Bergkamp often travelled to away games in Europe by car or train."
+    },
+    {
+      "id": "pla-0007",
+      "question": "Which goalkeeper holds the record for most Premier League clean sheets?",
+      "options": [
+        "David de Gea",
+        "Petr Čech",
+        "Edwin van der Sar",
+        "David James"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Legends",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Čech kept 202 clean sheets for Chelsea and Arsenal."
+    },
+    {
+      "id": "pla-0008",
+      "question": "Which club did Jamie Vardy play for before joining Leicester in 2012?",
+      "options": [
+        "Halifax Town",
+        "Stocksbridge Park Steels",
+        "Fleetwood Town",
+        "Crawley Town"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Legends",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He came through non-league football."
+    },
+    {
+      "id": "pla-0009",
+      "question": "Which Leicester winger won the PFA Player of the Year award in 2016?",
+      "options": [
+        "N'Golo Kanté",
+        "Riyad Mahrez",
+        "Jamie Vardy",
+        "Marc Albrighton"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Legends",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Mahrez scored 17 league goals in the title season."
+    },
+    {
+      "id": "pla-0010",
+      "question": "Cristiano Ronaldo won his first Ballon d'Or in 2008 while playing for which club?",
+      "options": [
+        "Real Madrid",
+        "Sporting CP",
+        "Juventus",
+        "Manchester United"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Legends",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He scored 31 league goals in 2007-08."
+    },
+    {
+      "id": "pla-0011",
+      "question": "Ryan Giggs scored in how many consecutive Premier League seasons?",
+      "options": [
+        "17",
+        "23",
+        "19",
+        "21"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "Legends",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He scored in every season from 1992-93 to 2012-13."
+    },
+    {
+      "id": "pla-0012",
+      "question": "Which Stoke midfielder was famous for his long throw-ins?",
+      "options": [
+        "Matthew Etherington",
+        "Glenn Whelan",
+        "Ricardo Fuller",
+        "Rory Delap"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Legends",
+      "westHam": false,
+      "verified": true,
+      "explanation": "His throws were treated like corners under Tony Pulis."
+    },
+    {
+      "id": "pla-0013",
+      "question": "Which Liverpool captain famously never won the Premier League?",
+      "options": [
+        "Steven Gerrard",
+        "Virgil van Dijk",
+        "Jordan Henderson",
+        "Jamie Carragher"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "Legends",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Gerrard came closest in 2008-09 and 2013-14."
+    },
+    {
+      "id": "pla-0014",
+      "question": "Wayne Rooney's first Premier League goal, aged 16, was a late winner against which team?",
+      "options": [
+        "Liverpool",
+        "Manchester United",
+        "Leeds United",
+        "Arsenal"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Legends",
+      "westHam": false,
+      "verified": true,
+      "explanation": "It ended Arsenal's 30-game unbeaten run in October 2002."
+    },
+    {
+      "id": "pla-0015",
+      "question": "Who scored the famous overhead kick winner for Manchester United in the February 2011 derby?",
+      "options": [
+        "Dimitar Berbatov",
+        "Nani",
+        "Javier Hernández",
+        "Wayne Rooney"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Legends",
+      "westHam": false,
+      "verified": true,
+      "explanation": "It was voted the Premier League's goal of its first 20 seasons."
+    },
+    {
+      "id": "pla-0016",
+      "question": "Which Chelsea striker scored in four different FA Cup finals?",
+      "options": [
+        "Didier Drogba",
+        "Nicolas Anelka",
+        "Frank Lampard",
+        "Fernando Torres"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "Legends",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He scored in 2007, 2009, 2010 and 2012."
+    },
+    {
+      "id": "tra-0001",
+      "question": "From which club did Liverpool sign Virgil van Dijk in January 2018?",
+      "options": [
+        "Celtic",
+        "Ajax",
+        "Feyenoord",
+        "Southampton"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "Transfers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He cost about £75m, a world record for a defender at the time."
+    },
+    {
+      "id": "tra-0002",
+      "question": "Fernando Torres joined Chelsea in January 2011 from which club?",
+      "options": [
+        "Barcelona",
+        "Atlético Madrid",
+        "AC Milan",
+        "Liverpool"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "Transfers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "The fee was a British record of £50m."
+    },
+    {
+      "id": "tra-0003",
+      "question": "Which club did Gareth Bale leave to join Real Madrid in 2013?",
+      "options": [
+        "Tottenham Hotspur",
+        "Manchester United",
+        "Southampton",
+        "Arsenal"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "Transfers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "The fee was a world record at the time."
+    },
+    {
+      "id": "tra-0004",
+      "question": "Robin van Persie left Arsenal in 2012 and won the league with which club?",
+      "options": [
+        "Chelsea",
+        "Juventus",
+        "Manchester City",
+        "Manchester United"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "Transfers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He won the Golden Boot with 26 goals that season."
+    },
+    {
+      "id": "tra-0005",
+      "question": "Harry Kane left Tottenham in 2023 to join which club?",
+      "options": [
+        "Paris Saint-Germain",
+        "Bayern Munich",
+        "Manchester United",
+        "Real Madrid"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "Transfers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Kane had spent his whole senior career at Spurs."
+    },
+    {
+      "id": "tra-0006",
+      "question": "From which club did Manchester United sign Wayne Rooney in 2004?",
+      "options": [
+        "Everton",
+        "Leeds United",
+        "Liverpool",
+        "Newcastle United"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "Transfers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He was 18 at the time."
+    },
+    {
+      "id": "tra-0007",
+      "question": "Philippe Coutinho left Liverpool for which club in January 2018?",
+      "options": [
+        "Real Madrid",
+        "Bayern Munich",
+        "Barcelona",
+        "Paris Saint-Germain"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "Transfers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "The money helped Liverpool fund Virgil van Dijk and Alisson."
+    },
+    {
+      "id": "tra-0008",
+      "question": "From which club did Manchester City sign Jack Grealish for £100m in 2021?",
+      "options": [
+        "Leicester City",
+        "Birmingham City",
+        "Everton",
+        "Aston Villa"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "Transfers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "It was the first £100m transfer by a British club."
+    },
+    {
+      "id": "tra-0009",
+      "question": "From which club did Manchester United sign Cristiano Ronaldo in 2003?",
+      "options": [
+        "Porto",
+        "Sporting CP",
+        "Real Madrid",
+        "Benfica"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Transfers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He impressed United's players in a friendly against Sporting."
+    },
+    {
+      "id": "tra-0010",
+      "question": "From which club did Chelsea sign Didier Drogba in 2004?",
+      "options": [
+        "Marseille",
+        "Paris Saint-Germain",
+        "Monaco",
+        "Lyon"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Transfers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He cost about £24m."
+    },
+    {
+      "id": "tra-0011",
+      "question": "From which club did Chelsea sign Eden Hazard in 2012?",
+      "options": [
+        "Lyon",
+        "Standard Liège",
+        "Anderlecht",
+        "Lille"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Transfers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He won the French league with Lille in 2011."
+    },
+    {
+      "id": "tra-0012",
+      "question": "N'Golo Kanté joined Chelsea in 2016 from which club?",
+      "options": [
+        "Leicester City",
+        "Southampton",
+        "Marseille",
+        "Caen"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "Transfers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He won back-to-back titles with Leicester and Chelsea."
+    },
+    {
+      "id": "tra-0013",
+      "question": "From which club did Manchester City sign Kevin De Bruyne in 2015?",
+      "options": [
+        "Werder Bremen",
+        "Chelsea",
+        "Wolfsburg",
+        "Genk"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Transfers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He had previously been at Chelsea but played little."
+    },
+    {
+      "id": "tra-0014",
+      "question": "Sol Campbell joined Arsenal on a free transfer in 2001 from which rival?",
+      "options": [
+        "Tottenham Hotspur",
+        "Chelsea",
+        "Aston Villa",
+        "West Ham United"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Transfers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Spurs fans never forgave him."
+    },
+    {
+      "id": "tra-0015",
+      "question": "Ashley Cole left Arsenal in 2006 to join which club?",
+      "options": [
+        "Chelsea",
+        "Liverpool",
+        "Real Madrid",
+        "Manchester United"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Transfers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Fans called him 'Cashley' over the move."
+    },
+    {
+      "id": "tra-0016",
+      "question": "Raheem Sterling joined Manchester City in 2015 from which club?",
+      "options": [
+        "Arsenal",
+        "QPR",
+        "Liverpool",
+        "Chelsea"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Transfers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "The fee was about £49m."
+    },
+    {
+      "id": "tra-0017",
+      "question": "Paul Pogba rejoined Manchester United in 2016 from which club?",
+      "options": [
+        "Bayern Munich",
+        "Paris Saint-Germain",
+        "Real Madrid",
+        "Juventus"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Transfers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "The fee of about £89m was a world record at the time."
+    },
+    {
+      "id": "tra-0018",
+      "question": "Romelu Lukaku joined Manchester United in 2017 from which club?",
+      "options": [
+        "Chelsea",
+        "Everton",
+        "West Brom",
+        "Inter Milan"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Transfers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He later rejoined Chelsea from Inter in 2021."
+    },
+    {
+      "id": "tra-0019",
+      "question": "Moisés Caicedo joined Chelsea in 2023 for a British record fee from which club?",
+      "options": [
+        "Crystal Palace",
+        "Wolves",
+        "Brighton",
+        "Southampton"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Transfers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "The fee was about £115m."
+    },
+    {
+      "id": "tra-0020",
+      "question": "From which club did Arsenal sign Thierry Henry in 1999?",
+      "options": [
+        "Barcelona",
+        "Juventus",
+        "Inter Milan",
+        "Monaco"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Transfers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Wenger had coached him at Monaco."
+    },
+    {
+      "id": "man-0001",
+      "question": "Who replaced Sir Alex Ferguson as Manchester United manager in 2013?",
+      "options": [
+        "Louis van Gaal",
+        "José Mourinho",
+        "Ryan Giggs",
+        "David Moyes"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "Managers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Moyes moved from Everton but lasted less than a season."
+    },
+    {
+      "id": "man-0002",
+      "question": "Which manager called himself 'a special one' when he arrived at Chelsea in 2004?",
+      "options": [
+        "José Mourinho",
+        "Carlo Ancelotti",
+        "Claudio Ranieri",
+        "Rafael Benítez"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "Managers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He had just won the Champions League with Porto."
+    },
+    {
+      "id": "man-0003",
+      "question": "Jürgen Klopp joined Liverpool in 2015 after leaving which club?",
+      "options": [
+        "Bayern Munich",
+        "Borussia Dortmund",
+        "Mainz",
+        "Schalke"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "Managers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He won the Bundesliga twice with Dortmund."
+    },
+    {
+      "id": "man-0004",
+      "question": "Who has managed Arsenal since December 2019?",
+      "options": [
+        "Mikel Arteta",
+        "Unai Emery",
+        "Freddie Ljungberg",
+        "Thomas Tuchel"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "Managers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Arteta captained Arsenal as a player."
+    },
+    {
+      "id": "man-0005",
+      "question": "Who replaced Arsène Wenger as Arsenal manager in 2018?",
+      "options": [
+        "Carlo Ancelotti",
+        "Patrick Vieira",
+        "Unai Emery",
+        "Mikel Arteta"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Managers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Wenger had been in charge for nearly 22 years."
+    },
+    {
+      "id": "man-0006",
+      "question": "Pep Guardiola joined Manchester City in 2016 from which club?",
+      "options": [
+        "Juventus",
+        "Paris Saint-Germain",
+        "Bayern Munich",
+        "Barcelona"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Managers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He won three Bundesliga titles at Bayern."
+    },
+    {
+      "id": "man-0007",
+      "question": "How many Premier League titles did Arsène Wenger win with Arsenal?",
+      "options": [
+        "5",
+        "3",
+        "4",
+        "2"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Managers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He won in 1997-98, 2001-02 and 2003-04."
+    },
+    {
+      "id": "man-0008",
+      "question": "Who managed Leicester City to the 2015-16 title?",
+      "options": [
+        "Craig Shakespeare",
+        "Nigel Pearson",
+        "Claudio Ranieri",
+        "Brendan Rodgers"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Managers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Ranieri was sacked less than a year later."
+    },
+    {
+      "id": "man-0009",
+      "question": "Erik ten Hag joined Manchester United in 2022 from which club?",
+      "options": [
+        "Ajax",
+        "PSV Eindhoven",
+        "Bayern Munich II",
+        "Feyenoord"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Managers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He won three Dutch titles with Ajax."
+    },
+    {
+      "id": "man-0010",
+      "question": "Ruben Amorim joined Manchester United in November 2024 from which club?",
+      "options": [
+        "Sporting CP",
+        "Porto",
+        "Benfica",
+        "Braga"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Managers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He replaced Erik ten Hag."
+    },
+    {
+      "id": "man-0011",
+      "question": "Graham Potter left which club to become Chelsea manager in 2022?",
+      "options": [
+        "Swansea City",
+        "West Ham United",
+        "Östersund",
+        "Brighton"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Managers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He lasted about seven months at Chelsea."
+    },
+    {
+      "id": "man-0012",
+      "question": "Kenny Dalglish returned for a second spell as Liverpool manager in 2011, replacing whom?",
+      "options": [
+        "Gérard Houllier",
+        "Roy Hodgson",
+        "Brendan Rodgers",
+        "Rafael Benítez"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Managers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Dalglish won the League Cup in 2012."
+    },
+    {
+      "id": "man-0013",
+      "question": "Which club did Mauricio Pochettino lead to the 2019 Champions League final?",
+      "options": [
+        "Chelsea",
+        "Paris Saint-Germain",
+        "Tottenham Hotspur",
+        "Southampton"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Managers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Spurs lost 2-0 to Liverpool in Madrid."
+    },
+    {
+      "id": "man-0014",
+      "question": "Who was manager when Chelsea won the Champions League in 2012?",
+      "options": [
+        "André Villas-Boas",
+        "Rafael Benítez",
+        "Roberto Di Matteo",
+        "Guus Hiddink"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "Managers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He was only interim manager at the time."
+    },
+    {
+      "id": "man-0015",
+      "question": "Who managed Wigan to their 2013 FA Cup win?",
+      "options": [
+        "Roberto Martínez",
+        "Steve Bruce",
+        "Paul Jewell",
+        "Uwe Rösler"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "Managers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Wigan were relegated from the Premier League days later."
+    },
+    {
+      "id": "man-0016",
+      "question": "Who managed Middlesbrough to the 2006 UEFA Cup final?",
+      "options": [
+        "Steve McClaren",
+        "Gareth Southgate",
+        "Bryan Robson",
+        "Terry Venables"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "Managers",
+      "westHam": false,
+      "verified": true,
+      "explanation": "He became England manager that summer."
+    },
+    {
+      "id": "mom-0001",
+      "question": "Which Chelsea defender did Luis Suárez bite in April 2013?",
+      "options": [
+        "César Azpilicueta",
+        "Branislav Ivanović",
+        "Gary Cahill",
+        "John Terry"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Big moments",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Suárez was banned for 10 games."
+    },
+    {
+      "id": "mom-0002",
+      "question": "After Steven Gerrard's slip against Chelsea in April 2014, who scored?",
+      "options": [
+        "Eden Hazard",
+        "Demba Ba",
+        "Fernando Torres",
+        "Willian"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Big moments",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Chelsea won 2-0 and the title slipped away from Liverpool."
+    },
+    {
+      "id": "mom-0003",
+      "question": "Who provided the assist for Sergio Agüero's title-winning goal against QPR in 2012?",
+      "options": [
+        "Yaya Touré",
+        "David Silva",
+        "Mario Balotelli",
+        "Edin Džeko"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "Big moments",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Balotelli slid the ball through from the edge of the box."
+    },
+    {
+      "id": "mom-0004",
+      "question": "Arsenal's record unbeaten league run ended at Old Trafford in October 2004. How many games was it?",
+      "options": [
+        "38",
+        "52",
+        "49",
+        "45"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "Big moments",
+      "westHam": false,
+      "verified": true,
+      "explanation": "The match became known as 'Pizzagate' or the 'Battle of the Buffet'."
+    },
+    {
+      "id": "mom-0005",
+      "question": "Which two captains clashed in the Highbury tunnel before Arsenal v Man Utd in February 2005?",
+      "options": [
+        "Sol Campbell and Rio Ferdinand",
+        "Patrick Vieira and Roy Keane",
+        "Thierry Henry and Gary Neville",
+        "Patrick Vieira and Gary Neville"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Big moments",
+      "westHam": false,
+      "verified": true,
+      "explanation": "United won the match 4-2."
+    },
+    {
+      "id": "mom-0006",
+      "question": "Mario Balotelli revealed a T-shirt with which slogan after scoring at Old Trafford in 2011?",
+      "options": [
+        "Why always me?",
+        "Who else?",
+        "Calma, calma",
+        "This is Manchester"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Big moments",
+      "westHam": false,
+      "verified": true,
+      "explanation": "City won the derby 6-1."
+    },
+    {
+      "id": "mom-0007",
+      "question": "Which Leicester striker had the chant 'Jamie ___'s having a party'?",
+      "options": [
+        "Carragher",
+        "Redknapp",
+        "Mackail-Smith",
+        "Vardy"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "Big moments",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Vardy scored 24 league goals in the title season."
+    },
+    {
+      "id": "mom-0008",
+      "question": "What technology was introduced to the Premier League in 2019-20?",
+      "options": [
+        "Semi-automated offside",
+        "VAR",
+        "Goal-line technology",
+        "Referee body cams"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Big moments",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Goal-line technology had arrived in 2013-14."
+    },
+    {
+      "id": "mom-0009",
+      "question": "Which team pulled off the 'Great Escape' in 2014-15, winning 7 of their last 9 games to stay up?",
+      "options": [
+        "Sunderland",
+        "Hull City",
+        "Leicester City",
+        "West Brom"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Big moments",
+      "westHam": false,
+      "verified": true,
+      "explanation": "A year later, Leicester were champions."
+    },
+    {
+      "id": "clu-0001",
+      "question": "Arsenal moved to the Emirates Stadium in 2006 from which ground?",
+      "options": [
+        "Craven Cottage",
+        "White Hart Lane",
+        "The Valley",
+        "Highbury"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "Clubs & grounds",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Highbury was converted into flats."
+    },
+    {
+      "id": "clu-0002",
+      "question": "Which club plays at Craven Cottage?",
+      "options": [
+        "QPR",
+        "Brentford",
+        "Crystal Palace",
+        "Fulham"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "Clubs & grounds",
+      "westHam": false,
+      "verified": true,
+      "explanation": "It sits on the banks of the Thames."
+    },
+    {
+      "id": "clu-0003",
+      "question": "Which club plays at Turf Moor?",
+      "options": [
+        "Bolton Wanderers",
+        "Burnley",
+        "Preston North End",
+        "Blackburn Rovers"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "Clubs & grounds",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Burnley have played there since 1883."
+    },
+    {
+      "id": "clu-0004",
+      "question": "Which club played at the Liberty Stadium in the Premier League?",
+      "options": [
+        "Swansea City",
+        "Stoke City",
+        "Hull City",
+        "Cardiff City"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Clubs & grounds",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Swansea spent 2011 to 2018 in the Premier League."
+    },
+    {
+      "id": "clu-0005",
+      "question": "Which club plays at the Amex Stadium?",
+      "options": [
+        "Brighton",
+        "Bournemouth",
+        "Southampton",
+        "Reading"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Clubs & grounds",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Brighton moved there in 2011."
+    },
+    {
+      "id": "clu-0006",
+      "question": "Manchester City moved to their current stadium in 2003 from which ground?",
+      "options": [
+        "Boundary Park",
+        "Maine Road",
+        "Hyde Road",
+        "Old Trafford"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Clubs & grounds",
+      "westHam": false,
+      "verified": true,
+      "explanation": "The new stadium was built for the 2002 Commonwealth Games."
+    },
+    {
+      "id": "clu-0007",
+      "question": "Where did Tottenham play most home games in 2017-18 while their new stadium was built?",
+      "options": [
+        "Wembley",
+        "Twickenham",
+        "London Stadium",
+        "Stamford Bridge"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Clubs & grounds",
+      "westHam": false,
+      "verified": true,
+      "explanation": "The Tottenham Hotspur Stadium opened in April 2019."
+    },
+    {
+      "id": "clu-0008",
+      "question": "Which club is nicknamed 'The Toffees'?",
+      "options": [
+        "Liverpool",
+        "Everton",
+        "Sunderland",
+        "Blackburn Rovers"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "Clubs & grounds",
+      "westHam": false,
+      "verified": true,
+      "explanation": "The name is linked to a local toffee shop."
+    },
+    {
+      "id": "clu-0009",
+      "question": "Which club is nicknamed 'The Black Cats'?",
+      "options": [
+        "Hull City",
+        "Sunderland",
+        "Middlesbrough",
+        "Newcastle United"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "Clubs & grounds",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Their stadium is the Stadium of Light."
+    },
+    {
+      "id": "clu-0010",
+      "question": "Which club is nicknamed 'The Cherries'?",
+      "options": [
+        "Bournemouth",
+        "Brentford",
+        "Southampton",
+        "Watford"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Clubs & grounds",
+      "westHam": false,
+      "verified": true,
+      "explanation": "They first reached the Premier League in 2015."
+    },
+    {
+      "id": "clu-0011",
+      "question": "Which club is nicknamed 'The Potters'?",
+      "options": [
+        "Derby County",
+        "Port Vale",
+        "Stoke City",
+        "Wolves"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Clubs & grounds",
+      "westHam": false,
+      "verified": true,
+      "explanation": "It refers to the area's pottery industry."
+    },
+    {
+      "id": "clu-0012",
+      "question": "Which club is nicknamed 'The Baggies'?",
+      "options": [
+        "West Brom",
+        "Wolves",
+        "Birmingham City",
+        "Aston Villa"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Clubs & grounds",
+      "westHam": false,
+      "verified": true,
+      "explanation": "West Brom play at The Hawthorns."
+    },
+    {
+      "id": "clu-0013",
+      "question": "Which club is nicknamed 'The Hornets'?",
+      "options": [
+        "Norwich City",
+        "Brentford",
+        "Wycombe",
+        "Watford"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Clubs & grounds",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Elton John was once Watford's owner."
+    },
+    {
+      "id": "clu-0014",
+      "question": "Which club finished 5th in the Premier League in 2000-01, their first season after promotion?",
+      "options": [
+        "Bolton Wanderers",
+        "Fulham",
+        "Ipswich Town",
+        "Charlton Athletic"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "Clubs & grounds",
+      "westHam": false,
+      "verified": true,
+      "explanation": "George Burley was named Manager of the Year."
+    },
+    {
+      "id": "cup-0001",
+      "question": "Which team did Liverpool beat in the 2005 Champions League final in Istanbul?",
+      "options": [
+        "Barcelona",
+        "Juventus",
+        "AC Milan",
+        "Inter Milan"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "Cups & Europe",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Liverpool came back from 3-0 down to win on penalties."
+    },
+    {
+      "id": "cup-0002",
+      "question": "Manchester City won the treble in which season?",
+      "options": [
+        "2022-23",
+        "2020-21",
+        "2023-24",
+        "2018-19"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "Cups & Europe",
+      "westHam": false,
+      "verified": true,
+      "explanation": "They won the Premier League, FA Cup and Champions League."
+    },
+    {
+      "id": "cup-0003",
+      "question": "Who scored the winner as Manchester City beat Inter Milan in the 2023 Champions League final?",
+      "options": [
+        "Phil Foden",
+        "Kevin De Bruyne",
+        "Erling Haaland",
+        "Rodri"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Cups & Europe",
+      "westHam": false,
+      "verified": true,
+      "explanation": "City won 1-0 in Istanbul."
+    },
+    {
+      "id": "cup-0004",
+      "question": "Who scored the winner when Chelsea beat Manchester City in the 2021 Champions League final?",
+      "options": [
+        "Kai Havertz",
+        "N'Golo Kanté",
+        "Timo Werner",
+        "Mason Mount"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Cups & Europe",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Chelsea won 1-0 in Porto."
+    },
+    {
+      "id": "cup-0005",
+      "question": "Manchester United beat which team on penalties in the 2008 Champions League final in Moscow?",
+      "options": [
+        "Bayern Munich",
+        "Barcelona",
+        "Chelsea",
+        "Liverpool"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Cups & Europe",
+      "westHam": false,
+      "verified": true,
+      "explanation": "John Terry slipped taking what would have been the winning penalty."
+    },
+    {
+      "id": "cup-0006",
+      "question": "Which team beat Arsenal in the 2006 Champions League final?",
+      "options": [
+        "Bayern Munich",
+        "Barcelona",
+        "AC Milan",
+        "Real Madrid"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Cups & Europe",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Barcelona won 2-1 in Paris."
+    },
+    {
+      "id": "cup-0007",
+      "question": "Portsmouth won the FA Cup in 2008 by beating which team in the final?",
+      "options": [
+        "Barnsley",
+        "West Brom",
+        "Cardiff City",
+        "Middlesbrough"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Cups & Europe",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Kanu scored the only goal."
+    },
+    {
+      "id": "cup-0008",
+      "question": "Which team did Wigan beat in the 2013 FA Cup final?",
+      "options": [
+        "Millwall",
+        "Manchester City",
+        "Chelsea",
+        "Arsenal"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Cups & Europe",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Ben Watson headed a late winner."
+    },
+    {
+      "id": "cup-0009",
+      "question": "Birmingham City beat which team in the 2011 League Cup final?",
+      "options": [
+        "Aston Villa",
+        "Manchester United",
+        "Arsenal",
+        "Tottenham Hotspur"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Cups & Europe",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Obafemi Martins scored the late winner."
+    },
+    {
+      "id": "cup-0010",
+      "question": "Swansea won the 2013 League Cup by beating which team 5-0?",
+      "options": [
+        "Wigan Athletic",
+        "Aston Villa",
+        "Chelsea",
+        "Bradford City"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Cups & Europe",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Bradford were in League Two at the time."
+    },
+    {
+      "id": "cup-0011",
+      "question": "Fulham reached the 2010 Europa League final under which manager?",
+      "options": [
+        "Roy Hodgson",
+        "Mark Hughes",
+        "Lawrie Sanchez",
+        "Chris Coleman"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Cups & Europe",
+      "westHam": false,
+      "verified": true,
+      "explanation": "They lost to Atlético Madrid after extra time."
+    },
+    {
+      "id": "cup-0012",
+      "question": "Which team did Tottenham beat in the 2025 Europa League final?",
+      "options": [
+        "Chelsea",
+        "Manchester United",
+        "Roma",
+        "Athletic Bilbao"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Cups & Europe",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Brennan Johnson scored the only goal in Bilbao."
+    },
+    {
+      "id": "cup-0013",
+      "question": "Crystal Palace won their first major trophy in 2025, beating which team in the FA Cup final?",
+      "options": [
+        "Manchester City",
+        "Aston Villa",
+        "Arsenal",
+        "Liverpool"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Cups & Europe",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Eberechi Eze scored the only goal."
+    },
+    {
+      "id": "cup-0014",
+      "question": "Newcastle won the 2025 League Cup final against which team?",
+      "options": [
+        "Chelsea",
+        "Manchester United",
+        "Arsenal",
+        "Liverpool"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Cups & Europe",
+      "westHam": false,
+      "verified": true,
+      "explanation": "It was Newcastle's first major domestic trophy in 70 years."
+    },
+    {
+      "id": "cup-0015",
+      "question": "Who scored Liverpool's goals in the 2019 Champions League final win over Tottenham?",
+      "options": [
+        "Roberto Firmino and Divock Origi",
+        "Sadio Mané and Mohamed Salah",
+        "Mohamed Salah and Divock Origi",
+        "Jordan Henderson and Sadio Mané"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "Cups & Europe",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Salah scored a penalty in the second minute."
+    },
+    {
+      "id": "cup-0016",
+      "question": "Which team knocked Leeds out in the 2001 Champions League semi-final?",
+      "options": [
+        "Bayern Munich",
+        "AC Milan",
+        "Real Madrid",
+        "Valencia"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "Cups & Europe",
+      "westHam": false,
+      "verified": true,
+      "explanation": "Leeds lost 3-0 on aggregate."
+    },
+    {
+      "id": "cup-0017",
+      "question": "Which team beat Middlesbrough 4-0 in the 2006 UEFA Cup final?",
+      "options": [
+        "Espanyol",
+        "Basel",
+        "Steaua Bucharest",
+        "Sevilla"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "Cups & Europe",
+      "westHam": false,
+      "verified": true,
+      "explanation": "The final was in Eindhoven."
+    },
+    {
+      "id": "whu-0001",
+      "question": "Which stadium did West Ham move to in 2016?",
+      "options": [
+        "The Valley",
+        "Emirates Stadium",
+        "Wembley",
+        "London Stadium"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "It was built for the 2012 Olympics."
+    },
+    {
+      "id": "whu-0002",
+      "question": "What was West Ham's ground before 2016 better known as?",
+      "options": [
+        "Upton Park",
+        "Loftus Road",
+        "Brisbane Road",
+        "The Den"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Its official name was the Boleyn Ground."
+    },
+    {
+      "id": "whu-0003",
+      "question": "Which song do West Ham fans sing as their anthem?",
+      "options": [
+        "I'm Forever Blowing Bubbles",
+        "Glory Glory",
+        "Blue Moon",
+        "You'll Never Walk Alone"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Bubbles fill the stadium before kick-off."
+    },
+    {
+      "id": "whu-0004",
+      "question": "Which trophy did West Ham win in 2023?",
+      "options": [
+        "Europa League",
+        "League Cup",
+        "FA Cup",
+        "Europa Conference League"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "It was their first major trophy since 1980."
+    },
+    {
+      "id": "whu-0005",
+      "question": "Who scored the late winner in the 2023 Europa Conference League final?",
+      "options": [
+        "Jarrod Bowen",
+        "Michail Antonio",
+        "Lucas Paquetá",
+        "Saïd Benrahma"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "West Ham beat Fiorentina 2-1 in Prague."
+    },
+    {
+      "id": "whu-0006",
+      "question": "Which team did West Ham beat in the 2023 Europa Conference League final?",
+      "options": [
+        "Anderlecht",
+        "Fiorentina",
+        "Roma",
+        "AZ Alkmaar"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Benrahma scored the first goal from the penalty spot."
+    },
+    {
+      "id": "whu-0007",
+      "question": "Which manager led West Ham to the 2023 Europa Conference League?",
+      "options": [
+        "David Moyes",
+        "Sam Allardyce",
+        "Slaven Bilić",
+        "Manuel Pellegrini"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "West Ham bosses",
+      "westHam": true,
+      "verified": true,
+      "explanation": "It was Moyes's first major trophy as a manager."
+    },
+    {
+      "id": "whu-0008",
+      "question": "Declan Rice left West Ham in 2023 to join which club?",
+      "options": [
+        "Manchester City",
+        "Chelsea",
+        "Arsenal",
+        "Bayern Munich"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "West Ham players",
+      "westHam": true,
+      "verified": true,
+      "explanation": "The fee of around £105m was a British record at the time."
+    },
+    {
+      "id": "whu-0009",
+      "question": "Who is the long-serving West Ham captain known as 'Mr West Ham', who retired in 2022?",
+      "options": [
+        "James Collins",
+        "Carlton Cole",
+        "Kevin Nolan",
+        "Mark Noble"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Noble spent his whole career at West Ham, apart from two short loans."
+    },
+    {
+      "id": "whu-0010",
+      "question": "West Ham lost the 2006 FA Cup final on penalties to which team?",
+      "options": [
+        "Arsenal",
+        "Manchester United",
+        "Liverpool",
+        "Chelsea"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Steven Gerrard's late screamer made it 3-3."
+    },
+    {
+      "id": "whu-0011",
+      "question": "Who was West Ham's manager in the 2006 FA Cup final?",
+      "options": [
+        "Alan Curbishley",
+        "Alan Pardew",
+        "Glenn Roeder",
+        "Harry Redknapp"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "West Ham bosses",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Pardew also won promotion with West Ham in 2005."
+    },
+    {
+      "id": "whu-0012",
+      "question": "Carlos Tevez and Javier Mascherano joined West Ham in 2006 from which club?",
+      "options": [
+        "River Plate",
+        "Santos",
+        "Boca Juniors",
+        "Corinthians"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "West Ham players",
+      "westHam": true,
+      "verified": true,
+      "explanation": "The deal led to a Premier League inquiry."
+    },
+    {
+      "id": "whu-0013",
+      "question": "Carlos Tevez scored the winner to keep West Ham up on the final day of 2006-07 at which ground?",
+      "options": [
+        "Anfield",
+        "Stamford Bridge",
+        "Emirates Stadium",
+        "Old Trafford"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "West Ham beat champions Manchester United 1-0."
+    },
+    {
+      "id": "whu-0014",
+      "question": "West Ham were relegated in 2002-03 with how many points, a record for a relegated side?",
+      "options": [
+        "44",
+        "42",
+        "40",
+        "38"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "They were relegated despite a strong finish under Trevor Brooking."
+    },
+    {
+      "id": "whu-0015",
+      "question": "Paolo Di Canio scored a famous scissor-kick volley against which team in March 2000?",
+      "options": [
+        "Bradford City",
+        "Arsenal",
+        "Coventry City",
+        "Wimbledon"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "It won Goal of the Season."
+    },
+    {
+      "id": "whu-0016",
+      "question": "In December 2000, Paolo Di Canio caught the ball instead of shooting at an open goal against which team?",
+      "options": [
+        "Leeds United",
+        "Everton",
+        "Derby County",
+        "Southampton"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Everton's keeper Paul Gerrard was lying injured, and Di Canio won a FIFA Fair Play award."
+    },
+    {
+      "id": "whu-0017",
+      "question": "Rio Ferdinand left West Ham in 2000 for a British record fee to join which club?",
+      "options": [
+        "Liverpool",
+        "Leeds United",
+        "Chelsea",
+        "Manchester United"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "West Ham players",
+      "westHam": true,
+      "verified": true,
+      "explanation": "He moved on to Manchester United in 2002."
+    },
+    {
+      "id": "whu-0018",
+      "question": "Which of these players did NOT come through the West Ham academy?",
+      "options": [
+        "Joe Cole",
+        "Frank Lampard",
+        "Michael Carrick",
+        "Steven Gerrard"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "West Ham players",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Gerrard came through Liverpool's academy."
+    },
+    {
+      "id": "whu-0019",
+      "question": "Who scored the winner in the 2012 Championship play-off final to send West Ham back up?",
+      "options": [
+        "Kevin Nolan",
+        "Carlton Cole",
+        "Mark Noble",
+        "Ricardo Vaz Tê"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "West Ham beat Blackpool 2-1 at Wembley."
+    },
+    {
+      "id": "whu-0020",
+      "question": "Which former Chelsea forward managed West Ham from 2008 to 2010?",
+      "options": [
+        "Gianluca Vialli",
+        "Gianfranco Zola",
+        "Ruud Gullit",
+        "Roberto Di Matteo"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "West Ham bosses",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Steve Clarke was his assistant."
+    },
+    {
+      "id": "whu-0021",
+      "question": "Under which manager were West Ham relegated in 2010-11?",
+      "options": [
+        "Sam Allardyce",
+        "Avram Grant",
+        "Alan Curbishley",
+        "Gianfranco Zola"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "West Ham bosses",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Grant was sacked on the day relegation was confirmed."
+    },
+    {
+      "id": "whu-0022",
+      "question": "From which club did West Ham sign Dimitri Payet in 2015?",
+      "options": [
+        "Lille",
+        "Marseille",
+        "Lyon",
+        "Paris Saint-Germain"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "West Ham players",
+      "westHam": true,
+      "verified": true,
+      "explanation": "He went back to Marseille in January 2017."
+    },
+    {
+      "id": "whu-0023",
+      "question": "Who was the first West Ham manager at the London Stadium?",
+      "options": [
+        "Manuel Pellegrini",
+        "David Moyes",
+        "Slaven Bilić",
+        "Sam Allardyce"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "West Ham bosses",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Bilić played for West Ham in the 1990s."
+    },
+    {
+      "id": "whu-0024",
+      "question": "Which team did West Ham beat 3-2 in their last ever game at Upton Park in May 2016?",
+      "options": [
+        "Swansea City",
+        "Arsenal",
+        "Tottenham Hotspur",
+        "Manchester United"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Winston Reid headed the winner."
+    },
+    {
+      "id": "whu-0025",
+      "question": "Which former Manchester City manager took charge of West Ham in 2018?",
+      "options": [
+        "Manuel Pellegrini",
+        "Mark Hughes",
+        "Sven-Göran Eriksson",
+        "Roberto Mancini"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "West Ham bosses",
+      "westHam": true,
+      "verified": true,
+      "explanation": "He was replaced by David Moyes in December 2019."
+    },
+    {
+      "id": "whu-0026",
+      "question": "Which team knocked West Ham out in the 2021-22 Europa League semi-final?",
+      "options": [
+        "Eintracht Frankfurt",
+        "Sevilla",
+        "Lyon",
+        "Rangers"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Frankfurt went on to win the tournament."
+    },
+    {
+      "id": "whu-0027",
+      "question": "Which manager did Graham Potter replace at West Ham in January 2025?",
+      "options": [
+        "Nuno Espírito Santo",
+        "Julen Lopetegui",
+        "Steven Gerrard",
+        "David Moyes"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "West Ham bosses",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Lopetegui lasted about half a season."
+    },
+    {
+      "id": "whu-0028",
+      "question": "Who is West Ham's all-time top Premier League goalscorer?",
+      "options": [
+        "Paolo Di Canio",
+        "Jarrod Bowen",
+        "Michail Antonio",
+        "Carlton Cole"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Antonio joined from Nottingham Forest in 2015."
+    },
+    {
+      "id": "whu-0029",
+      "question": "West Ham were founded in 1895 under what name?",
+      "options": [
+        "Thames Ironworks",
+        "Millwall Rovers",
+        "Woolwich Arsenal",
+        "East London United"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "That's why the club is nicknamed 'The Irons'."
+    },
+    {
+      "id": "whu-0030",
+      "question": "Which club are West Ham's fiercest traditional rivals?",
+      "options": [
+        "Millwall",
+        "Crystal Palace",
+        "Leyton Orient",
+        "Charlton Athletic"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "The rivalry goes back to the docks."
+    },
+    {
+      "id": "whu-0031",
+      "question": "Which West Ham midfielder was named FWA Footballer of the Year in 2011, despite the club being relegated?",
+      "options": [
+        "Scott Parker",
+        "Mark Noble",
+        "Matthew Upson",
+        "Kevin Nolan"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "He joined Tottenham shortly afterwards."
+    },
+    {
+      "id": "whu-0032",
+      "question": "Who became West Ham's joint owners in January 2010?",
+      "options": [
+        "David Sullivan and David Gold",
+        "Terence Brown and Alan Pardew",
+        "Karren Brady and Alan Sugar",
+        "Björgólfur Guðmundsson and Eggert Magnússon"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "West Ham bosses",
+      "westHam": true,
+      "verified": true,
+      "explanation": "They had previously owned Birmingham City."
+    },
+    {
+      "id": "whu-0033",
+      "question": "From which club did West Ham sign Lucas Paquetá in 2022?",
+      "options": [
+        "AC Milan",
+        "Paris Saint-Germain",
+        "Lyon",
+        "Flamengo"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "West Ham players",
+      "westHam": true,
+      "verified": true,
+      "explanation": "He became the club's record signing at the time."
+    },
+    {
+      "id": "whu-0034",
+      "question": "From which club did West Ham sign Jarrod Bowen in 2020?",
+      "options": [
+        "Hull City",
+        "Norwich City",
+        "Brentford",
+        "Burnley"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "West Ham players",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Hull were in the Championship at the time."
+    },
+    {
+      "id": "whu-0035",
+      "question": "From which club did West Ham sign Tomáš Souček in 2020?",
+      "options": [
+        "Sparta Prague",
+        "Celtic",
+        "Slavia Prague",
+        "Ajax"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "West Ham players",
+      "westHam": true,
+      "verified": true,
+      "explanation": "He joined on loan first, then permanently."
+    },
+    {
+      "id": "whu-0036",
+      "question": "From which club did West Ham sign goalkeeper Łukasz Fabiański in 2018?",
+      "options": [
+        "Legia Warsaw",
+        "Arsenal",
+        "Swansea City",
+        "Celtic"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "West Ham players",
+      "westHam": true,
+      "verified": true,
+      "explanation": "He had earlier spent seven years at Arsenal."
+    },
+    {
+      "id": "whu-0037",
+      "question": "Which West Ham academy defender was Roman Abramovich's first Chelsea signing in 2003?",
+      "options": [
+        "James Tomkins",
+        "Rio Ferdinand",
+        "Glen Johnson",
+        "Anton Ferdinand"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "West Ham players",
+      "westHam": true,
+      "verified": true,
+      "explanation": "West Ham had just been relegated."
+    },
+    {
+      "id": "whu-0038",
+      "question": "Michael Carrick left West Ham in 2004 to join which club?",
+      "options": [
+        "Manchester United",
+        "Aston Villa",
+        "Chelsea",
+        "Tottenham Hotspur"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "West Ham players",
+      "westHam": true,
+      "verified": true,
+      "explanation": "He moved on to Manchester United two years later."
+    },
+    {
+      "id": "whu-0039",
+      "question": "Frank Lampard's uncle managed West Ham until 2001. Who is he?",
+      "options": [
+        "Harry Redknapp",
+        "John Lyall",
+        "Billy Bonds",
+        "Glenn Roeder"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "West Ham bosses",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Frank Lampard Sr was Redknapp's assistant."
+    },
+    {
+      "id": "whu-0040",
+      "question": "Who scored the winner in the 2005 Championship play-off final to take West Ham up?",
+      "options": [
+        "Bobby Zamora",
+        "Teddy Sheringham",
+        "Marlon Harewood",
+        "Matthew Etherington"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "West Ham beat Preston 1-0 in Cardiff."
+    },
+    {
+      "id": "whu-0041",
+      "question": "Which team did West Ham beat in the 2022 Europa League quarter-final?",
+      "options": [
+        "Rapid Vienna",
+        "Sevilla",
+        "Lyon",
+        "Genk"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "They had knocked out Sevilla in the last 16."
+    },
+    {
+      "id": "whu-0042",
+      "question": "Which goalkeeper made a famous World Cup error for England in 2010 while a West Ham player?",
+      "options": [
+        "Ben Foster",
+        "Robert Green",
+        "Joe Hart",
+        "David James"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Clint Dempsey's shot squirmed under him against the USA."
+    },
+    {
+      "id": "whu-0043",
+      "question": "West Ham signed Sébastien Haller for a club record fee in 2019 from which club?",
+      "options": [
+        "Eintracht Frankfurt",
+        "Borussia Dortmund",
+        "Utrecht",
+        "Ajax"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "West Ham players",
+      "westHam": true,
+      "verified": true,
+      "explanation": "The fee was around £45m."
+    },
+    {
+      "id": "whu-0044",
+      "question": "Which captain did Sam Allardyce sign from Newcastle in 2011?",
+      "options": [
+        "Kevin Nolan",
+        "Joey Barton",
+        "Alan Smith",
+        "Steven Taylor"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "West Ham players",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Nolan had played for Allardyce at Bolton too."
+    },
+    {
+      "id": "whu-0045",
+      "question": "What is on the West Ham badge along with the castle?",
+      "options": [
+        "A lion",
+        "A ship",
+        "Two crossed hammers",
+        "A cannon"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "The hammers come from the Thames Ironworks roots."
+    },
+    {
+      "id": "whu-0046",
+      "question": "Which West Ham midfielder captained the club when they won the 2023 Europa Conference League?",
+      "options": [
+        "Tomáš Souček",
+        "Jarrod Bowen",
+        "Mark Noble",
+        "Declan Rice"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "It was his last game for West Ham before joining Arsenal."
+    },
+    {
+      "id": "whu-0047",
+      "question": "What are West Ham's traditional colours?",
+      "options": [
+        "Red and white",
+        "Claret and blue",
+        "Black and white",
+        "Blue and white"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Aston Villa and Burnley wear claret and blue too."
+    },
+    {
+      "id": "whu-0048",
+      "question": "Which West Ham legend captained England to the 1966 World Cup?",
+      "options": [
+        "Billy Bonds",
+        "Geoff Hurst",
+        "Bobby Moore",
+        "Martin Peters"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "A statue of him stands outside the London Stadium."
+    },
+    {
+      "id": "whu-0049",
+      "question": "Which of these is West Ham's nickname?",
+      "options": [
+        "The Saints",
+        "The Hammers",
+        "The Toffees",
+        "The Villans"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "They are also called 'The Irons'."
+    },
+    {
+      "id": "whu-0050",
+      "question": "Who was West Ham's manager for most of the 2002-03 relegation season?",
+      "options": [
+        "Alan Pardew",
+        "Glenn Roeder",
+        "Trevor Brooking",
+        "Harry Redknapp"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "West Ham bosses",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Trevor Brooking took over after Roeder fell ill in April 2003."
+    },
+    {
+      "id": "whu-0051",
+      "question": "From which club did West Ham sign Marko Arnautović in 2017?",
+      "options": [
+        "Inter Milan",
+        "Twente",
+        "Stoke City",
+        "Werder Bremen"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "West Ham players",
+      "westHam": true,
+      "verified": true,
+      "explanation": "He was West Ham's player of the year in 2017-18."
+    },
+    {
+      "id": "whu-0052",
+      "question": "Marko Arnautović left West Ham in 2019 to join which club?",
+      "options": [
+        "Guangzhou Evergrande",
+        "Inter Milan",
+        "Shanghai SIPG",
+        "Bologna"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "West Ham players",
+      "westHam": true,
+      "verified": true,
+      "explanation": "He returned to Europe with Bologna in 2021."
+    },
+    {
+      "id": "whu-0053",
+      "question": "From which club did West Ham sign Javier Hernández in 2017?",
+      "options": [
+        "Sevilla",
+        "Manchester United",
+        "Real Madrid",
+        "Bayer Leverkusen"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "West Ham players",
+      "westHam": true,
+      "verified": true,
+      "explanation": "He had previously played for Manchester United."
+    },
+    {
+      "id": "whu-0054",
+      "question": "Which club knocked West Ham out of Europa League qualifying in 2016, their first season at the London Stadium?",
+      "options": [
+        "Steaua Bucharest",
+        "Astra Giurgiu",
+        "NK Rijeka",
+        "Domžale"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Astra won 1-0 in London after a 1-1 draw in Romania."
+    },
+    {
+      "id": "whu-0055",
+      "question": "Where did West Ham finish in the 2020-21 Premier League?",
+      "options": [
+        "7th",
+        "5th",
+        "8th",
+        "6th"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "It was their highest Premier League points total (65)."
+    },
+    {
+      "id": "whu-0056",
+      "question": "Which team did West Ham beat in the 2006 FA Cup semi-final?",
+      "options": [
+        "Chelsea",
+        "Middlesbrough",
+        "Bolton Wanderers",
+        "Charlton Athletic"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "Marlon Harewood scored the only goal at Villa Park."
+    },
+    {
+      "id": "whu-0057",
+      "question": "Which veteran striker, the Premier League's oldest scorer at the time, played for West Ham aged 40 in 2006-07?",
+      "options": [
+        "Ian Wright",
+        "Les Ferdinand",
+        "Paolo Di Canio",
+        "Teddy Sheringham"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "West Ham moments",
+      "westHam": true,
+      "verified": true,
+      "explanation": "He had won the treble with Manchester United in 1999."
+    }
+  ]
+}
