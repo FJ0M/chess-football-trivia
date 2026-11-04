@@ -1,0 +1,71 @@
+/* App chrome around the game screen, plus the Settings sheet.
+   The sheet stays neutral so it reads the same whichever style is picked. */
+:root {
+  --chrome-bg: #e9edee; --chrome-fg: #18304a;
+  --sheet-bg: #ffffff; --sheet-fg: #1b1d1a; --sheet-muted: #5d625a; --sheet-line: #dde1e3; --sheet-accent: #1f5fbf;
+  font-family: "Kalam", system-ui, sans-serif;
+}
+html[data-style="tactics"]   { --chrome-bg: #dfe5e8; --chrome-fg: #18304a; }
+html[data-style="floodlit"]  { --chrome-bg: #050914; --chrome-fg: #e9eefc; }
+html[data-style="programme"] { --chrome-bg: #7a263a; --chrome-fg: #f3ead6; }
+html[data-style="sticker"]   { --chrome-bg: #1e1240; --chrome-fg: #ffd23f; }
+html[data-style="tabletop"]  { --chrome-bg: #3d230f; --chrome-fg: #ffd98a; }
+html[data-style="fanzine"]   { --chrome-bg: #d9d8d0; --chrome-fg: #111; }
+html[data-style="broadcast"] { --chrome-bg: #020c0e; --chrome-fg: #eafcff; }
+html[data-style="teletext"]  { --chrome-bg: #000; --chrome-fg: #fff; }
+html[data-style="shirt"]     { --chrome-bg: #4a1022; --chrome-fg: #fbeec9; }
+html[data-style="pundit"]    { --chrome-bg: #ececea; --chrome-fg: #0e0e0d; }
+
+html, body { min-height: 100%; }
+body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transition: background .3s; }
+.app { max-width: 460px; margin: 0 auto; padding-left: max(12px, env(safe-area-inset-left, 0px)); padding-right: max(12px, env(safe-area-inset-right, 0px)); padding-block: max(10px, env(safe-area-inset-top, 0px)) max(20px, env(safe-area-inset-bottom, 0px)); display: grid; gap: 10px; }
+.appbar { display: flex; align-items: center; justify-content: space-between; font-family: system-ui, sans-serif; font-weight: 700; font-size: 15px; }
+.gear { width: 40px; height: 40px; border-radius: 50%; border: 0; background: transparent; color: inherit; cursor: pointer; display: grid; place-items: center; }
+.gear svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+.gear:focus-visible { outline: 2px solid currentColor; }
+.tap-note { margin: -6px 0 -4px; text-align: center; font-family: system-ui, sans-serif; font-size: 13px; opacity: .8; }
+
+/* Board squares and power-ups are real buttons. */
+.screen button.sq { border: 0; padding: 0; margin: 0; font: inherit; cursor: pointer; border-radius: 0; color: inherit; }
+.screen button.sq:focus-visible { outline: 3px solid var(--dot); outline-offset: -3px; z-index: 3; }
+.screen button.pw { font: inherit; color: inherit; cursor: pointer; border: 0; background: transparent; }
+.screen .pw span:not(.cost) { font-size: inherit; }
+.screen .quiz .answers button.right { outline: 3px solid #2e9d4f; outline-offset: -3px; }
+.screen .quiz .answers button.wrong { outline: 3px solid #d1342f; outline-offset: -3px; }
+.screen .quiz .answers button.dim { opacity: .45; }
+.screen .hint { margin: 0; font-size: 13px; opacity: .8; text-align: center; min-height: 1.3em; }
+
+/* Settings sheet */
+.sheet-backdrop { position: fixed; inset: 0; grid-template-columns: minmax(0, 1fr); background: rgba(10, 14, 20, .55); display: grid; align-items: end; justify-items: center; z-index: 20; }
+.sheet { grid-template-columns: minmax(0, 1fr); width: 100%; max-width: 520px; max-height: 88vh; overflow-y: auto; box-sizing: border-box; background: var(--sheet-bg); color: var(--sheet-fg); border-radius: 18px 18px 0 0; font-family: system-ui, sans-serif; font-size: 15px;
+  padding: 16px max(18px, env(safe-area-inset-right, 0px)) max(24px, env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px)); display: grid; gap: 12px; }
+@media (min-width: 640px) { .sheet-backdrop { align-items: center; } .sheet { border-radius: 18px; } }
+.sheet-head { display: flex; justify-content: space-between; align-items: center; }
+.sheet h2 { margin: 0; font-size: 22px; }
+.sheet h3 { margin: 10px 0 0; font-size: 12px; text-transform: uppercase; letter-spacing: .1em; color: var(--sheet-muted); }
+.ghost { background: transparent; border: 1px solid var(--sheet-line); color: var(--sheet-accent); font: inherit; font-weight: 600; border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+.reset { justify-self: start; margin-top: 8px; }
+.style-list { display: grid; gap: 6px; }
+.style-option { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: center; padding: 10px; border: 1px solid var(--sheet-line); border-radius: 12px; cursor: pointer; position: relative; }
+.style-option.on { border-color: var(--sheet-accent); box-shadow: 0 0 0 1px var(--sheet-accent); }
+.style-option input { position: absolute; opacity: 0; pointer-events: none; }
+.style-option:has(input:focus-visible) { outline: 2px solid var(--sheet-accent); outline-offset: 2px; }
+.style-option .sw { display: grid; grid-template-columns: repeat(5, 10px); height: 34px; border-radius: 6px; overflow: hidden; border: 1px solid var(--sheet-line); }
+.style-option .sw i { display: block; }
+.style-option .txt { display: grid; gap: 2px; min-width: 0; }
+.style-option strong em { font-style: normal; font-size: 11px; font-weight: 600; color: var(--sheet-accent); margin-left: 6px; text-transform: uppercase; letter-spacing: .06em; }
+.style-option small { color: var(--sheet-muted); }
+.row { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.row input[type="range"] { flex: 1; min-width: 140px; accent-color: var(--sheet-accent); }
+.toggle { display: flex; gap: 8px; align-items: center; font-weight: 600; min-width: 140px; }
+.toggle input { width: 20px; height: 20px; accent-color: var(--sheet-accent); }
+.select { display: grid; gap: 4px; }
+.select span { font-size: 13px; color: var(--sheet-muted); }
+.select select { font: inherit; padding: 8px; border-radius: 8px; border: 1px solid var(--sheet-line); background: var(--sheet-bg); color: var(--sheet-fg); }
+.sounds summary { cursor: pointer; color: var(--sheet-accent); font-weight: 600; }
+.sound-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 6px; margin-top: 8px; }
+.sound-grid button { font: inherit; font-size: 13px; padding: 8px; border-radius: 8px; border: 1px solid var(--sheet-line); background: var(--sheet-bg); color: var(--sheet-fg); cursor: pointer; text-align: left; }
+
+@media (prefers-color-scheme: dark) {
+  :root { --sheet-bg: #1c1f22; --sheet-fg: #eceee8; --sheet-muted: #a2a79c; --sheet-line: #33383c; --sheet-accent: #7fb0ff; }
+}
