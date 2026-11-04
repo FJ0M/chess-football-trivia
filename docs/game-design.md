@@ -70,7 +70,7 @@ A question appears straight after a move that triggers one, and the player who m
 
 If a move hits two triggers, the higher one in the table wins. The Kick-off counter resets whenever you get a question, so captures don't stack extra questions on top.
 
-**Hot Spots.** Four squares on ranks 3 to 6 are picked at random each game, two on each half of the board. Once a Hot Spot is used it moves to a new random empty square in the same half, so nobody can camp on one. Hot Spots are never placed where a knight (or, in Chess960, any piece other than a pawn) can land on move one. Pawns are left out of that rule, because between them they reach every square on ranks 3 to 6.
+**Hot Spots.** Four squares on ranks 3 to 6 are picked at random each game, two on each half of the board. Once a Hot Spot is used it moves to a new random empty square in the same half, so nobody can camp on one. After every other move, the Hot Spot that has stayed put longest also jumps to a new square in its half, so one moves on every move. Hot Spots are never placed where a knight (or, in Chess960, any piece other than a pawn) can land on move one. Pawns are left out of that rule, because between them they reach every square on ranks 3 to 6.
 
 **A turn, step by step:**
 
@@ -81,14 +81,14 @@ If a move hits two triggers, the higher one in the table wins. The Kick-off coun
 
 ## Choosing a question: risk and reward
 
-You pick your own question, and the harder it is, the more you win and the more you risk. Each trigger deals three face-down cards showing only a topic and a difficulty, for example "Managers · Easy", "Transfers · Medium", "West Ham · Hard". One card of each difficulty is dealt, with random topics. A **Go for a Worldie** button turns the Hard card into a Worldie.
+You pick your own question, and the harder it is, the more you win and the more you risk. Each trigger deals three face-down cards showing only a topic and a difficulty, for example "Managers · Tap-in", "Transfers · Highlight", "West Ham · Screamer". One card of each difficulty is dealt, with random topics. A **Go for a Puskás** button turns the Screamer card into a Puskás. The names are kinds of goal, so they can't be mistaken for topics or leagues.
 
 | Difficulty | Timer | Right answer | Wrong answer or time out |
 | --- | --- | --- | --- |
-| Sunday League (easy) | 15 s | +1 Form | Nothing, you just miss out |
-| Championship (medium) | 15 s | +2 Form | Opponent gets +2 Form ("scored on the break") |
-| Premier League (hard) | 15 s | +4 Form | **Booked**: the piece you just moved is frozen for your next turn |
-| Worldie (hard, no hints) | 8 s | +6 Form | **Sent off**: you lose your next turn, and the opponent gets a Free Kick |
+| Tap-in (easy) | 15 s | +1 Form | Nothing, you just miss out |
+| Highlight (medium) | 15 s | +2 Form | Opponent gets +2 Form ("scored on the break") |
+| Screamer (hard) | 15 s | +4 Form | **Booked**: the piece you just moved is frozen for your next turn |
+| Puskás (hard, no hints) | 8 s | +6 Form | **Sent off**: you lose your next turn, and the opponent gets a Free Kick |
 
 **Extras on top:**
 
@@ -134,7 +134,7 @@ Form is spent on one power-up per turn, before you move, plus any number of hint
 | Scout Report | 2 | Shows the piece the opponent will most likely move next |
 | Manager's Tip | 2 | Shows the engine's best move (cooldown 8 moves) |
 
-**Trivia hints** (during a question, not allowed on a Worldie):
+**Trivia hints** (during a question, not allowed on a Puskás):
 
 | Hint | Cost | Effect |
 | --- | --- | --- |
@@ -201,7 +201,7 @@ The game is a static web app with no server: everything, including the bots, run
 }
 ```
 
-`difficulty` is easy, medium or hard (Worldies reuse hard questions). `topic` drives the card labels, and `club` (a club id, or null for general questions) decides what can appear in a Club Bonus Round. Only `verified` questions are shown in the game.
+`difficulty` is easy, medium or hard (a Puskás reuses hard questions; the data keeps the keys easy/medium/hard, which the game shows as Tap-in/Highlight/Screamer). `topic` drives the card labels, and `club` (a club id, or null for general questions) decides what can appear in a Club Bonus Round. Only `verified` questions are shown in the game.
 
 ## Build order and open questions
 

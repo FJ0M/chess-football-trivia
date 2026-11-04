@@ -38,7 +38,9 @@ export function GameScreen({ style, play, setup, view, paused, onPause, onExit, 
   const active: Color = "color" in phase ? phase.color : phase.kind === "shootout" ? phase.taker : turn;
   const humans = (["white", "black"] as Color[]).filter((c) => game.players[c].kind === "human");
   const local = game.options.mode === "local";
-  const orientation: Color = local ? (view === "hand-over" ? active : "white") : humans[0] ?? "white";
+  // "Flip the screen" turns the whole card round for Black, so the board inside is drawn from Black's side:
+  // after the 180° turn the pieces stay where they sit on the table and only the screen faces the other way.
+  const orientation: Color = local ? (view === "hand-over" || view === "flip" ? active : "white") : humans[0] ?? "white";
   const turned = local && view === "face-to-face" && active === "black";
   /** "Flip the screen": the whole game turns 180 degrees for Black, so the board and every card face them. */
   const flipAll = local && view === "flip" && active === "black";
@@ -120,7 +122,7 @@ export function GameScreen({ style, play, setup, view, paused, onPause, onExit, 
           );
         }))}
         {style.id === "tactics" && last && <MarkerArrow from={last[0]} to={last[1]} orientation={orientation} color="#fff7a8" id="ah" />}
-        {g.overlay.tip && <MarkerArrow from={g.overlay.tip[0]} to={g.overlay.tip[1]} orientation={orientation} color="#2e9d4f" id="tip" />}
+        {g.overlay.tip && <MarkerArrow from={g.overlay.tip[0]} to={g.overlay.tip[1]} orientation={orientation} color="#ff2d95" id="tip" outline />}
       </div>
       <PlayerBar game={game} color={bottom} active={active} bubble={g.bubble} />
 
@@ -207,7 +209,7 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
         </div>
         {humanToAct && (
           <button type="button" className="worldie" onClick={() => g.pickCard(phase.cards.findIndex((c) => c.difficulty === "hard"), true)}>
-            Go for a Worldie: +{6 * (phase.bonus ? 2 : 1)} Form, 8 seconds, no hints. Wrong and you're sent off
+            Go for a Puskás: turn the Screamer into the goal of the season. +{6 * (phase.bonus ? 2 : 1)} Form, 8 seconds, no hints. Wrong and you're sent off
           </button>
         )}
       </div>
@@ -426,7 +428,7 @@ function StadiumClock({ ms, running }: { ms: number; running: boolean }) {
   );
 }
 
-function MarkerArrow({ from, to, orientation, color, id }: { from: string; to: string; orientation: Color; color: string; id: string }) {
+function MarkerArrow({ from, to, orientation, color, id, outline }: { from: string; to: string; orientation: Color; color: string; id: string; outline?: boolean }) {
   const xy = (sq: string) => {
     const f = FILES.indexOf(sq[0]), r = Number(sq[1]) - 1;
     return orientation === "white" ? [f + 0.5, 7 - r + 0.5] : [7 - f + 0.5, r + 0.5];
@@ -440,10 +442,11 @@ function MarkerArrow({ from, to, orientation, color, id }: { from: string; to: s
     <svg className="arrow" viewBox="0 0 8 8" aria-hidden="true">
       <defs>
         <marker id={id} viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto">
-          <path d="M0 0L10 5L0 10z" fill={color} />
+          <path d="M0 0L10 5L0 10z" fill={color} stroke={outline ? "#fff" : "none"} strokeWidth="1.2" />
         </marker>
       </defs>
-      <path d={`M${x1} ${y1} Q ${mx} ${my} ${ex} ${ey}`} fill="none" stroke={color} strokeWidth=".12" strokeLinecap="round" strokeDasharray=".25 .14" markerEnd={`url(#${id})`} />
+      {outline && <path d={`M${x1} ${y1} Q ${mx} ${my} ${ex} ${ey}`} fill="none" stroke="#fff" strokeWidth=".26" strokeLinecap="round" opacity=".9" />}
+      <path d={`M${x1} ${y1} Q ${mx} ${my} ${ex} ${ey}`} fill="none" stroke={color} strokeWidth={outline ? ".14" : ".12"} strokeLinecap="round" strokeDasharray={outline ? undefined : ".25 .14"} markerEnd={`url(#${id})`} />
     </svg>
   );
 }

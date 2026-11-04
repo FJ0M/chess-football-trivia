@@ -163,7 +163,7 @@ export function pickHotSpots(fen: string, rng: Rng): string[] {
   return spots;
 }
 
-/** Moves a used Hot Spot to a new random empty square in the same half of the board. */
+/** Moves a Hot Spot to a new random empty square in the same half of the board (after it's used, or as its turn to drift). */
 function relocateHotSpot(state: GameState, used: string, rng: Rng): string[] {
   const rank = Number(used[1]) - 1;
   const half: Color = rank <= 3 ? "white" : "black";
@@ -437,6 +437,10 @@ export function playMove(state: GameState, uci: string, rng: Rng = Math.random):
     }
     if (onSpot && (trigger.kind === "hot-spot" || trigger.kind === "promotion")) {
       next = { ...next, hotSpots: relocateHotSpot(next, landed, rng) };
+    } else if (next.hotSpots.length) {
+      // Keep the pitch moving: one Hot Spot, the one that has stayed put longest, jumps somewhere new after every move.
+      const drifting = next.hotSpots[0]; // relocating appends, so index 0 is always the one that has sat longest
+      next = { ...next, hotSpots: relocateHotSpot(next, drifting, rng) };
     }
     if (trigger.kind !== "none" && trigger.kind !== "promotion") next = withPlayer(next, mover, { kickoffCount: 0 });
   }

@@ -74,6 +74,22 @@ describe("Hot Spots", () => {
     expect(r.state.hotSpots).not.toContain("e4");
     expect(r.state.hotSpots).toHaveLength(4);
   });
+  it("one Hot Spot drifts after every move, each in turn, staying in its half", () => {
+    let g = game();
+    g = { ...g, hotSpots: ["a3", "h4", "a6", "h5"] };
+    const seen = new Set(g.hotSpots);
+    for (const m of ["g1f3", "g8f6", "f3g1", "f6g8"]) {
+      const before = g.hotSpots;
+      const r = playMove(g, resolveMove(g, m)!, Math.random);
+      const moved = before.filter((s) => !r.state.hotSpots.includes(s));
+      expect(moved).toHaveLength(1);
+      expect(r.state.hotSpots).toHaveLength(4);
+      expect(r.state.hotSpots.filter((s) => "34".includes(s[1]))).toHaveLength(2);
+      for (const s of moved) seen.delete(s);
+      g = finishTurn(r.state).state;
+    }
+    expect(seen.size).toBe(0);
+  });
 });
 
 describe("triggers", () => {
