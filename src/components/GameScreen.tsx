@@ -10,6 +10,7 @@ import { useGame, cardLabel, type Phase, type SetupChoice } from "../game/useGam
 import { FORM_CAP, POWER_UPS, POWER_UP_BY_ID, TRIVIA_HINTS, fergieMs, fmtSeconds, type PowerUpDef } from "../game/powerups";
 import { destsFor, isPromotion, pieceAt, powerBlocked, powerCost, powerTargets, turnOf, WHO_AM_I_PIECES, ROLE_NAME } from "../game/rules";
 import { clubShort } from "../game/clubs";
+import { PowerIcon } from "./PowerIcons";
 import { CLUE_MS } from "../game/whoami";
 import type { Color, GameState, Outcome, PowerUpId } from "../game/types";
 
@@ -370,7 +371,7 @@ function PowerBar({ game, phase, color, enabled, onPick, play }: { game: GameSta
       </div>
       {def && (
         <div className="confirm" role="dialog" aria-label={`Use ${def.name}?`}>
-          <div className="confirm-head"><span className="pw-icon big" data-power={def.id} /><b>{def.name}</b><span className="cost">{pendingCost} Form</span></div>
+          <div className="confirm-head"><PowerIcon id={def.id} className="pw-icon big" /><b>{def.name}</b><span className="cost">{pendingCost} Form</span></div>
           <p>{powerEffect(game, def)}{def.rule ? `. ${def.rule}.` : "."}</p>
           {pendingBlocked ? <p className="why">{pendingBlocked}</p> : <p className="fine">Once you confirm it can't be cancelled{def.target !== "none" ? ": you'll have to pick a target" : ""}.</p>}
           <div className="row-btns">
@@ -392,7 +393,7 @@ function PowerBar({ game, phase, color, enabled, onPick, play }: { game: GameSta
           };
           return (
             <button key={p.id} type="button" title={`${powerEffect(game, p)}${p.rule ? `. ${p.rule}` : ""}`} className={`pw${blocked || !enabled ? " locked" : ""}${on || pending === p.id ? " on" : ""}${me.form >= cost ? " afford" : ""}`} onClick={tap}>
-              <span className="pw-icon" data-power={p.id} aria-hidden="true" />
+              <PowerIcon id={p.id} className="pw-icon" />
               <span>{p.name}</span>
               <span className="cost">{cost} Form{cd > 0 ? ` · ${cd} to go` : ""}</span>
             </button>

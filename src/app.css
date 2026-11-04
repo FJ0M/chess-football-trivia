@@ -165,9 +165,8 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 .screen .powers { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
 .screen .pw { min-width: 0; overflow-wrap: normal; word-break: normal; }
 .screen .pw.afford:not(.locked) .cost { opacity: 1; font-weight: 700; }
-/* Slot for each power-up's icon (drawn by PowerIcon). Empty for now, so it takes no room. */
-.screen .pw-icon:empty { display: none; }
-.screen .pw-icon { display: grid; place-items: center; width: 24px; height: 24px; }
+/* Each power-up's icon (PowerIcon). */
+.screen .pw-icon { display: block; width: 24px; height: 24px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .screen .pw-icon.big { width: 32px; height: 32px; }
 .screen .confirm { display: grid; gap: 6px; padding: 10px 12px; border-radius: 12px; border: 2px solid currentColor; background: rgba(255,255,255,.14); animation: pop .2s ease-out; }
 .screen .confirm-head { display: flex; align-items: center; gap: 8px; font-size: 16px; }
