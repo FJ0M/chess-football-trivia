@@ -231,6 +231,51 @@ def topic(cat, q):
     if any(w in ql for w in ("sign","join","left west ham","leave","academy","from which club")): return "West Ham players"
     return "West Ham moments"
 
+# ---------- club questions (tools/clubs/<division>.py) ----------
+# Each division file defines QUESTIONS = {club_id: [(difficulty, kind, question, correct, [3 wrong], explanation, source_url), ...]}
+# kind is one of CLUB_KINDS; the card label becomes e.g. "Brighton bosses".
+CLUB_KINDS = {"history": "history", "players": "players", "bosses": "bosses", "moments": "big moments", "grounds": "home & identity"}
+DIVISIONS = ("premier_league", "championship", "league_one", "league_two")
+
+def club_questions(seen):
+    import importlib.util, os
+    here = os.path.join(os.path.dirname(os.path.abspath(__file__)), "clubs")
+    sys.path.insert(0, here)
+    from clubs import ALL
+    rng = random.Random(92)
+    out = []
+    for div in DIVISIONS:
+        path = os.path.join(here, div + ".py")
+        if not os.path.exists(path):
+            continue
+        spec = importlib.util.spec_from_file_location(div, path)
+        mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+        for cid, qs in mod.QUESTIONS.items():
+            assert cid in ALL, f"unknown club id {cid}"
+            assert cid != "west-ham", "West Ham questions live in Q above"
+            for n, (diff, kind, q, correct, wrong, expl, src) in enumerate(qs, 1):
+                assert diff in (1, 2, 3) and kind in CLUB_KINDS, (cid, q)
+                assert len(wrong) == 3, q
+                opts = [correct] + wrong
+                assert len(set(opts)) == 4, q
+                assert q not in seen, q
+                assert src.startswith("https://"), (cid, q)
+                seen.add(q)
+                rng.shuffle(opts)
+                out.append({
+                    "id": f"{cid}-{n:04d}",
+                    "question": q,
+                    "options": opts,
+                    "answer": opts.index(correct),
+                    "difficulty": DIFF[diff],
+                    "topic": f"{ALL[cid][1]} {CLUB_KINDS[kind]}",
+                    "club": cid,
+                    "verified": True,
+                    "explanation": expl,
+                    "source": src,
+                })
+    return out
+
 def main(out):
     rng = random.Random(2000)
     seen, out_qs = set(), []
@@ -257,9 +302,10 @@ def main(out):
             "verified": True,
             "explanation": expl,
         })
+    out_qs += club_questions(seen)
     bank = {
         "version": 1,
-        "scope": "Premier League, 2000-01 season onwards (some all-time records included), plus a West Ham bonus round",
+        "scope": "Premier League, 2000-01 season onwards (some all-time records included), plus club rounds for all 92 clubs in the top four divisions (2026-27)",
         "questions": out_qs,
     }
     with open(out, "w", encoding="utf-8") as f:
@@ -268,6 +314,11 @@ def main(out):
     print(dict(per_cat))
     print("by difficulty", Counter(x["difficulty"] for x in out_qs))
     print("answer positions", Counter(x["answer"] for x in out_qs))
-    print("topic x diff", sorted(Counter((x["topic"],x["difficulty"]) for x in out_qs).items()))
+    gen = [x for x in out_qs if not x["club"] or x["club"] == "west-ham"]
+    print("general topic x diff", sorted(Counter((x["topic"],x["difficulty"]) for x in gen).items()))
+    per_club = Counter((x["club"], x["difficulty"]) for x in out_qs if x["club"])
+    for cid in sorted({c for c, _ in per_club}):
+        e, m, h = (per_club[(cid, d)] for d in ("easy", "medium", "hard"))
+        print(f"  {cid:16} easy {e:2}  medium {m:2}  hard {h:2}" + ("" if min(e, m, h) >= 10 else "   (below 10 per difficulty)"))
 
 main(sys.argv[1])
