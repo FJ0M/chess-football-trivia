@@ -29,7 +29,7 @@ There are two ways to play, and both use the same rules.
 - **vs Bot.** Pick Freddie, Ryan or Ollie. You answer questions yourself; the bot "answers" using its trivia profile and talks trash throughout.
 - **Pass and Play.** Two people on one device. Whoever triggered the question answers it, and the other player hands over the device without peeking (honour system, as at the pub). The screen faces whoever is up. **Hand over** (the default, best on a phone) flips the board each turn. **Face to face** (a tablet flat on the table) keeps the board fixed and turns the question card and controls 180 degrees towards Black. Both can be switched off in Settings.
 
-Each game also has a **Plain Chess** toggle (no trivia) and a **Timed** toggle (10 minutes each), so it works for a quick game or a serious one.
+Each game also has a **Plain Chess** toggle (no trivia) and a **Timed** toggle (3, 5, 10, 15 or 30 minutes each, shown on stadium-style scoreboard clocks), so it works for a quick game or a serious one.
 
 **Winning.** Checkmate wins, as normal. Resigning is allowed. A draw of any kind (stalemate, repetition, 50 moves, agreement) goes to a **Penalty Shootout**: five questions each, alternating, best score wins, sudden death if level. Rules that only exist because of power-ups are listed with each power-up below; nothing can capture or remove a king or queen directly.
 
@@ -107,11 +107,13 @@ You pick your own question, and the harder it is, the more you win and the more 
 
 Form is spent on one power-up per turn, before you move, plus any number of hints during a question. At about one question every two or three moves, a player earns around 1 Form per move, so cheap items come often and big ones a few times a game.
 
-**Power-ups** (one per turn, used before your move). Each has a cooldown: once used, it is locked for that many of your own moves, and every power-up also starts the game locked for its cooldown. The button shows when it's ready.
+**Power-ups** (one per turn, used before your move). Each has a cooldown: once used, it is locked for that many of your own moves, and every power-up also starts the game locked for its cooldown. The button shows when it's ready, and a Form meter above the buttons shows how much you have to spend. Tapping a power-up opens a card with its cost and effect; nothing is spent until you tap Confirm, and once confirmed it can't be cancelled (so targeted power-ups only offer Confirm when there is a valid target).
+
+**No own goals.** A power-up should never hurt the player who uses it: Extra Time's second move is optional, engine power-ups (Manager's Tip, Scout Report, Masterclass) cost nothing if the engine can't answer, Scout Report can't be used in check, and freezes or Park the Bus are lifted if they would leave the opponent with no legal move (so they can't force a stalemate).
 
 | Power-up | Style | Cost | Cooldown (your moves) | Effect | Balance rule |
 | --- | --- | --- | --- | --- | --- |
-| Fergie Time | Football | 2 | 8 | +30 seconds on your clock | Timed games only |
+| Fergie Time | Football | 2 | 8 | Adds a tenth of the starting clock: 20s (3 min), 30s (5), 1:00 (10), 1:30 (15), 3:00 (30) | Timed games only |
 | Tactical Foul | Football | 3 | 6 | Freeze one enemy piece (not the king) for their next turn | Not a piece that is giving check |
 | Park the Bus | Football | 3 | 6 | Your pieces on your own back two ranks can't be captured next turn | Not while in check |
 | VAR Review | Chess | 3 | 10 | Undo your last move and the opponent's reply | |
@@ -121,7 +123,8 @@ Form is spent on one power-up per turn, before you move, plus any number of hint
 | Formation Change | Chess | 5 | 10 | Swap two of your own pieces (not the king) | Can't give check or leave you in check |
 | Super-Sub | Football | 6 | 15 | Upgrade a pawn to a knight | |
 | Red Card | Football | 7 | 20 | Send off one enemy pawn (removed) | Not a pawn on its 6th or 7th rank |
-| Extra Time | Chess | 8 | 20 | Make two moves this turn | Second move can't capture or check |
+| Extra Time | Chess | 8 | 20 | Make two moves this turn | Second move can't capture or check, and can be skipped |
+| Masterclass | Chess | 10 | 20 | The engine plays the best move for you | Best move that your freezes and penalties allow |
 
 **Chess hints** (count as your power-up for the turn):
 

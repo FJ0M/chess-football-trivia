@@ -32,7 +32,8 @@ export type PowerUpId =
   | "extra-time"
   | "assistants-flag"
   | "scout-report"
-  | "managers-tip";
+  | "managers-tip"
+  | "masterclass";
 
 export type TriviaHintId = "fifty-fifty" | "ask-the-crowd" | "phone-a-friend";
 
@@ -101,6 +102,8 @@ export interface GameOptions {
   mode: "bot" | "local";
   trivia: boolean;
   timed: boolean;
+  /** Minutes on each clock in a timed game (default 10). */
+  minutes?: number;
   chess960: boolean;
   position: number;
 }

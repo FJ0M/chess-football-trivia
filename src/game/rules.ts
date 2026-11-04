@@ -10,7 +10,7 @@ import { chessgroundDests } from "chessops/compat";
 import type { Setup } from "chessops/setup";
 import type { NormalMove, Role, Square } from "chessops/types";
 import { startFen } from "./chess960";
-import { FORM_CAP, POWER_UP_BY_ID, startingCooldowns } from "./powerups";
+import { DEFAULT_MINUTES, FORM_CAP, POWER_UP_BY_ID, fergieMs, fmtSeconds, startingCooldowns } from "./powerups";
 import type {
   Color, Difficulty, DrawReason, Frozen, GameOptions, GameState, MoveRecord, PlayerState, PowerUpId, PromoRole, Snapshot, Trigger,
 } from "./types";
@@ -69,7 +69,7 @@ export interface PlayerInit {
   club: string | null;
 }
 
-function newPlayer(p: PlayerInit, timed: boolean): PlayerState {
+function newPlayer(p: PlayerInit, timed: boolean, minutes: number): PlayerState {
   return {
     ...p,
     form: 0,
@@ -80,7 +80,7 @@ function newPlayer(p: PlayerInit, timed: boolean): PlayerState {
     doubleNextPower: false,
     goldenBoot: false,
     sentOff: false,
-    clockMs: timed ? 10 * 60 * 1000 : null,
+    clockMs: timed ? minutes * 60 * 1000 : null,
   };
 }
 
@@ -89,7 +89,7 @@ export function newGame(options: GameOptions, players: Record<Color, PlayerInit>
   return {
     options,
     fen,
-    players: { white: newPlayer(players.white, options.timed), black: newPlayer(players.black, options.timed) },
+    players: { white: newPlayer(players.white, options.timed, options.minutes ?? DEFAULT_MINUTES), black: newPlayer(players.black, options.timed, options.minutes ?? DEFAULT_MINUTES) },
     hotSpots: options.trivia ? pickHotSpots(fen, rng) : [],
     frozen: [],
     parkTheBus: null,
@@ -572,7 +572,8 @@ export function powerBlocked(state: GameState, id: PowerUpId): string | null {
   const cost = powerCost(state, color, id);
   if (me.form < cost) return `Needs ${cost} Form`;
   const pos = positionOf(state.fen);
-  if (id === "park-the-bus" && pos.isCheck()) return "Not while in check";
+  if ((id === "park-the-bus" || id === "scout-report") && pos.isCheck()) return "Not while in check";
+  if (id === "masterclass" && legalMoves(state).moves.length === 0) return "No move to play";
   if (id === "var-review" && varTarget(state) === null) return "Nothing to review yet";
   if (id === "substitution" && !state.captured[color].includes("p")) return "No captured pawns to bring back";
   return null;
@@ -631,7 +632,8 @@ export function usePowerUp(state: GameState, id: PowerUpId, targets: string[] = 
 
   switch (id) {
     case "fergie-time":
-      next = withPlayer(next, color, { clockMs: (me.clockMs ?? 0) + 30_000 });
+      next = withPlayer(next, color, { clockMs: (me.clockMs ?? 0) + fergieMs(state.options.minutes) });
+      note = `${me.name} used Fergie Time: +${fmtSeconds(fergieMs(state.options.minutes))}`;
       break;
     case "tactical-foul": {
       if (!piece || piece.color !== enemy) return fail("Pick an enemy piece");
@@ -726,6 +728,7 @@ export function usePowerUp(state: GameState, id: PowerUpId, targets: string[] = 
     case "assistants-flag":
     case "scout-report":
     case "managers-tip":
+    case "masterclass":
       break;
   }
 
@@ -821,4 +824,13 @@ export function timeout(state: GameState, loser: Color): GameState {
 
 export function setClock(state: GameState, color: Color, ms: number): GameState {
   return withPlayer(state, color, { clockMs: ms });
+}
+
+/** Extra Time's second move is optional: passing hands the turn back as if it had not been played. */
+/** Returns the position to hand to finishTurn, with the turn back with the opponent. */
+export function skipExtraTime(state: GameState): GameState | null {
+  if (state.step !== "extra-time" || state.outcome) return null;
+  const fen = flipTurn(state.fen);
+  if (!fen) return null;
+  return { ...state, fen, extraTimePending: false };
 }

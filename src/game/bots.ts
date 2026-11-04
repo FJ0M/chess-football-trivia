@@ -25,7 +25,7 @@ export interface BotLike {
 export interface BotModule {
   createBot(id: BotId, level?: BotLevel): BotLike;
   BOTS: BotMeta[] | Record<string, BotMeta>;
-  bestMove(fen: string, chess960?: boolean): Promise<string | null>;
+  bestMove(fen: string, chess960?: boolean, depth?: number, searchMoves?: string[]): Promise<string | null>;
 }
 
 // ---------------------------------------------------------------- built-in stand-in
@@ -129,8 +129,8 @@ function fallbackBot(id: BotId): BotLike {
 export const fallbackModule: BotModule = {
   createBot: (id) => fallbackBot(id),
   BOTS: FALLBACK_BOTS,
-  async bestMove(fen) {
-    const moves = allMoves(fen);
+  async bestMove(fen, _chess960, _depth, searchMoves) {
+    const moves = searchMoves?.length ? allMoves(fen).filter((m) => searchMoves.includes(m)) : allMoves(fen);
     if (!moves.length) return null;
     const scored = scoreMoves(fen, moves).sort((a, b) => b.score - a.score);
     return scored[0].uci;
