@@ -9,7 +9,7 @@ import { botList, loadBots, type BotLike, type BotLevel, type BotMeta, type BotM
 import { POWER_UP_BY_ID, POWER_UPS, TRIVIA_HINTS } from "./powerups";
 import {
   PROMOTION_AIM, applyAnswer, attackedSquares, finishTurn, flipTurn, legalMoves, newGame, playMove, powerBlocked, powerCost,
-  resign as resignRule, resolveMove, resolvePromotion, setClock, spendForm, timeout, turnOf, usePowerUp, endInDraw,
+  resign as resignRule, resolveMove, resolvePromotion, setClock, skipExtraTime, spendForm, timeout, turnOf, usePowerUp, endInDraw,
   type MoveResult, type PlayerInit,
 } from "./rules";
 import { QuestionBank, TIMER_MS, askTheCrowd, browserSeenStore, fiftyFifty, phoneAFriend, type Card } from "./trivia";
@@ -25,6 +25,8 @@ export interface SetupChoice {
 export type Phase =
   | { kind: "move" }
   | { kind: "target"; power: PowerUpId; first?: string }
+  /** Waiting on the engine for Manager's Tip, Scout Report or Masterclass. */
+  | { kind: "thinking"; power: PowerUpId }
   | { kind: "cards"; color: Color; cards: Card[]; bonus: boolean; landed: string | null; label: string }
   | {
       kind: "question"; color: Color; q: Question; card: Card; worldie: boolean; bonus: boolean; landed: string | null;
@@ -208,46 +210,74 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
   }, [afterMove]);
 
   // ------------------------------------------------------------ power-ups
+  /** Spends the Form and applies the effect. Engine power-ups ask the engine first, so a failed lookup costs nothing. */
   const applyPower = useCallback((id: PowerUpId, targets: string[]): string | null => {
     const g = gameRef.current;
-    const res = usePowerUp(g, id, targets);
-    if (res.error) { play("locked"); setNote(res.error); return res.error; }
-    setGame(res.state);
-    play("powerup");
-    setNote(res.note ?? "");
-    react(turnOf(g), "powerUp");
     const me = turnOf(g);
-    if (id === "assistants-flag") setOverlay({ attacked: attackedSquares(g.fen, opposite(me)) });
-    if ((id === "managers-tip" || id === "scout-report") && mod) {
-      const fen = id === "managers-tip" ? res.state.fen : flipTurn(res.state.fen);
-      if (fen) {
-        mod.bestMove(fen, g.options.chess960).then((best) => {
-          if (!alive.current || !best) return;
-          if (id === "managers-tip") {
-            const legal = resolveMove(gameRef.current, best);
-            if (legal) setOverlay({ tip: [legal.slice(0, 2), legal.slice(2, 4)] });
-            setNote(legal ? `Manager's Tip: ${legal.slice(0, 2)} to ${legal.slice(2, 4)}` : "Manager's Tip: the gaffer's stumped");
-          } else {
-            setOverlay({ scout: best.slice(0, 2) });
-            setNote(`Scout Report: watch the piece on ${best.slice(0, 2)}`);
-          }
-        });
-      } else setNote("The scouts can't read the game while you're in check");
+    const check = usePowerUp(g, id, targets);
+    if (check.error) { play("locked"); setNote(check.error); return check.error; }
+    const commit = (): GameState => {
+      const res = usePowerUp(gameRef.current, id, targets);
+      setGame(res.state);
+      play("powerup");
+      setNote(res.note ?? "");
+      react(me, "powerUp");
+      return res.state;
+    };
+    if (!POWER_UP_BY_ID[id].engine) {
+      commit();
+      if (id === "assistants-flag") setOverlay({ attacked: attackedSquares(g.fen, opposite(me)) });
+      return null;
     }
+    if (!mod) { play("locked"); setNote("The engine is still warming up. Try again in a moment"); return "engine"; }
+    const fen = id === "scout-report" ? flipTurn(g.fen) : g.fen;
+    if (!fen) { play("locked"); setNote("The scouts can't read the game right now"); return "engine"; }
+    const allowed = id === "masterclass" ? legalMoves(g).moves : undefined;
+    const back = phaseRef.current;
+    go({ kind: "thinking", power: id });
+    setNote(`${POWER_UP_BY_ID[id].name}: thinking…`);
+    mod.bestMove(fen, g.options.chess960, id === "masterclass" ? 18 : undefined, allowed).then((best) => {
+      if (!alive.current) return;
+      const legal = best ? (id === "scout-report" ? best : resolveMove(gameRef.current, best)) : null;
+      const ok = !!legal && (!allowed || allowed.includes(legal));
+      if (!ok) { go(back.kind === "target" ? { kind: "move" } : back); setNote(`${POWER_UP_BY_ID[id].name}: the gaffer's stumped, so no Form spent`); return; }
+      const after = commit();
+      if (id === "masterclass") {
+        setNote(`Masterclass: ${legal!.slice(0, 2)} to ${legal!.slice(2, 4)}`);
+        afterMove(playMove(after, legal!), me);
+      } else if (id === "managers-tip") {
+        go({ kind: "move" });
+        setOverlay({ tip: [legal!.slice(0, 2), legal!.slice(2, 4)] });
+        setNote(`Manager's Tip: ${legal!.slice(0, 2)} to ${legal!.slice(2, 4)}`);
+      } else {
+        go({ kind: "move" });
+        setOverlay({ scout: legal!.slice(0, 2) });
+        setNote(`Scout Report: watch the piece on ${legal!.slice(0, 2)}`);
+      }
+    }, () => { if (alive.current) { go({ kind: "move" }); setNote("The engine didn't answer, so no Form spent"); } });
     return null;
-  }, [mod, play, react, setGame]);
+  }, [afterMove, go, mod, play, react, setGame]);
+
+  /** Extra Time's second move is optional. */
+  const skipExtra = useCallback(() => {
+    if (phaseRef.current.kind !== "move") return;
+    const next = skipExtraTime(gameRef.current);
+    if (!next) return;
+    play("select");
+    endTurn(next);
+  }, [endTurn, play]);
 
   /** Human taps a power-up button. */
   const choosePower = useCallback((id: PowerUpId) => {
     const g = gameRef.current;
-    if (phaseRef.current.kind === "target") { go({ kind: "move" }); if ((phaseRef.current as { power?: string }).power === id) return; }
-    if (phaseRef.current.kind !== "move" && phaseRef.current.kind !== "target") return;
+    // Once a power-up is confirmed it can't be cancelled or swapped.
+    if (phaseRef.current.kind !== "move") return;
     const blocked = powerBlocked(g, id);
     if (blocked) { play("locked"); setNote(`${POWER_UP_BY_ID[id].name}: ${blocked}`); return; }
     const def = POWER_UP_BY_ID[id];
     if (def.target === "none") { applyPower(id, []); return; }
     play("select");
-    setNote(`${def.name}: ${targetPrompt(def.target)} (tap the button again to cancel)`);
+    setNote(`${def.name}: ${targetPrompt(def.target)}`);
     go({ kind: "target", power: id });
   }, [applyPower, go, play]);
 
@@ -531,7 +561,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
 
   return {
     game, phase, note, bubble, overlay, now, ready: !!data, botMeta, engineReady: !!mod,
-    move, choosePower, tapTarget, pickCard, answer, useHint, nextClue, guess, continueOn, kick, resign, agreeDraw,
+    move, choosePower, tapTarget, skipExtra, pickCard, answer, useHint, nextClue, guess, continueOn, kick, resign, agreeDraw,
   };
 }
 

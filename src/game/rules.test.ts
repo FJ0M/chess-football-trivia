@@ -2,8 +2,9 @@ import { describe, expect, it } from "vitest";
 import { backRank, startFen } from "./chess960";
 import {
   applyAnswer, attackedSquares, resolvePromotion, finishTurn, firstMoveReach, legalMoves, newGame, pickHotSpots, playMove,
-  powerBlocked, powerTargets, resolveMove, turnOf, usePowerUp,
+  powerBlocked, powerTargets, resolveMove, skipExtraTime, turnOf, usePowerUp,
 } from "./rules";
+import { fergieMs } from "./powerups";
 import type { GameOptions, GameState } from "./types";
 
 const opts = (o: Partial<GameOptions> = {}): GameOptions => ({ mode: "local", trivia: true, timed: false, chess960: false, position: 518, ...o });
@@ -248,6 +249,29 @@ describe("power-ups", () => {
     expect(g.step).toBe("extra-time");
     g = move(g, "d2d4");
     expect(turnOf(g)).toBe("black");
+  });
+  it("Extra Time's second move can be skipped, handing the turn back", () => {
+    let g = at("4k3/pppppppp/8/8/8/8/PPPPPPPP/4K3 w - - 0 1");
+    g = usePowerUp(g, "extra-time").state;
+    g = move(g, "e2e4");
+    const skipped = finishTurn(skipExtraTime(g)!).state;
+    expect(turnOf(skipped)).toBe("black");
+    expect(skipped.step).toBe("normal");
+    expect(skipped.history).toHaveLength(1);
+    expect(skipExtraTime(skipped)).toBeNull();
+  });
+  it("Fergie Time scales with the clock and timed games start on the chosen minutes", () => {
+    expect([3, 5, 10, 15, 30].map((m) => fergieMs(m) / 1000)).toEqual([20, 30, 60, 90, 180]);
+    let g = at("4k3/8/8/8/8/8/8/4K3 w - - 0 1", { timed: true, minutes: 5 });
+    expect(game({ timed: true, minutes: 5 }).players.white.clockMs).toBe(5 * 60_000);
+    g = { ...g, players: { ...g.players, white: { ...g.players.white, clockMs: 60_000 } } };
+    expect(usePowerUp(g, "fergie-time").state.players.white.clockMs).toBe(90_000);
+  });
+  it("Masterclass and Scout Report can't be used when they'd do nothing", () => {
+    const check = at("4k3/8/8/8/8/8/4r3/4K3 w - - 0 1");
+    expect(powerBlocked(check, "scout-report")).toMatch(/check/);
+    expect(powerBlocked(check, "masterclass")).toBeNull();
+    expect(usePowerUp(check, "masterclass").state.players.white.form).toBe(2);
   });
   it("red card from four wrong answers doubles the next power-up", () => {
     let g = at("4k3/8/8/8/8/8/8/4K3 w - - 0 1");

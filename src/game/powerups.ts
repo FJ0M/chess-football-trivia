@@ -30,7 +30,7 @@ export interface PowerUpDef {
 }
 
 export const POWER_UPS: PowerUpDef[] = [
-  { id: "fergie-time", name: "Fergie Time", kind: "football", cost: 2, cooldown: 8, effect: "+30 seconds on your clock", target: "none", timedOnly: true },
+  { id: "fergie-time", name: "Fergie Time", kind: "football", cost: 2, cooldown: 8, effect: "Adds a tenth of your starting time to your clock", target: "none", timedOnly: true },
   { id: "tactical-foul", name: "Tactical Foul", kind: "football", cost: 3, cooldown: 6, effect: "Freeze one enemy piece for their next turn", rule: "Not the king, or a piece giving check", target: "enemy-piece" },
   { id: "park-the-bus", name: "Park the Bus", kind: "football", cost: 3, cooldown: 6, effect: "Pieces on your back two ranks can't be captured next turn", rule: "Not while in check", target: "none" },
   { id: "var-review", name: "VAR Review", kind: "chess", cost: 3, cooldown: 10, effect: "Undo your last move and the opponent's reply", target: "none" },
@@ -43,6 +43,7 @@ export const POWER_UPS: PowerUpDef[] = [
   { id: "extra-time", name: "Extra Time", kind: "chess", cost: 8, cooldown: 20, effect: "Make two moves this turn", rule: "Second move can't capture or give check", target: "none" },
   { id: "assistants-flag", name: "Assistant's Flag", kind: "hint", cost: 1, cooldown: 0, effect: "Shows every square the opponent attacks", target: "none" },
   { id: "scout-report", name: "Scout Report", kind: "hint", cost: 2, cooldown: 0, effect: "Shows the piece the opponent will most likely move next", target: "none", engine: true },
+  { id: "masterclass", name: "Masterclass", kind: "chess", cost: 10, cooldown: 20, effect: "The engine plays the best move for you", rule: "Plays the best move your freezes and penalties allow", target: "none", engine: true },
   { id: "managers-tip", name: "Manager's Tip", kind: "hint", cost: 2, cooldown: 8, effect: "Shows the best move", target: "none", engine: true },
 ];
 
@@ -67,3 +68,17 @@ export const TRIVIA_HINTS: TriviaHintDef[] = [
 ];
 
 export const FORM_CAP = 12;
+
+/** Clock lengths offered on the setup screen, in minutes each. */
+export const TIME_CONTROLS = [3, 5, 10, 15, 30] as const;
+export const DEFAULT_MINUTES = 10;
+
+/** Fergie Time adds a tenth of the starting clock, rounded to 5 seconds: 3 min gets 20s, 10 min gets 1:00, 30 min gets 3:00. */
+export function fergieMs(minutes: number = DEFAULT_MINUTES): number {
+  return Math.max(5000, Math.round((minutes * 60_000 * 0.1) / 5000) * 5000);
+}
+
+export function fmtSeconds(ms: number): string {
+  const s = Math.round(ms / 1000);
+  return s < 60 ? `${s} seconds` : `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+}

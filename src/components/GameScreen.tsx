@@ -7,11 +7,11 @@ import type { GameStyle } from "../theme/themes";
 import type { SfxName } from "../audio/sfx";
 import type { PassAndPlayView } from "../settings/settings";
 import { useGame, cardLabel, type Phase, type SetupChoice } from "../game/useGame";
-import { POWER_UPS, POWER_UP_BY_ID, TRIVIA_HINTS } from "../game/powerups";
+import { FORM_CAP, POWER_UPS, POWER_UP_BY_ID, TRIVIA_HINTS, fergieMs, fmtSeconds, type PowerUpDef } from "../game/powerups";
 import { destsFor, isPromotion, pieceAt, powerBlocked, powerCost, powerTargets, turnOf, WHO_AM_I_PIECES, ROLE_NAME } from "../game/rules";
 import { clubShort } from "../game/clubs";
 import { CLUE_MS } from "../game/whoami";
-import type { Color, GameState, Outcome } from "../game/types";
+import type { Color, GameState, Outcome, PowerUpId } from "../game/types";
 
 const GLYPH: Record<string, string> = { k: "♚", q: "♛", r: "♜", b: "♝", n: "♞", p: "♟" };
 const FILES = "abcdefgh";
@@ -115,7 +115,7 @@ export function GameScreen({ style, play, setup, view, paused, onPause, onExit, 
       <div className={`controls${turned ? " turned" : ""}`}>
         <Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} />
         {game.options.trivia && phase.kind !== "over" && phase.kind !== "shootout" && (
-          <PowerBar game={game} phase={phase} enabled={humanToAct && (phase.kind === "move" || phase.kind === "target")} onPick={g.choosePower} />
+          <PowerBar game={game} phase={phase} color={local ? active : humans[0] ?? turn} enabled={humanToAct && phase.kind === "move"} onPick={g.choosePower} play={play} />
         )}
         {style.id === "broadcast" ? <div className="ticker"><b>LIVE</b> · {selNote ?? g.note}</div> : <p className="hint" aria-live="polite">{selNote ?? g.note}</p>}
         {phase.kind !== "over" && (
@@ -154,12 +154,6 @@ function boardArray(fen: string): Array<Array<{ role: string; color: Color } | n
   return out;
 }
 
-function fmtClock(ms: number | null): string {
-  if (ms === null) return "";
-  const s = Math.max(0, Math.ceil(ms / 1000));
-  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
-}
-
 function PlayerBar({ game, color, active, bubble, flipped }: { game: GameState; color: Color; active: Color; bubble: { color: Color; text: string } | null; flipped?: boolean }): ReactNode {
   const p = game.players[color];
   const status = [p.sentOff ? "Sent off" : "", p.doubleNextPower ? "Red card" : "", p.goldenBoot ? "Golden Boot" : "", p.wrongStreak >= 2 ? "Booked" : ""].filter(Boolean);
@@ -172,7 +166,7 @@ function PlayerBar({ game, color, active, bubble, flipped }: { game: GameState; 
       {bubble?.color === color && <span className="bubble" role="status">{bubble.text}</span>}
       <span className="form">
         {game.options.trivia && <>Form {p.form}</>}
-        {p.clockMs !== null && <span className="clock"> {fmtClock(p.clockMs)}</span>}
+        {p.clockMs !== null && <StadiumClock ms={p.clockMs} running={active === color && !game.outcome} />}
       </span>
     </div>
   );
@@ -310,6 +304,15 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
     );
   }
 
+  if (phase.kind === "thinking") {
+    return (
+      <div className="quiz idle">
+        <div className="meta"><span>{POWER_UP_BY_ID[phase.power].name}</span><span>{game.players[turnOf(game)].name}</span></div>
+        <p className="q small">{phase.power === "masterclass" ? "The engine is finding the best move…" : "The engine is reading the game…"}</p>
+      </div>
+    );
+  }
+
   // Waiting for a move.
   const mover = game.players[turnOf(game)];
   return (
@@ -318,7 +321,8 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
         <span>{game.step === "free-kick" ? "Free Kick" : game.step === "extra-time" ? "Extra Time" : phase.kind === "target" ? POWER_UP_BY_ID[phase.power].name : "Open play"}</span>
         <span>{mover.name} to move</span>
       </div>
-      <p className="q small">{mover.kind === "bot" ? `${mover.name} is thinking…` : game.options.trivia ? "Questions come on captures, every 3rd move and on Hot Spots (circled squares)." : "Plain chess: no trivia this game."}</p>
+      <p className="q small">{phase.kind === "target" ? `Pick a target to finish ${POWER_UP_BY_ID[phase.power].name}.` : mover.kind === "bot" ? `${mover.name} is thinking…` : game.step === "extra-time" ? "Second move: no captures or checks. You can skip it if it would hurt you." : game.options.trivia ? "Questions come on captures, every 3rd move and on Hot Spots (circled squares)." : "Plain chess: no trivia this game."}</p>
+      {game.step === "extra-time" && humanToAct && phase.kind === "move" && <button type="button" className="worldie" onClick={g.skipExtra}>Skip the second move</button>}
     </div>
   );
 }
@@ -334,24 +338,79 @@ function outcomeText(game: GameState, o: Outcome): string {
   }
 }
 
-function PowerBar({ game, phase, enabled, onPick }: { game: GameState; phase: Phase; enabled: boolean; onPick: (id: never) => void }): ReactNode {
-  const color = turnOf(game);
+function powerEffect(game: GameState, p: PowerUpDef): string {
+  return p.id === "fergie-time" ? `+${fmtSeconds(fergieMs(game.options.minutes))} on your clock` : p.effect;
+}
+
+/** Can this power-up be finished once confirmed? Targeted ones need at least one valid target. */
+function hasTargets(game: GameState, id: PowerUpId): boolean {
+  const def = POWER_UP_BY_ID[id];
+  if (def.target === "none") return true;
+  const firsts = powerTargets(game, id);
+  if (def.target !== "two-own-pieces") return firsts.length > 0;
+  return firsts.some((f) => powerTargets(game, id, f).length > 0);
+}
+
+function PowerBar({ game, phase, color, enabled, onPick, play }: { game: GameState; phase: Phase; color: Color; enabled: boolean; onPick: (id: PowerUpId) => void; play: (s: SfxName) => void }): ReactNode {
   const me = game.players[color];
+  const myTurn = turnOf(game) === color;
+  const [pending, setPending] = useState<PowerUpId | null>(null);
+  useEffect(() => { if (!enabled) setPending(null); }, [enabled]);
   const list = POWER_UPS.filter((p) => !p.timedOnly || game.options.timed);
+  const def = pending ? POWER_UP_BY_ID[pending] : null;
+  const pendingCost = pending ? powerCost(game, color, pending) : 0;
+  const pendingBlocked = pending ? powerBlocked(game, pending) ?? (hasTargets(game, pending) ? null : "No valid target right now") : null;
+
   return (
-    <div className="powers scroll" aria-label="Power-ups">
-      {list.map((p) => {
-        const blocked = powerBlocked(game, p.id);
-        const cd = me.cooldowns[p.id];
-        const on = phase.kind === "target" && phase.power === p.id;
-        return (
-          <button key={p.id} type="button" title={`${p.effect}${p.rule ? `. ${p.rule}` : ""}`} className={`pw${blocked || !enabled ? " locked" : ""}${on ? " on" : ""}`} onClick={() => enabled && onPick(p.id as never)}>
-            <span>{p.name}</span>
-            <span className="cost">{powerCost(game, color, p.id)} Form{cd > 0 ? ` · ready in ${cd}` : ""}</span>
-          </button>
-        );
-      })}
+    <div className="powerbox">
+      <div className="form-meter" aria-label={`${me.name} has ${me.form} Form to spend`}>
+        <span className="label">{me.kind === "human" && game.options.mode === "bot" ? "Your Form" : `${me.name}'s Form`}</span>
+        <span className="pips" aria-hidden="true">{Array.from({ length: FORM_CAP }, (_, i) => <i key={i} className={i < me.form ? "on" : ""} />)}</span>
+        <b className="num">{me.form}<small>/{FORM_CAP}</small></b>
+      </div>
+      {def && (
+        <div className="confirm" role="dialog" aria-label={`Use ${def.name}?`}>
+          <div className="confirm-head"><span className="pw-icon big" data-power={def.id} /><b>{def.name}</b><span className="cost">{pendingCost} Form</span></div>
+          <p>{powerEffect(game, def)}{def.rule ? `. ${def.rule}.` : "."}</p>
+          {pendingBlocked ? <p className="why">{pendingBlocked}</p> : <p className="fine">Once you confirm it can't be cancelled{def.target !== "none" ? ": you'll have to pick a target" : ""}.</p>}
+          <div className="row-btns">
+            <button type="button" className="go" disabled={!!pendingBlocked} onClick={() => { const id = pending!; setPending(null); onPick(id); }}>Confirm</button>
+            <button type="button" onClick={() => setPending(null)}>Not now</button>
+          </div>
+        </div>
+      )}
+      <div className="powers" aria-label="Power-ups">
+        {list.map((p) => {
+          const blocked = myTurn ? powerBlocked(game, p.id) : "Not your turn";
+          const cd = me.cooldowns[p.id];
+          const cost = powerCost(game, color, p.id);
+          const on = (phase.kind === "target" || phase.kind === "thinking") && phase.power === p.id;
+          const tap = () => {
+            if (!enabled) return;
+            play("select");
+            setPending((cur) => (cur === p.id ? null : p.id));
+          };
+          return (
+            <button key={p.id} type="button" title={`${powerEffect(game, p)}${p.rule ? `. ${p.rule}` : ""}`} className={`pw${blocked || !enabled ? " locked" : ""}${on || pending === p.id ? " on" : ""}${me.form >= cost ? " afford" : ""}`} onClick={tap}>
+              <span className="pw-icon" data-power={p.id} aria-hidden="true" />
+              <span>{p.name}</span>
+              <span className="cost">{cost} Form{cd > 0 ? ` · ${cd} to go` : ""}</span>
+            </button>
+          );
+        })}
+      </div>
     </div>
+  );
+}
+
+function StadiumClock({ ms, running }: { ms: number; running: boolean }) {
+  const s = Math.max(0, Math.ceil(ms / 1000));
+  const mm = String(Math.floor(s / 60)).padStart(2, "0");
+  const ss = String(s % 60).padStart(2, "0");
+  return (
+    <span className={`clock stadium${running ? " running" : ""}${s <= 30 ? " low" : ""}`} role="timer" aria-label={`${Math.floor(s / 60)} minutes ${s % 60} seconds left`}>
+      <span className="digits" data-ghost="88:88">{mm}<span className="colon">:</span>{ss}</span>
+    </span>
   );
 }
 

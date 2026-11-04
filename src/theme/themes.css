@@ -9,8 +9,9 @@
 .player .badge { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; flex: none; }
 .player .tag { font-size: 11px; opacity: .75; }
 .player .form { font-variant-numeric: tabular-nums; font-size: 13px; white-space: nowrap; }
-.board { position: relative; display: grid; grid-template-columns: repeat(8, 1fr); aspect-ratio: 1; width: 100%; max-width: 100%; }
-.sq { position: relative; display: grid; place-items: center; background: var(--sq-d); }
+/* Rows are fixed eighths too, so a row with no pieces (or only Hot Spot icons) can't shrink. */
+.board { position: relative; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); grid-template-rows: repeat(8, minmax(0, 1fr)); aspect-ratio: 1; width: 100%; max-width: 100%; }
+.sq { position: relative; display: grid; place-items: center; background: var(--sq-d); min-width: 0; min-height: 0; aspect-ratio: 1; }
 .sq.l { background: var(--sq-l); }
 .sq.last::before, .sq.sel::before { content: ""; position: absolute; inset: 0; background: var(--last); }
 .sq.sel::before { background: var(--sel); }

@@ -107,7 +107,6 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 .screen .fine { font-size: 11px; opacity: .75; }
 .screen .result .lines { margin: 0; padding-left: 18px; font-size: 14px; }
 .screen .result .explain { margin: 0; font-size: 13px; opacity: .85; }
-.screen .powers.scroll { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(84px, 1fr); grid-template-columns: none; overflow-x: auto; scrollbar-width: thin; padding-bottom: 4px; }
 .screen .pw.on { outline: 2px solid currentColor; outline-offset: -2px; }
 .screen .game-actions { display: flex; gap: 8px; justify-content: center; align-items: center; font-size: 13px; flex-wrap: wrap; }
 .screen .game-actions button { font: inherit; font-size: 13px; color: inherit; cursor: pointer; padding: 5px 12px; border-radius: 999px; border: 1px solid currentColor; background: transparent; opacity: .85; }
@@ -152,3 +151,75 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 .sheet.pause { gap: 8px; }
 .sq .hs { position: absolute; width: 52%; height: 52%; opacity: .7; z-index: 0; pointer-events: none; }
 .sq.hot { box-shadow: inset 0 0 0 2px rgba(255,255,255,.55); }
+
+/* ---------------------------------------------------------------- Form meter, power-ups, confirm card */
+.screen .powerbox { display: grid; gap: 8px; }
+.screen .form-meter { display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: 10px; border: 2px solid currentColor; font-size: 14px; }
+.screen .form-meter .label { font-weight: 700; white-space: nowrap; }
+.screen .form-meter .pips { flex: 1; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 3px; min-width: 0; }
+.screen .form-meter .pips i { display: block; height: 10px; border-radius: 3px; border: 1.5px solid currentColor; opacity: .35; }
+.screen .form-meter .pips i.on { background: #2e9d4f; border-color: #1f6e37; opacity: 1; }
+.screen .form-meter .num { font-size: 22px; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.screen .form-meter .num small { font-size: 12px; opacity: .7; }
+.screen .powers { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+.screen .pw { min-width: 0; overflow-wrap: normal; word-break: normal; }
+.screen .pw.afford:not(.locked) .cost { opacity: 1; font-weight: 700; }
+/* Slot for each power-up's icon (drawn by PowerIcon). Empty for now, so it takes no room. */
+.screen .pw-icon:empty { display: none; }
+.screen .pw-icon { display: grid; place-items: center; width: 24px; height: 24px; }
+.screen .pw-icon.big { width: 32px; height: 32px; }
+.screen .confirm { display: grid; gap: 6px; padding: 10px 12px; border-radius: 12px; border: 2px solid currentColor; background: rgba(255,255,255,.14); animation: pop .2s ease-out; }
+.screen .confirm-head { display: flex; align-items: center; gap: 8px; font-size: 16px; }
+.screen .confirm-head .cost { margin-left: auto; font-variant-numeric: tabular-nums; font-weight: 700; }
+.screen .confirm p { margin: 0; font-size: 13px; line-height: 1.3; }
+.screen .confirm .why { color: #d1342f; font-weight: 700; }
+.screen .confirm .row-btns button { font: inherit; font-size: 14px; color: inherit; cursor: pointer; padding: 7px 14px; border-radius: 999px; border: 2px solid currentColor; background: transparent; }
+.screen .confirm .row-btns button.go { background: #2e9d4f; border-color: #1f6e37; color: #fff; font-weight: 700; }
+.screen .confirm .row-btns button:disabled { opacity: .45; cursor: default; }
+
+/* ---------------------------------------------------------------- stadium clock
+   Same in every style: a black scoreboard panel with amber LED digits, the unlit
+   segments ghosted behind. */
+.screen .player .clock.stadium { display: inline-grid; margin-left: 8px; padding: 3px 7px 2px; border: 0; border-radius: 5px; vertical-align: middle;
+  background: linear-gradient(#1b1d1f, #0b0c0d); box-shadow: inset 0 0 0 2px #3a3d40, 0 2px 0 rgba(0,0,0,.35); }
+.screen .clock.stadium .digits { position: relative; font-family: "VT323", "IBM Plex Mono", ui-monospace, monospace; font-size: 24px; line-height: .9; letter-spacing: .06em; color: #ffb21e; text-shadow: 0 0 6px rgba(255,170,30,.75); font-style: normal; font-weight: 400; text-transform: none; }
+.screen .clock.stadium .digits::before { content: attr(data-ghost); position: absolute; inset: 0; color: rgba(255,178,30,.12); text-shadow: none; }
+.screen .clock.stadium:not(.running) .digits { color: #9a6c17; text-shadow: none; }
+.screen .clock.stadium.running .colon { animation: blink 1s steps(1) infinite; }
+.screen .clock.stadium.low .digits { color: #ff3b30; text-shadow: 0 0 8px rgba(255,59,48,.8); }
+.screen .clock.stadium.low .digits::before { color: rgba(255,59,48,.12); }
+@keyframes blink { 50% { opacity: .2; } }
+@media (prefers-reduced-motion: reduce) { .screen .clock.stadium.running .colon { animation: none; } }
+
+/* ---------------------------------------------------------------- screen sizes
+   Phones: one column. Tablets in portrait: a wider column. Landscape tablets,
+   laptops and landscape phones: board on the left (sized to the window height),
+   question panel and power-ups on the right. */
+.menu, .setup { width: 100%; max-width: 460px; margin: 0 auto; box-sizing: border-box; }
+@media (min-width: 600px) and (orientation: portrait) {
+  .app { max-width: 640px; }
+  .app .screen { max-width: min(640px, calc(100dvh - 260px)); min-width: min(100%, 460px); }
+  .pc { font-size: clamp(20px, 5vw, 40px); }
+}
+@media (orientation: landscape) and (min-width: 560px) {
+  .app { max-width: 1180px; }
+  .app .screen { max-width: none; align-items: start; align-content: start; grid-template-rows: auto auto auto auto 1fr;
+    grid-template-columns: clamp(240px, min(calc(100dvh - 170px), 58vw), 720px) minmax(0, 1fr); column-gap: 18px; }
+  .app .screen > :not(.controls) { grid-column: 1; }
+  .app .screen > .controls { grid-column: 2; grid-row: 1 / span 5; align-self: start; position: sticky; top: 10px; }
+  .app .screen .pc { font-size: clamp(14px, calc((100dvh - 170px) / 8 * .55), 52px); }
+  .app .screen.style-tactics .pc, .app .screen.style-tabletop .pc, .app .screen.style-sticker .pc { font-size: clamp(12px, calc((100dvh - 170px) / 8 * .38), 36px); }
+}
+/* Landscape phones are short: drop the sound note so the board gets the height. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .tap-note { display: none; }
+  .app { gap: 4px; }
+  .app .screen { grid-template-columns: clamp(200px, min(calc(100dvh - 110px), 55vw), 480px) minmax(0, 1fr); padding: 8px; gap: 6px; }
+  .app .screen .pc { font-size: clamp(12px, calc((100dvh - 110px) / 8 * .55), 40px); }
+}
+/* Very narrow phones (Galaxy Fold cover screen): drop the pips, keep the number. */
+@media (max-width: 340px) {
+  .screen .form-meter .pips { display: none; }
+  .screen .form-meter { justify-content: space-between; }
+  .screen .clock.stadium .digits { font-size: 20px; }
+}

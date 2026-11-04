@@ -6,6 +6,7 @@ import { backRank, randomPosition, STANDARD_POSITION } from "../game/chess960";
 import { botList, loadBots, type BotLevel, type BotMeta } from "../game/bots";
 import type { SetupChoice } from "../game/useGame";
 import type { Color } from "../game/types";
+import { DEFAULT_MINUTES, TIME_CONTROLS, fergieMs, fmtSeconds } from "../game/powerups";
 
 interface Saved {
   mode: "bot" | "local";
@@ -16,19 +17,22 @@ interface Saved {
   clubs: [string, string];
   trivia: boolean;
   timed: boolean;
+  minutes: number;
   chess960: boolean;
 }
 
 const KEY = "cft.setup.v1";
 const DEFAULTS: Saved = {
   mode: "bot", botId: "ryan", botLevel: "medium", side: "white", names: ["You", "Player 2"], clubs: ["west-ham", "brighton"],
-  trivia: true, timed: false, chess960: false,
+  trivia: true, timed: false, minutes: DEFAULT_MINUTES, chess960: false,
 };
 
 function loadSaved(): Saved {
   try {
     const raw = JSON.parse(localStorage.getItem(KEY) ?? "{}");
-    return { ...DEFAULTS, ...(raw && typeof raw === "object" ? raw : {}) };
+    const out: Saved = { ...DEFAULTS, ...(raw && typeof raw === "object" ? raw : {}) };
+    if (!(TIME_CONTROLS as readonly number[]).includes(out.minutes)) out.minutes = DEFAULT_MINUTES;
+    return out;
   } catch { return DEFAULTS; }
 }
 
@@ -45,7 +49,7 @@ export function SetupScreen({ mode, onStart, onBack }: { mode: "bot" | "local"; 
 
   function start() {
     const side: Color = s.side === "random" ? (Math.random() < 0.5 ? "white" : "black") : s.side;
-    const options = { mode: s.mode, trivia: s.trivia, timed: s.timed, chess960: s.chess960, position: s.chess960 ? position : STANDARD_POSITION };
+    const options = { mode: s.mode, trivia: s.trivia, timed: s.timed, minutes: s.minutes, chess960: s.chess960, position: s.chess960 ? position : STANDARD_POSITION };
     const human = (i: 0 | 1) => ({ name: s.names[i].trim() || `Player ${i + 1}`, kind: "human" as const, club: s.clubs[i] || null });
     let players: SetupChoice["players"];
     if (s.mode === "bot" && bot) {
@@ -122,7 +126,15 @@ export function SetupScreen({ mode, onStart, onBack }: { mode: "bot" | "local"; 
 
       <h3>Rules</h3>
       <label className="switch"><input type="checkbox" checked={s.trivia} onChange={(e) => set("trivia", e.target.checked)} /><span>Football trivia <small>Off = plain chess</small></span></label>
-      <label className="switch"><input type="checkbox" checked={s.timed} onChange={(e) => set("timed", e.target.checked)} /><span>Timed <small>10 minutes each</small></span></label>
+      <label className="switch"><input type="checkbox" checked={s.timed} onChange={(e) => set("timed", e.target.checked)} /><span>Timed <small>{s.minutes} minutes each</small></span></label>
+      {s.timed && (
+        <div className="field">
+          <span>Clock{s.trivia ? ` · Fergie Time adds ${fmtSeconds(fergieMs(s.minutes))}` : ""}</span>
+          <div className="seg small" role="group" aria-label="Minutes each">
+            {TIME_CONTROLS.map((m) => <button key={m} type="button" className={s.minutes === m ? "on" : ""} onClick={() => set("minutes", m)}>{m} min</button>)}
+          </div>
+        </div>
+      )}
       <label className="switch"><input type="checkbox" checked={s.chess960} onChange={(e) => set("chess960", e.target.checked)} /><span>Chess960 <small>Random back rank</small></span></label>
       {s.chess960 && (
         <div className="c960">
