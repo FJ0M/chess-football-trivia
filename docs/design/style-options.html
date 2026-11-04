@@ -1,0 +1,410 @@
+<title>The Kit Room</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600;700&family=Saira+Condensed:wght@700;800&family=Saira:wght@400;600&family=Alfa+Slab+One&family=Libre+Franklin:wght@400;600;800&family=Anton&family=Nunito:wght@600;800&family=Archivo+Black&family=Archivo:wght@400;600&family=Rubik+Mono+One&family=Special+Elite&family=Permanent+Marker&family=Kalam:wght@400;700&family=Barlow+Condensed:ital,wght@0,600;1,800&family=Barlow:wght@400;600&family=VT323&family=Teko:wght@500;600&family=Hind:wght@400;600&family=Familjen+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: quiet gallery shell; each of the ten styles is a self-contained phone-sized game screen beside its notes. */
+:root {
+  --bg: #f3f4f1; --fg: #1b1d1a; --muted: #5d625a; --line: #d9dcd4; --panel: #ffffff; --accent: #7a263a;
+  --f-ui: "Instrument Sans", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #141613; --fg: #eceee8; --muted: #a2a79c; --line: #2c302a; --panel: #1c1f1b; --accent: #e48aa0; color-scheme: dark } }
+:root[data-theme="dark"] { --bg: #141613; --fg: #eceee8; --muted: #a2a79c; --line: #2c302a; --panel: #1c1f1b; --accent: #e48aa0; color-scheme: dark }
+
+body { background: var(--bg); color: var(--fg); font-family: var(--f-ui); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 80px; }
+header.intro { display: grid; gap: 10px; max-width: 64ch; }
+header.intro h1 { font-size: clamp(28px, 5vw, 44px); line-height: 1.05; margin: 0; letter-spacing: -0.02em; text-wrap: balance; }
+header.intro p { margin: 0; color: var(--muted); }
+.eyebrow { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+nav.jump { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 22px; }
+nav.jump a { text-decoration: none; color: var(--fg); border: 1px solid var(--line); background: var(--panel); padding: 5px 11px; border-radius: 999px; font-size: 13px; font-weight: 600; }
+nav.jump a:hover, nav.jump a:focus-visible { border-color: var(--accent); outline: none; }
+nav.jump a span { color: var(--muted); font-variant-numeric: tabular-nums; margin-right: 4px; }
+
+section.style { display: grid; grid-template-columns: minmax(0, 400px) minmax(0, 1fr); gap: 36px; align-items: start; padding-block: 48px; border-top: 1px solid var(--line); scroll-margin-top: 12px; }
+section.style:first-of-type { margin-top: 32px; }
+.notes { display: grid; gap: 14px; min-width: 0; padding-top: 8px; }
+.notes .num { font-variant-numeric: tabular-nums; font-size: 13px; color: var(--muted); font-weight: 600; letter-spacing: .08em; }
+.notes h2 { margin: 0; font-size: 28px; line-height: 1.1; letter-spacing: -0.01em; }
+.notes p { margin: 0; max-width: 60ch; }
+.notes dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 16px; margin: 0; font-size: 14px; }
+.notes dt { color: var(--muted); font-weight: 600; }
+.notes dd { margin: 0; }
+.swatches { display: flex; gap: 6px; flex-wrap: wrap; }
+.swatches i { width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--line); display: block; }
+footer { margin-top: 40px; color: var(--muted); font-size: 13px; max-width: 64ch; }
+@media (max-width: 760px) {
+  section.style { grid-template-columns: minmax(0, 1fr); gap: 20px; padding-block: 36px; }
+  .notes { order: -1; padding-top: 0; }
+}
+
+/* ---------- Shared game-screen skeleton ---------- */
+.screen { --sq-l: #eee; --sq-d: #999; --pw: #fff; --pb: #111; --pws: #111; --pbs: #fff; --last: rgba(255,220,0,.35); --sel: rgba(255,255,255,.4); --dot: rgba(0,0,0,.35); --spot: #fff;
+  position: relative; width: 100%; max-width: 400px; overflow: hidden; display: grid; gap: 10px; padding: 14px; box-sizing: border-box; isolation: isolate; }
+.strip { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; display: flex; justify-content: space-between; gap: 8px; }
+.player { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 14px; }
+.player .who { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.player .badge { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; flex: none; }
+.player .tag { font-size: 11px; opacity: .75; }
+.player .form { font-variant-numeric: tabular-nums; font-size: 13px; white-space: nowrap; }
+.board { position: relative; display: grid; grid-template-columns: repeat(8, 1fr); aspect-ratio: 1; width: 100%; max-width: 100%; }
+.sq { position: relative; display: grid; place-items: center; background: var(--sq-d); }
+.sq.l { background: var(--sq-l); }
+.sq.last::before, .sq.sel::before { content: ""; position: absolute; inset: 0; background: var(--last); }
+.sq.sel::before { background: var(--sel); }
+.sq .dot { position: absolute; width: 28%; height: 28%; border-radius: 50%; background: var(--dot); }
+.sq.spot::after { content: ""; position: absolute; width: 22%; height: 22%; border: 2px solid var(--spot); border-radius: 50%; box-sizing: border-box; }
+.pc { position: relative; z-index: 1; font-size: clamp(20px, 7.4vw, 32px); line-height: 1; font-family: "DejaVu Sans", "Segoe UI Symbol", "Apple Symbols", "Noto Sans Symbols 2", sans-serif; -webkit-text-stroke: 1.2px var(--pws); paint-order: stroke fill; color: var(--pw); }
+.pc.b { color: var(--pb); -webkit-text-stroke-color: var(--pbs); }
+.arrow { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+.quiz { display: grid; gap: 8px; padding: 12px; }
+.quiz .meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 8px; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+.quiz .q { font-size: 16px; line-height: 1.3; margin: 0; text-wrap: balance; }
+.quiz .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.quiz button { font: inherit; font-size: 13px; text-align: left; padding: 8px 9px; cursor: pointer; display: flex; gap: 7px; align-items: baseline; line-height: 1.2; color: inherit; background: transparent; border: 0; }
+.quiz button b { font-size: 11px; flex: none; }
+.quiz button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.timer { height: 5px; position: relative; overflow: hidden; }
+.timer::after { content: ""; position: absolute; inset: 0 38% 0 0; background: currentColor; }
+.powers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.pw { display: grid; justify-items: center; gap: 3px; padding: 8px 4px; text-align: center; font-size: 11px; line-height: 1.15; }
+.pw svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.pw .cost { font-variant-numeric: tabular-nums; font-size: 10px; opacity: .8; }
+.pw.locked { opacity: .42; }
+
+/* ---------- 1 Floodlit ---------- */
+.v1 { background: radial-gradient(120% 60% at 50% -10%, #3a4f86 0%, #101a38 45%, #070c1d 100%); color: #e9eefc; font-family: "Saira", sans-serif;
+  --sq-l: #4e9b45; --sq-d: #3f873a; --pw: #fbfbf5; --pws: #1a2a12; --pb: #0b1226; --pbs: #b8c6ee; --last: rgba(255,232,120,.35); --sel: rgba(255,255,255,.28); --dot: rgba(255,255,255,.55); --spot: #fff; }
+.v1::before { content: ""; position: absolute; inset: -40px 0 auto; height: 160px; background: radial-gradient(closest-side at 15% 50%, rgba(255,250,210,.35), transparent), radial-gradient(closest-side at 85% 50%, rgba(255,250,210,.35), transparent); z-index: -1; }
+.v1 .strip { font-family: "Saira Condensed", sans-serif; font-weight: 700; color: #ffe066; }
+.v1 .board { box-shadow: 0 0 0 3px #f4f4ef, 0 0 40px rgba(120,200,255,.25); }
+.v1 .sq:nth-child(-n+8)::after { content: none; }
+.v1 .board::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; background: rgba(255,255,255,.7); transform: translateY(-1px); pointer-events: none; }
+.v1 .board::before { content: ""; position: absolute; width: 26%; aspect-ratio: 1; left: 37%; top: 37%; border: 2px solid rgba(255,255,255,.7); border-radius: 50%; pointer-events: none; z-index: 0; }
+.v1 .player .badge { background: #ffe066; color: #101a38; }
+.v1 .player .form { font-family: "Saira Condensed", sans-serif; font-weight: 800; font-size: 16px; color: #ffe066; }
+.v1 .quiz { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); border-radius: 12px; backdrop-filter: blur(6px); }
+.v1 .quiz .meta { color: #ffe066; font-family: "Saira Condensed", sans-serif; font-weight: 700; }
+.v1 .quiz .q { font-family: "Saira Condensed", sans-serif; font-weight: 700; font-size: 20px; text-transform: uppercase; letter-spacing: .01em; }
+.v1 .quiz button { background: rgba(255,255,255,.1); border-radius: 8px; }
+.v1 .quiz button b { color: #ffe066; }
+.v1 .timer { background: rgba(255,255,255,.15); border-radius: 3px; color: #ffe066; }
+.v1 .pw { background: rgba(10,18,40,.6); border: 1px solid rgba(255,224,102,.35); border-radius: 10px; color: #f2f4ff; }
+.v1 .pw svg { color: #ffe066; }
+
+/* ---------- 2 Matchday Programme ---------- */
+.v2 { background-color: #a9d4ee; background-image: radial-gradient(rgba(122,38,58,.16) 1px, transparent 1.3px); background-size: 6px 6px; color: #2a0f17; font-family: "Libre Franklin", sans-serif;
+  --sq-l: #f3ead6; --sq-d: #7a263a; --pw: #f3ead6; --pws: #2a0f17; --pb: #1c2a4a; --pbs: #f3ead6; --last: rgba(169,212,238,.6); --sel: rgba(255,214,90,.55); --dot: rgba(28,42,74,.55); --spot: #1c2a4a; }
+.v2 .strip { background: #7a263a; color: #f3ead6; padding: 6px 8px; font-weight: 800; margin: -14px -14px 0; }
+.v2 .board { border: 6px solid #2a0f17; box-sizing: border-box; }
+.v2 .sq.spot::after { border-color: #f3ead6; }
+.v2 .player { font-family: "Alfa Slab One", serif; font-size: 16px; }
+.v2 .player .badge { background: #7a263a; color: #f3ead6; border: 2px solid #2a0f17; font-family: "Libre Franklin"; }
+.v2 .player .tag { font-family: "Libre Franklin"; }
+.v2 .quiz { background: #f3ead6; border: 2px solid #2a0f17; box-shadow: 5px 5px 0 #7a263a; }
+.v2 .quiz .meta { font-weight: 800; color: #7a263a; border-bottom: 2px solid #2a0f17; padding-bottom: 6px; }
+.v2 .quiz .q { font-family: "Alfa Slab One", serif; font-size: 19px; font-weight: 400; }
+.v2 .quiz button { border: 1.5px solid #2a0f17; background: #fff9ee; }
+.v2 .quiz button b { color: #7a263a; }
+.v2 .timer { background: #d7c9ad; color: #7a263a; }
+.v2 .pw { background: #7a263a; color: #f3ead6; border: 2px solid #2a0f17; font-weight: 600; }
+
+/* ---------- 3 Sticker Album ---------- */
+.v3 { background: #ffd23f linear-gradient(135deg, #ffd23f 0 50%, #ff8a3d 50% 100%); color: #1e1240; font-family: "Nunito", sans-serif;
+  --sq-l: #ffffff; --sq-d: #e3ddf5; --pw: #ffffff; --pws: #1e1240; --pb: #1e1240; --pbs: #ffffff; --last: rgba(255,138,61,.4); --sel: rgba(70,214,180,.5); --dot: rgba(30,18,64,.4); --spot: #ff3d7f; }
+.v3 .strip { font-family: "Anton", sans-serif; letter-spacing: .06em; font-size: 13px; }
+.v3 .board { border-radius: 14px; overflow: hidden; border: 4px solid transparent; background: conic-gradient(from 0deg, #ff6ad5, #ffd23f, #46d6b4, #6a8bff, #ff6ad5) border-box; padding: 0; box-shadow: 0 6px 0 rgba(30,18,64,.25); }
+.v3 .pc { display: grid; place-items: center; width: 80%; aspect-ratio: 1; border-radius: 50%; background: #fff; box-shadow: 0 2px 0 rgba(30,18,64,.3), inset 0 0 0 2px #1e1240; font-size: clamp(16px, 5.6vw, 24px); }
+.v3 .pc.b { background: #1e1240; box-shadow: 0 2px 0 rgba(30,18,64,.3), inset 0 0 0 2px #ffd23f; }
+.v3 .player { font-weight: 800; }
+.v3 .player .badge { background: #1e1240; color: #ffd23f; border-radius: 6px; transform: rotate(-6deg); }
+.v3 .player .form { background: #1e1240; color: #fff; padding: 2px 8px; border-radius: 999px; }
+.v3 .quiz { background: #fff; border-radius: 14px; border: 4px solid transparent; background: linear-gradient(#fff, #fff) padding-box, conic-gradient(from 90deg, #ff6ad5, #ffd23f, #46d6b4, #6a8bff, #ff6ad5) border-box; transform: rotate(-1deg); }
+.v3 .quiz .meta { font-family: "Anton", sans-serif; font-size: 12px; color: #ff3d7f; }
+.v3 .quiz .q { font-family: "Anton", sans-serif; font-size: 21px; font-weight: 400; text-transform: uppercase; letter-spacing: .01em; }
+.v3 .quiz button { background: #f2eefc; border-radius: 10px; font-weight: 800; }
+.v3 .quiz button b { background: #1e1240; color: #fff; border-radius: 4px; padding: 0 4px; }
+.v3 .timer { background: #f2eefc; border-radius: 3px; color: #46d6b4; }
+.v3 .pw { background: #fff; border-radius: 12px; font-weight: 800; box-shadow: 0 3px 0 rgba(30,18,64,.25); }
+.v3 .pw svg { color: #ff3d7f; }
+.v3 .pw:nth-child(odd) { transform: rotate(-2deg); } .v3 .pw:nth-child(even) { transform: rotate(2deg); }
+
+/* ---------- 4 Tabletop Flick ---------- */
+.v4 { background: repeating-linear-gradient(90deg, #6b3f1f 0 7px, #75461f 7px 13px, #643a1c 13px 19px); color: #fff8ec; font-family: "Archivo", sans-serif; padding: 18px;
+  --sq-l: #3e8a45; --sq-d: #2f7238; --pw: #ffffff; --pws: #7a1616; --pb: #c8242a; --pbs: #ffffff; --last: rgba(255,255,255,.18); --sel: rgba(255,240,150,.35); --dot: rgba(255,255,255,.6); --spot: #fff; }
+.v4 .strip { font-family: "Archivo Black", sans-serif; color: #ffd98a; }
+.v4 .board { box-shadow: inset 0 0 0 3px rgba(255,255,255,.85), 0 6px 14px rgba(0,0,0,.45); background-image: radial-gradient(rgba(0,0,0,.08) 1px, transparent 1px); }
+.v4 .sq { background-image: radial-gradient(rgba(0,0,0,.09) 1px, transparent 1.4px); background-size: 4px 4px; }
+.v4 .pc { width: 78%; aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff 0 20%, #e9e9e9 60%, #bdbdbd); color: #c8242a; -webkit-text-stroke: 0; font-size: clamp(14px, 5vw, 22px); box-shadow: 0 3px 0 #1f4d25, 0 4px 6px rgba(0,0,0,.4); }
+.v4 .pc.b { background: radial-gradient(circle at 35% 30%, #ff6b6b 0 18%, #c8242a 60%, #8e1418); color: #fff; }
+.v4 .player { font-family: "Archivo Black", sans-serif; }
+.v4 .player .badge { background: #c8242a; color: #fff; border: 2px solid #fff; }
+.v4 .player .form { color: #ffd98a; }
+.v4 .quiz { background: #fff8ec; color: #2b1a0e; border-top: 10px solid #c8242a; box-shadow: 0 6px 0 #3d230f; }
+.v4 .quiz .meta { color: #c8242a; font-weight: 600; }
+.v4 .quiz .q { font-family: "Archivo Black", sans-serif; font-size: 17px; font-weight: 400; }
+.v4 .quiz button { background: #2f7238; color: #fff; border-radius: 3px; box-shadow: inset 0 0 0 2px rgba(255,255,255,.6); }
+.v4 .quiz button b { color: #ffd98a; }
+.v4 .timer { background: #eadfc9; color: #c8242a; }
+.v4 .pw { background: #fff8ec; color: #2b1a0e; border-radius: 4px; box-shadow: 0 4px 0 #3d230f; font-weight: 600; }
+.v4 .pw svg { color: #c8242a; }
+
+/* ---------- 5 Fanzine ---------- */
+.v5 { background: #f0efe9; background-image: radial-gradient(rgba(0,0,0,.07) .8px, transparent 1px); background-size: 3px 3px; color: #111; font-family: "Special Elite", "Courier New", monospace;
+  --sq-l: #f7f7f2; --sq-d: #111; --pw: #f7f7f2; --pws: #111; --pb: #111; --pbs: #f7f7f2; --last: rgba(255,62,165,.55); --sel: rgba(255,242,0,.7); --dot: #ff3ea5; --spot: #fff200; }
+.v5 .strip { font-family: "Rubik Mono One", sans-serif; font-size: 10px; }
+.v5 .strip span:first-child { background: #111; color: #fff200; padding: 2px 6px; transform: rotate(-2deg); display: inline-block; }
+.v5 .board { border: 3px solid #111; transform: rotate(.6deg); }
+.v5 .sq:not(.l) { background-image: repeating-linear-gradient(45deg, #111 0 3px, #2a2a2a 3px 5px); }
+.v5 .board::before { content: ""; position: absolute; top: -10px; left: 30%; width: 70px; height: 20px; background: rgba(255,242,0,.75); transform: rotate(-6deg); z-index: 3; }
+.v5 .player .who > span:last-child { font-family: "Rubik Mono One", sans-serif; font-size: 12px; }
+.v5 .player .badge { background: #ff3ea5; color: #111; border-radius: 0; transform: rotate(4deg); font-family: "Rubik Mono One"; }
+.v5 .player .form { background: #fff200; padding: 0 6px; }
+.v5 .quiz { background: #fff; border: 2px solid #111; transform: rotate(-1.2deg); box-shadow: 4px 4px 0 #111; }
+.v5 .quiz .meta { font-family: "Rubik Mono One", sans-serif; font-size: 9px; }
+.v5 .quiz .meta span:first-child { background: #ff3ea5; padding: 1px 4px; }
+.v5 .quiz .q { font-size: 17px; }
+.v5 .quiz .q mark { background: #fff200; padding: 0 2px; }
+.v5 .quiz button { border: 2px solid #111; background: #fff; }
+.v5 .quiz button:nth-child(2) { transform: rotate(1deg); } .v5 .quiz button:nth-child(3) { transform: rotate(-1deg); }
+.v5 .quiz button b { font-family: "Rubik Mono One"; }
+.v5 .timer { background: #ddd; color: #111; }
+.v5 .pw { background: #111; color: #f0efe9; }
+.v5 .pw:nth-child(2) { background: #ff3ea5; color: #111; } .v5 .pw:nth-child(3) { background: #fff200; color: #111; }
+
+/* ---------- 6 Tactics Board ---------- */
+.v6 { background: #f6f8f8; background-image: linear-gradient(115deg, transparent 40%, rgba(80,120,160,.06) 45%, transparent 55%); color: #18304a; font-family: "Kalam", cursive; border: 10px solid #b9c0c6; box-shadow: inset 0 0 0 2px #8d959c;
+  --sq-l: #5cae5f; --sq-d: #4a9a4f; --pw: #fff; --pws: transparent; --pb: #fff; --pbs: transparent; --last: rgba(255,255,255,.22); --sel: rgba(255,255,255,.3); --dot: rgba(255,255,255,.75); --spot: #fff; }
+.v6 .strip { font-family: "Permanent Marker", cursive; font-size: 13px; letter-spacing: .02em; text-transform: none; color: #c4302b; }
+.v6 .board { border: 3px solid #fff; outline: 2px solid #2d5f30; }
+.v6 .pc { width: 76%; aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; background: #1f5fbf; font-size: clamp(14px, 5vw, 21px); box-shadow: 0 2px 0 rgba(0,0,0,.35), inset 0 -3px 0 rgba(0,0,0,.2); -webkit-text-stroke: 0; }
+.v6 .pc.b { background: #d1342f; }
+.v6 .player { font-family: "Permanent Marker", cursive; font-size: 15px; }
+.v6 .player .badge { background: transparent; border: 2px solid currentColor; font-family: "Kalam"; }
+.v6 .player:first-of-type .badge { color: #d1342f; } .v6 .player .badge { color: #1f5fbf; }
+.v6 .quiz { background: #fff7a8; color: #2a2a12; transform: rotate(.8deg); box-shadow: 0 6px 10px rgba(0,0,0,.12); }
+.v6 .quiz .meta { color: #c4302b; font-weight: 700; text-transform: none; letter-spacing: 0; font-size: 13px; }
+.v6 .quiz .q { font-family: "Permanent Marker", cursive; font-size: 17px; font-weight: 400; }
+.v6 .quiz button { font-size: 15px; border-bottom: 2px dashed rgba(0,0,0,.25); padding: 4px 2px; }
+.v6 .quiz button b { color: #1f5fbf; font-size: 14px; }
+.v6 .timer { background: rgba(0,0,0,.08); color: #c4302b; height: 4px; }
+.v6 .pw { border: 2px solid #18304a; border-radius: 40% 45% 42% 48% / 50% 40% 55% 45%; font-weight: 700; font-size: 13px; }
+.v6 .pw svg { color: #c4302b; }
+
+/* ---------- 7 Broadcast ---------- */
+.v7 { background: linear-gradient(160deg, #0b2a30, #04161a 70%); color: #eafcff; font-family: "Barlow", sans-serif;
+  --sq-l: #2d5960; --sq-d: #1b3d43; --pw: #f1ffff; --pws: #062025; --pb: #ff4b55; --pbs: #2a0306; --last: rgba(0,224,198,.3); --sel: rgba(0,224,198,.45); --dot: #00e0c6; --spot: #ff4b55; }
+.v7 .strip { margin: -14px -14px 0; padding: 0; display: grid; grid-template-columns: auto 1fr auto; align-items: stretch; font-family: "Barlow Condensed", sans-serif; font-weight: 800; font-style: italic; font-size: 13px; }
+.v7 .strip span { padding: 6px 10px; }
+.v7 .strip span:first-child { background: #ff4b55; clip-path: polygon(0 0, 100% 0, 88% 100%, 0 100%); padding-right: 18px; }
+.v7 .strip span:nth-child(2) { background: rgba(255,255,255,.08); }
+.v7 .strip span:last-child { background: #00e0c6; color: #04161a; clip-path: polygon(12% 0, 100% 0, 100% 100%, 0 100%); padding-left: 16px; }
+.v7 .board { box-shadow: 0 0 0 1px rgba(0,224,198,.5), 0 10px 30px rgba(0,0,0,.5); }
+.v7 .board::after { content: ""; position: absolute; inset: 0; background: linear-gradient(160deg, rgba(255,255,255,.12), transparent 40%); pointer-events: none; z-index: 2; }
+.v7 .player { font-family: "Barlow Condensed", sans-serif; font-weight: 800; font-style: italic; font-size: 17px; text-transform: uppercase; background: rgba(255,255,255,.06); padding: 4px 8px 4px 0; clip-path: polygon(0 0, 100% 0, 97% 100%, 0 100%); }
+.v7 .player .badge { border-radius: 0; background: #00e0c6; color: #04161a; height: 30px; width: 30px; font-style: normal; }
+.v7 .player .form { color: #00e0c6; font-size: 18px; }
+.v7 .quiz { background: rgba(4,22,26,.85); border-left: 4px solid #00e0c6; }
+.v7 .quiz .meta { font-family: "Barlow Condensed", sans-serif; font-weight: 800; font-style: italic; color: #00e0c6; font-size: 12px; }
+.v7 .quiz .q { font-family: "Barlow Condensed", sans-serif; font-weight: 800; font-style: italic; font-size: 21px; text-transform: uppercase; }
+.v7 .quiz button { background: linear-gradient(90deg, rgba(255,255,255,.12), rgba(255,255,255,.04)); clip-path: polygon(0 0, 100% 0, 95% 100%, 0 100%); }
+.v7 .quiz button b { color: #00e0c6; }
+.v7 .timer { background: rgba(255,255,255,.1); color: #ff4b55; height: 4px; }
+.v7 .pw { background: rgba(255,255,255,.07); border-bottom: 3px solid #00e0c6; font-family: "Barlow Condensed", sans-serif; font-weight: 600; font-size: 13px; text-transform: uppercase; }
+.v7 .pw.locked { border-color: #555; }
+.v7 .ticker { margin: 0 -14px -14px; background: #eafcff; color: #04161a; font-family: "Barlow Condensed", sans-serif; font-weight: 600; font-size: 13px; padding: 5px 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.v7 .ticker b { color: #ff4b55; font-style: italic; }
+
+/* ---------- 8 Teletext ---------- */
+.v8 { background: #000; color: #fff; font-family: "VT323", monospace; font-size: 18px;
+  --sq-l: #00ffff; --sq-d: #0000ff; --pw: #fff; --pws: #000; --pb: #000; --pbs: #ffff00; --last: rgba(255,0,255,.55); --sel: rgba(0,255,0,.6); --dot: #ffff00; --spot: #ff0000; }
+.v8 .strip { font-size: 18px; letter-spacing: 0; text-transform: none; }
+.v8 .strip span:first-child { color: #00ff00; } .v8 .strip span:last-child { color: #ffff00; }
+.v8 .banner { background: #ff0000; color: #ffff00; font-size: 26px; line-height: 1; padding: 4px 8px; letter-spacing: .04em; }
+.v8 .board { image-rendering: pixelated; }
+.v8 .sq.spot::after { border-radius: 0; border-width: 3px; }
+.v8 .sq .dot { border-radius: 0; width: 24%; height: 24%; }
+.v8 .player { font-size: 20px; }
+.v8 .player .badge { border-radius: 0; background: #ff00ff; color: #000; font-size: 18px; }
+.v8 .player .tag { color: #00ffff; opacity: 1; font-size: 18px; }
+.v8 .player .form { color: #ffff00; font-size: 20px; }
+.v8 .quiz { padding: 4px 0; }
+.v8 .quiz .meta { font-size: 18px; letter-spacing: 0; color: #00ffff; }
+.v8 .quiz .q { font-size: 22px; line-height: 1.05; color: #ffff00; }
+.v8 .quiz button { font-size: 19px; padding: 2px 4px; }
+.v8 .quiz button b { width: 14px; height: 14px; font-size: 0; align-self: center; }
+.v8 .quiz button:nth-child(1) b { background: #ff0000; } .v8 .quiz button:nth-child(2) b { background: #00ff00; }
+.v8 .quiz button:nth-child(3) b { background: #ffff00; } .v8 .quiz button:nth-child(4) b { background: #00ffff; }
+.v8 .timer { background: #0000ff; color: #fff; height: 8px; }
+.v8 .pw { background: #0000ff; color: #fff; font-size: 16px; line-height: 1; padding: 6px 2px; }
+.v8 .pw svg { color: #ffff00; stroke-width: 2.4; stroke-linecap: square; stroke-linejoin: miter; }
+.v8 .pw .cost { font-size: 16px; color: #00ff00; opacity: 1; }
+
+/* ---------- 9 Shirt Fabric ---------- */
+.v9 { background-color: #6b1d33; background-image: radial-gradient(rgba(0,0,0,.22) 1.2px, transparent 1.6px), radial-gradient(rgba(255,255,255,.06) 1.2px, transparent 1.6px); background-size: 6px 6px; background-position: 0 0, 3px 3px; color: #fbeec9; font-family: "Hind", sans-serif;
+  --sq-l: #9bc9e6; --sq-d: #84b7d8; --pw: #fbeec9; --pws: #4a1022; --pb: #4a1022; --pbs: #fbeec9; --last: rgba(232,190,90,.45); --sel: rgba(255,255,255,.4); --dot: #6b1d33; --spot: #6b1d33; }
+.v9 .strip { font-family: "Teko", sans-serif; font-size: 16px; letter-spacing: .14em; color: #e8be5a; }
+.v9 .board { border: 2px dashed #e8be5a; outline: 6px solid #4a1022; outline-offset: 0; box-sizing: border-box; }
+.v9 .sq { background-image: repeating-linear-gradient(0deg, rgba(255,255,255,.08) 0 1px, transparent 1px 3px); }
+.v9 .player { font-family: "Teko", sans-serif; font-size: 22px; line-height: 1; text-transform: uppercase; letter-spacing: .04em; }
+.v9 .player .badge { font-family: "Teko"; font-size: 20px; background: #fbeec9; color: #6b1d33; border-radius: 4px 4px 12px 12px; width: 28px; height: 30px; }
+.v9 .player .tag { font-family: "Hind"; font-size: 12px; text-transform: none; }
+.v9 .player .form { color: #e8be5a; }
+.v9 .quiz { background: #fbfaf5; color: #2b1d22; border-radius: 2px; box-shadow: 0 0 0 4px #fbfaf5, 0 0 0 5px #c9c3b5; position: relative; }
+.v9 .quiz::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 6px; background: repeating-linear-gradient(90deg, #6b1d33 0 10px, #9bc9e6 10px 20px); }
+.v9 .quiz .meta { margin-top: 6px; color: #6b1d33; font-weight: 600; }
+.v9 .quiz .q { font-family: "Teko", sans-serif; font-size: 24px; line-height: 1; font-weight: 500; }
+.v9 .quiz button { border: 1px solid #c9c3b5; }
+.v9 .quiz button b { font-family: "Teko"; font-size: 17px; color: #6b1d33; }
+.v9 .timer { background: #ece6d8; color: #6b1d33; }
+.v9 .pw { border: 2px dashed rgba(232,190,90,.7); border-radius: 6px; font-family: "Teko", sans-serif; font-size: 15px; letter-spacing: .03em; text-transform: uppercase; }
+.v9 .pw svg { color: #9bc9e6; }
+
+/* ---------- 10 Pundit Stats ---------- */
+.v10 { background: #fbfbf9; color: #0e0e0d; font-family: "Familjen Grotesk", sans-serif; border: 1px solid #0e0e0d;
+  --sq-l: #ececea; --sq-d: #cfd0cb; --pw: #ffffff; --pws: #0e0e0d; --pb: #0e0e0d; --pbs: #0e0e0d; --last: rgba(255,90,31,.25); --sel: rgba(255,90,31,.45); --dot: #ff5a1f; --spot: #ff5a1f; }
+.v10 .strip { font-family: "IBM Plex Mono", monospace; font-size: 10px; border-bottom: 1px solid #0e0e0d; padding-bottom: 8px; }
+.v10 .board { outline: 1px solid #0e0e0d; }
+.v10 .pc { -webkit-text-stroke-width: 1px; }
+.v10 .player { font-weight: 600; }
+.v10 .player .badge { background: #0e0e0d; color: #fbfbf9; border-radius: 2px; }
+.v10 .player:first-of-type .badge { background: #ff5a1f; }
+.v10 .player .form { font-family: "IBM Plex Mono", monospace; font-size: 12px; }
+.v10 .quiz { border: 1px solid #0e0e0d; padding: 12px; }
+.v10 .quiz .meta { font-family: "IBM Plex Mono", monospace; font-size: 10px; }
+.v10 .quiz .meta span:last-child { color: #ff5a1f; }
+.v10 .quiz .q { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
+.v10 .quiz button { border-top: 1px solid #0e0e0d; padding: 8px 2px; }
+.v10 .quiz button b { font-family: "IBM Plex Mono", monospace; color: #ff5a1f; }
+.v10 .timer { background: #e2e2de; color: #0e0e0d; height: 2px; }
+.v10 .powers { gap: 0; border: 1px solid #0e0e0d; }
+.v10 .pw { border-right: 1px solid #0e0e0d; font-weight: 600; }
+.v10 .pw:last-child { border-right: 0; }
+.v10 .pw .cost { font-family: "IBM Plex Mono", monospace; color: #ff5a1f; opacity: 1; }
+.v10 .pw.locked .cost { color: inherit; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .timer::after { animation: drain 14s linear infinite; }
+  @keyframes drain { from { right: 0; } to { right: 100%; } }
+}
+</style>
+
+<div class="wrap">
+  <header class="intro">
+    <div class="eyebrow">Chess Football Trivia · look and feel</div>
+    <h1>Ten ways the game could look</h1>
+    <p>Each mockup shows the same moment in a game: Ryan has picked up his knight (the dots are where it can go), the ringed square is a "penalty spot" that triggers a question, and a trivia card is open above the power-up bar. Ryan has 5 Form, so Park the Bus is still locked. All the questions are real.</p>
+    <p>Pick one, or mix and match (for example the Teletext answer buttons with the Floodlit board). Nothing here uses real club crests or logos.</p>
+  </header>
+  <nav class="jump" id="jump" aria-label="Jump to a style"></nav>
+  <main id="gallery"></main>
+  <footer>Pieces use your device's standard chess symbols for now; the real game would get a custom piece set to match whichever style you choose.</footer>
+</div>
+
+<script>
+const ICONS = {
+  var: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4M10 8l4 2-4 2z"/></svg>',
+  foul: '<svg viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="15" rx="1.5" transform="rotate(12 12 10.5)"/><path d="M5 21h7"/></svg>',
+  sub: '<svg viewBox="0 0 24 24"><path d="M4 8h14l-3.5-3.5M20 16H6l3.5 3.5"/></svg>',
+  bus: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="11" rx="2"/><path d="M3 10.5h18M8 5v5.5M16 5v5.5"/><circle cx="7.5" cy="18.5" r="1.5"/><circle cx="16.5" cy="18.5" r="1.5"/></svg>'
+};
+const POWERS = [["var","VAR Review",3],["foul","Tactical Foul",4],["sub","Super-Sub",5],["bus","Park the Bus",6]];
+const FORM = 5;
+
+// Rank 8 down to rank 1. Upper case = white (Ryan), lower = black (bot).
+const POS = ["r..q.rk.","pp..bppp","..np.n..","..p.p...","..B.P...","..NP.N..","PPP..PPP","R.BQ.RK."];
+const GLYPH = {k:"♚",q:"♛",r:"♜",b:"♝",n:"♞",p:"♟"};
+const LAST = ["d7","d6"], SEL = "f3", DOTS = ["g5","h4","d4","d2","e1"], SPOT = "d5";
+
+const STYLES = [
+  { id:"floodlit", name:"Floodlit Night", strip:["Matchday · 19:45 KO","Live"], opp:["Ollie","Bot · trivia whizz",2],
+    q:"Which club won the Premier League in 2015/16, having started the season as 5000-1 outsiders?", a:["Chelsea","Leicester City","Tottenham","Arsenal"], meta:["General · Medium","+2 Form / −1"],
+    pitch:"A night match under the lights. The board is a striped pitch with a halfway line and centre circle, the frame glows like floodlights against a navy sky.",
+    feel:"Big-match atmosphere, dramatic, easy to read on a phone at night.", fonts:"Saira Condensed for headings, Saira for text", sw:["#070c1d","#3f873a","#4e9b45","#ffe066","#f4f4ef"] },
+  { id:"programme", name:"Matchday Programme", strip:["Matchday Programme · No. 14","50p"], opp:["Freddie","Bot · chess shark",4],
+    q:"Who scored West Ham's winner in the 2023 Europa Conference League final?", a:["Said Benrahma","Michail Antonio","Jarrod Bowen","Lucas Paquetá"], meta:["West Ham bonus · Hard","+3 Form / −2"],
+    pitch:"A printed programme from the terraces era. Halftone sky-blue paper, slab-serif headlines, claret blocks with chunky black borders and offset shadows.",
+    feel:"Nostalgic, warm and a little bit claret and blue for Ryan without using any badge.", fonts:"Alfa Slab One for headings, Libre Franklin for text", sw:["#a9d4ee","#7a263a","#f3ead6","#1c2a4a","#2a0f17"] },
+  { id:"sticker", name:"Sticker Album", strip:["Season 25/26","Sticker 214 of 640"], opp:["Ollie","Bot · trivia whizz",2],
+    q:"Who scored the Premier League's fastest hat-trick, in 2 minutes 56 seconds, in 2015?", a:["Sadio Mané","Robbie Fowler","Sergio Agüero","Jermain Defoe"], meta:["Records · Hard","+3 Form / −2"],
+    pitch:"Collecting stickers at the school gate. Pieces sit on round stickers, cards have holographic foil borders, everything is slightly tilted as if stuck in by hand.",
+    feel:"Playful and bright. The most fun-first option, good if the game leans casual.", fonts:"Anton for headings, Nunito for text", sw:["#ffd23f","#ff8a3d","#1e1240","#46d6b4","#ff3d7f"] },
+  { id:"tabletop", name:"Tabletop Flick", strip:["Table football edition","Wooden board"], opp:["Freddie","Bot · chess shark",3],
+    q:"Arsenal went the whole 2003/04 league season unbeaten. What nickname did that team get?", a:["The Invincibles","The Untouchables","The Immortals","The Entertainers"], meta:["General · Easy","+1 Form / −0"],
+    pitch:"The flick-to-kick table game on a bedroom floor. Felt pitch on a wooden frame, pieces stand on glossy round bases in red and white like little painted players.",
+    feel:"Toy-like and tactile. Pieces look like you could pick them up.", fonts:"Archivo Black for headings, Archivo for text", sw:["#6b3f1f","#2f7238","#3e8a45","#c8242a","#fff8ec"] },
+  { id:"fanzine", name:"Terrace Fanzine", strip:["Issue 3 · One pound","Not official"], opp:["Freddie","Bot · chess shark",4],
+    q:"Which ground did West Ham move into in 2016 after leaving the Boleyn Ground?", a:["Wembley","London Stadium","The Valley","Selhurst Park"], meta:["West Ham bonus · Easy","+1 Form / −0"],
+    pitch:"A photocopied fanzine sold outside the ground. Xerox grain, typewriter text, ransom-note labels, highlighter pink and yellow, tape holding the board down.",
+    feel:"Cheeky, loud and full of attitude. Trash talk from the bots fits right in.", fonts:"Rubik Mono One for labels, Special Elite for text", sw:["#f0efe9","#111111","#ff3ea5","#fff200","#ffffff"] },
+  { id:"tactics", name:"Tactics Board", strip:["Training ground · set piece #3","Mon"], opp:["Freddie","Bot · chess shark",3],
+    q:"Who scored Man City's title-winning goal against QPR in the 93rd minute in May 2012?", a:["Edin Džeko","Mario Balotelli","Carlos Tevez","Sergio Agüero"], meta:["Moments · Medium","+2 Form / −1"],
+    pitch:"The manager's magnetic tactics board. Pieces are red and blue magnets, moves are drawn in marker pen, questions arrive on a yellow sticky note.",
+    feel:"Clever and coachy. Arrows and doodles make it easy to show hints and VAR replays.", fonts:"Permanent Marker for headings, Kalam for text", sw:["#f6f8f8","#4a9a4f","#1f5fbf","#d1342f","#fff7a8"] },
+  { id:"broadcast", name:"Live Broadcast", strip:["Live","Ryan 1 – 0 Ollie","62'"], opp:["Ollie","Bot · trivia whizz",2],
+    q:"How many Premier League goals did Mohamed Salah score in 2017/18, his first season at Liverpool?", a:["29","31","32","34"], meta:["Records · Medium","+2 Form / −1"], ticker:true,
+    pitch:"Saturday night TV graphics. Slanted score bug, italic condensed type, glossy dark board, and a scrolling ticker with match events and bot trash talk.",
+    feel:"Slick and modern, like the game is on telly. Great for big VAR moments.", fonts:"Barlow Condensed for headings, Barlow for text", sw:["#04161a","#1b3d43","#2d5960","#00e0c6","#ff4b55"] },
+  { id:"teletext", name:"Teletext Page 302", strip:["P302","Wed 04 Nov 05:09"], opp:["Freddie","Bot · chess shark",4], banner:"FOOTBALL  QUIZ  ",
+    q:"Liverpool finished second in 2018/19 despite how many points?", a:["91 points","94 points","97 points","99 points"], meta:["Stats · Hard","+3 Form / -2"],
+    pitch:"The old TV text pages your dad checked for scores. Seven pure colours on black, a chunky pixel font, and the four answers are the red, green, yellow and cyan remote buttons.",
+    feel:"Very British, very retro, instantly recognisable. Cheap to build and super readable.", fonts:"VT323 for everything", sw:["#000000","#0000ff","#00ffff","#ffff00","#ff0000"] },
+  { id:"shirt", name:"Shirt Fabric", strip:["Home shirt","25/26"], opp:["Freddie","Bot · chess shark",3],
+    q:"Who managed West Ham to European glory in Prague in 2023?", a:["Slaven Bilić","David Moyes","Manuel Pellegrini","Sam Allardyce"], meta:["West Ham bonus · Medium","+2 Form / −1"],
+    pitch:"Everything is made of kit. Claret mesh fabric, a sky-blue board with stitched seams, shirt-number type, and the question card is a woven care label.",
+    feel:"Rich and kit-launch premium, and clearly claret and blue without any crest.", fonts:"Teko for headings, Hind for text", sw:["#6b1d33","#4a1022","#9bc9e6","#e8be5a","#fbfaf5"] },
+  { id:"pundit", name:"Pundit Stats", strip:["Match 014 · Ryan v Ollie","Move 11"], opp:["Ollie","Bot · trivia whizz",2],
+    q:"Which goalkeeper holds the record for most Premier League clean sheets?", a:["David James","Petr Čech","Edwin van der Sar","Mark Schwarzer"], meta:["Records · Hard","+3 Form / −2"],
+    pitch:"A clean analytics look. Off-white, thin black rules, mono numbers and one orange accent. Lets the chess and the questions do the talking.",
+    feel:"Calm, grown-up and the easiest to scale across phone, tablet and desktop.", fonts:"Familjen Grotesk for text, IBM Plex Mono for numbers", sw:["#fbfbf9","#0e0e0d","#ececea","#cfd0cb","#ff5a1f"] }
+];
+
+function sqName(r, c) { return "abcdefgh"[c] + (8 - r); }
+function board(style) {
+  let h = '<div class="board" aria-label="Chess board mockup">';
+  for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) {
+    const n = sqName(r, c), ch = POS[r][c];
+    const cls = ["sq", (r + c) % 2 === 0 ? "l" : "", LAST.includes(n) ? "last" : "", n === SEL ? "sel" : "", n === SPOT ? "spot" : ""].join(" ");
+    let inner = "";
+    if (ch !== ".") inner = '<span class="pc ' + (ch === ch.toUpperCase() ? "w" : "b") + '">' + GLYPH[ch.toLowerCase()] + "︎</span>";
+    if (DOTS.includes(n)) inner += '<span class="dot"></span>';
+    h += '<div class="' + cls + '">' + inner + "</div>";
+  }
+  if (style.id === "tactics") {
+    h += '<svg class="arrow" viewBox="0 0 8 8"><defs><marker id="ah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#fff7a8"/></marker></defs><path d="M5.5 5.4 C 5.6 4.3, 6.1 3.9, 6.45 3.7" fill="none" stroke="#fff7a8" stroke-width=".12" stroke-linecap="round" stroke-dasharray=".25 .14" marker-end="url(#ah)"/></svg>';
+  }
+  return h + "</div>";
+}
+function esc(s) { return s.replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+function screen(s, i) {
+  const [oppName, oppTag, oppForm] = s.opp;
+  const ini = n => n[0];
+  let h = '<div class="screen v' + (i + 1) + '">';
+  h += '<div class="strip">' + s.strip.map(t => "<span>" + esc(t) + "</span>").join("") + "</div>";
+  if (s.banner) h += '<div class="banner">' + s.banner + "</div>";
+  h += '<div class="player"><div class="who"><span class="badge">' + ini(oppName) + "</span><span>" + oppName + ' <span class="tag">' + oppTag + '</span></span></div><span class="form">Form ' + oppForm + "</span></div>";
+  h += board(s);
+  h += '<div class="player"><div class="who"><span class="badge">R</span><span>Ryan <span class="tag">You</span></span></div><span class="form">Form ' + FORM + "</span></div>";
+  const qText = s.id === "fanzine" ? esc(s.q).replace("2016", "<mark>2016</mark>") : esc(s.q);
+  h += '<div class="quiz"><div class="meta"><span>' + s.meta[0] + "</span><span>" + s.meta[1] + '</span></div><p class="q">' + qText + '</p><div class="timer"></div><div class="answers">' +
+       s.a.map((a, k) => '<button type="button"><b>' + "ABCD"[k] + "</b><span>" + esc(a) + "</span></button>").join("") + "</div></div>";
+  h += '<div class="powers">' + POWERS.map(([ic, name, cost]) => '<div class="pw' + (cost > FORM ? " locked" : "") + '">' + ICONS[ic] + "<span>" + name + '</span><span class="cost">' + cost + " Form</span></div>").join("") + "</div>";
+  if (s.ticker) h += '<div class="ticker"><b>VAR CHECK</b> · Ollie: "Nice knight, shame about the trivia" · Ryan earns +2 Form · Next: Penalty spot on d5</div>';
+  return h + "</div>";
+}
+
+const gallery = document.getElementById("gallery"), jump = document.getElementById("jump");
+STYLES.forEach((s, i) => {
+  const n = String(i + 1).padStart(2, "0");
+  jump.insertAdjacentHTML("beforeend", '<a href="#' + s.id + '"><span>' + (i + 1) + "</span>" + s.name + "</a>");
+  gallery.insertAdjacentHTML("beforeend",
+    '<section class="style" id="' + s.id + '">' + screen(s, i) +
+    '<div class="notes"><div class="num">Style ' + n + " of 10</div><h2>" + s.name + "</h2><p>" + s.pitch + "</p>" +
+    "<dl><dt>Feel</dt><dd>" + s.feel + "</dd><dt>Type</dt><dd>" + s.fonts + "</dd></dl>" +
+    '<div class="swatches" aria-label="Palette">' + s.sw.map(c => '<i style="background:' + c + '" title="' + c + '"></i>').join("") + "</div></div></section>");
+});
+if (location.hash) { const t = document.querySelector(location.hash.replace(/[^#\w-]/g, "")); if (t) t.scrollIntoView(); }
+</script>

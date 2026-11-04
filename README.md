@@ -4,3 +4,16 @@ A chess game where Premier League trivia (2000/01 onwards, with West Ham bonus r
 
 - [Game design](docs/game-design.md)
 - [Research: existing chess x trivia games](https://claude.ai/artifact/288D72mj429RgxhCALFLa8)
+- [Visual style, sound and music](docs/visual-style.md)
+
+## Run it
+
+```sh
+npm install
+npm run dev     # local dev server
+npm test        # unit tests
+npm run build   # production build in dist/
+```
+
+Pushes to `main` deploy to GitHub Pages through `.github/workflows/deploy.yml` (turn on Pages with "GitHub Actions" as the source in the repo settings).
+
