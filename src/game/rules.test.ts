@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { backRank, startFen } from "./chess960";
 import {
-  applyAnswer, attackedSquares, demotePromotion, finishTurn, firstMoveReach, legalMoves, newGame, pickHotSpots, playMove,
+  applyAnswer, attackedSquares, resolvePromotion, finishTurn, firstMoveReach, legalMoves, newGame, pickHotSpots, playMove,
   powerBlocked, powerTargets, resolveMove, turnOf, usePowerUp,
 } from "./rules";
 import type { GameOptions, GameState } from "./types";
@@ -77,7 +77,7 @@ describe("Hot Spots", () => {
 
 describe("triggers", () => {
   it("fires Kick-off on every 3rd move, and captures reset the count", () => {
-    let g = { ...game(), hotSpots: [] };
+    let g: GameState = { ...game(), hotSpots: [] };
     const kinds: string[] = [];
     for (const m of ["g1f3", "g8f6", "f3g1", "f6g8", "g1f3", "g8f6"]) {
       const r = playMove(g, resolveMove(g, m)!);
@@ -92,11 +92,18 @@ describe("triggers", () => {
     g = at("4k3/8/8/3p4/4P3/8/8/4K3 w - - 0 1", { trivia: false });
     expect(playMove(g, "e4d5").trigger.kind).toBe("none");
   });
-  it("promotion asks a question; a wrong answer leaves a knight", () => {
+  it("promotion is a Who am I: earlier right guesses earn better pieces, wrong gives a knight and +2 to the opponent", () => {
     const g = at("4k3/1P6/8/8/8/8/8/4K3 w - - 0 1");
     const r = playMove(g, "b7b8q");
-    expect(r.trigger).toMatchObject({ kind: "promotion", role: "q", square: "b8" });
-    expect(demotePromotion(r.state, "b8").fen.startsWith("1N2k3")).toBe(true);
+    expect(r.trigger).toMatchObject({ kind: "promotion", square: "b8" });
+    expect(resolvePromotion(r.state, "b8", 1, true).state.fen.startsWith("1Q2k3")).toBe(true);
+    expect(resolvePromotion(r.state, "b8", 2, true).state.fen.startsWith("1R2k3")).toBe(true);
+    expect(resolvePromotion(r.state, "b8", 3, true).state.fen.startsWith("1B2k3")).toBe(true);
+    expect(resolvePromotion(r.state, "b8", 5, true).state.fen.startsWith("1N2k3")).toBe(true);
+    const low = { ...r.state, players: { ...r.state.players, black: { ...r.state.players.black, form: 3 } } };
+    const wrong = resolvePromotion(low, "b8", 1, false).state;
+    expect(wrong.fen.startsWith("1N2k3")).toBe(true);
+    expect(wrong.players.black.form).toBe(5);
   });
 });
 

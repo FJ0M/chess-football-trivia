@@ -72,6 +72,16 @@ export function SettingsPanel({ settings, onChange, onClose, play }: Props) {
           </select>
         </label>
 
+        <h3>Pass and Play</h3>
+        <label className="select" htmlFor="pnp-view">
+          <span>How the screen faces each player</span>
+          <select id="pnp-view" value={settings.passAndPlayView} onChange={(e) => set("passAndPlayView", e.target.value as Settings["passAndPlayView"])}>
+            <option value="hand-over">Hand over: the board flips to whoever is up (best on a phone)</option>
+            <option value="face-to-face">Face to face: board stays put, controls turn round (tablet on a table)</option>
+            <option value="off">Off: White always at the bottom</option>
+          </select>
+        </label>
+
         <button type="button" className="ghost reset" onClick={() => onChange({ ...DEFAULT_SETTINGS })}>Reset to defaults</button>
       </section>
     </div>

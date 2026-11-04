@@ -1,0 +1,571 @@
+// The game loop for the UI: whose turn it is, which panel is showing (cards,
+// question, "Who am I?", result, shootout), the bots, the clocks and the sounds.
+// The rules themselves are in rules.ts; this file only sequences them.
+
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { opposite } from "chessops/util";
+import type { SfxName } from "../audio/sfx";
+import { botList, loadBots, type BotLike, type BotLevel, type BotMeta, type BotModule, type TalkMoment } from "./bots";
+import { POWER_UP_BY_ID, POWER_UPS, TRIVIA_HINTS } from "./powerups";
+import {
+  PROMOTION_AIM, applyAnswer, attackedSquares, finishTurn, flipTurn, legalMoves, newGame, playMove, powerBlocked, powerCost,
+  resign as resignRule, resolveMove, resolvePromotion, setClock, spendForm, timeout, turnOf, usePowerUp, endInDraw,
+  type MoveResult, type PlayerInit,
+} from "./rules";
+import { QuestionBank, TIMER_MS, askTheCrowd, browserSeenStore, fiftyFifty, phoneAFriend, type Card } from "./trivia";
+import { CLUE_MS, WhoAmIBank, type WhoAmI } from "./whoami";
+import type { Color, GameOptions, GameState, PowerUpId, Question, TriviaHintId } from "./types";
+
+export interface SetupChoice {
+  options: GameOptions;
+  players: Record<Color, PlayerInit>;
+  botLevel: BotLevel;
+}
+
+export type Phase =
+  | { kind: "move" }
+  | { kind: "target"; power: PowerUpId; first?: string }
+  | { kind: "cards"; color: Color; cards: Card[]; bonus: boolean; landed: string | null; label: string }
+  | {
+      kind: "question"; color: Color; q: Question; card: Card; worldie: boolean; bonus: boolean; landed: string | null;
+      startedAt: number; limitMs: number; hidden: number[]; crowd?: number[]; friend?: number; label: string;
+    }
+  | { kind: "whoami"; color: Color; set: WhoAmI; square: string; clues: number; clueAt: number; bonus: boolean }
+  | {
+      kind: "result"; color: Color; correct: boolean; title: string; lines: string[]; options: string[]; answer: number;
+      choice: number | null; explanation?: string; next: GameState; auto: boolean;
+    }
+  | { kind: "shootout"; kicks: Array<{ color: Color; scored: boolean }>; q: Question; startedAt: number; choice: number | null; taker: Color }
+  | { kind: "over" };
+
+export interface Overlay {
+  attacked?: string[];
+  tip?: [string, string];
+  scout?: string;
+}
+
+interface Data {
+  bank: QuestionBank;
+  whoami: WhoAmIBank;
+}
+
+let dataPromise: Promise<Data> | null = null;
+function loadData(): Promise<Data> {
+  if (!dataPromise) {
+    dataPromise = Promise.all([import("../../data/questions.json"), import("../../data/whoami.json")]).then(([q, w]) => {
+      const seen = browserSeenStore();
+      return {
+        bank: new QuestionBank((q.default as { questions: Question[] }).questions, seen),
+        whoami: new WhoAmIBank((w.default as { sets: WhoAmI[] }).sets, seen),
+      };
+    });
+  }
+  return dataPromise;
+}
+
+const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+const DIFF_LABEL = { easy: "Sunday League", medium: "Championship", hard: "Premier League" } as const;
+
+export function cardLabel(c: Card, worldie = false): string {
+  return `${c.topic} · ${worldie ? "Worldie" : DIFF_LABEL[c.difficulty]}`;
+}
+
+export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused = false) {
+  const [game, setGameState] = useState<GameState>(() => {
+    const g = newGame(setup.options, setup.players);
+    // Dev only: ?fen=... starts from a position, ?form=12 unlocks everything (for testing).
+    if (import.meta.env.DEV) {
+      const q = new URLSearchParams(location.search);
+      const fen = q.get("fen");
+      const form = Number(q.get("form") ?? NaN);
+      let out = fen ? { ...g, fen, repetition: {} } : g;
+      if (Number.isFinite(form)) {
+        const ready = (p: GameState["players"]["white"]) => ({ ...p, form, cooldowns: Object.fromEntries(Object.keys(p.cooldowns).map((k) => [k, 0])) as typeof p.cooldowns });
+        out = { ...out, players: { white: ready(out.players.white), black: ready(out.players.black) } };
+      }
+      return out;
+    }
+    return g;
+  });
+  const [phase, setPhase] = useState<Phase>({ kind: "move" });
+  const [note, setNote] = useState("Kick-off! White to move");
+  const [bubble, setBubble] = useState<{ color: Color; text: string } | null>(null);
+  const [overlay, setOverlay] = useState<Overlay>({});
+  const [data, setData] = useState<Data | null>(null);
+  const [mod, setMod] = useState<BotModule | null>(null);
+  const [now, setNow] = useState(Date.now());
+
+  const gameRef = useRef(game);
+  const phaseRef = useRef(phase);
+  const bots = useRef<Partial<Record<Color, BotLike>>>({});
+  const alive = useRef(true);
+  const setGame = useCallback((g: GameState) => { gameRef.current = g; setGameState(g); }, []);
+  const go = useCallback((p: Phase) => { phaseRef.current = p; setPhase(p); }, []);
+
+  useEffect(() => { alive.current = true; return () => { alive.current = false; }; }, []);
+
+  // Pausing stops the clocks, the question timers and the bots. On resume, timers carry on where they were.
+  const lastTick = useRef(Date.now());
+  const pausedRef = useRef(paused);
+  const pausedAt = useRef(0);
+  useEffect(() => {
+    pausedRef.current = paused;
+    if (paused) { pausedAt.current = Date.now(); return; }
+    if (!pausedAt.current) return;
+    const d = Date.now() - pausedAt.current;
+    pausedAt.current = 0;
+    lastTick.current = Date.now();
+    const p = phaseRef.current;
+    if (p.kind === "question" || p.kind === "shootout") go({ ...p, startedAt: p.startedAt + d });
+    else if (p.kind === "whoami") go({ ...p, clueAt: p.clueAt + d });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paused]);
+  useEffect(() => { loadData().then((d) => alive.current && setData(d)); }, []);
+  useEffect(() => {
+    loadBots().then((m) => {
+      if (!alive.current) return;
+      setMod(m);
+      for (const c of ["white", "black"] as Color[]) {
+        const p = setup.players[c];
+        if (p.kind === "bot" && p.botId) bots.current[c] = m.createBot(p.botId as never, setup.botLevel);
+      }
+      for (const c of ["white", "black"] as Color[]) talk(c, "start");
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const isBot = (c: Color) => game.players[c].kind === "bot";
+
+  // ------------------------------------------------------------ talk
+  const bubbleTimer = useRef<ReturnType<typeof setTimeout>>();
+  const talk = useCallback((c: Color, m: TalkMoment) => {
+    const line = bots.current[c]?.say(m);
+    if (!line) return;
+    setBubble({ color: c, text: line });
+    clearTimeout(bubbleTimer.current);
+    bubbleTimer.current = setTimeout(() => alive.current && setBubble(null), 3000);
+  }, []);
+  /** Lets every bot react to something (their own moment, or the opponent's). */
+  const react = useCallback((actor: Color, own: TalkMoment, other?: TalkMoment) => {
+    if (bots.current[actor]) talk(actor, own);
+    if (other && bots.current[opposite(actor)]) talk(opposite(actor), other);
+  }, [talk]);
+
+  // ------------------------------------------------------------ ending a turn
+  const endTurn = useCallback((state: GameState) => {
+    const { state: next, notes } = finishTurn(state);
+    setGame(next);
+    setOverlay({});
+    if (notes.length) setNote(notes.join(". "));
+    if (next.outcome) {
+      play("fulltime");
+      const w = "winner" in next.outcome ? next.outcome.winner : null;
+      if (w) { react(w, "win"); react(opposite(w), "loss"); }
+      go({ kind: "over" });
+      return;
+    }
+    if (next.pendingDraw && data) {
+      setNote(`It's a draw (${next.pendingDraw}), so it goes to a Penalty Shootout!`);
+      play("kickoff");
+      go({ kind: "shootout", kicks: [], q: data.bank.any("medium"), startedAt: Date.now(), choice: null, taker: "white" });
+      return;
+    }
+    if (!notes.length) setNote(`${next.players[turnOf(next)].name} to move`);
+    if (positionCheck(next)) play("check");
+    go({ kind: "move" });
+  }, [data, go, play, react, setGame]);
+
+  // ------------------------------------------------------------ moves
+  const afterMove = useCallback((r: MoveResult, mover: Color) => {
+    setGame(r.state);
+    setOverlay({});
+    play(r.captured ? "capture" : "move");
+    if (r.captured) react(mover, "capture", "lostPiece");
+    const name = r.state.players[mover].name;
+    const t = r.trigger;
+    if (t.kind === "none" || !data) { endTurn(r.state); return; }
+    if (t.kind === "promotion") {
+      play("kickoff");
+      setNote(`${name} reaches the end: "Who am I?" decides the new piece`);
+      go({ kind: "whoami", color: mover, set: data.whoami.draw(r.state.players[mover].club, t.bonus), square: t.square, clues: 1, clueAt: Date.now(), bonus: t.bonus });
+      return;
+    }
+    const bonus = t.kind === "hot-spot";
+    if (bonus) { play("cheer"); react(mover, "hotSpot"); }
+    else play("kickoff");
+    const label = bonus ? "Club Bonus Round: double Form" : t.kind === "capture" ? "Capture: pick a question" : "Kick-off: pick a question";
+    setNote(`${name}: ${label}`);
+    go({ kind: "cards", color: mover, cards: data.bank.deal(r.state.players[mover].club, bonus), bonus, landed: r.landed, label });
+  }, [data, endTurn, go, play, react, setGame]);
+
+  const move = useCallback((uci: string): boolean => {
+    const g = gameRef.current;
+    if (phaseRef.current.kind !== "move" || g.outcome) return false;
+    const m = resolveMove(g, uci);
+    if (!m) return false;
+    afterMove(playMove(g, m), turnOf(g));
+    return true;
+  }, [afterMove]);
+
+  // ------------------------------------------------------------ power-ups
+  const applyPower = useCallback((id: PowerUpId, targets: string[]): string | null => {
+    const g = gameRef.current;
+    const res = usePowerUp(g, id, targets);
+    if (res.error) { play("locked"); setNote(res.error); return res.error; }
+    setGame(res.state);
+    play("powerup");
+    setNote(res.note ?? "");
+    react(turnOf(g), "powerUp");
+    const me = turnOf(g);
+    if (id === "assistants-flag") setOverlay({ attacked: attackedSquares(g.fen, opposite(me)) });
+    if ((id === "managers-tip" || id === "scout-report") && mod) {
+      const fen = id === "managers-tip" ? res.state.fen : flipTurn(res.state.fen);
+      if (fen) {
+        mod.bestMove(fen, g.options.chess960).then((best) => {
+          if (!alive.current || !best) return;
+          if (id === "managers-tip") {
+            const legal = resolveMove(gameRef.current, best);
+            if (legal) setOverlay({ tip: [legal.slice(0, 2), legal.slice(2, 4)] });
+            setNote(legal ? `Manager's Tip: ${legal.slice(0, 2)} to ${legal.slice(2, 4)}` : "Manager's Tip: the gaffer's stumped");
+          } else {
+            setOverlay({ scout: best.slice(0, 2) });
+            setNote(`Scout Report: watch the piece on ${best.slice(0, 2)}`);
+          }
+        });
+      } else setNote("The scouts can't read the game while you're in check");
+    }
+    return null;
+  }, [mod, play, react, setGame]);
+
+  /** Human taps a power-up button. */
+  const choosePower = useCallback((id: PowerUpId) => {
+    const g = gameRef.current;
+    if (phaseRef.current.kind === "target") { go({ kind: "move" }); if ((phaseRef.current as { power?: string }).power === id) return; }
+    if (phaseRef.current.kind !== "move" && phaseRef.current.kind !== "target") return;
+    const blocked = powerBlocked(g, id);
+    if (blocked) { play("locked"); setNote(`${POWER_UP_BY_ID[id].name}: ${blocked}`); return; }
+    const def = POWER_UP_BY_ID[id];
+    if (def.target === "none") { applyPower(id, []); return; }
+    play("select");
+    setNote(`${def.name}: ${targetPrompt(def.target)} (tap the button again to cancel)`);
+    go({ kind: "target", power: id });
+  }, [applyPower, go, play]);
+
+  /** Human taps a square while picking a power-up target. */
+  const tapTarget = useCallback((sq: string) => {
+    const p = phaseRef.current;
+    if (p.kind !== "target") return;
+    const def = POWER_UP_BY_ID[p.power];
+    if (def.target === "two-own-pieces" && !p.first) {
+      play("select");
+      setNote(`${def.name}: now tap the piece to swap with`);
+      go({ ...p, first: sq });
+      return;
+    }
+    const err = applyPower(p.power, p.first ? [p.first, sq] : [sq]);
+    if (!err) go({ kind: "move" });
+    else if (p.first) go({ ...p, first: undefined });
+  }, [applyPower, go, play]);
+
+  // ------------------------------------------------------------ questions
+  const pickCard = useCallback((index: number, worldie: boolean) => {
+    const p = phaseRef.current;
+    if (p.kind !== "cards" || !data) return;
+    const card = p.cards[index];
+    const isWorldie = worldie && card.difficulty === "hard";
+    play("select");
+    go({
+      kind: "question", color: p.color, q: data.bank.draw(card), card, worldie: isWorldie, bonus: p.bonus, landed: p.landed,
+      startedAt: Date.now(), limitMs: isWorldie ? TIMER_MS.worldie : TIMER_MS.normal, hidden: [], label: cardLabel(card, isWorldie),
+    });
+  }, [data, go, play]);
+
+  const answer = useCallback((choice: number | null) => {
+    const p = phaseRef.current;
+    if (p.kind !== "question") return;
+    const ms = Date.now() - p.startedAt;
+    const correct = choice === p.q.answer && ms <= p.limitMs + 250;
+    const out = applyAnswer(gameRef.current, {
+      color: p.color, difficulty: p.card.difficulty, worldie: p.worldie, bonus: p.bonus, correct, ms, landed: p.landed,
+    });
+    setGame(out.state);
+    if (correct) { play("correct"); setTimeout(() => play("form"), 300); react(p.color, "ownRight"); }
+    else { play("wrong"); setTimeout(() => play("groan"), 350); react(p.color, "ownWrong", "oppWrong"); }
+    const who = out.state.players[p.color].name;
+    go({
+      kind: "result", color: p.color, correct, title: correct ? `${who} got it right!` : choice === null ? "Time's up!" : `${who} got it wrong`,
+      lines: out.lines, options: p.q.options, answer: p.q.answer, choice, explanation: p.q.explanation, next: out.state, auto: isBot(p.color),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [go, play, react, setGame]);
+
+  const useHint = useCallback((id: TriviaHintId) => {
+    const p = phaseRef.current;
+    if (p.kind !== "question" || p.worldie) return;
+    const def = TRIVIA_HINTS.find((h) => h.id === id)!;
+    const g = gameRef.current;
+    if (g.players[p.color].form < def.cost) { play("locked"); setNote(`${def.name} needs ${def.cost} Form`); return; }
+    if ((id === "fifty-fifty" && p.hidden.length) || (id === "ask-the-crowd" && p.crowd) || (id === "phone-a-friend" && p.friend !== undefined)) return;
+    setGame(spendForm(g, p.color, def.cost));
+    play("powerup");
+    if (id === "fifty-fifty") go({ ...p, hidden: fiftyFifty(p.q) });
+    if (id === "ask-the-crowd") go({ ...p, crowd: askTheCrowd(p.q, Math.random, p.hidden) });
+    if (id === "phone-a-friend") go({ ...p, friend: phoneAFriend(p.q, Math.random, p.hidden) });
+  }, [go, play, setGame]);
+
+  // "Who am I?"
+  const nextClue = useCallback(() => {
+    const p = phaseRef.current;
+    if (p.kind !== "whoami") return;
+    if (p.clues >= 5) { guess(null); return; }
+    play("tick");
+    go({ ...p, clues: p.clues + 1, clueAt: Date.now() });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [go, play]);
+
+  const guess = useCallback((choice: number | null) => {
+    const p = phaseRef.current;
+    if (p.kind !== "whoami") return;
+    const correct = choice === p.set.answer;
+    const res = resolvePromotion(gameRef.current, p.square, p.clues, correct);
+    setGame(res.state);
+    if (correct) { play("correct"); setTimeout(() => play("cheer"), 350); react(p.color, "ownRight"); }
+    else { play("wrong"); react(p.color, "ownWrong", "oppWrong"); }
+    const who = res.state.players[p.color].name;
+    go({
+      kind: "result", color: p.color, correct,
+      title: correct ? `${who} got it on clue ${p.clues}!` : choice === null ? "Time's up!" : `${who} got it wrong`,
+      lines: [res.line], options: p.set.options, answer: p.set.answer, choice,
+      explanation: p.set.clues.slice(p.clues).length ? `The clues you didn't need: ${p.set.clues.slice(p.clues).join(" ")}` : undefined,
+      next: res.state, auto: isBot(p.color),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [go, play, react, setGame]);
+
+  const continueOn = useCallback(() => {
+    const p = phaseRef.current;
+    if (p.kind !== "result") return;
+    endTurn(p.next);
+  }, [endTurn]);
+
+  // ------------------------------------------------------------ shootout
+  const kick = useCallback((choice: number | null) => {
+    const p = phaseRef.current;
+    if (p.kind !== "shootout" || p.choice !== null || !data) return;
+    const scored = choice === p.q.answer && Date.now() - p.startedAt <= TIMER_MS.normal + 250;
+    play(scored ? "cheer" : "groan");
+    const kicks = [...p.kicks, { color: p.taker, scored }];
+    go({ ...p, choice: choice ?? -1, kicks });
+    setTimeout(() => {
+      if (!alive.current) return;
+      const winner = shootoutWinner(kicks);
+      if (winner) {
+        const score = { white: kicks.filter((k) => k.color === "white" && k.scored).length, black: kicks.filter((k) => k.color === "black" && k.scored).length };
+        const g = { ...gameRef.current, pendingDraw: null, outcome: { kind: "shootout" as const, winner, score } };
+        setGame(g);
+        play("fulltime");
+        react(winner, "win");
+        react(opposite(winner), "loss");
+        go({ kind: "over" });
+      } else {
+        go({ kind: "shootout", kicks, q: data.bank.any("medium"), startedAt: Date.now(), choice: null, taker: opposite(p.taker) });
+      }
+    }, 1800);
+  }, [data, go, play, react, setGame]);
+
+  // ------------------------------------------------------------ resign / draw
+  const resign = useCallback((c: Color) => {
+    const g = resignRule(gameRef.current, c);
+    setGame(g);
+    play("fulltime");
+    react(opposite(c), "win");
+    go({ kind: "over" });
+  }, [go, play, react, setGame]);
+
+  const agreeDraw = useCallback(() => {
+    const g = endInDraw(gameRef.current, "agreement");
+    endTurnDraw(g);
+    function endTurnDraw(s: GameState) {
+      setGame(s);
+      if (s.outcome) { play("fulltime"); go({ kind: "over" }); return; }
+      if (data) { setNote("Draw agreed. Penalty Shootout!"); go({ kind: "shootout", kicks: [], q: data.bank.any("medium"), startedAt: Date.now(), choice: null, taker: "white" }); }
+    }
+  }, [data, go, play, setGame]);
+
+  // ------------------------------------------------------------ timers (question clock, clues, chess clock)
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 200);
+    return () => clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    const p = phase;
+    if (pausedRef.current) return;
+    if (p.kind === "question" && !isBot(p.color)) {
+      const left = p.limitMs - (now - p.startedAt);
+      if (left <= 0) answer(null);
+    }
+    if (p.kind === "whoami" && !isBot(p.color) && now - p.clueAt >= CLUE_MS) nextClue();
+    if (p.kind === "shootout" && p.choice === null && !isBot(p.taker) && now - p.startedAt > TIMER_MS.normal) kick(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [now]);
+
+  // Chess clock: runs only while the player to move is choosing a move.
+  useEffect(() => {
+    const t = Date.now();
+    const dt = t - lastTick.current;
+    lastTick.current = t;
+    if (pausedRef.current) return;
+    const g = gameRef.current;
+    if (!g.options.timed || g.outcome || (phase.kind !== "move" && phase.kind !== "target")) return;
+    const c = turnOf(g);
+    const left = (g.players[c].clockMs ?? 0) - dt;
+    if (left <= 0) {
+      setGame(timeout(setClock(g, c, 0), c));
+      play("fulltime");
+      go({ kind: "over" });
+    } else setGame(setClock(g, c, left));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [now]);
+
+  // ------------------------------------------------------------ bots
+  const busy = useRef(false);
+  useEffect(() => {
+    const p = phase;
+    const g = game;
+    if (g.outcome || busy.current || paused) return;
+    const actor: Color | null =
+      p.kind === "move" ? turnOf(g)
+        : p.kind === "cards" || p.kind === "question" || p.kind === "whoami" || p.kind === "result" ? p.color
+          : p.kind === "shootout" && p.choice === null ? p.taker : null;
+    if (!actor) return;
+    const bot = bots.current[actor];
+    if (!bot) return;
+    busy.current = true;
+    runBot(bot, actor, p).finally(() => { busy.current = false; });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, mod, paused]);
+
+  async function runBot(bot: BotLike, color: Color, p: Phase) {
+    const still = () => alive.current && !pausedRef.current && phaseRef.current === p;
+    if (p.kind === "move") {
+      await wait(400);
+      if (!still()) return;
+      let g = gameRef.current;
+      let managersTip = false;
+      const available = POWER_UPS.filter((d) => !powerBlocked(g, d.id) && d.id !== "scout-report" && d.id !== "assistants-flag")
+        .map((d) => ({ id: d.id, cost: powerCost(g, color, d.id) }));
+      if (available.length) {
+        const choice = await bot.choosePowerUp({
+          fen: g.fen, color, form: g.players[color].form, available, inCheck: positionCheck(g), timed: g.options.timed, clockMs: g.players[color].clockMs ?? undefined,
+        });
+        if (choice && available.some((a) => a.id === choice.id)) {
+          const id = choice.id as PowerUpId;
+          const targets = [choice.target, choice.target2].filter((t): t is string => !!t);
+          const res = usePowerUp(g, id, targets);
+          if (!res.error) {
+            setGame(res.state);
+            play("powerup");
+            setNote(res.note ?? "");
+            talk(color, "powerUp");
+            g = res.state;
+            if (id === "managers-tip") managersTip = true;
+            await wait(900);
+            if (!alive.current) return;
+            if (id === "counter-attack" && targets[0]) {
+              const push = legalMoves(g).moves.find((m) => m.startsWith(targets[0]) && Math.abs(Number(m[3]) - Number(m[1])) === 2);
+              if (push) { afterMove(playMove(g, push), color); return; }
+            }
+          }
+        }
+      }
+      const allowed = legalMoves(g).moves;
+      if (!allowed.length) return;
+      let uci = allowed[0];
+      try {
+        const res = await bot.chooseMove({ fen: g.fen, chess960: g.options.chess960, allowedMoves: allowed, managersTip });
+        await wait(Math.min(res.thinkMs, 2500));
+        uci = resolveMove(gameRef.current, res.uci) ?? allowed[Math.floor(Math.random() * allowed.length)];
+      } catch {
+        uci = allowed[Math.floor(Math.random() * allowed.length)];
+      }
+      if (!alive.current || pausedRef.current || phaseRef.current.kind !== "move" || turnOf(gameRef.current) !== color) return;
+      afterMove(playMove(gameRef.current, uci), color);
+    } else if (p.kind === "cards") {
+      await wait(1100);
+      if (!still()) return;
+      const c = await bot.chooseCard({ cards: p.cards, worldieAllowed: true, form: gameRef.current.players[color].form, bonusRound: p.bonus });
+      pickCard(Math.min(2, Math.max(0, c.index)), c.worldie);
+    } else if (p.kind === "question") {
+      const a = await bot.answer({ question: p.q, worldie: p.worldie, removed: p.hidden });
+      await wait(Math.min(a.delayMs, p.limitMs + 100));
+      if (!still()) return;
+      answer(a.delayMs > p.limitMs ? null : a.choice);
+    } else if (p.kind === "whoami") {
+      const aim = PROMOTION_AIM[bot.promotionPick()] ?? PROMOTION_AIM.n;
+      // Reveal clues at a watchable pace up to the bot's aim, then guess.
+      for (let k = p.clues; k < aim.clues; k++) {
+        await wait(1500);
+        if (!alive.current || phaseRef.current.kind !== "whoami") return;
+        go({ ...(phaseRef.current as Extract<Phase, { kind: "whoami" }>), clues: k + 1, clueAt: Date.now() });
+        play("tick");
+      }
+      const set = p.set;
+      const a = await bot.answer({ question: { options: set.options, answer: set.answer, difficulty: aim.difficulty, club: set.club }, worldie: aim.worldie });
+      await wait(Math.min(2500, Math.max(900, a.delayMs / 3)));
+      if (!alive.current || phaseRef.current.kind !== "whoami") return;
+      guess(a.choice);
+    } else if (p.kind === "result" && p.auto) {
+      await wait(2600);
+      if (!still()) return;
+      continueOn();
+    } else if (p.kind === "shootout") {
+      const a = await bot.answer({ question: p.q });
+      await wait(Math.min(a.delayMs, TIMER_MS.normal));
+      if (!still()) return;
+      kick(a.choice);
+    }
+  }
+
+  const botMeta: BotMeta[] = useMemo(() => (mod ? botList(mod) : []), [mod]);
+
+  return {
+    game, phase, note, bubble, overlay, now, ready: !!data, botMeta, engineReady: !!mod,
+    move, choosePower, tapTarget, pickCard, answer, useHint, nextClue, guess, continueOn, kick, resign, agreeDraw,
+  };
+}
+
+function positionCheck(g: GameState): boolean {
+  // In check if the side to move has its king attacked.
+  try {
+    const { positionOf } = rulesModule;
+    return positionOf(g.fen).isCheck();
+  } catch { return false; }
+}
+import * as rulesModule from "./rules";
+
+function targetPrompt(t: string): string {
+  switch (t) {
+    case "enemy-piece": return "tap an enemy piece";
+    case "enemy-pawn": return "tap an enemy pawn";
+    case "own-pawn": return "tap one of your pawns";
+    case "own-second-rank": return "tap an empty square on your 2nd rank";
+    case "two-own-pieces": return "tap the first of two pieces to swap";
+    default: return "";
+  }
+}
+
+/** The shootout winner, or null if it isn't decided yet (5 each, then sudden death). */
+export function shootoutWinner(kicks: Array<{ color: Color; scored: boolean }>): Color | null {
+  const taken = (c: Color) => kicks.filter((k) => k.color === c).length;
+  const goals = (c: Color) => kicks.filter((k) => k.color === c && k.scored).length;
+  const w = goals("white"), b = goals("black"), tw = taken("white"), tb = taken("black");
+  if (tw <= 5 && tb <= 5) {
+    if (w > b + (5 - tb)) return "white";
+    if (b > w + (5 - tw)) return "black";
+    if (tw === 5 && tb === 5) return w > b ? "white" : b > w ? "black" : null;
+    return null;
+  }
+  if (tw === tb && w !== b) return w > b ? "white" : "black";
+  return null;
+}

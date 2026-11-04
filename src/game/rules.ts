@@ -444,16 +444,42 @@ export function playMove(state: GameState, uci: string, rng: Rng = Math.random):
   return { state: next, trigger, san, captured: capturedPiece ? ROLE_CHAR[capturedPiece.role] : null, check, landed };
 }
 
-/** A wrong promotion answer: the new piece becomes a knight. */
-export function demotePromotion(state: GameState, square: string): GameState {
+/**
+ * Promotion is a "Who am I?": five clues, one guess. The earlier the right guess,
+ * the better the piece. Index = clues shown minus one.
+ */
+export const WHO_AM_I_PIECES: PromoRole[] = ["q", "r", "b", "n", "n"];
+export const WHO_AM_I_PENALTY = 2;
+
+/** Sets the promoted piece once the "Who am I?" is over. Wrong: a knight, and the opponent gets +2 Form. */
+export function resolvePromotion(state: GameState, square: string, cluesShown: number, correct: boolean): { state: GameState; role: PromoRole; line: string } {
+  const role: PromoRole = correct ? WHO_AM_I_PIECES[Math.min(4, Math.max(0, cluesShown - 1))] : "n";
   const s = setupOf(state.fen);
   const sq = parseSquare(square)!;
   const p = s.board.get(sq);
-  if (!p) return state;
-  s.board.set(sq, { role: "knight", color: p.color, promoted: true });
-  const fen = validFen(s);
-  return fen ? { ...state, fen } : state;
+  let next = state;
+  if (p) {
+    s.board.set(sq, { role: CHAR_ROLE[role], color: p.color, promoted: true });
+    const fen = validFen(s);
+    if (fen) next = { ...next, fen };
+  }
+  const mover = p?.color ?? opposite(turnOf(state));
+  let line = `Promoted to a ${ROLE_NAME[role]}`;
+  if (!correct) {
+    const enemy = opposite(mover);
+    next = withPlayer(next, enemy, { form: addForm(next.players[enemy].form, WHO_AM_I_PENALTY) });
+    line = `Wrong, so it's a knight, and ${next.players[enemy].name} gets +${WHO_AM_I_PENALTY} Form`;
+  }
+  return { state: next, role, line };
 }
+
+/** For bots: the piece they aim for maps to an old-style difficulty for their answer odds. */
+export const PROMOTION_AIM: Record<PromoRole, { clues: number; difficulty: Difficulty; worldie: boolean }> = {
+  q: { clues: 1, difficulty: "hard", worldie: true },
+  r: { clues: 2, difficulty: "hard", worldie: false },
+  b: { clues: 3, difficulty: "medium", worldie: false },
+  n: { clues: 4, difficulty: "easy", worldie: false },
+};
 
 export interface TurnInfo {
   state: GameState;
@@ -782,12 +808,17 @@ export function applyAnswer(state: GameState, a: AnswerCtx): AnswerOutcome {
   return { state: next, lines, formGained: gained };
 }
 
-/** Which question a promotion needs. */
-export const PROMOTION_QUESTION: Record<PromoRole, { difficulty: Difficulty; worldie: boolean; label: string }> = {
-  n: { difficulty: "easy", worldie: false, label: "Sunday League" },
-  b: { difficulty: "medium", worldie: false, label: "Championship" },
-  r: { difficulty: "hard", worldie: false, label: "Premier League" },
-  q: { difficulty: "hard", worldie: true, label: "Worldie" },
-};
-
 export { CHAR_ROLE, ROLE_CHAR };
+
+/** Spends Form on a trivia hint. */
+export function spendForm(state: GameState, color: Color, n: number): GameState {
+  return withPlayer(state, color, { form: Math.max(0, state.players[color].form - n) });
+}
+
+export function timeout(state: GameState, loser: Color): GameState {
+  return { ...state, outcome: { kind: "timeout", winner: opposite(loser) } };
+}
+
+export function setClock(state: GameState, color: Color, ms: number): GameState {
+  return withPlayer(state, color, { clockMs: ms });
+}

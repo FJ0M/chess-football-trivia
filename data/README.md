@@ -25,3 +25,11 @@ Each question:
 - Clubs: all 92 clubs in the 2026-27 Premier League, Championship, League One and League Two. Each has at least 10 questions per difficulty, so a player who picks their club always gets tailored cards. West Ham's club questions are the 57 West Ham questions in the general bank.
 - Scope: Premier League from 2000-01 onwards, plus a few all-time records and West Ham history.
 - Facts current to the 2024-25 season. Questions about "records" may go stale; check them each season.
+
+## Who am I? (pawn promotion)
+
+`whoami.json` holds the "Who am I?" clue sets used for pawn promotion. Do not edit it by hand: edit `tools/build_whoami.py` and run
+
+    python3 tools/build_whoami.py data/whoami.json
+
+Each set has five clues (hardest first), four `options`, the `answer` index, `club` (null for general Premier League players, or a club id for a club set) and the Wikipedia `source` every clue was checked against on 2026-11-04. v1: 30 general, 10 West Ham, 8 Brighton.
