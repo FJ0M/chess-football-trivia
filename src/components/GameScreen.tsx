@@ -2,7 +2,7 @@
 // Class names (.board, .sq, .pc, .quiz, .powers, .pw, .player) are the ones every
 // style in themes.css dresses up.
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { GameStyle } from "../theme/themes";
 import type { SfxName } from "../audio/sfx";
 import type { PassAndPlayView } from "../settings/settings";
@@ -40,7 +40,18 @@ export function GameScreen({ style, play, setup, view, paused, onPause, onExit, 
   const local = game.options.mode === "local";
   const orientation: Color = local ? (view === "hand-over" ? active : "white") : humans[0] ?? "white";
   const turned = local && view === "face-to-face" && active === "black";
+  /** "Flip the screen": the whole game turns 180 degrees for Black, so the board and every card face them. */
+  const flipAll = local && view === "flip" && active === "black";
   const humanToAct = game.players[active].kind === "human";
+  // When the whole screen turns round, mirror the scroll position so the player now facing it
+  // sees the same part (board or controls) the other player was looking at.
+  const firstFlip = useRef(true);
+  useEffect(() => {
+    if (firstFlip.current) { firstFlip.current = false; return; }
+    if (!(local && view === "flip")) return;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    if (max > 0) window.scrollTo({ top: max - window.scrollY });
+  }, [flipAll]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const dests = useMemo(() => (phase.kind === "move" && humanToAct ? destsFor(game) : new Map<string, string[]>()), [game, phase.kind, humanToAct]);
   const targets = useMemo(() => {
@@ -78,7 +89,7 @@ export function GameScreen({ style, play, setup, view, paused, onPause, onExit, 
   const bottom: Color = orientation;
 
   return (
-    <div className={`screen style-${style.id}${turned ? " f2f-black" : ""}`}>
+    <div className={`screen style-${style.id}${turned ? " f2f-black" : ""}${local && view === "flip" ? " flip-mode" : ""}${flipAll ? " flip-all" : ""}`}>
       <div className="strip">
         <span>{game.options.chess960 ? `Chess960 · No. ${game.options.position}` : game.options.trivia ? "Chess Football Trivia" : "Plain chess"}</span>
         <span>Move {Math.ceil((game.history.length + 1) / 2)}</span>
@@ -365,7 +376,7 @@ function PowerBar({ game, phase, color, enabled, onPick, play }: { game: GameSta
   return (
     <div className="powerbox">
       <div className="form-meter" aria-label={`${me.name} has ${me.form} Form to spend`}>
-        <span className="label">{me.kind === "human" && game.options.mode === "bot" ? "Your Form" : `${me.name}'s Form`}</span>
+        <span className="label">{(me.kind === "human" && game.options.mode === "bot") || me.name.toLowerCase() === "you" ? "Your Form" : `${me.name}'s Form`}</span>
         <span className="pips" aria-hidden="true">{Array.from({ length: FORM_CAP }, (_, i) => <i key={i} className={i < me.form ? "on" : ""} />)}</span>
         <b className="num">{me.form}<small>/{FORM_CAP}</small></b>
       </div>

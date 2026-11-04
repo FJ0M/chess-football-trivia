@@ -27,7 +27,7 @@ All numbers below (Form costs, timers, bot accuracy) are first guesses to tune i
 There are two ways to play, and both use the same rules.
 
 - **vs Bot.** Pick Freddie, Ryan or Ollie. You answer questions yourself; the bot "answers" using its trivia profile and talks trash throughout.
-- **Pass and Play.** Two people on one device. Whoever triggered the question answers it, and the other player hands over the device without peeking (honour system, as at the pub). The screen faces whoever is up. **Hand over** (the default, best on a phone) flips the board each turn. **Face to face** (a tablet flat on the table) keeps the board fixed and turns the question card and controls 180 degrees towards Black. Both can be switched off in Settings.
+- **Pass and Play.** Two people on one device. Whoever triggered the question answers it, and the other player hands over the device without peeking (honour system, as at the pub). The screen faces whoever is up. **Flip the screen** (the default, on phones, tablets and computers) turns the whole game round 180 degrees on Black's turn, so the board, question card and power-ups all face them with the device flat on the table. **Hand over** flips only the board, for passing the device across. **Face to face** (a tablet flat on the table) keeps the board fixed and turns the question card and controls 180 degrees towards Black. Both can be switched off in Settings.
 
 Each game also has a **Plain Chess** toggle (no trivia) and a **Timed** toggle (3, 5, 10, 15 or 30 minutes each, shown on stadium-style scoreboard clocks), so it works for a quick game or a serious one.
 

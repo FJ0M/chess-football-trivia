@@ -48,3 +48,14 @@ describe("styles and music", () => {
     }
   });
 });
+
+describe("Pass and Play view", () => {
+  it("defaults to flipping the whole screen, and moves old default saves over once", () => {
+    expect(DEFAULT_SETTINGS.passAndPlayView).toBe("flip");
+    const old = { getItem: () => JSON.stringify({ passAndPlayView: "hand-over" }) };
+    expect(loadSettings(old).passAndPlayView).toBe("flip");
+    let saved = "";
+    saveSettings({ ...DEFAULT_SETTINGS, passAndPlayView: "hand-over" }, { setItem: (_k: string, v: string) => { saved = v; } });
+    expect(loadSettings({ getItem: () => saved }).passAndPlayView).toBe("hand-over");
+  });
+});

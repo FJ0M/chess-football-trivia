@@ -9,12 +9,14 @@ export interface Settings {
   musicVolume: number;
   /** "match" plays the track that goes with the chosen style. */
   musicTrack: "match" | MusicTrackId;
-  /** Pass and Play: flip the board to whoever is up, keep it fixed and turn the controls (tablet on a table), or neither. */
+  /** Pass and Play: turn the whole screen to face whoever is up (device flat on the table), flip just the board (hand the device over), keep the board fixed and turn the controls, or none. */
   passAndPlayView: PassAndPlayView;
 }
 
-export type PassAndPlayView = "hand-over" | "face-to-face" | "off";
-const VIEWS: PassAndPlayView[] = ["hand-over", "face-to-face", "off"];
+export type PassAndPlayView = "flip" | "hand-over" | "face-to-face" | "off";
+const VIEWS: PassAndPlayView[] = ["flip", "hand-over", "face-to-face", "off"];
+/** Saves from before "flip" existed had "hand-over" as the default; they move to the new default once. */
+const VIEW_VERSION = 2;
 
 export const DEFAULT_SETTINGS: Settings = {
   style: DEFAULT_STYLE,
@@ -23,7 +25,7 @@ export const DEFAULT_SETTINGS: Settings = {
   musicOn: true,
   musicVolume: 0.35,
   musicTrack: "match",
-  passAndPlayView: "hand-over",
+  passAndPlayView: "flip",
 };
 
 const KEY = "cft.settings.v1";
@@ -51,7 +53,9 @@ export function sanitize(raw: unknown): Settings {
 export function loadSettings(storage: Pick<Storage, "getItem"> | undefined = safeStorage()): Settings {
   try {
     const text = storage?.getItem(KEY);
-    return sanitize(text ? JSON.parse(text) : {});
+    const raw = text ? JSON.parse(text) : {};
+    if (raw && typeof raw === "object" && raw.viewVersion !== VIEW_VERSION && raw.passAndPlayView === "hand-over") raw.passAndPlayView = "flip";
+    return sanitize(raw);
   } catch {
     return { ...DEFAULT_SETTINGS };
   }
@@ -59,7 +63,7 @@ export function loadSettings(storage: Pick<Storage, "getItem"> | undefined = saf
 
 export function saveSettings(s: Settings, storage: Pick<Storage, "setItem"> | undefined = safeStorage()): void {
   try {
-    storage?.setItem(KEY, JSON.stringify(s));
+    storage?.setItem(KEY, JSON.stringify({ ...s, viewVersion: VIEW_VERSION }));
   } catch {
     // Private browsing or storage full: settings just won't persist.
   }

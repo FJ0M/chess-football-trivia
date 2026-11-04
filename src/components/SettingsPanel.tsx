@@ -76,7 +76,8 @@ export function SettingsPanel({ settings, onChange, onClose, play }: Props) {
         <label className="select" htmlFor="pnp-view">
           <span>How the screen faces each player</span>
           <select id="pnp-view" value={settings.passAndPlayView} onChange={(e) => set("passAndPlayView", e.target.value as Settings["passAndPlayView"])}>
-            <option value="hand-over">Hand over: the board flips to whoever is up (best on a phone)</option>
+            <option value="flip">Flip the screen: everything turns round to face whoever is up (device flat on the table)</option>
+            <option value="hand-over">Hand over: only the board flips, for passing the device across</option>
             <option value="face-to-face">Face to face: board stays put, controls turn round (tablet on a table)</option>
             <option value="off">Off: White always at the bottom</option>
           </select>
