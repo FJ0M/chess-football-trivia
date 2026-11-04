@@ -253,7 +253,7 @@ def main(out):
             "answer": opts.index(correct),
             "difficulty": DIFF[diff],
             "topic": topic(cat, q),
-            "westHam": cat == "west-ham",
+            "club": "west-ham" if cat == "west-ham" else None,
             "verified": True,
             "explanation": expl,
         })

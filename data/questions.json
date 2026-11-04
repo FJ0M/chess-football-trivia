@@ -14,7 +14,7 @@
       "answer": 2,
       "difficulty": "easy",
       "topic": "Title races",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Arsenal's 'Invincibles' won 26 and drew 12."
     },
@@ -30,7 +30,7 @@
       "answer": 1,
       "difficulty": "easy",
       "topic": "Title races",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Leicester won it by 10 points under Claudio Ranieri."
     },
@@ -46,7 +46,7 @@
       "answer": 1,
       "difficulty": "easy",
       "topic": "Title races",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "City beat QPR 3-2 with Agüero's goal at 93:20."
     },
@@ -62,7 +62,7 @@
       "answer": 0,
       "difficulty": "easy",
       "topic": "Title races",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Liverpool won it by 18 points under Jürgen Klopp."
     },
@@ -78,7 +78,7 @@
       "answer": 0,
       "difficulty": "easy",
       "topic": "Title races",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "It was Ferguson's 13th and final league title before retiring."
     },
@@ -94,7 +94,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "Title races",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Pep Guardiola's 'Centurions' got exactly 100 points in 2017-18."
     },
@@ -110,7 +110,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "Title races",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Mourinho's first Chelsea side set a record of 95 points (since beaten by City)."
     },
@@ -126,7 +126,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "Title races",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Conte won it in his first season using a back three."
     },
@@ -142,7 +142,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "Title races",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "No team had ever won four consecutive top-flight titles before."
     },
@@ -158,7 +158,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "Title races",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Slot took over from Klopp in summer 2024."
     },
@@ -174,7 +174,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "Title races",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "It was City's first top-flight title for 44 years."
     },
@@ -190,7 +190,7 @@
       "answer": 2,
       "difficulty": "hard",
       "topic": "Title races",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Pellegrini won the title and League Cup in his first season."
     },
@@ -206,7 +206,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "Title races",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Chelsea scored 103 league goals that season."
     },
@@ -222,7 +222,7 @@
       "answer": 3,
       "difficulty": "hard",
       "topic": "Title races",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Vieira was captain from 2002 to 2005."
     },
@@ -238,7 +238,7 @@
       "answer": 1,
       "difficulty": "hard",
       "topic": "Title races",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Giggs holds the record for most Premier League titles."
     },
@@ -254,7 +254,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "Title races",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Spurs' last league title was in 1960-61."
     },
@@ -270,7 +270,7 @@
       "answer": 3,
       "difficulty": "hard",
       "topic": "Title races",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Derby won just one league game all season."
     },
@@ -286,7 +286,7 @@
       "answer": 2,
       "difficulty": "easy",
       "topic": "Goals & records",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Shearer scored 260 Premier League goals."
     },
@@ -302,7 +302,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "Goals & records",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Kane scored 213 for Spurs before joining Bayern Munich."
     },
@@ -318,7 +318,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "Goals & records",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Haaland did it in his first Premier League season."
     },
@@ -334,7 +334,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "Goals & records",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Salah broke the 31-goal record shared by Shearer, Ronaldo and Suárez."
     },
@@ -350,7 +350,7 @@
       "answer": 2,
       "difficulty": "hard",
       "topic": "Goals & records",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Henry won it in 2001-02, 2003-04, 2004-05 and 2005-06."
     },
@@ -366,7 +366,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "Goals & records",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Long scored it against Watford in April 2019."
     },
@@ -382,7 +382,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "Goals & records",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Mané did it for Southampton against Aston Villa in May 2015."
     },
@@ -398,7 +398,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "Goals & records",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "It is Tottenham's biggest Premier League win."
     },
@@ -414,7 +414,7 @@
       "answer": 0,
       "difficulty": "hard",
       "topic": "Goals & records",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He broke Ruud van Nistelrooy's record of 10."
     },
@@ -430,7 +430,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "Goals & records",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "It equalled the record Premier League winning margin."
     },
@@ -446,7 +446,7 @@
       "answer": 3,
       "difficulty": "hard",
       "topic": "Goals & records",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "It was played in September 2007."
     },
@@ -462,7 +462,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "Goals & records",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Wayne Rooney scored a hat-trick."
     },
@@ -478,7 +478,7 @@
       "answer": 2,
       "difficulty": "hard",
       "topic": "Goals & records",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Didier Drogba's hat-trick won him the Golden Boot."
     },
@@ -494,7 +494,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "Goals & records",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Ollie Watkins scored a hat-trick."
     },
@@ -510,7 +510,7 @@
       "answer": 2,
       "difficulty": "easy",
       "topic": "Goals & records",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Balotelli celebrated his goal with the 'Why always me?' T-shirt."
     },
@@ -526,7 +526,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "Goals & records",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Son scored all 23 without a single penalty."
     },
@@ -542,7 +542,7 @@
       "answer": 0,
       "difficulty": "hard",
       "topic": "Goals & records",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Crouch scored 53 headers."
     },
@@ -558,7 +558,7 @@
       "answer": 0,
       "difficulty": "hard",
       "topic": "Goals & records",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "The wind carried his clearance into the net."
     },
@@ -574,7 +574,7 @@
       "answer": 2,
       "difficulty": "hard",
       "topic": "Goals & records",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He scored 147 of them for Chelsea."
     },
@@ -590,7 +590,7 @@
       "answer": 3,
       "difficulty": "hard",
       "topic": "Goals & records",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Henry did it in 2002-03, De Bruyne in 2019-20."
     },
@@ -606,7 +606,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "Goals & records",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Giggs made 162 assists."
     },
@@ -622,7 +622,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "Goals & records",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Salah also made 18 assists that season."
     },
@@ -638,7 +638,7 @@
       "answer": 0,
       "difficulty": "easy",
       "topic": "Legends",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Rooney scored 253 goals, passing Bobby Charlton in 2017."
     },
@@ -654,7 +654,7 @@
       "answer": 0,
       "difficulty": "easy",
       "topic": "Legends",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Henry scored 228 goals for Arsenal."
     },
@@ -670,7 +670,7 @@
       "answer": 2,
       "difficulty": "easy",
       "topic": "Legends",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Agüero scored 260 goals for City."
     },
@@ -686,7 +686,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "Legends",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Lampard scored 211 goals for Chelsea."
     },
@@ -702,7 +702,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "Legends",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Greaves had held the record with 266 goals."
     },
@@ -718,7 +718,7 @@
       "answer": 1,
       "difficulty": "easy",
       "topic": "Legends",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Bergkamp often travelled to away games in Europe by car or train."
     },
@@ -734,7 +734,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "Legends",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Čech kept 202 clean sheets for Chelsea and Arsenal."
     },
@@ -750,7 +750,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "Legends",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He came through non-league football."
     },
@@ -766,7 +766,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "Legends",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Mahrez scored 17 league goals in the title season."
     },
@@ -782,7 +782,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "Legends",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He scored 31 league goals in 2007-08."
     },
@@ -798,7 +798,7 @@
       "answer": 3,
       "difficulty": "hard",
       "topic": "Legends",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He scored in every season from 1992-93 to 2012-13."
     },
@@ -814,7 +814,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "Legends",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "His throws were treated like corners under Tony Pulis."
     },
@@ -830,7 +830,7 @@
       "answer": 0,
       "difficulty": "easy",
       "topic": "Legends",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Gerrard came closest in 2008-09 and 2013-14."
     },
@@ -846,7 +846,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "Legends",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "It ended Arsenal's 30-game unbeaten run in October 2002."
     },
@@ -862,7 +862,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "Legends",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "It was voted the Premier League's goal of its first 20 seasons."
     },
@@ -878,7 +878,7 @@
       "answer": 0,
       "difficulty": "hard",
       "topic": "Legends",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He scored in 2007, 2009, 2010 and 2012."
     },
@@ -894,7 +894,7 @@
       "answer": 3,
       "difficulty": "easy",
       "topic": "Transfers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He cost about £75m, a world record for a defender at the time."
     },
@@ -910,7 +910,7 @@
       "answer": 3,
       "difficulty": "easy",
       "topic": "Transfers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "The fee was a British record of £50m."
     },
@@ -926,7 +926,7 @@
       "answer": 0,
       "difficulty": "easy",
       "topic": "Transfers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "The fee was a world record at the time."
     },
@@ -942,7 +942,7 @@
       "answer": 3,
       "difficulty": "easy",
       "topic": "Transfers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He won the Golden Boot with 26 goals that season."
     },
@@ -958,7 +958,7 @@
       "answer": 1,
       "difficulty": "easy",
       "topic": "Transfers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Kane had spent his whole senior career at Spurs."
     },
@@ -974,7 +974,7 @@
       "answer": 0,
       "difficulty": "easy",
       "topic": "Transfers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He was 18 at the time."
     },
@@ -990,7 +990,7 @@
       "answer": 2,
       "difficulty": "easy",
       "topic": "Transfers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "The money helped Liverpool fund Virgil van Dijk and Alisson."
     },
@@ -1006,7 +1006,7 @@
       "answer": 3,
       "difficulty": "easy",
       "topic": "Transfers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "It was the first £100m transfer by a British club."
     },
@@ -1022,7 +1022,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "Transfers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He impressed United's players in a friendly against Sporting."
     },
@@ -1038,7 +1038,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "Transfers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He cost about £24m."
     },
@@ -1054,7 +1054,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "Transfers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He won the French league with Lille in 2011."
     },
@@ -1070,7 +1070,7 @@
       "answer": 0,
       "difficulty": "easy",
       "topic": "Transfers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He won back-to-back titles with Leicester and Chelsea."
     },
@@ -1086,7 +1086,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "Transfers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He had previously been at Chelsea but played little."
     },
@@ -1102,7 +1102,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "Transfers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Spurs fans never forgave him."
     },
@@ -1118,7 +1118,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "Transfers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Fans called him 'Cashley' over the move."
     },
@@ -1134,7 +1134,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "Transfers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "The fee was about £49m."
     },
@@ -1150,7 +1150,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "Transfers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "The fee of about £89m was a world record at the time."
     },
@@ -1166,7 +1166,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "Transfers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He later rejoined Chelsea from Inter in 2021."
     },
@@ -1182,7 +1182,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "Transfers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "The fee was about £115m."
     },
@@ -1198,7 +1198,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "Transfers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Wenger had coached him at Monaco."
     },
@@ -1214,7 +1214,7 @@
       "answer": 3,
       "difficulty": "easy",
       "topic": "Managers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Moyes moved from Everton but lasted less than a season."
     },
@@ -1230,7 +1230,7 @@
       "answer": 0,
       "difficulty": "easy",
       "topic": "Managers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He had just won the Champions League with Porto."
     },
@@ -1246,7 +1246,7 @@
       "answer": 1,
       "difficulty": "easy",
       "topic": "Managers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He won the Bundesliga twice with Dortmund."
     },
@@ -1262,7 +1262,7 @@
       "answer": 0,
       "difficulty": "easy",
       "topic": "Managers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Arteta captained Arsenal as a player."
     },
@@ -1278,7 +1278,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "Managers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Wenger had been in charge for nearly 22 years."
     },
@@ -1294,7 +1294,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "Managers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He won three Bundesliga titles at Bayern."
     },
@@ -1310,7 +1310,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "Managers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He won in 1997-98, 2001-02 and 2003-04."
     },
@@ -1326,7 +1326,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "Managers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Ranieri was sacked less than a year later."
     },
@@ -1342,7 +1342,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "Managers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He won three Dutch titles with Ajax."
     },
@@ -1358,7 +1358,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "Managers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He replaced Erik ten Hag."
     },
@@ -1374,7 +1374,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "Managers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He lasted about seven months at Chelsea."
     },
@@ -1390,7 +1390,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "Managers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Dalglish won the League Cup in 2012."
     },
@@ -1406,7 +1406,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "Managers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Spurs lost 2-0 to Liverpool in Madrid."
     },
@@ -1422,7 +1422,7 @@
       "answer": 2,
       "difficulty": "hard",
       "topic": "Managers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He was only interim manager at the time."
     },
@@ -1438,7 +1438,7 @@
       "answer": 0,
       "difficulty": "hard",
       "topic": "Managers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Wigan were relegated from the Premier League days later."
     },
@@ -1454,7 +1454,7 @@
       "answer": 0,
       "difficulty": "hard",
       "topic": "Managers",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "He became England manager that summer."
     },
@@ -1470,7 +1470,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "Big moments",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Suárez was banned for 10 games."
     },
@@ -1486,7 +1486,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "Big moments",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Chelsea won 2-0 and the title slipped away from Liverpool."
     },
@@ -1502,7 +1502,7 @@
       "answer": 2,
       "difficulty": "hard",
       "topic": "Big moments",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Balotelli slid the ball through from the edge of the box."
     },
@@ -1518,7 +1518,7 @@
       "answer": 2,
       "difficulty": "hard",
       "topic": "Big moments",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "The match became known as 'Pizzagate' or the 'Battle of the Buffet'."
     },
@@ -1534,7 +1534,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "Big moments",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "United won the match 4-2."
     },
@@ -1550,7 +1550,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "Big moments",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "City won the derby 6-1."
     },
@@ -1566,7 +1566,7 @@
       "answer": 3,
       "difficulty": "easy",
       "topic": "Big moments",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Vardy scored 24 league goals in the title season."
     },
@@ -1582,7 +1582,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "Big moments",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Goal-line technology had arrived in 2013-14."
     },
@@ -1598,7 +1598,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "Big moments",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "A year later, Leicester were champions."
     },
@@ -1614,7 +1614,7 @@
       "answer": 3,
       "difficulty": "easy",
       "topic": "Clubs & grounds",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Highbury was converted into flats."
     },
@@ -1630,7 +1630,7 @@
       "answer": 3,
       "difficulty": "easy",
       "topic": "Clubs & grounds",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "It sits on the banks of the Thames."
     },
@@ -1646,7 +1646,7 @@
       "answer": 1,
       "difficulty": "easy",
       "topic": "Clubs & grounds",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Burnley have played there since 1883."
     },
@@ -1662,7 +1662,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "Clubs & grounds",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Swansea spent 2011 to 2018 in the Premier League."
     },
@@ -1678,7 +1678,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "Clubs & grounds",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Brighton moved there in 2011."
     },
@@ -1694,7 +1694,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "Clubs & grounds",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "The new stadium was built for the 2002 Commonwealth Games."
     },
@@ -1710,7 +1710,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "Clubs & grounds",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "The Tottenham Hotspur Stadium opened in April 2019."
     },
@@ -1726,7 +1726,7 @@
       "answer": 1,
       "difficulty": "easy",
       "topic": "Clubs & grounds",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "The name is linked to a local toffee shop."
     },
@@ -1742,7 +1742,7 @@
       "answer": 1,
       "difficulty": "easy",
       "topic": "Clubs & grounds",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Their stadium is the Stadium of Light."
     },
@@ -1758,7 +1758,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "Clubs & grounds",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "They first reached the Premier League in 2015."
     },
@@ -1774,7 +1774,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "Clubs & grounds",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "It refers to the area's pottery industry."
     },
@@ -1790,7 +1790,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "Clubs & grounds",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "West Brom play at The Hawthorns."
     },
@@ -1806,7 +1806,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "Clubs & grounds",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Elton John was once Watford's owner."
     },
@@ -1822,7 +1822,7 @@
       "answer": 2,
       "difficulty": "hard",
       "topic": "Clubs & grounds",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "George Burley was named Manager of the Year."
     },
@@ -1838,7 +1838,7 @@
       "answer": 2,
       "difficulty": "easy",
       "topic": "Cups & Europe",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Liverpool came back from 3-0 down to win on penalties."
     },
@@ -1854,7 +1854,7 @@
       "answer": 0,
       "difficulty": "easy",
       "topic": "Cups & Europe",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "They won the Premier League, FA Cup and Champions League."
     },
@@ -1870,7 +1870,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "Cups & Europe",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "City won 1-0 in Istanbul."
     },
@@ -1886,7 +1886,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "Cups & Europe",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Chelsea won 1-0 in Porto."
     },
@@ -1902,7 +1902,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "Cups & Europe",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "John Terry slipped taking what would have been the winning penalty."
     },
@@ -1918,7 +1918,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "Cups & Europe",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Barcelona won 2-1 in Paris."
     },
@@ -1934,7 +1934,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "Cups & Europe",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Kanu scored the only goal."
     },
@@ -1950,7 +1950,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "Cups & Europe",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Ben Watson headed a late winner."
     },
@@ -1966,7 +1966,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "Cups & Europe",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Obafemi Martins scored the late winner."
     },
@@ -1982,7 +1982,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "Cups & Europe",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Bradford were in League Two at the time."
     },
@@ -1998,7 +1998,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "Cups & Europe",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "They lost to Atlético Madrid after extra time."
     },
@@ -2014,7 +2014,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "Cups & Europe",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Brennan Johnson scored the only goal in Bilbao."
     },
@@ -2030,7 +2030,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "Cups & Europe",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Eberechi Eze scored the only goal."
     },
@@ -2046,7 +2046,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "Cups & Europe",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "It was Newcastle's first major domestic trophy in 70 years."
     },
@@ -2062,7 +2062,7 @@
       "answer": 2,
       "difficulty": "hard",
       "topic": "Cups & Europe",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Salah scored a penalty in the second minute."
     },
@@ -2078,7 +2078,7 @@
       "answer": 3,
       "difficulty": "hard",
       "topic": "Cups & Europe",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "Leeds lost 3-0 on aggregate."
     },
@@ -2094,7 +2094,7 @@
       "answer": 3,
       "difficulty": "hard",
       "topic": "Cups & Europe",
-      "westHam": false,
+      "club": null,
       "verified": true,
       "explanation": "The final was in Eindhoven."
     },
@@ -2110,7 +2110,7 @@
       "answer": 3,
       "difficulty": "easy",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "It was built for the 2012 Olympics."
     },
@@ -2126,7 +2126,7 @@
       "answer": 0,
       "difficulty": "easy",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Its official name was the Boleyn Ground."
     },
@@ -2142,7 +2142,7 @@
       "answer": 0,
       "difficulty": "easy",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Bubbles fill the stadium before kick-off."
     },
@@ -2158,7 +2158,7 @@
       "answer": 3,
       "difficulty": "easy",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "It was their first major trophy since 1980."
     },
@@ -2174,7 +2174,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "West Ham beat Fiorentina 2-1 in Prague."
     },
@@ -2190,7 +2190,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Benrahma scored the first goal from the penalty spot."
     },
@@ -2206,7 +2206,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "West Ham bosses",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "It was Moyes's first major trophy as a manager."
     },
@@ -2222,7 +2222,7 @@
       "answer": 2,
       "difficulty": "easy",
       "topic": "West Ham players",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "The fee of around £105m was a British record at the time."
     },
@@ -2238,7 +2238,7 @@
       "answer": 3,
       "difficulty": "easy",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Noble spent his whole career at West Ham, apart from two short loans."
     },
@@ -2254,7 +2254,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Steven Gerrard's late screamer made it 3-3."
     },
@@ -2270,7 +2270,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "West Ham bosses",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Pardew also won promotion with West Ham in 2005."
     },
@@ -2286,7 +2286,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "West Ham players",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "The deal led to a Premier League inquiry."
     },
@@ -2302,7 +2302,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "West Ham beat champions Manchester United 1-0."
     },
@@ -2318,7 +2318,7 @@
       "answer": 1,
       "difficulty": "hard",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "They were relegated despite a strong finish under Trevor Brooking."
     },
@@ -2334,7 +2334,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "It won Goal of the Season."
     },
@@ -2350,7 +2350,7 @@
       "answer": 1,
       "difficulty": "hard",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Everton's keeper Paul Gerrard was lying injured, and Di Canio won a FIFA Fair Play award."
     },
@@ -2366,7 +2366,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "West Ham players",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "He moved on to Manchester United in 2002."
     },
@@ -2382,7 +2382,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "West Ham players",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Gerrard came through Liverpool's academy."
     },
@@ -2398,7 +2398,7 @@
       "answer": 3,
       "difficulty": "hard",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "West Ham beat Blackpool 2-1 at Wembley."
     },
@@ -2414,7 +2414,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "West Ham bosses",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Steve Clarke was his assistant."
     },
@@ -2430,7 +2430,7 @@
       "answer": 1,
       "difficulty": "hard",
       "topic": "West Ham bosses",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Grant was sacked on the day relegation was confirmed."
     },
@@ -2446,7 +2446,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "West Ham players",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "He went back to Marseille in January 2017."
     },
@@ -2462,7 +2462,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "West Ham bosses",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Bilić played for West Ham in the 1990s."
     },
@@ -2478,7 +2478,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Winston Reid headed the winner."
     },
@@ -2494,7 +2494,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "West Ham bosses",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "He was replaced by David Moyes in December 2019."
     },
@@ -2510,7 +2510,7 @@
       "answer": 0,
       "difficulty": "hard",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Frankfurt went on to win the tournament."
     },
@@ -2526,7 +2526,7 @@
       "answer": 1,
       "difficulty": "hard",
       "topic": "West Ham bosses",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Lopetegui lasted about half a season."
     },
@@ -2542,7 +2542,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Antonio joined from Nottingham Forest in 2015."
     },
@@ -2558,7 +2558,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "That's why the club is nicknamed 'The Irons'."
     },
@@ -2574,7 +2574,7 @@
       "answer": 0,
       "difficulty": "easy",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "The rivalry goes back to the docks."
     },
@@ -2590,7 +2590,7 @@
       "answer": 0,
       "difficulty": "hard",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "He joined Tottenham shortly afterwards."
     },
@@ -2606,7 +2606,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "West Ham bosses",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "They had previously owned Birmingham City."
     },
@@ -2622,7 +2622,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "West Ham players",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "He became the club's record signing at the time."
     },
@@ -2638,7 +2638,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "West Ham players",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Hull were in the Championship at the time."
     },
@@ -2654,7 +2654,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "West Ham players",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "He joined on loan first, then permanently."
     },
@@ -2670,7 +2670,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "West Ham players",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "He had earlier spent seven years at Arsenal."
     },
@@ -2686,7 +2686,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "West Ham players",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "West Ham had just been relegated."
     },
@@ -2702,7 +2702,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "West Ham players",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "He moved on to Manchester United two years later."
     },
@@ -2718,7 +2718,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "West Ham bosses",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Frank Lampard Sr was Redknapp's assistant."
     },
@@ -2734,7 +2734,7 @@
       "answer": 0,
       "difficulty": "hard",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "West Ham beat Preston 1-0 in Cardiff."
     },
@@ -2750,7 +2750,7 @@
       "answer": 2,
       "difficulty": "hard",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "They had knocked out Sevilla in the last 16."
     },
@@ -2766,7 +2766,7 @@
       "answer": 1,
       "difficulty": "medium",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Clint Dempsey's shot squirmed under him against the USA."
     },
@@ -2782,7 +2782,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "West Ham players",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "The fee was around £45m."
     },
@@ -2798,7 +2798,7 @@
       "answer": 0,
       "difficulty": "medium",
       "topic": "West Ham players",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Nolan had played for Allardyce at Bolton too."
     },
@@ -2814,7 +2814,7 @@
       "answer": 2,
       "difficulty": "easy",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "The hammers come from the Thames Ironworks roots."
     },
@@ -2830,7 +2830,7 @@
       "answer": 3,
       "difficulty": "easy",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "It was his last game for West Ham before joining Arsenal."
     },
@@ -2846,7 +2846,7 @@
       "answer": 1,
       "difficulty": "easy",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Aston Villa and Burnley wear claret and blue too."
     },
@@ -2862,7 +2862,7 @@
       "answer": 2,
       "difficulty": "easy",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "A statue of him stands outside the London Stadium."
     },
@@ -2878,7 +2878,7 @@
       "answer": 1,
       "difficulty": "easy",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "They are also called 'The Irons'."
     },
@@ -2894,7 +2894,7 @@
       "answer": 1,
       "difficulty": "hard",
       "topic": "West Ham bosses",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Trevor Brooking took over after Roeder fell ill in April 2003."
     },
@@ -2910,7 +2910,7 @@
       "answer": 2,
       "difficulty": "medium",
       "topic": "West Ham players",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "He was West Ham's player of the year in 2017-18."
     },
@@ -2926,7 +2926,7 @@
       "answer": 2,
       "difficulty": "hard",
       "topic": "West Ham players",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "He returned to Europe with Bologna in 2021."
     },
@@ -2942,7 +2942,7 @@
       "answer": 3,
       "difficulty": "hard",
       "topic": "West Ham players",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "He had previously played for Manchester United."
     },
@@ -2958,7 +2958,7 @@
       "answer": 1,
       "difficulty": "hard",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Astra won 1-0 in London after a 1-1 draw in Romania."
     },
@@ -2974,7 +2974,7 @@
       "answer": 3,
       "difficulty": "hard",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "It was their highest Premier League points total (65)."
     },
@@ -2990,7 +2990,7 @@
       "answer": 1,
       "difficulty": "hard",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "Marlon Harewood scored the only goal at Villa Park."
     },
@@ -3006,7 +3006,7 @@
       "answer": 3,
       "difficulty": "medium",
       "topic": "West Ham moments",
-      "westHam": true,
+      "club": "west-ham",
       "verified": true,
       "explanation": "He had won the treble with Manchester United in 1999."
     }
