@@ -75,6 +75,10 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
    and the style's own variables, so all ten styles keep their look. */
 .screen .controls { display: grid; gap: 10px; transition: transform .35s; }
 .screen .controls.turned, .screen .player.turned { transform: rotate(180deg); }
+/* Pass and Play "Flip the screen": the whole game card turns to face Black on their turn. */
+.screen.flip-mode { transition: transform .45s ease-in-out; }
+.screen.flip-all { transform: rotate(180deg); }
+@media (prefers-reduced-motion: reduce) { .screen.flip-mode { transition: none; } }
 .screen .player.up .badge { box-shadow: 0 0 0 2px currentColor; }
 .screen .player { position: relative; }
 .screen .player .clock { font-variant-numeric: tabular-nums; margin-left: 6px; padding: 1px 6px; border-radius: 6px; border: 1px solid currentColor; }
