@@ -120,6 +120,7 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 .menu-title h1, .setup h1 { font-family: "Permanent Marker", "Kalam", cursive; font-weight: 400; font-size: 30px; margin: 2px 0; color: #1f5fbf; }
 .setup h1 { font-size: 24px; margin: 0; }
 .menu-title p { margin: 0; font-size: 15px; }
+.menu-logo { float: right; width: 72px; height: 72px; margin: 0 0 6px 10px; border-radius: 16px; box-shadow: 0 2px 6px rgba(24,48,74,.25); }
 .menu-btn { font: inherit; text-align: left; cursor: pointer; display: grid; gap: 1px; padding: 12px 14px; border-radius: 10px; border: 2px solid #18304a; background: #fff; color: #18304a; box-shadow: 3px 3px 0 #18304a; }
 .menu-btn b { font-size: 18px; } .menu-btn small { font-size: 13px; opacity: .75; }
 .menu-btn.primary { background: #fff7a8; }

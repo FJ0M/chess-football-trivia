@@ -10,6 +10,7 @@ export function MainMenu({ onPlay, onSettings, onScores, onRules }: { onPlay: (m
   return (
     <nav className="menu" aria-label="Main menu">
       <div className="menu-title">
+        <img className="menu-logo" src={`${import.meta.env.BASE_URL}icons/logo.svg`} alt="" width="72" height="72" />
         <span className="kicker">The manager's whiteboard</span>
         <h1>Chess Football Trivia</h1>
         <p>Play chess, answer football questions, spend your Form on power-ups.</p>
