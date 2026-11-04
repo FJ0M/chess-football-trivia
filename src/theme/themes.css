@@ -1,0 +1,251 @@
+/* Ten game styles, ported from the style mockups. The screen root gets class "screen style-<id>".
+   Shared skeleton first, then one block per style. */
+/* ---------- Shared game-screen skeleton ---------- */
+.screen { --sq-l: #eee; --sq-d: #999; --pw: #fff; --pb: #111; --pws: #111; --pbs: #fff; --last: rgba(255,220,0,.35); --sel: rgba(255,255,255,.4); --dot: rgba(0,0,0,.35); --spot: #fff;
+  position: relative; width: 100%; max-width: 460px; margin: 0 auto; overflow: hidden; display: grid; gap: 10px; padding: 14px; box-sizing: border-box; isolation: isolate; }
+.strip { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; display: flex; justify-content: space-between; gap: 8px; }
+.player { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 14px; }
+.player .who { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.player .badge { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; flex: none; }
+.player .tag { font-size: 11px; opacity: .75; }
+.player .form { font-variant-numeric: tabular-nums; font-size: 13px; white-space: nowrap; }
+.board { position: relative; display: grid; grid-template-columns: repeat(8, 1fr); aspect-ratio: 1; width: 100%; max-width: 100%; }
+.sq { position: relative; display: grid; place-items: center; background: var(--sq-d); }
+.sq.l { background: var(--sq-l); }
+.sq.last::before, .sq.sel::before { content: ""; position: absolute; inset: 0; background: var(--last); }
+.sq.sel::before { background: var(--sel); }
+.sq .dot { position: absolute; width: 28%; height: 28%; border-radius: 50%; background: var(--dot); }
+.sq.spot::after { content: ""; position: absolute; width: 22%; height: 22%; border: 2px solid var(--spot); border-radius: 50%; box-sizing: border-box; }
+.pc { position: relative; z-index: 1; font-size: clamp(20px, 7.4vw, 32px); line-height: 1; font-family: "DejaVu Sans", "Segoe UI Symbol", "Apple Symbols", "Noto Sans Symbols 2", sans-serif; -webkit-text-stroke: 1.2px var(--pws); paint-order: stroke fill; color: var(--pw); }
+.pc.b { color: var(--pb); -webkit-text-stroke-color: var(--pbs); }
+.arrow { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+.quiz { display: grid; gap: 8px; padding: 12px; }
+.quiz .meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 8px; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+.quiz .q { font-size: 16px; line-height: 1.3; margin: 0; text-wrap: balance; }
+.quiz .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.quiz .answers button { font: inherit; font-size: 13px; text-align: left; padding: 8px 9px; cursor: pointer; display: flex; gap: 7px; align-items: baseline; line-height: 1.2; color: inherit; background: transparent; border: 0; }
+.quiz button b { font-size: 11px; flex: none; }
+.quiz button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.timer { height: 5px; position: relative; overflow: hidden; }
+.timer::after { content: ""; position: absolute; inset: 0 38% 0 0; background: currentColor; }
+.powers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.pw { display: grid; justify-items: center; gap: 3px; padding: 8px 4px; text-align: center; font-size: 11px; line-height: 1.15; }
+.pw svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.pw .cost { font-variant-numeric: tabular-nums; font-size: 10px; opacity: .8; }
+.pw.locked { opacity: .42; }
+
+/* ---------- 1 Floodlit ---------- */
+.style-floodlit { background: radial-gradient(120% 60% at 50% -10%, #3a4f86 0%, #101a38 45%, #070c1d 100%); color: #e9eefc; font-family: "Saira", sans-serif;
+  --sq-l: #4e9b45; --sq-d: #3f873a; --pw: #fbfbf5; --pws: #1a2a12; --pb: #0b1226; --pbs: #b8c6ee; --last: rgba(255,232,120,.35); --sel: rgba(255,255,255,.28); --dot: rgba(255,255,255,.55); --spot: #fff; }
+.style-floodlit::before { content: ""; position: absolute; inset: -40px 0 auto; height: 160px; background: radial-gradient(closest-side at 15% 50%, rgba(255,250,210,.35), transparent), radial-gradient(closest-side at 85% 50%, rgba(255,250,210,.35), transparent); z-index: -1; }
+.style-floodlit .strip { font-family: "Saira Condensed", sans-serif; font-weight: 700; color: #ffe066; }
+.style-floodlit .board { box-shadow: 0 0 0 3px #f4f4ef, 0 0 40px rgba(120,200,255,.25); }
+.style-floodlit .sq:nth-child(-n+8)::after { content: none; }
+.style-floodlit .board::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; background: rgba(255,255,255,.7); transform: translateY(-1px); pointer-events: none; }
+.style-floodlit .board::before { content: ""; position: absolute; width: 26%; aspect-ratio: 1; left: 37%; top: 37%; border: 2px solid rgba(255,255,255,.7); border-radius: 50%; pointer-events: none; z-index: 0; }
+.style-floodlit .player .badge { background: #ffe066; color: #101a38; }
+.style-floodlit .player .form { font-family: "Saira Condensed", sans-serif; font-weight: 800; font-size: 16px; color: #ffe066; }
+.style-floodlit .quiz { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); border-radius: 12px; backdrop-filter: blur(6px); }
+.style-floodlit .quiz .meta { color: #ffe066; font-family: "Saira Condensed", sans-serif; font-weight: 700; }
+.style-floodlit .quiz .q { font-family: "Saira Condensed", sans-serif; font-weight: 700; font-size: 20px; text-transform: uppercase; letter-spacing: .01em; }
+.style-floodlit .quiz .answers button { background: rgba(255,255,255,.1); border-radius: 8px; }
+.style-floodlit .quiz button b { color: #ffe066; }
+.style-floodlit .timer { background: rgba(255,255,255,.15); border-radius: 3px; color: #ffe066; }
+.style-floodlit .pw { background: rgba(10,18,40,.6); border: 1px solid rgba(255,224,102,.35); border-radius: 10px; color: #f2f4ff; }
+.style-floodlit .pw svg { color: #ffe066; }
+
+/* ---------- 2 Matchday Programme ---------- */
+.style-programme { background-color: #a9d4ee; background-image: radial-gradient(rgba(122,38,58,.16) 1px, transparent 1.3px); background-size: 6px 6px; color: #2a0f17; font-family: "Libre Franklin", sans-serif;
+  --sq-l: #f3ead6; --sq-d: #7a263a; --pw: #f3ead6; --pws: #2a0f17; --pb: #1c2a4a; --pbs: #f3ead6; --last: rgba(169,212,238,.6); --sel: rgba(255,214,90,.55); --dot: rgba(28,42,74,.55); --spot: #1c2a4a; }
+.style-programme .strip { background: #7a263a; color: #f3ead6; padding: 6px 8px; font-weight: 800; margin: -14px -14px 0; }
+.style-programme .board { border: 6px solid #2a0f17; box-sizing: border-box; }
+.style-programme .sq.spot::after { border-color: #f3ead6; }
+.style-programme .player { font-family: "Alfa Slab One", serif; font-size: 16px; }
+.style-programme .player .badge { background: #7a263a; color: #f3ead6; border: 2px solid #2a0f17; font-family: "Libre Franklin"; }
+.style-programme .player .tag { font-family: "Libre Franklin"; }
+.style-programme .quiz { background: #f3ead6; border: 2px solid #2a0f17; box-shadow: 5px 5px 0 #7a263a; }
+.style-programme .quiz .meta { font-weight: 800; color: #7a263a; border-bottom: 2px solid #2a0f17; padding-bottom: 6px; }
+.style-programme .quiz .q { font-family: "Alfa Slab One", serif; font-size: 19px; font-weight: 400; }
+.style-programme .quiz .answers button { border: 1.5px solid #2a0f17; background: #fff9ee; }
+.style-programme .quiz button b { color: #7a263a; }
+.style-programme .timer { background: #d7c9ad; color: #7a263a; }
+.style-programme .pw { background: #7a263a; color: #f3ead6; border: 2px solid #2a0f17; font-weight: 600; }
+
+/* ---------- 3 Sticker Album ---------- */
+.style-sticker { background: #ffd23f linear-gradient(135deg, #ffd23f 0 50%, #ff8a3d 50% 100%); color: #1e1240; font-family: "Nunito", sans-serif;
+  --sq-l: #ffffff; --sq-d: #e3ddf5; --pw: #ffffff; --pws: #1e1240; --pb: #1e1240; --pbs: #ffffff; --last: rgba(255,138,61,.4); --sel: rgba(70,214,180,.5); --dot: rgba(30,18,64,.4); --spot: #ff3d7f; }
+.style-sticker .strip { font-family: "Anton", sans-serif; letter-spacing: .06em; font-size: 13px; }
+.style-sticker .board { border-radius: 14px; overflow: hidden; border: 4px solid transparent; background: conic-gradient(from 0deg, #ff6ad5, #ffd23f, #46d6b4, #6a8bff, #ff6ad5) border-box; padding: 0; box-shadow: 0 6px 0 rgba(30,18,64,.25); }
+.style-sticker .pc { display: grid; place-items: center; width: 80%; aspect-ratio: 1; border-radius: 50%; background: #fff; box-shadow: 0 2px 0 rgba(30,18,64,.3), inset 0 0 0 2px #1e1240; font-size: clamp(16px, 5.6vw, 24px); }
+.style-sticker .pc.b { background: #1e1240; box-shadow: 0 2px 0 rgba(30,18,64,.3), inset 0 0 0 2px #ffd23f; }
+.style-sticker .player { font-weight: 800; }
+.style-sticker .player .badge { background: #1e1240; color: #ffd23f; border-radius: 6px; transform: rotate(-6deg); }
+.style-sticker .player .form { background: #1e1240; color: #fff; padding: 2px 8px; border-radius: 999px; }
+.style-sticker .quiz { background: #fff; border-radius: 14px; border: 4px solid transparent; background: linear-gradient(#fff, #fff) padding-box, conic-gradient(from 90deg, #ff6ad5, #ffd23f, #46d6b4, #6a8bff, #ff6ad5) border-box; transform: rotate(-1deg); }
+.style-sticker .quiz .meta { font-family: "Anton", sans-serif; font-size: 12px; color: #ff3d7f; }
+.style-sticker .quiz .q { font-family: "Anton", sans-serif; font-size: 21px; font-weight: 400; text-transform: uppercase; letter-spacing: .01em; }
+.style-sticker .quiz .answers button { background: #f2eefc; border-radius: 10px; font-weight: 800; }
+.style-sticker .quiz button b { background: #1e1240; color: #fff; border-radius: 4px; padding: 0 4px; }
+.style-sticker .timer { background: #f2eefc; border-radius: 3px; color: #46d6b4; }
+.style-sticker .pw { background: #fff; border-radius: 12px; font-weight: 800; box-shadow: 0 3px 0 rgba(30,18,64,.25); }
+.style-sticker .pw svg { color: #ff3d7f; }
+.style-sticker .pw:nth-child(odd) { transform: rotate(-2deg); } .style-sticker .pw:nth-child(even) { transform: rotate(2deg); }
+
+/* ---------- 4 Tabletop Flick ---------- */
+.style-tabletop { background: repeating-linear-gradient(90deg, #6b3f1f 0 7px, #75461f 7px 13px, #643a1c 13px 19px); color: #fff8ec; font-family: "Archivo", sans-serif; padding: 18px;
+  --sq-l: #3e8a45; --sq-d: #2f7238; --pw: #ffffff; --pws: #7a1616; --pb: #c8242a; --pbs: #ffffff; --last: rgba(255,255,255,.18); --sel: rgba(255,240,150,.35); --dot: rgba(255,255,255,.6); --spot: #fff; }
+.style-tabletop .strip { font-family: "Archivo Black", sans-serif; color: #ffd98a; }
+.style-tabletop .board { box-shadow: inset 0 0 0 3px rgba(255,255,255,.85), 0 6px 14px rgba(0,0,0,.45); background-image: radial-gradient(rgba(0,0,0,.08) 1px, transparent 1px); }
+.style-tabletop .sq { background-image: radial-gradient(rgba(0,0,0,.09) 1px, transparent 1.4px); background-size: 4px 4px; }
+.style-tabletop .pc { width: 78%; aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff 0 20%, #e9e9e9 60%, #bdbdbd); color: #c8242a; -webkit-text-stroke: 0; font-size: clamp(14px, 5vw, 22px); box-shadow: 0 3px 0 #1f4d25, 0 4px 6px rgba(0,0,0,.4); }
+.style-tabletop .pc.b { background: radial-gradient(circle at 35% 30%, #ff6b6b 0 18%, #c8242a 60%, #8e1418); color: #fff; }
+.style-tabletop .player { font-family: "Archivo Black", sans-serif; }
+.style-tabletop .player .badge { background: #c8242a; color: #fff; border: 2px solid #fff; }
+.style-tabletop .player .form { color: #ffd98a; }
+.style-tabletop .quiz { background: #fff8ec; color: #2b1a0e; border-top: 10px solid #c8242a; box-shadow: 0 6px 0 #3d230f; }
+.style-tabletop .quiz .meta { color: #c8242a; font-weight: 600; }
+.style-tabletop .quiz .q { font-family: "Archivo Black", sans-serif; font-size: 17px; font-weight: 400; }
+.style-tabletop .quiz .answers button { background: #2f7238; color: #fff; border-radius: 3px; box-shadow: inset 0 0 0 2px rgba(255,255,255,.6); }
+.style-tabletop .quiz button b { color: #ffd98a; }
+.style-tabletop .timer { background: #eadfc9; color: #c8242a; }
+.style-tabletop .pw { background: #fff8ec; color: #2b1a0e; border-radius: 4px; box-shadow: 0 4px 0 #3d230f; font-weight: 600; }
+.style-tabletop .pw svg { color: #c8242a; }
+
+/* ---------- 5 Fanzine ---------- */
+.style-fanzine { background: #f0efe9; background-image: radial-gradient(rgba(0,0,0,.07) .8px, transparent 1px); background-size: 3px 3px; color: #111; font-family: "Special Elite", "Courier New", monospace;
+  --sq-l: #f7f7f2; --sq-d: #111; --pw: #f7f7f2; --pws: #111; --pb: #111; --pbs: #f7f7f2; --last: rgba(255,62,165,.55); --sel: rgba(255,242,0,.7); --dot: #ff3ea5; --spot: #fff200; }
+.style-fanzine .strip { font-family: "Rubik Mono One", sans-serif; font-size: 10px; }
+.style-fanzine .strip span:first-child { background: #111; color: #fff200; padding: 2px 6px; transform: rotate(-2deg); display: inline-block; }
+.style-fanzine .board { border: 3px solid #111; transform: rotate(.6deg); }
+.style-fanzine .sq:not(.l) { background-image: repeating-linear-gradient(45deg, #111 0 3px, #2a2a2a 3px 5px); }
+.style-fanzine .board::before { content: ""; position: absolute; top: -10px; left: 30%; width: 70px; height: 20px; background: rgba(255,242,0,.75); transform: rotate(-6deg); z-index: 3; }
+.style-fanzine .player .who > span:last-child { font-family: "Rubik Mono One", sans-serif; font-size: 12px; }
+.style-fanzine .player .badge { background: #ff3ea5; color: #111; border-radius: 0; transform: rotate(4deg); font-family: "Rubik Mono One"; }
+.style-fanzine .player .form { background: #fff200; padding: 0 6px; }
+.style-fanzine .quiz { background: #fff; border: 2px solid #111; transform: rotate(-1.2deg); box-shadow: 4px 4px 0 #111; }
+.style-fanzine .quiz .meta { font-family: "Rubik Mono One", sans-serif; font-size: 9px; }
+.style-fanzine .quiz .meta span:first-child { background: #ff3ea5; padding: 1px 4px; }
+.style-fanzine .quiz .q { font-size: 17px; }
+.style-fanzine .quiz .q mark { background: #fff200; padding: 0 2px; }
+.style-fanzine .quiz .answers button { border: 2px solid #111; background: #fff; }
+.style-fanzine .quiz button:nth-child(2) { transform: rotate(1deg); } .style-fanzine .quiz button:nth-child(3) { transform: rotate(-1deg); }
+.style-fanzine .quiz button b { font-family: "Rubik Mono One"; }
+.style-fanzine .timer { background: #ddd; color: #111; }
+.style-fanzine .pw { background: #111; color: #f0efe9; }
+.style-fanzine .pw:nth-child(2) { background: #ff3ea5; color: #111; } .style-fanzine .pw:nth-child(3) { background: #fff200; color: #111; }
+
+/* ---------- 6 Tactics Board ---------- */
+.style-tactics { background: #f6f8f8; background-image: linear-gradient(115deg, transparent 40%, rgba(80,120,160,.06) 45%, transparent 55%); color: #18304a; font-family: "Kalam", cursive; border: 10px solid #b9c0c6; box-shadow: inset 0 0 0 2px #8d959c;
+  --sq-l: #5cae5f; --sq-d: #4a9a4f; --pw: #fff; --pws: transparent; --pb: #fff; --pbs: transparent; --last: rgba(255,255,255,.22); --sel: rgba(255,255,255,.3); --dot: rgba(255,255,255,.75); --spot: #fff; }
+.style-tactics .strip { font-family: "Permanent Marker", cursive; font-size: 13px; letter-spacing: .02em; text-transform: none; color: #c4302b; }
+.style-tactics .board { border: 3px solid #fff; outline: 2px solid #2d5f30; }
+.style-tactics .pc { width: 76%; aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; background: #1f5fbf; font-size: clamp(14px, 5vw, 21px); box-shadow: 0 2px 0 rgba(0,0,0,.35), inset 0 -3px 0 rgba(0,0,0,.2); -webkit-text-stroke: 0; }
+.style-tactics .pc.b { background: #d1342f; }
+.style-tactics .player { font-family: "Permanent Marker", cursive; font-size: 15px; }
+.style-tactics .player .badge { background: transparent; border: 2px solid currentColor; font-family: "Kalam"; }
+.style-tactics .player:first-of-type .badge { color: #d1342f; } .style-tactics .player .badge { color: #1f5fbf; }
+.style-tactics .quiz { background: #fff7a8; color: #2a2a12; transform: rotate(.8deg); box-shadow: 0 6px 10px rgba(0,0,0,.12); }
+.style-tactics .quiz .meta { color: #c4302b; font-weight: 700; text-transform: none; letter-spacing: 0; font-size: 13px; }
+.style-tactics .quiz .q { font-family: "Permanent Marker", cursive; font-size: 17px; font-weight: 400; }
+.style-tactics .quiz .answers button { font-size: 15px; border-bottom: 2px dashed rgba(0,0,0,.25); padding: 4px 2px; }
+.style-tactics .quiz button b { color: #1f5fbf; font-size: 14px; }
+.style-tactics .timer { background: rgba(0,0,0,.08); color: #c4302b; height: 4px; }
+.style-tactics .pw { border: 2px solid #18304a; border-radius: 40% 45% 42% 48% / 50% 40% 55% 45%; font-weight: 700; font-size: 13px; }
+.style-tactics .pw svg { color: #c4302b; }
+
+/* ---------- 7 Broadcast ---------- */
+.style-broadcast { background: linear-gradient(160deg, #0b2a30, #04161a 70%); color: #eafcff; font-family: "Barlow", sans-serif;
+  --sq-l: #2d5960; --sq-d: #1b3d43; --pw: #f1ffff; --pws: #062025; --pb: #ff4b55; --pbs: #2a0306; --last: rgba(0,224,198,.3); --sel: rgba(0,224,198,.45); --dot: #00e0c6; --spot: #ff4b55; }
+.style-broadcast .strip { margin: -14px -14px 0; padding: 0; display: grid; grid-template-columns: auto 1fr auto; align-items: stretch; font-family: "Barlow Condensed", sans-serif; font-weight: 800; font-style: italic; font-size: 13px; }
+.style-broadcast .strip span { padding: 6px 10px; }
+.style-broadcast .strip span:first-child { background: #ff4b55; clip-path: polygon(0 0, 100% 0, 88% 100%, 0 100%); padding-right: 18px; }
+.style-broadcast .strip span:nth-child(2) { background: rgba(255,255,255,.08); }
+.style-broadcast .strip span:last-child { background: #00e0c6; color: #04161a; clip-path: polygon(12% 0, 100% 0, 100% 100%, 0 100%); padding-left: 16px; }
+.style-broadcast .board { box-shadow: 0 0 0 1px rgba(0,224,198,.5), 0 10px 30px rgba(0,0,0,.5); }
+.style-broadcast .board::after { content: ""; position: absolute; inset: 0; background: linear-gradient(160deg, rgba(255,255,255,.12), transparent 40%); pointer-events: none; z-index: 2; }
+.style-broadcast .player { font-family: "Barlow Condensed", sans-serif; font-weight: 800; font-style: italic; font-size: 17px; text-transform: uppercase; background: rgba(255,255,255,.06); padding: 4px 8px 4px 0; clip-path: polygon(0 0, 100% 0, 97% 100%, 0 100%); }
+.style-broadcast .player .badge { border-radius: 0; background: #00e0c6; color: #04161a; height: 30px; width: 30px; font-style: normal; }
+.style-broadcast .player .form { color: #00e0c6; font-size: 18px; }
+.style-broadcast .quiz { background: rgba(4,22,26,.85); border-left: 4px solid #00e0c6; }
+.style-broadcast .quiz .meta { font-family: "Barlow Condensed", sans-serif; font-weight: 800; font-style: italic; color: #00e0c6; font-size: 12px; }
+.style-broadcast .quiz .q { font-family: "Barlow Condensed", sans-serif; font-weight: 800; font-style: italic; font-size: 21px; text-transform: uppercase; }
+.style-broadcast .quiz .answers button { background: linear-gradient(90deg, rgba(255,255,255,.12), rgba(255,255,255,.04)); clip-path: polygon(0 0, 100% 0, 95% 100%, 0 100%); }
+.style-broadcast .quiz button b { color: #00e0c6; }
+.style-broadcast .timer { background: rgba(255,255,255,.1); color: #ff4b55; height: 4px; }
+.style-broadcast .pw { background: rgba(255,255,255,.07); border-bottom: 3px solid #00e0c6; font-family: "Barlow Condensed", sans-serif; font-weight: 600; font-size: 13px; text-transform: uppercase; }
+.style-broadcast .pw.locked { border-color: #555; }
+.style-broadcast .ticker { margin: 0 -14px -14px; background: #eafcff; color: #04161a; font-family: "Barlow Condensed", sans-serif; font-weight: 600; font-size: 13px; padding: 5px 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.style-broadcast .ticker b { color: #ff4b55; font-style: italic; }
+
+/* ---------- 8 Teletext ---------- */
+.style-teletext { background: #000; color: #fff; font-family: "VT323", monospace; font-size: 18px;
+  --sq-l: #00ffff; --sq-d: #0000ff; --pw: #fff; --pws: #000; --pb: #000; --pbs: #ffff00; --last: rgba(255,0,255,.55); --sel: rgba(0,255,0,.6); --dot: #ffff00; --spot: #ff0000; }
+.style-teletext .strip { font-size: 18px; letter-spacing: 0; text-transform: none; }
+.style-teletext .strip span:first-child { color: #00ff00; } .style-teletext .strip span:last-child { color: #ffff00; }
+.style-teletext .banner { background: #ff0000; color: #ffff00; font-size: 26px; line-height: 1; padding: 4px 8px; letter-spacing: .04em; }
+.style-teletext .board { image-rendering: pixelated; }
+.style-teletext .sq.spot::after { border-radius: 0; border-width: 3px; }
+.style-teletext .sq .dot { border-radius: 0; width: 24%; height: 24%; }
+.style-teletext .player { font-size: 20px; }
+.style-teletext .player .badge { border-radius: 0; background: #ff00ff; color: #000; font-size: 18px; }
+.style-teletext .player .tag { color: #00ffff; opacity: 1; font-size: 18px; }
+.style-teletext .player .form { color: #ffff00; font-size: 20px; }
+.style-teletext .quiz { padding: 4px 0; }
+.style-teletext .quiz .meta { font-size: 18px; letter-spacing: 0; color: #00ffff; }
+.style-teletext .quiz .q { font-size: 22px; line-height: 1.05; color: #ffff00; }
+.style-teletext .quiz .answers button { font-size: 19px; padding: 2px 4px; }
+.style-teletext .quiz button b { width: 14px; height: 14px; font-size: 0; align-self: center; }
+.style-teletext .quiz button:nth-child(1) b { background: #ff0000; } .style-teletext .quiz button:nth-child(2) b { background: #00ff00; }
+.style-teletext .quiz button:nth-child(3) b { background: #ffff00; } .style-teletext .quiz button:nth-child(4) b { background: #00ffff; }
+.style-teletext .timer { background: #0000ff; color: #fff; height: 8px; }
+.style-teletext .pw { background: #0000ff; color: #fff; font-size: 16px; line-height: 1; padding: 6px 2px; }
+.style-teletext .pw svg { color: #ffff00; stroke-width: 2.4; stroke-linecap: square; stroke-linejoin: miter; }
+.style-teletext .pw .cost { font-size: 16px; color: #00ff00; opacity: 1; }
+
+/* ---------- 9 Shirt Fabric ---------- */
+.style-shirt { background-color: #6b1d33; background-image: radial-gradient(rgba(0,0,0,.22) 1.2px, transparent 1.6px), radial-gradient(rgba(255,255,255,.06) 1.2px, transparent 1.6px); background-size: 6px 6px; background-position: 0 0, 3px 3px; color: #fbeec9; font-family: "Hind", sans-serif;
+  --sq-l: #9bc9e6; --sq-d: #84b7d8; --pw: #fbeec9; --pws: #4a1022; --pb: #4a1022; --pbs: #fbeec9; --last: rgba(232,190,90,.45); --sel: rgba(255,255,255,.4); --dot: #6b1d33; --spot: #6b1d33; }
+.style-shirt .strip { font-family: "Teko", sans-serif; font-size: 16px; letter-spacing: .14em; color: #e8be5a; }
+.style-shirt .board { border: 2px dashed #e8be5a; outline: 6px solid #4a1022; outline-offset: 0; box-sizing: border-box; }
+.style-shirt .sq { background-image: repeating-linear-gradient(0deg, rgba(255,255,255,.08) 0 1px, transparent 1px 3px); }
+.style-shirt .player { font-family: "Teko", sans-serif; font-size: 22px; line-height: 1; text-transform: uppercase; letter-spacing: .04em; }
+.style-shirt .player .badge { font-family: "Teko"; font-size: 20px; background: #fbeec9; color: #6b1d33; border-radius: 4px 4px 12px 12px; width: 28px; height: 30px; }
+.style-shirt .player .tag { font-family: "Hind"; font-size: 12px; text-transform: none; }
+.style-shirt .player .form { color: #e8be5a; }
+.style-shirt .quiz { background: #fbfaf5; color: #2b1d22; border-radius: 2px; box-shadow: 0 0 0 4px #fbfaf5, 0 0 0 5px #c9c3b5; position: relative; }
+.style-shirt .quiz::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 6px; background: repeating-linear-gradient(90deg, #6b1d33 0 10px, #9bc9e6 10px 20px); }
+.style-shirt .quiz .meta { margin-top: 6px; color: #6b1d33; font-weight: 600; }
+.style-shirt .quiz .q { font-family: "Teko", sans-serif; font-size: 24px; line-height: 1; font-weight: 500; }
+.style-shirt .quiz .answers button { border: 1px solid #c9c3b5; }
+.style-shirt .quiz button b { font-family: "Teko"; font-size: 17px; color: #6b1d33; }
+.style-shirt .timer { background: #ece6d8; color: #6b1d33; }
+.style-shirt .pw { border: 2px dashed rgba(232,190,90,.7); border-radius: 6px; font-family: "Teko", sans-serif; font-size: 15px; letter-spacing: .03em; text-transform: uppercase; }
+.style-shirt .pw svg { color: #9bc9e6; }
+
+/* ---------- 10 Pundit Stats ---------- */
+.style-pundit { background: #fbfbf9; color: #0e0e0d; font-family: "Familjen Grotesk", sans-serif; border: 1px solid #0e0e0d;
+  --sq-l: #ececea; --sq-d: #cfd0cb; --pw: #ffffff; --pws: #0e0e0d; --pb: #0e0e0d; --pbs: #0e0e0d; --last: rgba(255,90,31,.25); --sel: rgba(255,90,31,.45); --dot: #ff5a1f; --spot: #ff5a1f; }
+.style-pundit .strip { font-family: "IBM Plex Mono", monospace; font-size: 10px; border-bottom: 1px solid #0e0e0d; padding-bottom: 8px; }
+.style-pundit .board { outline: 1px solid #0e0e0d; }
+.style-pundit .pc { -webkit-text-stroke-width: 1px; }
+.style-pundit .player { font-weight: 600; }
+.style-pundit .player .badge { background: #0e0e0d; color: #fbfbf9; border-radius: 2px; }
+.style-pundit .player:first-of-type .badge { background: #ff5a1f; }
+.style-pundit .player .form { font-family: "IBM Plex Mono", monospace; font-size: 12px; }
+.style-pundit .quiz { border: 1px solid #0e0e0d; padding: 12px; }
+.style-pundit .quiz .meta { font-family: "IBM Plex Mono", monospace; font-size: 10px; }
+.style-pundit .quiz .meta span:last-child { color: #ff5a1f; }
+.style-pundit .quiz .q { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
+.style-pundit .quiz .answers button { border-top: 1px solid #0e0e0d; padding: 8px 2px; }
+.style-pundit .quiz button b { font-family: "IBM Plex Mono", monospace; color: #ff5a1f; }
+.style-pundit .timer { background: #e2e2de; color: #0e0e0d; height: 2px; }
+.style-pundit .powers { gap: 0; border: 1px solid #0e0e0d; }
+.style-pundit .pw { border-right: 1px solid #0e0e0d; font-weight: 600; }
+.style-pundit .pw:last-child { border-right: 0; }
+.style-pundit .pw .cost { font-family: "IBM Plex Mono", monospace; color: #ff5a1f; opacity: 1; }
+.style-pundit .pw.locked .cost { color: inherit; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .timer::after { animation: drain 14s linear infinite; }
+  @keyframes drain { from { right: 0; } to { right: 100%; } }
+}
