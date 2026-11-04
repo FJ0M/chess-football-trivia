@@ -37,15 +37,15 @@ export const BOT_PROFILES: Record<BotId, BotProfile> = {
     style: "chaotic",
     levels: {
       low: {
-        chess: chess(400, 4, 5, 160, 0.3),
+        chess: chess(400, 3, 5, 200, 0.45),
         trivia: trivia(0.88, 0.78, 0.62, 0.5, 0.85, [2500, 6000], { easy: 1, medium: 3, hard: 6 }, 0.3),
       },
       medium: {
-        chess: chess(700, 6, 5, 110, 0.15),
+        chess: chess(700, 4, 5, 160, 0.25),
         trivia: trivia(0.95, 0.88, 0.78, 0.65, 0.9, [2000, 5000], { easy: 1, medium: 2, hard: 7 }, 0.4),
       },
       hard: {
-        chess: chess(1000, 8, 5, 70, 0.06),
+        chess: chess(1000, 6, 5, 120, 0.17),
         trivia: trivia(0.98, 0.94, 0.87, 0.78, 0.95, [1500, 4000], { easy: 0, medium: 2, hard: 8 }, 0.5),
       },
     },
@@ -60,15 +60,15 @@ export const BOT_PROFILES: Record<BotId, BotProfile> = {
     style: "balanced",
     levels: {
       low: {
-        chess: chess(900, 6, 3, 70, 0.07),
+        chess: chess(900, 5, 3, 110, 0.2),
         trivia: trivia(0.8, 0.62, 0.45, 0.3, 0.88, [4500, 10000], { easy: 3, medium: 6, hard: 1 }, 0.1),
       },
       medium: {
-        chess: chess(1200, 8, 3, 45, 0.035),
+        chess: chess(1200, 6, 3, 80, 0.1),
         trivia: trivia(0.88, 0.72, 0.55, 0.4, 0.92, [4000, 9000], { easy: 2, medium: 7, hard: 1 }, 0.15),
       },
       hard: {
-        chess: chess(1500, 10, 3, 25, 0.012),
+        chess: chess(1500, 8, 3, 60, 0.06),
         trivia: trivia(0.93, 0.8, 0.66, 0.5, 0.96, [3500, 8000], { easy: 1, medium: 7, hard: 2 }, 0.2),
       },
     },
@@ -83,15 +83,15 @@ export const BOT_PROFILES: Record<BotId, BotProfile> = {
     style: "positional",
     levels: {
       low: {
-        chess: chess(1500, 10, 3, 25, 0.012),
+        chess: chess(1500, 8, 3, 50, 0.05),
         trivia: trivia(0.55, 0.33, 0.18, 0.1, 0.55, [7000, 13000], { easy: 8, medium: 2, hard: 0 }, 0),
       },
       medium: {
-        chess: chess(1800, 12, 2, 12, 0.004),
+        chess: chess(1800, 8, 3, 35, 0.03),
         trivia: trivia(0.65, 0.42, 0.25, 0.15, 0.65, [7000, 13000], { easy: 7, medium: 2, hard: 1 }, 0.05),
       },
       hard: {
-        chess: chess(2100, 14, 1, 0, 0),
+        chess: chess(2100, 10, 2, 20, 0.012),
         trivia: trivia(0.72, 0.5, 0.32, 0.2, 0.72, [6000, 12000], { easy: 6, medium: 3, hard: 1 }, 0.05),
       },
     },

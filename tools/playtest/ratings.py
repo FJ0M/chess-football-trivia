@@ -13,15 +13,18 @@ from collections import defaultdict
 
 ANCHOR = "sf-1320"
 
-
 def main(paths):
+    global ANCHOR
+    if paths and paths[0].startswith("--anchor="):
+        ANCHOR = paths[0].split("=", 1)[1]
+        paths = paths[1:]
     games = []
     for p in paths:
         games += json.load(open(p))
     players = sorted({g["white"] for g in games} | {g["black"] for g in games})
     r = {p: 1200.0 for p in players}
     if ANCHOR in r:
-        r[ANCHOR] = float(ANCHOR[3:])
+        r[ANCHOR] = float(ANCHOR[3:].split("+")[0])
     # Gradient ascent on the log-likelihood, with a weak prior towards 1200 so
     # a clean sweep can't run off to infinity.
     for _ in range(4000):

@@ -87,14 +87,14 @@ describe("move picking", () => {
     }
   });
 
-  it("hard Freddie always takes the top line", () => {
+  it("takes the top line with no temperature or blunders", () => {
     const pos = positionFromFen(START);
     const lines: EngineLine[] = [
       { uci: "e2e4", scoreCp: 40, depth: 14, multipv: 1 },
       { uci: "d2d4", scoreCp: 39, depth: 14, multipv: 2 },
     ];
     for (let s = 1; s < 30; s++) {
-      expect(pickMove({ pos, lines, allowed: legalMoves(pos), strength: BOT_PROFILES.freddie.levels.hard.chess, style: "positional", rng: seeded(s) }).uci).toBe("e2e4");
+      expect(pickMove({ pos, lines, allowed: legalMoves(pos), strength: { ...BOT_PROFILES.freddie.levels.hard.chess, temperatureCp: 0, blunderRate: 0 }, style: "positional", rng: seeded(s) }).uci).toBe("e2e4");
     }
   });
 
@@ -115,7 +115,7 @@ describe("move picking", () => {
       return n / 400;
     };
     expect(rate("ollie")).toBeGreaterThan(0.5);
-    expect(rate("freddie")).toBeLessThan(0.3);
+    expect(rate("freddie")).toBeLessThan(rate("ollie") - 0.15);
   });
 });
 
@@ -274,5 +274,14 @@ describe("trash talk", () => {
   it("fills in the club name", () => {
     const t = new Talker("ryan", "West Ham", () => 0.5);
     for (let i = 0; i < 6; i++) expect(t.say("hotSpot")).not.toContain("{club}");
+  });
+});
+
+describe("promotion", () => {
+  it("Ollie aims for a queen, Freddie for a knight", () => {
+    const e = fakeEngine();
+    expect(createBotWith("ollie", "medium", e).promotionPick()).toBe("q");
+    expect(createBotWith("ryan", "medium", e).promotionPick()).toBe("r");
+    expect(createBotWith("freddie", "medium", e).promotionPick()).toBe("n");
   });
 });
