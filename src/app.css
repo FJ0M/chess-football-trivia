@@ -45,16 +45,19 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 .sheet h3 { margin: 10px 0 0; font-size: 12px; text-transform: uppercase; letter-spacing: .1em; color: var(--sheet-muted); }
 .ghost { background: transparent; border: 1px solid var(--sheet-line); color: var(--sheet-accent); font: inherit; font-weight: 600; border-radius: 999px; padding: 6px 14px; cursor: pointer; }
 .reset { justify-self: start; margin-top: 8px; }
-.style-list { display: grid; gap: 6px; }
-.style-option { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: center; padding: 10px; border: 1px solid var(--sheet-line); border-radius: 12px; cursor: pointer; position: relative; }
-.style-option.on { border-color: var(--sheet-accent); box-shadow: 0 0 0 1px var(--sheet-accent); }
-.style-option input { position: absolute; opacity: 0; pointer-events: none; }
-.style-option:has(input:focus-visible) { outline: 2px solid var(--sheet-accent); outline-offset: 2px; }
-.style-option .sw { display: grid; grid-template-columns: repeat(5, 10px); height: 34px; border-radius: 6px; overflow: hidden; border: 1px solid var(--sheet-line); }
-.style-option .sw i { display: block; }
-.style-option .txt { display: grid; gap: 2px; min-width: 0; }
-.style-option strong em { font-style: normal; font-size: 11px; font-weight: 600; color: var(--sheet-accent); margin-left: 6px; text-transform: uppercase; letter-spacing: .06em; }
-.style-option small { color: var(--sheet-muted); }
+/* Look: mini board with arrows to step through the styles. */
+.style-step { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; }
+.style-step .step-arrow { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--sheet-line); background: var(--sheet-bg); color: var(--sheet-fg); font: inherit; font-size: 22px; line-height: 1; cursor: pointer; }
+.style-step .mid { display: grid; gap: 6px; justify-items: center; text-align: center; min-width: 0; }
+.style-step strong em { font-style: normal; font-size: 11px; font-weight: 600; color: var(--sheet-accent); margin-left: 6px; text-transform: uppercase; letter-spacing: .06em; }
+.style-step small { color: var(--sheet-muted); min-height: 2.6em; }
+.mini-board { display: grid; grid-template-columns: repeat(4, 28px); grid-auto-rows: 28px; border: 3px solid; border-radius: 6px; overflow: hidden; }
+.mini-board i { display: grid; place-items: center; font-style: normal; font-size: 18px; line-height: 1; }
+.style-step .dots { display: flex; gap: 0; justify-content: center; flex-wrap: wrap; }
+.style-step .dots button { width: 15px; height: 20px; padding: 0; border: 0; background: none; cursor: pointer; display: grid; place-items: center; }
+.style-step .dots button::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--sheet-line); }
+.style-step .dots button.on::before { background: var(--sheet-accent); }
+.style-step button:focus-visible { outline: 2px solid var(--sheet-accent); outline-offset: 2px; }
 .row { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
 .row input[type="range"] { flex: 1; min-width: 140px; accent-color: var(--sheet-accent); }
 .toggle { display: flex; gap: 8px; align-items: center; font-weight: 600; min-width: 140px; }

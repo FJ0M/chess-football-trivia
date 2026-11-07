@@ -1,8 +1,9 @@
-import { STYLES, getStyle } from "../theme/themes";
+import { getStyle } from "../theme/themes";
 import { TRACKS } from "../audio/music";
 import { SFX_LABELS, type SfxName } from "../audio/sfx";
 import { DEFAULT_SETTINGS, VIEWS, type Settings } from "../settings/settings";
 import { VIEW_INFO, ViewArt } from "./ViewArt";
+import { StylePicker } from "./StylePicker";
 
 interface Props {
   settings: Settings;
@@ -24,18 +25,7 @@ export function SettingsPanel({ settings, onChange, onClose, play }: Props) {
         </header>
 
         <h3>Look</h3>
-        <div className="style-list" role="radiogroup" aria-label="Game style">
-          {STYLES.map((s) => (
-            <label key={s.id} className={`style-option${settings.style === s.id ? " on" : ""}`}>
-              <input type="radio" name="style" id={`style-${s.id}`} value={s.id} checked={settings.style === s.id} onChange={() => set("style", s.id)} />
-              <span className="sw">{s.swatches.map((c) => <i key={c} style={{ background: c }} />)}</span>
-              <span className="txt">
-                <strong>{s.name}{s.id === DEFAULT_SETTINGS.style && <em> Default</em>}</strong>
-                <small>{s.blurb}</small>
-              </span>
-            </label>
-          ))}
-        </div>
+        <StylePicker value={settings.style} defaultId={DEFAULT_SETTINGS.style} onChange={(id) => set("style", id)} />
 
         <h3>Sound effects</h3>
         <div className="row">
