@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { comment, type CommentEvent } from "./commentary";
 import { materialCp } from "./material";
 import { POWER_UP_BY_ID } from "./powerups";
+import { ODDS_POINTS } from "./handicap";
 import type { GameEvent } from "./useGame";
 import type { Color, GameState } from "./types";
 
@@ -22,7 +23,12 @@ export function useCommentary(
   namesRef.current = names;
 
   const say = (event: CommentEvent, evalCp: number | null, id: number) => {
-    const c = comment({ event, names: namesRef.current, evalCp, materialCp: materialCp(gameRef.current.fen), prevBucket: bucket.current });
+    // With Pass and Play piece odds, the commentator judges the game against the handicap:
+    // the side that gave a piece away isn't "behind" because of it.
+    const g = gameRef.current;
+    const h = g.options.mode === "local" ? g.options.handicap : null;
+    const offset = h ? (h.weaker === "white" ? -1 : 1) * ODDS_POINTS[h.odds] * 100 : 0;
+    const c = comment({ event, names: namesRef.current, evalCp: evalCp === null ? null : evalCp + offset, materialCp: materialCp(g.fen) + offset, prevBucket: bucket.current });
     bucket.current = c.bucket;
     setLine({ id, text: c.text });
   };

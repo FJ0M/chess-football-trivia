@@ -114,7 +114,7 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
   return (
     <div className={`screen style-${style.id}${local && view === "flip" ? " flip-mode" : ""}${flipAll ? " flip-all" : ""}`}>
       <div className="strip">
-        <span>{game.options.chess960 ? `Chess960 · No. ${game.options.position}` : game.options.trivia ? "Football trivia" : "Plain chess"}</span>
+        <span>{game.options.chess960 ? `Chess960 · No. ${game.options.position}` : game.options.trivia ? <><em className="wide-only">Football </em>trivia</> : "Plain chess"}</span>
         <Scoreline game={game} score={mat.score} />
         <span>Move {Math.ceil((game.history.length + 1) / 2)}</span>
       </div>
@@ -158,7 +158,7 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
       </div>
       <PlayerBar game={game} color={bottom} active={active} ticking={clockOwner(game, phase)} bubble={g.bubble} bench={mat.bench[bottom]} lead={mat.score[bottom] - mat.score[top]} ebk={g.ebk[bottom]} />
       {line && <p className="commentary" aria-live="polite"><Mic /><span key={line.id}>{line.text}</span></p>}
-      {fx && <ScreenFx events={g.events} now={g.now} names={{ white: game.players.white.name, black: game.players.black.name }} />}
+      {fx && <ScreenFx events={g.events} now={g.now} names={names} />}
 
       <div className="controls">
         {phase.kind !== "whoami" && <Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} />}
