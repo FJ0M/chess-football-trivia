@@ -1,6 +1,6 @@
 # Game logo and app icons
 
-Two pawns with footballs for heads on a pitch. Drawn by `tools/make_logo.py`.
+A penalty: the white pawn about to take a spot kick against the black pawn in goal, in front of a stand of fans. Both pawns have football heads and football-patterned bodies. This is option 2 ("Face-off") of the five in `docs/design/logo-options/`. Drawn by `tools/make_logo.py`, which uses `tools/logo_options.py`.
 
 - `logo.svg`: rounded square, used for the favicon and anywhere in the app.
 - `logo-maskable.svg`: full-bleed version with the artwork inside the maskable safe zone.

@@ -1,4 +1,5 @@
-"""Draws the game logo: two pawns with footballs for heads on a pitch.
+"""Draws the game logo: a penalty between two pawns with footballs for heads
+(option 2, "Face-off", from tools/logo_options.py). logo() is the older pitch-only logo.
 
 Writes public/icons/logo.svg (rounded, for favicon and menus) and
 public/icons/logo-maskable.svg (full bleed, artwork inside the safe zone).
@@ -9,9 +10,11 @@ import os
 import math
 def pent(cx,cy,r,rot):
     return " ".join(f"{cx+r*math.cos(math.radians(rot+72*k)):.1f},{cy+r*math.sin(math.radians(rot+72*k)):.1f}" for k in range(5))
-def ball(cx,cy,R,cid,ink="#1b2430"):
+def ball(cx,cy,R,cid,ink="#1b2430",face="#fff",outline=None):
+    """A football. face = panel colour, ink = patch and seam colour."""
+    outline=outline or ink
     out=[f'<clipPath id="{cid}"><circle cx="{cx}" cy="{cy}" r="{R}"/></clipPath>',
-         f'<circle cx="{cx}" cy="{cy}" r="{R}" fill="#fff"/>',f'<g clip-path="url(#{cid})">']
+         f'<circle cx="{cx}" cy="{cy}" r="{R}" fill="{face}"/>',f'<g clip-path="url(#{cid})">']
     p=0.34*R
     out.append(f'<polygon points="{pent(cx,cy,p,-90)}" fill="{ink}"/>')
     for k in range(5):
@@ -28,7 +31,7 @@ def ball(cx,cy,R,cid,ink="#1b2430"):
             tx,ty=ox2+(ex-ox2)*0.36*R/math.hypot(ex-ox2,ey-oy2),oy2+(ey-oy2)*0.36*R/math.hypot(ex-ox2,ey-oy2)
             out.append(f'<path d="M{ex:.1f} {ey:.1f}L{tx:.1f} {ty:.1f}" stroke="{ink}" stroke-width="{R*0.07:.1f}"/>')
     out.append('</g>')
-    out.append(f'<circle cx="{cx}" cy="{cy}" r="{R}" fill="none" stroke="{ink}" stroke-width="{R*0.1:.1f}"/>')
+    out.append(f'<circle cx="{cx}" cy="{cy}" r="{R}" fill="none" stroke="{outline}" stroke-width="{R*0.1:.1f}"/>')
     # shine
     out.append(f'<path d="M{cx-R*0.62:.1f} {cy-R*0.25:.1f}A{R*0.68:.1f} {R*0.68:.1f} 0 0 1 {cx-R*0.2:.1f} {cy-R*0.64:.1f}" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="{R*0.08:.1f}" stroke-linecap="round"/>')
     return "\n".join(out)
@@ -63,7 +66,13 @@ def logo(full=False):
         return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">{inner}</svg>'
     return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><clipPath id="r"><rect width="512" height="512" rx="112"/></clipPath>'
             f'<g clip-path="url(#r)">{inner}</g></svg>')
+def penalty_logo(full=False):
+    """The current logo: option 2 ("Face-off") from tools/logo_options.py."""
+    from logo_options import option2
+    return option2(rounded=not full)
+
+
 if __name__ == "__main__":
     OUT = os.path.join(os.path.dirname(__file__), "..", "public", "icons")
-    open(os.path.join(OUT, "logo.svg"), "w").write(logo())
-    open(os.path.join(OUT, "logo-maskable.svg"), "w").write(logo(True))
+    open(os.path.join(OUT, "logo.svg"), "w").write(penalty_logo())
+    open(os.path.join(OUT, "logo-maskable.svg"), "w").write(penalty_logo(True))
