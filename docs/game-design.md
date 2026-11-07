@@ -1,4 +1,4 @@
-# Chess Football Trivia: Game Design
+# They Think It's Checkmate: Game Design
 
 Nov 4, 2026 · Freddie Martin
 

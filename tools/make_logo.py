@@ -63,6 +63,7 @@ def logo(full=False):
         return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">{inner}</svg>'
     return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><clipPath id="r"><rect width="512" height="512" rx="112"/></clipPath>'
             f'<g clip-path="url(#r)">{inner}</g></svg>')
-OUT = os.path.join(os.path.dirname(__file__), "..", "public", "icons")
-open(os.path.join(OUT, "logo.svg"), "w").write(logo())
-open(os.path.join(OUT, "logo-maskable.svg"), "w").write(logo(True))
+if __name__ == "__main__":
+    OUT = os.path.join(os.path.dirname(__file__), "..", "public", "icons")
+    open(os.path.join(OUT, "logo.svg"), "w").write(logo())
+    open(os.path.join(OUT, "logo-maskable.svg"), "w").write(logo(True))
