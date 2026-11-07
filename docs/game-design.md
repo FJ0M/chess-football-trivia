@@ -29,22 +29,22 @@ There are two ways to play, and both use the same rules.
 - **vs Bot.** Pick Freddie, Ryan or Ollie. You answer questions yourself; the bot "answers" using its trivia profile and talks trash throughout.
 - **Pass and Play.** Two people on one device. Whoever triggered the question answers it, and the other player hands over the device without peeking (honour system, as at the pub). The screen faces whoever is up. Settings has two views, each with a picture. **Flat on the table** (the default, on phones, tablets and computers) turns the whole game round 180 degrees on Black's turn, so the board, question card and power-ups all face them with the device flat on the table. **Pass the phone** flips only the board, for handing the device across. (The old Face to face and Off views were removed in playtest round 3; saved settings move to Flat on the table and Pass the phone.)
 
-Each game also has a **Plain Chess** toggle (no trivia) and a **Timed** toggle (3, 5, 10, 15 or 30 minutes each, shown on stadium-style scoreboard clocks), so it works for a quick game or a serious one.
+Each game also has a **Plain Chess** toggle (no trivia) and a **Timed** toggle (3, 5, 10, 15 or 30 minutes each, shown on stadium-style scoreboard clocks), so it works for a quick game or a serious one. In a timed game the clock of whoever has to act **always runs**: while choosing a move, picking a card, answering, reading the result (which moves on by itself after 2.5 seconds) and while the engine thinks for a power-up. It stops only for a "Who am I?", the Penalty Shootout and the pause menu. Every move adds **3 seconds** to the mover's clock.
 
 **Winning.** Checkmate wins, as normal. Resigning is allowed. A draw of any kind (stalemate, repetition, 50 moves, agreement) goes to a **Penalty Shootout**: five questions each, alternating, best score wins, sudden death if level. Rules that only exist because of power-ups are listed with each power-up below; nothing can capture or remove a king or queen directly.
 
 ## Pawn promotion: "Who am I?"
 
-When a pawn reaches the last rank, you earn your new piece with a **"Who am I?"** about a footballer (Freddie, Nov 4, 2026). Five clues appear one at a time, hardest first, and you get **one guess** from four names. Clues show every 6 seconds, or you can tap Next clue.
+When a pawn reaches the last rank, you earn your new piece with a **"Who am I?"** about a footballer (Freddie, Nov 4, 2026). Five clues appear one at a time, hardest first, and you get **one guess**, typed in (playtest round 3). The board is hidden and both chess clocks stop while it's on. Clues show every 12 seconds, or you can tap Next clue. Capitals and accents don't matter (Paquetá, Ødegaard), the surname alone is enough, a typo or two is allowed (none for names of 3 letters or fewer, 1 up to 6, then 2), and each set lists extra accepted names (`aliases`, e.g. "Kun" for Agüero). Typing another footballer's name exactly is always wrong, so "Kane" doesn't pass for Kanté. Bots still pick from four names with their usual odds.
 
 | Guess right after | Piece |
 | --- | --- |
-| Clue 1 | Queen |
-| Clue 2 | Rook |
-| Clue 3 | Bishop |
-| Clue 4 or 5 | Knight |
+| Clue 1 or 2 | Queen |
+| Clue 3 | Rook |
+| Clue 4 | Bishop |
+| Clue 5 | Knight |
 
-A wrong guess, or no guess by 6 seconds after the fifth clue, gives you a knight **and your opponent +2 Form**. That way a blind early guess is a real gamble. The question replaces any other trigger on that move, and it restarts the Kick-off count. Hot Spots never sit on the promotion ranks, so instead about half of all "Who am I?"s are a **Club Bonus** player from your own club, where your club has clue sets.
+A wrong guess, or no guess by 12 seconds after the fifth clue, gives you a knight **and your opponent +2 Form**. That way a blind early guess is a real gamble. The question replaces any other trigger on that move, and it restarts the Kick-off count. Hot Spots never sit on the promotion ranks, so instead about half of all "Who am I?"s are a **Club Bonus** player from your own club, where your club has clue sets.
 
 Clue sets live in `data/whoami.json`, built by `tools/build_whoami.py`: 30 Premier League players from 2000 onwards, 10 West Ham and 8 Brighton. Every clue was checked against the player's Wikipedia page on 2026-11-04. Bots aim for a piece (Ollie a queen, Ryan a rook, Freddie a knight) and guess with their usual trivia accuracy.
 
@@ -76,7 +76,7 @@ If a move hits two triggers, the higher one in the table wins. The Kick-off coun
 
 1. Optionally spend Form on one power-up.
 2. Make your chess move.
-3. If the move triggers a question, pick a card and answer it (15 second timer).
+3. If the move triggers a question, pick a card and answer it (10 second timer; your chess clock keeps running).
 4. Form is added, or the penalty is applied, and play passes to the opponent.
 
 ## Choosing a question: risk and reward
@@ -85,9 +85,9 @@ You pick your own question, and the harder it is, the more you win and the more 
 
 | Difficulty | Timer | Right answer | Wrong answer or time out |
 | --- | --- | --- | --- |
-| Tap-in (easy) | 15 s | +1 Form | Nothing, you just miss out |
-| Highlight (medium) | 15 s | +2 Form | Opponent gets +2 Form ("scored on the break") |
-| Screamer (hard) | 15 s | +3 Form | **Booked**: the piece you just moved is frozen for your next turn |
+| Tap-in (easy) | 10 s | +1 Form | Nothing, you just miss out |
+| Highlight (medium) | 10 s | +2 Form | Opponent gets +2 Form ("scored on the break") |
+| Screamer (hard) | 10 s | +3 Form | **Booked**: the piece you just moved is frozen for your next turn |
 | Puskás (hard, no hints) | 8 s | +5 Form | **Sent off**: you lose your next turn, and the opponent gets a Free Kick |
 
 **Extras on top:**
@@ -227,5 +227,5 @@ Each step ends with something playable on a phone, so the game can be tested wit
 
 - [ ] chess.com or Lichess usernames, so the bots can copy real openings and ratings
 - [ ] Real catchphrases and in-jokes to replace the starter trash talk
-- [ ] Is a 15 second question timer about right, or should it be shorter?
+- [x] Question timer: 10 seconds, with the chess clock running (playtest round 3)
 - [x] Hot Spot bonus rounds use each player's own club

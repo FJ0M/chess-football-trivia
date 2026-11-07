@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { backRank, startFen } from "./chess960";
 import {
   applyAnswer, attackedSquares, resolvePromotion, finishTurn, firstMoveReach, legalMoves, material, newGame, pickHotSpots, playMove,
-  powerBlocked, powerCost, powerTargets, resolveMove, skipExtraTime, turnOf, usePowerUp,
+  powerBlocked, powerCost, powerTargets, resolveMove, skipExtraTime, turnOf, usePowerUp, addIncrement, withClocksFrom,
 } from "./rules";
 import { fergieMs } from "./powerups";
 import type { GameOptions, GameState } from "./types";
@@ -136,8 +136,9 @@ describe("triggers", () => {
     const r = playMove(g, "b7b8q");
     expect(r.trigger).toMatchObject({ kind: "promotion", square: "b8" });
     expect(resolvePromotion(r.state, "b8", 1, true).state.fen.startsWith("1Q2k3")).toBe(true);
-    expect(resolvePromotion(r.state, "b8", 2, true).state.fen.startsWith("1R2k3")).toBe(true);
-    expect(resolvePromotion(r.state, "b8", 3, true).state.fen.startsWith("1B2k3")).toBe(true);
+    expect(resolvePromotion(r.state, "b8", 2, true).state.fen.startsWith("1Q2k3")).toBe(true);
+    expect(resolvePromotion(r.state, "b8", 3, true).state.fen.startsWith("1R2k3")).toBe(true);
+    expect(resolvePromotion(r.state, "b8", 4, true).state.fen.startsWith("1B2k3")).toBe(true);
     expect(resolvePromotion(r.state, "b8", 5, true).state.fen.startsWith("1N2k3")).toBe(true);
     const low = { ...r.state, players: { ...r.state.players, black: { ...r.state.players.black, form: 3 } } };
     const wrong = resolvePromotion(low, "b8", 1, false).state;
@@ -381,6 +382,16 @@ describe("power-ups", () => {
     expect(game({ timed: true, minutes: 5 }).players.white.clockMs).toBe(5 * 60_000);
     g = { ...g, players: { ...g.players, white: { ...g.players.white, clockMs: 60_000 } } };
     expect(usePowerUp(g, "fergie-time").state.players.white.clockMs).toBe(90_000);
+  });
+  it("timed games add 3 seconds per move, and a saved state never winds the clocks back", () => {
+    const g = at("4k3/8/8/8/8/8/8/4K3 w - - 0 1", { timed: true, minutes: 5 });
+    expect(addIncrement(g, "white").players.white.clockMs).toBe(5 * 60_000 + 3000);
+    expect(addIncrement(at("4k3/8/8/8/8/8/8/4K3 w - - 0 1"), "white").players.white.clockMs).toBeNull();
+    const live = { ...g, players: { ...g.players, white: { ...g.players.white, clockMs: 1000 } } };
+    const saved = { ...g, players: { ...g.players, white: { ...g.players.white, form: 7 } } };
+    const merged = withClocksFrom(saved, live);
+    expect(merged.players.white.clockMs).toBe(1000);
+    expect(merged.players.white.form).toBe(7);
   });
   it("Masterclass and Scout Report can't be used when they'd do nothing", () => {
     const check = at("4k3/8/8/8/8/8/4r3/4K3 w - - 0 1");

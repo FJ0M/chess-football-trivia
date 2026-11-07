@@ -8,7 +8,7 @@ import type { SfxName } from "../audio/sfx";
 import { botList, loadBots, type BotLike, type BotLevel, type BotMeta, type BotModule, type TalkMoment } from "./bots";
 import { POWER_UP_BY_ID, POWER_UPS, TRIVIA_HINTS } from "./powerups";
 import {
-  PROMOTION_AIM, applyAnswer, attackedSquares, finishTurn, flipTurn, legalMoves, newGame, playMove, powerBlocked, powerCost,
+  PROMOTION_AIM, addIncrement, applyAnswer, attackedSquares, withClocksFrom, finishTurn, flipTurn, legalMoves, newGame, playMove, powerBlocked, powerCost,
   resign as resignRule, resolveMove, resolvePromotion, setClock, skipExtraTime, spendForm, timeout, turnOf, usePowerUp, endInDraw,
   type MoveResult, type PlayerInit,
 } from "./rules";
@@ -36,6 +36,8 @@ export type Phase =
   | {
       kind: "result"; color: Color; correct: boolean; title: string; lines: string[]; options: string[]; answer: number;
       choice: number | null; explanation?: string; next: GameState; auto: boolean;
+      /** When the result appeared: it moves on by itself after RESULT_MS. */
+      shownAt: number;
     }
   | { kind: "shootout"; kicks: Array<{ color: Color; scored: boolean }>; q: Question; startedAt: number; choice: number | null; taker: Color }
   | { kind: "over" };
@@ -73,6 +75,8 @@ function loadData(players: SetupChoice["players"]): Promise<Data> {
 }
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+/** The result screen moves on by itself after this long (the chess clock is running). */
+export const RESULT_MS = 2500;
 /** Difficulty names, as goals: Tap-in, Highlight, Screamer, and the Puskás (the top-tier upgrade of a Screamer). */
 export const DIFF_LABEL = { easy: "Tap-in", medium: "Highlight", hard: "Screamer" } as const;
 export const TOP_TIER = "Puskás";
@@ -129,6 +133,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     const p = phaseRef.current;
     if (p.kind === "question" || p.kind === "shootout") go({ ...p, startedAt: p.startedAt + d });
     else if (p.kind === "whoami") go({ ...p, clueAt: p.clueAt + d });
+    else if (p.kind === "result") go({ ...p, shownAt: p.shownAt + d });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paused]);
   useEffect(() => { loadData(setup.players).then((d) => alive.current && setData(d)); }, []);
@@ -187,7 +192,9 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
   }, [data, go, play, react, setGame]);
 
   // ------------------------------------------------------------ moves
-  const afterMove = useCallback((r: MoveResult, mover: Color) => {
+  const afterMove = useCallback((res: MoveResult, mover: Color) => {
+    // +3 seconds on the mover's clock for every move (timed games).
+    const r = { ...res, state: addIncrement(res.state, mover) };
     setGame(r.state);
     setOverlay({});
     play(r.captured ? "capture" : "move");
@@ -336,6 +343,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     go({
       kind: "result", color: p.color, correct, title: correct ? `${who} got it right!` : choice === null ? "Time's up!" : `${who} got it wrong`,
       lines: out.lines, options: p.q.options, answer: p.q.answer, choice, explanation: p.q.explanation, next: out.state, auto: isBot(p.color),
+      shownAt: Date.now(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [go, play, react, setGame]);
@@ -364,10 +372,14 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [go, play]);
 
-  const guess = useCallback((choice: number | null) => {
+  /** A "Who am I?" guess: typed text from a player, an option index from a bot, or null when time runs out. */
+  const guess = useCallback((input: string | number | null) => {
     const p = phaseRef.current;
-    if (p.kind !== "whoami") return;
-    const correct = choice === p.set.answer;
+    if (p.kind !== "whoami" || !data) return;
+    const typed = typeof input === "string" ? input.trim() : null;
+    const correct = typeof input === "number" ? input === p.set.answer : typed ? data.whoami.check(p.set, typed) : false;
+    const name = p.set.name ?? p.set.options[p.set.answer];
+    const choice = input === null || (typed !== null && !typed) ? null : 0;
     const res = resolvePromotion(gameRef.current, p.square, p.clues, correct);
     setGame(res.state);
     if (correct) { play("correct"); setTimeout(() => play("cheer"), 350); react(p.color, "ownRight"); }
@@ -376,17 +388,22 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     go({
       kind: "result", color: p.color, correct,
       title: correct ? `${who} got it on clue ${p.clues}!` : choice === null ? "Time's up!" : `${who} got it wrong`,
-      lines: [res.line], options: p.set.options, answer: p.set.answer, choice,
-      explanation: p.set.clues.slice(p.clues).length ? `The clues you didn't need: ${p.set.clues.slice(p.clues).join(" ")}` : undefined,
-      next: res.state, auto: isBot(p.color),
+      lines: [
+        ...(typed && !correct ? [`"${typed}" isn't right: it was ${name}`] : []),
+        res.line,
+      ],
+      options: [name], answer: 0, choice: correct ? 0 : null,
+      explanation: p.set.clues.slice(p.clues).length ? `The clues ${correct ? "you didn't need" : "still to come"}: ${p.set.clues.slice(p.clues).join(" ")}` : undefined,
+      next: res.state, auto: isBot(p.color), shownAt: Date.now(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [go, play, react, setGame]);
+  }, [data, go, play, react, setGame]);
 
   const continueOn = useCallback(() => {
     const p = phaseRef.current;
     if (p.kind !== "result") return;
-    endTurn(p.next);
+    // The clocks kept running while the result showed, so keep their current time.
+    endTurn(withClocksFrom(p.next, gameRef.current));
   }, [endTurn]);
 
   // ------------------------------------------------------------ shootout
@@ -447,19 +464,23 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
       if (left <= 0) answer(null);
     }
     if (p.kind === "whoami" && !isBot(p.color) && now - p.clueAt >= CLUE_MS) nextClue();
+    if (p.kind === "result" && now - p.shownAt >= RESULT_MS) continueOn();
     if (p.kind === "shootout" && p.choice === null && !isBot(p.taker) && now - p.startedAt > TIMER_MS.normal) kick(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [now]);
 
-  // Chess clock: runs only while the player to move is choosing a move.
+  // Chess clock: always runs for whoever has to act, through questions, results and engine
+  // thinking too. It stops only for a "Who am I?", the Penalty Shootout and the pause menu.
   useEffect(() => {
     const t = Date.now();
     const dt = t - lastTick.current;
     lastTick.current = t;
     if (pausedRef.current) return;
     const g = gameRef.current;
-    if (!g.options.timed || g.outcome || (phase.kind !== "move" && phase.kind !== "target")) return;
-    const c = turnOf(g);
+    if (!g.options.timed || g.outcome) return;
+    const p = phaseRef.current;
+    const c = clockOwner(g, p);
+    if (!c) return;
     const left = (g.players[c].clockMs ?? 0) - dt;
     if (left <= 0) {
       setGame(timeout(setClock(g, c, 0), c));
@@ -556,10 +577,6 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
       await wait(Math.min(2500, Math.max(900, a.delayMs / 3)));
       if (!alive.current || phaseRef.current.kind !== "whoami") return;
       guess(a.choice);
-    } else if (p.kind === "result" && p.auto) {
-      await wait(2600);
-      if (!still()) return;
-      continueOn();
     } else if (p.kind === "shootout") {
       const a = await bot.answer({ question: p.q });
       await wait(Math.min(a.delayMs, TIMER_MS.normal));
@@ -574,6 +591,15 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     game, phase, note, bubble, overlay, now, ready: !!data, botMeta, engineReady: !!mod,
     move, choosePower, tapTarget, skipExtra, pickCard, answer, useHint, nextClue, guess, continueOn, kick, resign, agreeDraw,
   };
+}
+
+/** Whose chess clock is running in this phase, or null when the clocks are stopped. */
+export function clockOwner(g: GameState, p: Phase): Color | null {
+  switch (p.kind) {
+    case "move": case "target": case "thinking": return turnOf(g);
+    case "cards": case "question": case "result": return p.color;
+    default: return null; // "Who am I?", shootout, game over
+  }
 }
 
 function positionCheck(g: GameState): boolean {

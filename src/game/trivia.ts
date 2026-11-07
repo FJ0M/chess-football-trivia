@@ -198,4 +198,5 @@ export function phoneAFriend(q: Question, rng: Rng = Math.random, hidden: number
   return wrong.length ? pick(wrong, rng) : q.answer;
 }
 
-export const TIMER_MS = { normal: 15_000, puskas: 8_000 };
+/** Question timers. The chess clock keeps running during questions, so these are short. */
+export const TIMER_MS = { normal: 10_000, puskas: 8_000 };

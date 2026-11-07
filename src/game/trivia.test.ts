@@ -121,3 +121,35 @@ describe("Who am I? club sets", () => {
     expect(club).toBeGreaterThan(240);
   });
 });
+
+describe("Who am I? typed answers", () => {
+  it("ignores capitals and accents, takes the surname alone, and allows a typo or two", async () => {
+    const { isRightGuess } = await import("./whoami");
+    const set = (name: string, aliases: string[] = []) => ({ id: "x", clues: [], options: [name, "A B", "C D", "E F"], answer: 0, name, aliases, club: null, verified: true });
+    const aguero = set("Sergio Agüero", ["Kun"]);
+    for (const t of ["sergio aguero", "AGUERO", "Agüero", "aguerro", "kun", " Sergio  Agüero "]) expect(isRightGuess(aguero, t)).toBe(true);
+    expect(isRightGuess(aguero, "Sergio")).toBe(false);
+    expect(isRightGuess(aguero, "")).toBe(false);
+    const ode = set("Martin Ødegaard");
+    expect(isRightGuess(ode, "odegaard")).toBe(true);
+    expect(isRightGuess(ode, "oedegard")).toBe(true);
+    const vvd = set("Virgil van Dijk");
+    for (const t of ["van dijk", "vandijk", "Van Dyk", "virgil van dijk"]) expect(isRightGuess(vvd, t)).toBe(true);
+    const kante = set("N'Golo Kanté");
+    expect(isRightGuess(kante, "kante")).toBe(true);
+    expect(isRightGuess(kante, "ngolo kante")).toBe(true);
+    // A typo away, but it's another footballer's name: wrong.
+    expect(isRightGuess(kante, "Kane", ["Harry Kane"])).toBe(false);
+    expect(isRightGuess(set("Joe Cole", []), "Andy Cole", ["Andy Cole"])).toBe(false);
+    expect(isRightGuess(set("Mohamed Salah"), "Sadio Mane")).toBe(false);
+  });
+  it("every set in the bank accepts its own name and surname", () => {
+    const bank = new WhoAmIBank((whoami as { sets: WhoAmI[] }).sets, { has: () => false, add: () => {}, delete: () => {} });
+    for (const s of (whoami as { sets: WhoAmI[] }).sets) {
+      const name = s.name ?? s.options[s.answer];
+      expect(bank.check(s, name)).toBe(true);
+      expect(bank.check(s, name.split(" ").slice(1).join(" ") || name)).toBe(true);
+      for (const other of s.options.filter((_, i) => i !== s.answer)) expect(bank.check(s, other)).toBe(false);
+    }
+  });
+});
