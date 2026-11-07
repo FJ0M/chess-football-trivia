@@ -1,5 +1,5 @@
-"""Draws 5 logo options for "They Think It's Checkmate": two pawns with
-football heads and football-patterned bodies, one taking a penalty against
+"""Draws 5 logo options for "They Think It's Checkmate": two chess pawns
+in football kits, one taking a penalty against
 the other in goal, with a stand of cartoon fans behind.
 
 Writes docs/design/logo-options/option-1.svg ... option-5.svg.
@@ -11,8 +11,8 @@ import random
 from make_logo import ball
 
 INK = "#1b2430"
-LIGHT = dict(base="#f4efe2", spot="#1b2430", line="#1b2430", ink=INK)
-DARK = dict(base="#24476b", spot="#0c1826", line="#0c1826", ink="#0b1420", head="#24476b", head_spot="#0c1826")
+LIGHT = dict(material="#f4efe2", light="#ffffff", shade="#cfc5ad", ink=INK, shirt="#7a263a", sleeve="#1bb1e7", shorts="#ffffff", number="9", number_col="#1bb1e7")
+DARK = dict(material="#1f3b5a", light="#4d77a3", shade="#0b1420", ink="#05090f", shirt="#c8ec3a", sleeve="#1b2430", shorts="#0b1420", number="1", number_col="#1b2430")
 CLARET, SKY = "#7a263a", "#1bb1e7"
 
 
@@ -41,27 +41,38 @@ def hexes(x0, y0, x1, y1, h, base, spot, line, sw):
 
 
 def ppawn(cx, base, s, kit, uid, gloves=False, shadow=True):
-    """A pawn with a football head and a football-patterned body."""
+    """A chess pawn (head and body in one material) wearing a football kit."""
     w = lambda v: v * s
     d = pawn_path(cx, base, s)
+    ink, mat = kit["ink"], kit["material"]
     collar = (cx - w(46), base - w(146), w(92), w(20))
-    out = []
+    sw = w(9)
+    out = [f'<radialGradient id="g{uid}" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="{kit["light"]}"/><stop offset=".55" stop-color="{mat}"/><stop offset="1" stop-color="{kit["shade"]}"/></radialGradient>']
     if shadow:
         out.append(f'<ellipse cx="{cx}" cy="{base+w(4):.1f}" rx="{w(86):.1f}" ry="{w(12):.1f}" fill="#000" opacity=".25"/>')
-    out.append(f'<clipPath id="c{uid}"><path d="{d}"/><rect x="{collar[0]:.1f}" y="{collar[1]:.1f}" width="{collar[2]:.1f}" height="{collar[3]:.1f}" rx="{w(10):.1f}"/></clipPath>')
-    out.append(f'<g clip-path="url(#c{uid})">' + hexes(cx - w(90), base - w(160), cx + w(90), base + w(5), w(15), kit["base"], kit["spot"], kit["line"], w(2.4))
-               + f'<path d="M{cx-w(40):.1f} {base-w(120):.1f}q{-w(4):.1f} {w(60):.1f} {-w(40):.1f} {w(100):.1f}" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="{w(10):.1f}" stroke-linecap="round"/></g>')
-    out.append(f'<path d="{d}" fill="none" stroke="{kit["ink"]}" stroke-width="{w(9):.1f}" stroke-linejoin="round"/>')
-    out.append(f'<rect x="{collar[0]:.1f}" y="{collar[1]:.1f}" width="{collar[2]:.1f}" height="{collar[3]:.1f}" rx="{w(10):.1f}" fill="none" stroke="{kit["ink"]}" stroke-width="{w(9):.1f}"/>')
-    if "head" in kit:  # head matches the body: dark blue with black patches
-        out.append(ball(cx, base - w(196), w(56), f"h{uid}", kit["head_spot"], face=kit["head"], outline=kit["ink"]))
-    else:
-        out.append(ball(cx, base - w(196), w(56), f"h{uid}", kit["ink"]))
+    # sleeves, behind the body
+    for sx in (-1, 1):
+        x0 = cx + sx * w(20)
+        out.append(f'<path d="M{x0:.1f} {base-w(134):.1f}L{x0+sx*w(34):.1f} {base-w(118):.1f}L{x0+sx*w(24):.1f} {base-w(94):.1f}L{x0+sx*w(2):.1f} {base-w(104):.1f}z" fill="{kit["sleeve"]}" stroke="{ink}" stroke-width="{sw:.1f}" stroke-linejoin="round"/>')
+    out.append(f'<clipPath id="c{uid}"><path d="{d}"/></clipPath>')
+    out.append(f'<path d="{d}" fill="url(#g{uid})"/>')
+    out.append(f'<g clip-path="url(#c{uid})">'
+               f'<rect x="{cx-w(90):.1f}" y="{base-w(140):.1f}" width="{w(180):.1f}" height="{w(80):.1f}" fill="{kit["shirt"]}"/>'
+               f'<rect x="{cx-w(90):.1f}" y="{base-w(60):.1f}" width="{w(180):.1f}" height="{w(22):.1f}" fill="{kit["shorts"]}"/>'
+               f'<path d="M{cx-w(90):.1f} {base-w(60):.1f}H{cx+w(90):.1f}M{cx-w(90):.1f} {base-w(38):.1f}H{cx+w(90):.1f}" stroke="{ink}" stroke-width="{w(5):.1f}"/>'
+               f'<path d="M{cx-w(13):.1f} {base-w(140):.1f}L{cx:.1f} {base-w(122):.1f}L{cx+w(13):.1f} {base-w(140):.1f}" fill="none" stroke="{kit["sleeve"]}" stroke-width="{w(7):.1f}"/>'
+               f'<path d="M{cx-w(28):.1f} {base-w(118):.1f}q{-w(4):.1f} {w(60):.1f} {-w(36):.1f} {w(100):.1f}" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="{w(9):.1f}" stroke-linecap="round"/></g>')
+    out.append(f'<text x="{cx}" y="{base-w(72):.1f}" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="{w(36):.1f}" fill="{kit["number_col"]}" stroke="{ink}" stroke-width="{w(1.5):.1f}">{kit["number"]}</text>')
+    out.append(f'<path d="{d}" fill="none" stroke="{ink}" stroke-width="{sw:.1f}" stroke-linejoin="round"/>')
+    out.append(f'<rect x="{collar[0]:.1f}" y="{collar[1]:.1f}" width="{collar[2]:.1f}" height="{collar[3]:.1f}" rx="{w(10):.1f}" fill="url(#g{uid})" stroke="{ink}" stroke-width="{sw:.1f}"/>')
+    hx, hy, hr = cx, base - w(190), w(50)
+    out.append(f'<circle cx="{hx}" cy="{hy:.1f}" r="{hr:.1f}" fill="url(#g{uid})" stroke="{ink}" stroke-width="{sw:.1f}"/>')
+    out.append(f'<path d="M{hx-hr*0.62:.1f} {hy-hr*0.2:.1f}A{hr*0.66:.1f} {hr*0.66:.1f} 0 0 1 {hx-hr*0.15:.1f} {hy-hr*0.62:.1f}" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="{hr*0.12:.1f}" stroke-linecap="round"/>')
     if gloves:
         for sx in (-1, 1):
             gx, gy = cx + sx * w(84), base - w(170)
-            out.append(f'<g transform="rotate({sx*18} {gx:.1f} {gy:.1f})"><rect x="{gx-w(20):.1f}" y="{gy-w(26):.1f}" width="{w(40):.1f}" height="{w(46):.1f}" rx="{w(14):.1f}" fill="#ff8a1f" stroke="{kit["ink"]}" stroke-width="{w(7):.1f}"/>'
-                       f'<path d="M{gx-w(8):.1f} {gy-w(26):.1f}v{w(16):.1f}M{gx+w(4):.1f} {gy-w(26):.1f}v{w(16):.1f}" stroke="{kit["ink"]}" stroke-width="{w(4):.1f}"/></g>')
+            out.append(f'<g transform="rotate({sx*18} {gx:.1f} {gy:.1f})"><rect x="{gx-w(20):.1f}" y="{gy-w(26):.1f}" width="{w(40):.1f}" height="{w(46):.1f}" rx="{w(14):.1f}" fill="#ff8a1f" stroke="{ink}" stroke-width="{w(7):.1f}"/>'
+                       f'<path d="M{gx-w(8):.1f} {gy-w(26):.1f}v{w(16):.1f}M{gx+w(4):.1f} {gy-w(26):.1f}v{w(16):.1f}" stroke="{ink}" stroke-width="{w(4):.1f}"/></g>')
     return "".join(out)
 
 

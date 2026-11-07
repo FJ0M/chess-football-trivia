@@ -1,4 +1,4 @@
-"""Draws the game logo: a penalty between two pawns with footballs for heads
+"""Draws the game logo: a penalty between two chess pawns in football kits
 (option 2, "Face-off", from tools/logo_options.py). logo() is the older pitch-only logo.
 
 Writes public/icons/logo.svg (rounded, for favicon and menus) and
