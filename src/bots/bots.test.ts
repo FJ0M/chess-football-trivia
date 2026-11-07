@@ -153,11 +153,11 @@ describe("trivia", () => {
     club,
   });
 
-  function rate(id: "ollie" | "ryan" | "freddie", question: QuestionLike, worldie = false) {
+  function rate(id: "ollie" | "ryan" | "freddie", question: QuestionLike, puskas = false) {
     const p = BOT_PROFILES[id];
     const rng = seeded(7);
     let right = 0;
-    for (let i = 0; i < 4000; i++) if (answerQuestion(p, p.levels.medium.trivia, { question, worldie }, rng).choice === question.answer) right++;
+    for (let i = 0; i < 4000; i++) if (answerQuestion(p, p.levels.medium.trivia, { question, puskas }, rng).choice === question.answer) right++;
     return right / 4000;
   }
 
@@ -180,12 +180,12 @@ describe("trivia", () => {
     }
   });
 
-  it("answers inside the timer, and faster on a Worldie", () => {
+  it("answers inside the timer, and faster on a Puskás", () => {
     const p = BOT_PROFILES.freddie;
     const rng = seeded(2);
     for (let i = 0; i < 200; i++) {
       expect(answerQuestion(p, p.levels.medium.trivia, { question: q("hard") }, rng).delayMs).toBeLessThan(15000);
-      expect(answerQuestion(p, p.levels.medium.trivia, { question: q("hard"), worldie: true }, rng).delayMs).toBeLessThan(8000);
+      expect(answerQuestion(p, p.levels.medium.trivia, { question: q("hard"), puskas: true }, rng).delayMs).toBeLessThan(8000);
     }
   });
 
@@ -206,7 +206,7 @@ describe("trivia", () => {
   it("Ryan always goes Hard on a West Ham card", () => {
     const p = BOT_PROFILES.ryan;
     const rng = seeded(5);
-    for (let i = 0; i < 100; i++) expect(chooseCard(p, p.levels.medium.trivia, { cards: deal, worldieAllowed: true, form: 0 }, rng).index).toBe(2);
+    for (let i = 0; i < 100; i++) expect(chooseCard(p, p.levels.medium.trivia, { cards: deal, puskasAllowed: true, form: 0 }, rng).index).toBe(2);
   });
 
   it("Ollie mostly goes Hard, Freddie mostly goes Easy", () => {
@@ -215,7 +215,7 @@ describe("trivia", () => {
       const p = BOT_PROFILES[id];
       const rng = seeded(6);
       let n = 0;
-      for (let i = 0; i < 1000; i++) if (chooseCard(p, p.levels.medium.trivia, { cards: general, worldieAllowed: true, form: 0 }, rng).index === diff) n++;
+      for (let i = 0; i < 1000; i++) if (chooseCard(p, p.levels.medium.trivia, { cards: general, puskasAllowed: true, form: 0 }, rng).index === diff) n++;
       return n / 1000;
     };
     expect(share("ollie", 2)).toBeGreaterThan(0.6);
@@ -227,9 +227,10 @@ describe("power-ups", () => {
   const fen = "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3";
   const always = () => 0;
 
-  it("Ryan fouls the most valuable enemy piece", () => {
-    const pick = choosePowerUp(BOT_PROFILES.ryan, { fen, form: 5, available: [{ id: "tactical-foul", cost: 3 }] }, always, 0);
-    expect(pick).toEqual({ id: "tactical-foul", target: "d8" });
+  it("Ryan fouls the most valuable enemy piece he's allowed to (not the queen)", () => {
+    const pick = choosePowerUp(BOT_PROFILES.ryan, { fen, form: 5, available: [{ id: "tactical-foul", cost: 5 }] }, always, 0);
+    expect(pick?.id).toBe("tactical-foul");
+    expect(["a8", "h8"]).toContain(pick?.target);
   });
 
   it("Red Card never targets a pawn on its 6th or 7th rank", () => {

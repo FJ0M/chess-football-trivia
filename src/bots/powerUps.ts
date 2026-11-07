@@ -28,11 +28,11 @@ function checkers(pos: Chess): Set<Square> {
   return new Set(pos.kingAttackers(king, opposite(pos.turn), pos.board.occupied));
 }
 
-/** Enemy piece worth freezing: the most valuable non-king piece that isn't giving check. */
+/** Enemy piece worth freezing: the most valuable piece that isn't the king or queen and isn't giving check. */
 function tacticalFoulTarget(pos: Chess, me: Color): Square | undefined {
   const giving = checkers(pos);
   return piecesOf(pos, opposite(me))
-    .filter((sq) => pos.board.get(sq)!.role !== "king" && !giving.has(sq))
+    .filter((sq) => pos.board.get(sq)!.role !== "king" && pos.board.get(sq)!.role !== "queen" && !giving.has(sq))
     .sort((a, b) => PIECE_VALUE[pos.board.get(b)!.role] - PIECE_VALUE[pos.board.get(a)!.role])[0];
 }
 
@@ -57,7 +57,7 @@ function counterAttackTarget(pos: Chess, me: Color): Square | undefined {
   return piecesOf(pos, me, "pawn")
     .filter((sq) => {
       const r = relRank(sq, me);
-      if (r >= 5) return false; // can't promote with it
+      if (r >= 4) return false; // the dash can't reach the 7th rank
       return !pos.board.occupied.has(sq + step) && !pos.board.occupied.has(sq + 2 * step);
     })
     .sort((a, b) => relRank(b, me) - relRank(a, me))[0];

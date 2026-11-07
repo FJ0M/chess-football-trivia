@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { backRank, startFen } from "./chess960";
 import {
-  applyAnswer, attackedSquares, resolvePromotion, finishTurn, firstMoveReach, legalMoves, newGame, pickHotSpots, playMove,
-  powerBlocked, powerTargets, resolveMove, skipExtraTime, turnOf, usePowerUp,
+  applyAnswer, attackedSquares, resolvePromotion, finishTurn, firstMoveReach, legalMoves, material, newGame, pickHotSpots, playMove,
+  powerBlocked, powerCost, powerTargets, resolveMove, skipExtraTime, turnOf, usePowerUp,
 } from "./rules";
 import { fergieMs } from "./powerups";
 import type { GameOptions, GameState } from "./types";
@@ -53,55 +53,77 @@ describe("Chess960", () => {
 });
 
 describe("Hot Spots", () => {
-  it("puts two on each half of the board, never where a piece can land on move one", () => {
+  it("puts one on each half of the board, never where a piece can land on move one", () => {
     for (const n of [518, 0, 100, 959]) {
       const fen = startFen(n);
       const reach = firstMoveReach(fen);
       for (let seed = 0; seed < 5; seed++) {
         const spots = pickHotSpots(fen, () => (seed + 0.5) / 5);
-        expect(spots).toHaveLength(4);
-        expect(spots.filter((s) => "34".includes(s[1]))).toHaveLength(2);
-        expect(spots.filter((s) => "56".includes(s[1]))).toHaveLength(2);
+        expect(spots).toHaveLength(2);
+        expect(spots.filter((s) => "34".includes(s[1]))).toHaveLength(1);
+        expect(spots.filter((s) => "56".includes(s[1]))).toHaveLength(1);
         for (const s of spots) expect(reach.has(s)).toBe(false);
       }
     }
   });
   it("triggers a club round and moves once used", () => {
     let g = game();
-    g = { ...g, hotSpots: ["e4", "b3", "c5", "g6"] };
+    g = { ...g, hotSpots: ["e4", "c5"] };
     const r = playMove(g, resolveMove(g, "e2e4")!);
     expect(r.trigger.kind).toBe("hot-spot");
     expect(r.state.hotSpots).not.toContain("e4");
-    expect(r.state.hotSpots).toHaveLength(4);
+    expect(r.state.hotSpots).toHaveLength(2);
+    expect(r.state.hotSpots.filter((s) => "34".includes(s[1]))).toHaveLength(1);
   });
-  it("one Hot Spot drifts after every move, each in turn, staying in its half", () => {
+  it("after claiming a Hot Spot, they don't count for you for your next 4 moves", () => {
+    let g: GameState = { ...game(), hotSpots: ["f3", "f6"] };
+    let r = playMove(g, resolveMove(g, "g1f3")!);
+    expect(r.trigger.kind).toBe("hot-spot");
+    expect(r.state.players.white.hotSpotRest).toBe(4);
+    g = finishTurn(r.state).state;
+    g = finishTurn(playMove(g, resolveMove(g, "b8c6")!).state).state;
+    const kinds: string[] = [];
+    for (const [w, b] of [["f3g1", "c6b8"], ["g1f3", "b8c6"], ["f3g1", "c6b8"], ["g1f3", "b8c6"]]) {
+      g = { ...g, hotSpots: ["f3", "a6"] };
+      r = playMove(g, resolveMove(g, w)!);
+      kinds.push(r.trigger.kind);
+      g = finishTurn(r.state).state;
+      g = finishTurn(playMove(g, resolveMove(g, b)!).state).state;
+    }
+    expect(kinds.filter((k) => k === "hot-spot")).toEqual([]);
+    g = { ...g, hotSpots: ["e3", "a6"] };
+    expect(g.players.white.hotSpotRest).toBe(0);
+    expect(playMove(g, resolveMove(g, "f3e5")!).trigger.kind).not.toBe("hot-spot");
+    expect(playMove(g, resolveMove(g, "e2e3")!).trigger.kind).toBe("hot-spot");
+  });
+  it("Hot Spots stay put until someone lands on one", () => {
     let g = game();
-    g = { ...g, hotSpots: ["a3", "h4", "a6", "h5"] };
-    const seen = new Set(g.hotSpots);
+    g = { ...g, hotSpots: ["a3", "h5"] };
     for (const m of ["g1f3", "g8f6", "f3g1", "f6g8"]) {
-      const before = g.hotSpots;
       const r = playMove(g, resolveMove(g, m)!, Math.random);
-      const moved = before.filter((s) => !r.state.hotSpots.includes(s));
-      expect(moved).toHaveLength(1);
-      expect(r.state.hotSpots).toHaveLength(4);
-      expect(r.state.hotSpots.filter((s) => "34".includes(s[1]))).toHaveLength(2);
-      for (const s of moved) seen.delete(s);
+      expect(r.state.hotSpots).toEqual(["a3", "h5"]);
       g = finishTurn(r.state).state;
     }
-    expect(seen.size).toBe(0);
   });
 });
 
 describe("triggers", () => {
-  it("fires Kick-off on every 3rd move, and captures reset the count", () => {
+  it("fires Kick-off on every 4th quiet move", () => {
     let g: GameState = { ...game(), hotSpots: [] };
     const kinds: string[] = [];
-    for (const m of ["g1f3", "g8f6", "f3g1", "f6g8", "g1f3", "g8f6"]) {
+    for (const m of ["g1f3", "g8f6", "f3g1", "f6g8", "g1f3", "g8f6", "f3g1", "f6g8", "g1f3", "g8f6"]) {
       const r = playMove(g, resolveMove(g, m)!);
       kinds.push(r.trigger.kind);
       g = finishTurn(r.state).state;
     }
-    expect(kinds).toEqual(["none", "none", "none", "none", "kickoff", "kickoff"]);
+    expect(kinds).toEqual(["none", "none", "none", "none", "none", "none", "kickoff", "kickoff", "none", "none"]);
+  });
+  it("a Who am I? restarts the Kick-off count, so a kick-off can't follow straight after", () => {
+    let g = at("4k3/1P6/8/8/8/8/8/4K3 w - - 0 1");
+    g = { ...g, players: { ...g.players, white: { ...g.players.white, kickoffCount: 3 } } };
+    const r = playMove(g, "b7b8q");
+    expect(r.trigger.kind).toBe("promotion");
+    expect(r.state.players.white.kickoffCount).toBe(0);
   });
   it("a capture triggers a question", () => {
     let g = at("4k3/8/8/3p4/4P3/8/8/4K3 w - - 0 1");
@@ -125,25 +147,35 @@ describe("triggers", () => {
 });
 
 describe("answers", () => {
-  const ctx = { color: "white" as const, worldie: false, bonus: false, ms: 9000, landed: "e4" };
-  it("rewards scale with difficulty, doubled in a bonus round, plus a quick-answer bonus", () => {
+  const ctx = { color: "white" as const, puskas: false, bonus: false, ms: 9000, landed: "e4" };
+  it("rewards 1/2/3/5, doubled in a bonus round, with a quick bonus on Screamers and Puskás only", () => {
     const g = game();
     expect(applyAnswer(g, { ...ctx, difficulty: "easy", correct: true }).state.players.white.form).toBe(1);
-    expect(applyAnswer(g, { ...ctx, difficulty: "hard", correct: true }).state.players.white.form).toBe(4);
-    expect(applyAnswer(g, { ...ctx, difficulty: "hard", worldie: true, correct: true }).state.players.white.form).toBe(6);
-    expect(applyAnswer(g, { ...ctx, difficulty: "medium", bonus: true, correct: true, ms: 2000 }).state.players.white.form).toBe(5);
+    expect(applyAnswer(g, { ...ctx, difficulty: "medium", correct: true }).state.players.white.form).toBe(2);
+    expect(applyAnswer(g, { ...ctx, difficulty: "hard", correct: true }).state.players.white.form).toBe(3);
+    expect(applyAnswer(g, { ...ctx, difficulty: "hard", puskas: true, correct: true }).state.players.white.form).toBe(5);
+    expect(applyAnswer(g, { ...ctx, difficulty: "medium", bonus: true, correct: true, ms: 2000 }).state.players.white.form).toBe(4);
+    expect(applyAnswer(g, { ...ctx, difficulty: "easy", correct: true, ms: 2000 }).state.players.white.form).toBe(1);
+    expect(applyAnswer(g, { ...ctx, difficulty: "hard", correct: true, ms: 2000 }).state.players.white.form).toBe(4);
   });
-  it("penalties: medium feeds the opponent, hard books the piece, Worldie sends you off", () => {
+  it("catch-up: the side behind on material gets +1 for a right answer", () => {
+    const behind = at("4k3/8/8/8/8/8/8/R3K3 b - - 0 1");
+    const zero = (s: GameState) => ({ ...s, players: { white: { ...s.players.white, form: 0 }, black: { ...s.players.black, form: 0 } } });
+    expect(material(behind.fen)).toEqual({ white: 5, black: 0 });
+    expect(applyAnswer(zero(behind), { ...ctx, color: "black", difficulty: "easy", correct: true }).state.players.black.form).toBe(2);
+    expect(applyAnswer(zero(behind), { ...ctx, color: "white", difficulty: "easy", correct: true }).state.players.white.form).toBe(1);
+  });
+  it("penalties: medium feeds the opponent, hard books the piece, Puskás sends you off", () => {
     const g = game();
     expect(applyAnswer(g, { ...ctx, difficulty: "easy", correct: false }).state.players.black.form).toBe(0);
     expect(applyAnswer(g, { ...ctx, difficulty: "medium", correct: false }).state.players.black.form).toBe(2);
     expect(applyAnswer(g, { ...ctx, difficulty: "hard", correct: false }).state.frozen).toEqual([{ square: "e4", owner: "white", reason: "booked" }]);
-    expect(applyAnswer(g, { ...ctx, difficulty: "hard", worldie: true, correct: false }).state.players.white.sentOff).toBe(true);
+    expect(applyAnswer(g, { ...ctx, difficulty: "hard", puskas: true, correct: false }).state.players.white.sentOff).toBe(true);
   });
   it("hat-trick, Form cap and the four-wrong red card", () => {
     let g = game();
     for (let i = 0; i < 3; i++) g = applyAnswer(g, { ...ctx, difficulty: "easy", correct: true }).state;
-    expect(g.players.white.form).toBe(6);
+    expect(g.players.white.form).toBe(5);
     for (let i = 0; i < 6; i++) g = applyAnswer(g, { ...ctx, difficulty: "hard", correct: true }).state;
     expect(g.players.white.form).toBe(12);
     for (let i = 0; i < 4; i++) g = applyAnswer(g, { ...ctx, difficulty: "easy", correct: false }).state;
@@ -169,11 +201,11 @@ describe("answers", () => {
   });
 });
 
-describe("Worldie sending off", () => {
+describe("Puskás sending off", () => {
   it("skips the next turn and gives the opponent a quiet Free Kick", () => {
     let g = at("4k3/pppppppp/8/8/8/8/PPPPPPPP/4K3 w - - 0 1");
     const r = playMove(g, "e2e4");
-    g = applyAnswer(r.state, { color: "white", difficulty: "hard", worldie: true, bonus: false, correct: false, ms: 8000, landed: r.landed }).state;
+    g = applyAnswer(r.state, { color: "white", difficulty: "hard", puskas: true, bonus: false, correct: false, ms: 8000, landed: r.landed }).state;
     g = finishTurn(g).state;
     expect(turnOf(g)).toBe("black");
     g = move(g, "d7d5");
@@ -190,23 +222,24 @@ describe("Worldie sending off", () => {
 describe("power-ups", () => {
   it("every power-up starts locked for its cooldown, and cooldowns count down on your moves", () => {
     let g = game();
-    expect(powerBlocked(g, "tactical-foul")).toMatch(/Ready in 6/);
-    g = { ...g, players: { ...g.players, white: { ...g.players.white, form: 12 } } };
-    for (const m of ["g1f3", "g8f6", "f3g1", "f6g8", "g1f3", "g8f6", "f3g1", "f6g8", "g1f3", "g8f6", "f3g1", "f6g8"]) g = move(g, m);
+    expect(powerBlocked(g, "tactical-foul")).toMatch(/Ready in 10/);
+    g = { ...g, hotSpots: [], players: { ...g.players, white: { ...g.players.white, form: 12 } } };
+    for (let i = 0; i < 5; i++) for (const m of ["g1f3", "g8f6", "f3g1", "f6g8"]) g = move(g, m);
     expect(powerBlocked(g, "tactical-foul")).toBeNull();
     const used = usePowerUp(g, "tactical-foul", ["d7"]).state;
-    expect(used.players.white.form).toBe(9);
+    expect(used.players.white.form).toBe(7);
     expect(powerBlocked(used, "park-the-bus")).toMatch(/One power-up per turn/);
-    // Locked for 6 of your moves after the one you used it on.
+    // Locked for 10 of your moves after the one you used it on.
     const after = move(move(used, "e2e4"), "e7e5");
-    expect(after.players.white.cooldowns["tactical-foul"]).toBe(6);
-    expect(move(move(after, "d2d4"), "d7d5").players.white.cooldowns["tactical-foul"]).toBe(5);
+    expect(after.players.white.cooldowns["tactical-foul"]).toBe(10);
+    expect(move(move(after, "d2d4"), "d7d5").players.white.cooldowns["tactical-foul"]).toBe(9);
   });
-  it("Tactical Foul freezes an enemy piece for one turn, but not the king or a checking piece", () => {
-    const g = at("4k3/8/8/8/8/8/3q4/R3K3 w - - 0 1");
+  it("Tactical Foul freezes an enemy piece for one turn, but not the king, the queen or a checking piece", () => {
+    const g = at("4k3/8/8/8/8/8/8/R2rK3 w - - 0 1");
     expect(usePowerUp(g, "tactical-foul", ["e8"]).error).toBe("Not the king");
-    expect(usePowerUp(g, "tactical-foul", ["d2"]).error).toMatch(/giving check/);
-    const g2 = at("4k3/3q4/8/8/8/8/8/R3K3 w - - 0 1");
+    expect(usePowerUp(g, "tactical-foul", ["d1"]).error).toMatch(/giving check/);
+    expect(usePowerUp(at("4k3/3q4/8/8/8/8/8/R3K3 w - - 0 1"), "tactical-foul", ["d7"]).error).toBe("Not the queen");
+    const g2 = at("4k3/3r4/8/8/8/8/8/R3K3 w - - 0 1");
     let s = usePowerUp(g2, "tactical-foul", ["d7"]).state;
     s = move(s, "a1a2");
     expect(legalMoves(s).moves.some((m) => m.startsWith("d7"))).toBe(false);
@@ -228,15 +261,48 @@ describe("power-ups", () => {
     expect(r.error).toBeUndefined();
     const v = r.state;
     expect(v.fen).toBe("4k3/pppppppp/8/8/8/8/PPPPPPPP/4K3 w - - 0 1");
-    expect(v.players.white.form).toBe(9);
+    expect(v.players.white.form).toBe(6);
   });
-  it("Counter-Attack lets a pawn move two squares from anywhere, but not onto the last rank", () => {
+  it("VAR Review rolls back Form, cooldowns, streaks and freezes too, but not the clocks", () => {
+    let g = at("4k3/pppppppp/8/8/8/8/PPPPPPPP/4K3 w - - 0 1", { timed: true });
+    g = { ...g, hotSpots: ["e4"], players: { ...g.players, white: { ...g.players.white, form: 6 } } };
+    // White lands on a Hot Spot and banks Form, Black replies and is booked.
+    const r = playMove(g, "e2e4");
+    expect(r.trigger.kind).toBe("hot-spot");
+    g = applyAnswer(r.state, { color: "white", difficulty: "hard", puskas: false, bonus: true, correct: true, ms: 9000, landed: r.landed }).state;
+    expect(g.players.white.form).toBe(12);
+    g = finishTurn(g).state;
+    const r2 = playMove(g, "e7e5");
+    g = applyAnswer(r2.state, { color: "black", difficulty: "hard", puskas: false, bonus: false, correct: false, ms: 9000, landed: r2.landed }).state;
+    g = finishTurn(g).state;
+    g = { ...g, players: { ...g.players, white: { ...g.players.white, clockMs: 1234 } } };
+    expect(g.frozen).toHaveLength(1);
+    const v = usePowerUp(g, "var-review").state;
+    expect(v.players.white.form).toBe(0); // the 6 from before the move, minus the 6 it costs
+    expect(v.players.white.rightStreak).toBe(0);
+    expect(v.players.white.cooldowns["var-review"]).toBe(15);
+    expect(v.players.white.clockMs).toBe(1234);
+    expect(v.frozen).toEqual([]);
+    expect(v.hotSpots).toEqual(["e4"]);
+  });
+  it("VAR Review needs its cost from the Form you had before the move", () => {
+    let g = at("4k3/pppppppp/8/8/8/8/PPPPPPPP/4K3 w - - 0 1");
+    g = { ...g, players: { ...g.players, white: { ...g.players.white, form: 2 } } };
+    g = move(g, "e2e4");
+    g = move(g, "e7e5");
+    g = { ...g, players: { ...g.players, white: { ...g.players.white, form: 12 } } };
+    expect(powerBlocked(g, "var-review")).toMatch(/from before that move/);
+  });
+  it("Counter-Attack lets a pawn move two squares from anywhere, but not onto the 7th rank or past an enemy pawn", () => {
     const g = at("4k3/8/8/8/3P4/8/8/4K3 w - - 0 1");
     const s = usePowerUp(g, "counter-attack", ["d4"]).state;
     expect(legalMoves(s).moves).toContain("d4d6");
     const after = move(s, "d4d6");
     expect(after.fen.startsWith("4k3/8/3P4")).toBe(true);
     expect(usePowerUp(at("4k3/8/3P4/8/8/8/8/4K3 w - - 0 1"), "counter-attack", ["d6"]).error).toBeTruthy();
+    expect(usePowerUp(at("4k3/8/8/3P4/8/8/8/4K3 w - - 0 1"), "counter-attack", ["d5"]).error).toMatch(/7th rank/);
+    // Black pawn on e5 would take en passant on d5 if the d3 pawn dashed to d5: not allowed.
+    expect(usePowerUp(at("4k3/8/8/4p3/8/3P4/8/4K3 w - - 0 1"), "counter-attack", ["d3"]).error).toMatch(/enemy pawn/);
   });
   it("Substitution, Super-Sub and Red Card edit the board", () => {
     let g = at("4k3/pppp4/8/8/8/8/1PPP4/4K3 w - - 0 1");
@@ -256,6 +322,39 @@ describe("power-ups", () => {
     expect(s.fen).toBe("r3k2r/8/8/8/8/8/8/NR2K2R w Kkq - 0 1");
     const checking = at("7k/8/8/8/8/8/4R3/4K2N w - - 0 1");
     expect(usePowerUp(checking, "formation-change", ["e2", "h1"]).error).toMatch(/check/);
+  });
+  it("Formation Change: no pawn past its 5th rank, no frozen piece, not while in check", () => {
+    const g = at("4k3/1N6/8/8/8/8/P7/4K3 w - - 0 1");
+    expect(usePowerUp(g, "formation-change", ["a2", "b7"]).error).toMatch(/2nd to 5th/);
+    const mid = at("4k3/8/8/1N6/8/8/P7/4K3 w - - 0 1");
+    expect(usePowerUp(mid, "formation-change", ["a2", "b5"]).error).toBeUndefined();
+    const frozen = { ...mid, frozen: [{ square: "b5", owner: "white" as const, reason: "booked" as const }] };
+    expect(usePowerUp(frozen, "formation-change", ["a2", "b5"]).error).toMatch(/frozen/);
+    expect(powerBlocked(at("4k3/8/8/1N6/8/8/P7/r3K3 w - - 0 1"), "formation-change")).toMatch(/check/);
+  });
+  it("Golden Boot: +2 Form for each capture over your next 3 moves", () => {
+    let g = at("4k3/8/8/p1p1p3/1P1P1P2/8/8/4K3 w - - 0 1");
+    g = { ...g, players: { ...g.players, white: { ...g.players.white, form: 2 } } };
+    g = usePowerUp(g, "golden-boot").state;
+    expect(g.players.white.form).toBe(0);
+    g = move(g, "b4a5");
+    expect(g.players.white.form).toBe(2);
+    g = move(g, "e8e7");
+    g = move(g, "d4c5");
+    expect(g.players.white.form).toBe(4);
+    g = move(g, "e7e8");
+    g = move(g, "e1e2");
+    g = move(g, "e8e7");
+    expect(g.players.white.goldenBootMoves).toBe(0);
+    g = move(g, "f4e5");
+    expect(g.players.white.form).toBe(4);
+  });
+  it("Extra Time: neither move can capture", () => {
+    let g = at("4k3/8/8/3p4/4P3/8/8/4K3 w - - 0 1");
+    g = usePowerUp(g, "extra-time").state;
+    expect(legalMoves(g).moves).not.toContain("e4d5");
+    expect(legalMoves(g).moves).toContain("e4e5");
+    expect(powerBlocked(at("4k3/8/8/8/8/8/8/4K3 w - - 0 1"), "extra-time")).toBeNull();
   });
   it("Extra Time gives a second, quiet move", () => {
     let g = at("4k3/pppppppp/8/8/8/8/PPPPPPPP/4K3 w - - 0 1");
@@ -287,12 +386,19 @@ describe("power-ups", () => {
     const check = at("4k3/8/8/8/8/8/4r3/4K3 w - - 0 1");
     expect(powerBlocked(check, "scout-report")).toMatch(/check/);
     expect(powerBlocked(check, "masterclass")).toBeNull();
-    expect(usePowerUp(check, "masterclass").state.players.white.form).toBe(2);
+    expect(usePowerUp(check, "masterclass").state.players.white.form).toBe(6);
   });
   it("red card from four wrong answers doubles the next power-up", () => {
     let g = at("4k3/8/8/8/8/8/8/4K3 w - - 0 1");
-    g = { ...g, players: { ...g.players, white: { ...g.players.white, doubleNextPower: true, form: 5 } } };
-    expect(powerBlocked(g, "park-the-bus")).toMatch(/Needs 6/);
+    g = { ...g, players: { ...g.players, white: { ...g.players.white, doubleNextPower: true, form: 9 } } };
+    expect(powerBlocked(g, "red-card")).toMatch(/Needs 10/);
+    // Cheap power-ups (under 3 Form) neither pay the double price nor clear it.
+    expect(powerCost(g, "white", "assistants-flag")).toBe(1);
+    const flagged = usePowerUp(g, "assistants-flag").state;
+    expect(flagged.players.white.doubleNextPower).toBe(true);
+    const sub = usePowerUp({ ...g, captured: { white: ["p"], black: [] } }, "substitution", ["a2"]).state;
+    expect(sub.players.white.form).toBe(1);
+    expect(sub.players.white.doubleNextPower).toBe(false);
   });
   it("lists valid targets", () => {
     const g = at("4k3/pppp4/8/8/8/8/PPPP4/4K3 w - - 0 1");

@@ -68,3 +68,20 @@ describe("Penalty Shootout", () => {
     expect(shootoutWinner(k("111111111110"))).toBe("white");
   });
 });
+
+describe("Who am I? club sets", () => {
+  it("about half of a club fan's sets are about their club, even without a Hot Spot", async () => {
+    const { WhoAmIBank } = await import("./whoami");
+    const sets = [
+      ...Array.from({ length: 5 }, (_, i) => ({ id: `g${i}`, clues: ["1", "2", "3", "4", "5"], options: ["a", "b", "c", "d"], answer: 0, club: null, verified: true })),
+      ...Array.from({ length: 5 }, (_, i) => ({ id: `w${i}`, clues: ["1", "2", "3", "4", "5"], options: ["a", "b", "c", "d"], answer: 0, club: "west-ham", verified: true })),
+    ];
+    const seen = new Set<string>();
+    const store = { has: (id: string) => seen.has(id), add: (id: string) => void seen.add(id), delete: (id: string) => void seen.delete(id) };
+    const bank = new WhoAmIBank(sets, store as never);
+    let club = 0;
+    for (let i = 0; i < 400; i++) if (bank.draw("west-ham").club === "west-ham") club++;
+    // Half the draws ask for a club set; the other half draw from everything, club sets included.
+    expect(club).toBeGreaterThan(240);
+  });
+});

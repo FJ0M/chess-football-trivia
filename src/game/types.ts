@@ -45,13 +45,16 @@ export interface PlayerState {
   form: number;
   /** Own moves left before each power-up can be used again. 0 = ready. */
   cooldowns: Record<PowerUpId, number>;
-  /** Moves made since the last question (Kick-off fires on the 3rd). */
+  /** Moves made since the last question (Kick-off fires on the 4th quiet move). */
   kickoffCount: number;
   rightStreak: number;
   wrongStreak: number;
   /** Red card from four wrong answers in a row: next power-up costs double. */
   doubleNextPower: boolean;
-  goldenBoot: boolean;
+  /** Golden Boot: own moves left in which each capture earns bonus Form. 0 = off. */
+  goldenBootMoves: number;
+  /** After claiming a Hot Spot, own moves left before Hot Spots count for this player again. 0 = ready. */
+  hotSpotRest: number;
   /** Sent off: this player's next turn is skipped and the opponent takes a Free Kick. */
   sentOff: boolean;
   clockMs: number | null;
@@ -87,6 +90,8 @@ export interface Snapshot {
   history: MoveRecord[];
   repetition: Record<string, number>;
   lastMove: [string, string] | null;
+  /** Both players as they were (VAR Review puts these back, apart from the clocks). */
+  players: Record<Color, PlayerState>;
 }
 
 export type Outcome =

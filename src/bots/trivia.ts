@@ -17,12 +17,12 @@ function weightedIndex(weights: number[], rng: Rng): number {
 
 export function chooseCard(profile: BotProfile, skill: TriviaSkill, req: CardRequest, rng: Rng): CardChoice {
   const { cards } = req;
-  if (cards.length === 0) return { index: 0, worldie: false };
+  if (cards.length === 0) return { index: 0, puskas: false };
 
   // Ryan: always goes Hard on a card about his own club (doc: "always Hard on a West Ham card").
   if (profile.id === "ryan") {
     const own = cards.findIndex((c) => c.club === profile.club && c.difficulty === "hard");
-    if (own >= 0) return { index: own, worldie: req.worldieAllowed && rng() < skill.worldieRate * 2 };
+    if (own >= 0) return { index: own, puskas: req.puskasAllowed && rng() < skill.puskasRate * 2 };
   }
 
   const weights = cards.map((c) => {
@@ -35,14 +35,14 @@ export function chooseCard(profile: BotProfile, skill: TriviaSkill, req: CardReq
   });
   const index = weightedIndex(weights, rng);
   const pick = cards[index];
-  const worldie = req.worldieAllowed && pick.difficulty === "hard" && rng() < skill.worldieRate;
-  return { index, worldie };
+  const puskas = req.puskasAllowed && pick.difficulty === "hard" && rng() < skill.puskasRate;
+  return { index, puskas };
 }
 
 export function answerChance(profile: BotProfile, skill: TriviaSkill, req: AnswerRequest): number {
   const q = req.question;
-  const base = req.worldie ? skill.accuracy.worldie : skill.accuracy[q.difficulty];
-  if (q.club && q.club === profile.club) return Math.max(base, skill.ownClubAccuracy - (req.worldie ? 0.1 : 0));
+  const base = req.puskas ? skill.accuracy.puskas : skill.accuracy[q.difficulty];
+  if (q.club && q.club === profile.club) return Math.max(base, skill.ownClubAccuracy - (req.puskas ? 0.1 : 0));
   return base;
 }
 
@@ -58,8 +58,8 @@ export function answerQuestion(profile: BotProfile, skill: TriviaSkill, req: Ans
     if (pool.length) choice = pool[Math.floor(rng() * pool.length)];
   }
   const [lo, hi] = skill.answerMs;
-  // Harder questions take a bit longer; Worldies have 8 s so the bot hurries.
-  const scale = req.worldie ? 0.55 : q.difficulty === "hard" ? 1.1 : q.difficulty === "easy" ? 0.85 : 1;
+  // Harder questions take a bit longer; Puskás goals have 8 s so the bot hurries.
+  const scale = req.puskas ? 0.55 : q.difficulty === "hard" ? 1.1 : q.difficulty === "easy" ? 0.85 : 1;
   const delayMs = Math.round((lo + rng() * (hi - lo)) * scale);
   return { choice, delayMs };
 }
