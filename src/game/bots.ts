@@ -15,8 +15,8 @@ export interface BotMeta { id: BotId; name: string; club: string; blurb: string 
 
 export interface BotLike {
   chooseMove(req: { fen: string; chess960?: boolean; allowedMoves?: string[]; managersTip?: boolean }): Promise<{ uci: string; thinkMs: number }>;
-  chooseCard(req: { cards: { topic: string; difficulty: Difficulty; club: string | null }[]; worldieAllowed: boolean; form: number; bonusRound?: boolean }): { index: number; worldie: boolean } | Promise<{ index: number; worldie: boolean }>;
-  answer(req: { question: { options: string[]; answer: number; difficulty: Difficulty; club?: string | null }; worldie?: boolean; removed?: number[] }): { choice: number; delayMs: number } | Promise<{ choice: number; delayMs: number }>;
+  chooseCard(req: { cards: { topic: string; difficulty: Difficulty; club: string | null }[]; puskasAllowed: boolean; form: number; bonusRound?: boolean }): { index: number; puskas: boolean } | Promise<{ index: number; puskas: boolean }>;
+  answer(req: { question: { options: string[]; answer: number; difficulty: Difficulty; club?: string | null }; puskas?: boolean; removed?: number[] }): { choice: number; delayMs: number } | Promise<{ choice: number; delayMs: number }>;
   choosePowerUp(req: { fen: string; color?: "white" | "black"; form: number; available: { id: string; cost: number }[]; inCheck?: boolean; timed?: boolean; clockMs?: number }): { id: string; target?: string; target2?: string } | null | Promise<{ id: string; target?: string; target2?: string } | null>;
   promotionPick(): PromoRole;
   say(moment: TalkMoment): string | null;
@@ -103,12 +103,12 @@ function fallbackBot(id: BotId): BotLike {
       movesSinceTalk++;
       return { uci: scored[0].uci, thinkMs: 500 + Math.random() * 900 };
     },
-    chooseCard({ cards, worldieAllowed }) {
+    chooseCard({ cards, puskasAllowed }) {
       const index = Math.max(0, cards.findIndex((c) => c.difficulty === skill.pick));
-      return { index, worldie: worldieAllowed && id === "ollie" && Math.random() < 0.4 };
+      return { index, puskas: puskasAllowed && id === "ollie" && Math.random() < 0.4 };
     },
-    answer({ question, worldie }) {
-      const right = Math.random() < skill.accuracy - (worldie ? 0.1 : 0);
+    answer({ question, puskas }) {
+      const right = Math.random() < skill.accuracy - (puskas ? 0.1 : 0);
       const wrong = question.options.map((_, i) => i).filter((i) => i !== question.answer);
       return { choice: right ? question.answer : wrong[Math.floor(Math.random() * wrong.length)], delayMs: 2000 + Math.random() * 5000 };
     },

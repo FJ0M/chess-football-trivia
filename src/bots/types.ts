@@ -54,16 +54,16 @@ export interface ChessStrength {
 export type ChessStyle = "chaotic" | "balanced" | "positional";
 
 export interface TriviaSkill {
-  /** Chance of a right answer by difficulty. Worldies use `worldie`. */
-  accuracy: Record<Difficulty | "worldie", number>;
+  /** Chance of a right answer by difficulty. Puskás goals use `puskas`. */
+  accuracy: Record<Difficulty | "puskas", number>;
   /** Accuracy on the bot's own club's questions, any difficulty. */
   ownClubAccuracy: number;
   /** Answer time range in milliseconds. */
   answerMs: [number, number];
   /** Weights for picking easy, medium, hard on a normal deal. */
   cardWeights: Record<Difficulty, number>;
-  /** Chance of upgrading a Hard pick to a Worldie when allowed. */
-  worldieRate: number;
+  /** Chance of upgrading a Hard pick to a Puskás when allowed. */
+  puskasRate: number;
 }
 
 export interface BotProfile {
@@ -109,7 +109,7 @@ export interface CardOffer {
 
 export interface CardRequest {
   cards: CardOffer[];
-  worldieAllowed: boolean;
+  puskasAllowed: boolean;
   form: number;
   /** Hot Spot round: every card is a club card and rewards are doubled. */
   bonusRound?: boolean;
@@ -119,7 +119,7 @@ export interface CardRequest {
 
 export interface CardChoice {
   index: number;
-  worldie: boolean;
+  puskas: boolean;
 }
 
 export interface QuestionLike {
@@ -131,7 +131,7 @@ export interface QuestionLike {
 
 export interface AnswerRequest {
   question: QuestionLike;
-  worldie?: boolean;
+  puskas?: boolean;
   /** Indexes already removed by a 50:50, if any. */
   removed?: number[];
 }

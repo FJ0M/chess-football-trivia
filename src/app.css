@@ -112,7 +112,7 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 .screen .qcard small { font-size: 10.5px; opacity: .8; line-height: 1.2; }
 .screen .qcard.d-easy { border-color: #2e9d4f; } .screen .qcard.d-medium { border-color: #e0a100; } .screen .qcard.d-hard { border-color: #d1342f; }
 .screen .qcard:disabled { cursor: default; }
-.screen .worldie { font: inherit; font-size: 13px; color: inherit; cursor: pointer; padding: 9px 10px; border-radius: 10px; border: 2px dashed currentColor; background: transparent; text-align: center; }
+.screen .cta { font: inherit; font-size: 13px; color: inherit; cursor: pointer; padding: 9px 10px; border-radius: 10px; border: 2px dashed currentColor; background: transparent; text-align: center; }
 .screen .thints { display: flex; flex-wrap: wrap; gap: 6px; }
 .screen .thints button { font: inherit; font-size: 12px; color: inherit; cursor: pointer; padding: 5px 9px; border-radius: 999px; border: 1px solid currentColor; background: transparent; }
 .screen .thints button:disabled { opacity: .4; cursor: default; }
@@ -171,6 +171,8 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 .sheet.pause { gap: 8px; }
 .sq .hs { position: absolute; width: 52%; height: 52%; opacity: .7; z-index: 0; pointer-events: none; }
 .sq.hot { box-shadow: inset 0 0 0 2px rgba(255,255,255,.55); }
+.sq.hot.resting { box-shadow: inset 0 0 0 2px rgba(255,255,255,.2); }
+.sq.hot.resting .hs { opacity: .25; }
 
 /* ---------------------------------------------------------------- Form meter, power-ups, confirm card */
 .screen .powerbox { display: grid; gap: 8px; }
@@ -183,7 +185,7 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 .screen .form-meter .num small { font-size: 12px; opacity: .7; }
 .screen .powers { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
 .screen .pw { min-width: 0; overflow-wrap: normal; word-break: normal; }
-.screen .pw.afford:not(.locked) .cost { opacity: 1; font-weight: 700; }
+.screen .pw.afford:not(.faded) .cost { opacity: 1; font-weight: 700; }
 /* Each power-up's icon (PowerIcon). */
 .screen .pw-icon { display: block; width: 24px; height: 24px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .screen .pw-icon.big { width: 32px; height: 32px; }

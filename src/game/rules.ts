@@ -10,7 +10,9 @@ import { chessgroundDests } from "chessops/compat";
 import type { Setup } from "chessops/setup";
 import type { NormalMove, Role, Square } from "chessops/types";
 import { startFen } from "./chess960";
-import { DEFAULT_MINUTES, FORM_CAP, POWER_UP_BY_ID, fergieMs, fmtSeconds, startingCooldowns } from "./powerups";
+import {
+  DEFAULT_MINUTES, DOUBLE_COST_MIN, FORM_CAP, GOLDEN_BOOT_FORM, GOLDEN_BOOT_MOVES, POWER_UP_BY_ID, fergieMs, fmtSeconds, startingCooldowns,
+} from "./powerups";
 import type {
   Color, Difficulty, DrawReason, Frozen, GameOptions, GameState, MoveRecord, PlayerState, PowerUpId, PromoRole, Snapshot, Trigger,
 } from "./types";
@@ -78,7 +80,8 @@ function newPlayer(p: PlayerInit, timed: boolean, minutes: number): PlayerState 
     rightStreak: 0,
     wrongStreak: 0,
     doubleNextPower: false,
-    goldenBoot: false,
+    goldenBootMoves: 0,
+    hotSpotRest: 0,
     sentOff: false,
     clockMs: timed ? minutes * 60 * 1000 : null,
   };
@@ -151,11 +154,16 @@ function pickFrom<T>(list: T[], rng: Rng): T | undefined {
   return list.length ? list[Math.floor(rng() * list.length)] : undefined;
 }
 
+/** Hot Spots per half of the board (2 in all). They stay put until someone lands on one. */
+export const HOT_SPOTS_PER_HALF = 1;
+/** After you claim a Hot Spot, it's this many of your moves before Hot Spots count for you again. */
+export const HOT_SPOT_REST = 4;
+
 export function pickHotSpots(fen: string, rng: Rng): string[] {
   const exclude = firstMoveReach(fen);
   const spots: string[] = [];
   for (const half of ["white", "black"] as Color[]) {
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < HOT_SPOTS_PER_HALF; i++) {
       const s = pickFrom(emptySquaresInHalf(fen, half, new Set([...exclude, ...spots])), rng);
       if (s) spots.push(s);
     }
@@ -163,12 +171,30 @@ export function pickHotSpots(fen: string, rng: Rng): string[] {
   return spots;
 }
 
-/** Moves a Hot Spot to a new random empty square in the same half of the board (after it's used, or as its turn to drift). */
+/** Every square any piece of either side (pawns included) could move to right now. */
+function reachNow(fen: string): Set<string> {
+  const out = new Set<string>();
+  for (const f of [fen, flipTurn(fen)]) {
+    if (!f) continue;
+    for (const [, tos] of positionOf(f).allDests()) for (const to of tos) out.add(makeSquare(to));
+  }
+  return out;
+}
+
+/**
+ * Moves a used Hot Spot to a new random empty square in the same half of the board,
+ * preferring one no piece can reach on the next move, so a Hot Spot takes a little
+ * planning to claim instead of being in reach almost every turn.
+ */
 function relocateHotSpot(state: GameState, used: string, rng: Rng): string[] {
   const rank = Number(used[1]) - 1;
   const half: Color = rank <= 3 ? "white" : "black";
   const others = state.hotSpots.filter((s) => s !== used);
-  const next = pickFrom(emptySquaresInHalf(state.fen, half, new Set([...others, used])), rng);
+  const taken = new Set([...others, used]);
+  const empty = emptySquaresInHalf(state.fen, half, taken);
+  const reach = reachNow(state.fen);
+  const quiet = empty.filter((s) => !reach.has(s));
+  const next = pickFrom(quiet.length ? quiet : empty, rng);
   return next ? [...others, next] : others;
 }
 
@@ -214,20 +240,38 @@ function rawMoves(fen: string): NormalMove[] {
   return out;
 }
 
-/** The Counter-Attack push for a pawn: two squares forward, path clear, not onto the last rank, king safe. */
-export function counterAttackMove(fen: string, square: string): NormalMove | null {
+/** Why a pawn can't Counter-Attack, or null if it can. */
+export function counterAttackBlocked(fen: string, square: string): string | null {
   const from = parseSquare(square);
-  if (from === undefined) return null;
+  if (from === undefined) return "Pick one of your pawns";
   const s = setupOf(fen);
   const pawn = s.board.get(from);
-  if (!pawn || pawn.role !== "pawn" || pawn.color !== s.turn) return null;
+  if (!pawn || pawn.role !== "pawn" || pawn.color !== s.turn) return "Pick one of your pawns";
   const dir = pawn.color === "white" ? 8 : -8;
   const mid = from + dir, to = from + 2 * dir;
-  if (to < 0 || to > 63) return null;
-  const lastRank = pawn.color === "white" ? 7 : 0;
-  if (squareRank(to) === lastRank) return null;
-  if (s.board.get(mid) || s.board.get(to)) return null;
-  return playSpecialPush(fen, from, to) ? { from, to } : null;
+  if (to < 0 || to > 63) return "That pawn can't go two squares";
+  // Relative rank, 1 to 8: the dash can't reach the 7th (one step from promoting) or the 8th.
+  const rel = pawn.color === "white" ? squareRank(to) + 1 : 8 - squareRank(to);
+  if (rel >= 7) return "Can't dash onto the 7th rank";
+  if (s.board.get(mid) || s.board.get(to)) return "The path must be clear";
+  // En passant can't be offered off the 2nd rank, so the dash can't skip past a square an enemy pawn covers.
+  const enemyPawnHits = (sq: Square) => [-1, 1].some((df) => {
+    const f = squareFile(sq) + df;
+    if (f < 0 || f > 7) return false;
+    const p = s.board.get(sq + dir + df);
+    return !!p && p.role === "pawn" && p.color !== pawn.color;
+  });
+  if (enemyPawnHits(mid)) return "Can't skip past an enemy pawn";
+  if (!playSpecialPush(fen, from, to)) return "That would leave your king in check";
+  return null;
+}
+
+/** The Counter-Attack push for a pawn: two squares forward, path clear, not onto the 7th or 8th rank, king safe. */
+export function counterAttackMove(fen: string, square: string): NormalMove | null {
+  if (counterAttackBlocked(fen, square)) return null;
+  const from = parseSquare(square)!;
+  const dir = setupOf(fen).turn === "white" ? 8 : -8;
+  return { from, to: from + 2 * dir };
 }
 
 /** Plays a pawn push by editing the board (chessops won't allow it). Null if it leaves the king in check. */
@@ -260,6 +304,8 @@ export function legalMoves(state: GameState): MoveFilter {
   const raw = rawMoves(fen);
   const frozen = new Set(state.frozen.filter((f) => f.owner === turn).map((f) => f.square));
   const restricted = state.step !== "normal";
+  // Extra Time: the first move can't capture either (it may give check, which cancels the second move).
+  const noCapture = restricted || state.extraTimePending;
   const bus = state.parkTheBus === opposite(turn) ? state.parkTheBus : null;
   const busRanks = bus === "white" ? [0, 1] : bus === "black" ? [6, 7] : [];
 
@@ -268,7 +314,8 @@ export function legalMoves(state: GameState): MoveFilter {
     if (isCastle(fen, m) && frozen.has(makeSquare(m.to))) return false;
     const cap = capturedSquare(fen, m);
     if (cap !== null && busRanks.includes(squareRank(cap))) return false;
-    if (restricted && (cap !== null || givesCheck(fen, m))) return false;
+    if (noCapture && cap !== null) return false;
+    if (restricted && givesCheck(fen, m)) return false;
     return true;
   };
   const filtered = raw.filter(ok).map(makeUci);
@@ -335,8 +382,8 @@ export interface MoveResult {
 }
 
 function snapshotOf(state: GameState): Snapshot {
-  const { fen, hotSpots, frozen, parkTheBus, captured, history, repetition, lastMove } = state;
-  return { fen, hotSpots, frozen, parkTheBus, captured, history, repetition, lastMove };
+  const { fen, hotSpots, frozen, parkTheBus, captured, history, repetition, lastMove, players } = state;
+  return { fen, hotSpots, frozen, parkTheBus, captured, history, repetition, lastMove, players };
 }
 
 function withPlayer(state: GameState, color: Color, patch: Partial<PlayerState>): GameState {
@@ -344,6 +391,21 @@ function withPlayer(state: GameState, color: Color, patch: Partial<PlayerState>)
 }
 
 const addForm = (form: number, n: number) => Math.max(0, Math.min(FORM_CAP, form + n));
+
+/** A question on every 4th quiet move (no capture, no Hot Spot). */
+export const KICKOFF_EVERY = 4;
+
+const PIECE_POINTS: Record<string, number> = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
+
+/** Material on the board for each side, in pawns (P1 N3 B3 R5 Q9). */
+export function material(fen: string): Record<Color, number> {
+  const out: Record<Color, number> = { white: 0, black: 0 };
+  for (const ch of fen.split(" ")[0]) {
+    const v = PIECE_POINTS[ch.toLowerCase()];
+    if (v !== undefined) out[ch === ch.toUpperCase() ? "white" : "black"] += v;
+  }
+  return out;
+}
 
 /** Plays a move (already checked with resolveMove). The turn isn't finished until `finishTurn`. */
 export function playMove(state: GameState, uci: string, rng: Rng = Math.random): MoveResult {
@@ -409,12 +471,13 @@ export function playMove(state: GameState, uci: string, rng: Rng = Math.random):
   const me = next.players[mover];
   const patch: Partial<PlayerState> = {};
   let log = next.log;
-  if (capturedPiece && me.goldenBoot) {
-    patch.form = addForm(me.form, 3);
-    patch.goldenBoot = false;
-    log = [...log, `Golden Boot: ${me.name} +3 Form for the capture`];
+  if (capturedPiece && me.goldenBootMoves > 0) {
+    patch.form = addForm(me.form, GOLDEN_BOOT_FORM);
+    log = [...log, `Golden Boot: ${me.name} +${GOLDEN_BOOT_FORM} Form for the capture`];
   }
   if (state.step === "normal") {
+    if (me.goldenBootMoves > 0) patch.goldenBootMoves = me.goldenBootMoves - 1;
+    if (me.hotSpotRest > 0) patch.hotSpotRest = me.hotSpotRest - 1;
     const used = state.powerUsedId;
     const cd = { ...me.cooldowns };
     for (const id of Object.keys(cd) as PowerUpId[]) if (id !== used && cd[id] > 0) cd[id] -= 1;
@@ -427,22 +490,22 @@ export function playMove(state: GameState, uci: string, rng: Rng = Math.random):
   let trigger: Trigger = { kind: "none" };
   const ended = after.isCheckmate() || after.isStalemate();
   if (state.options.trivia) {
-    const onSpot = next.hotSpots.includes(landed);
+    // A Hot Spot only counts if you haven't claimed one in your last few moves (checked before this move's count-down).
+    const onSpot = next.hotSpots.includes(landed) && me.hotSpotRest === 0;
     if (move.promotion) {
       trigger = { kind: "promotion", role: ROLE_CHAR[move.promotion] as PromoRole, square: makeSquare(move.to), bonus: onSpot };
     } else if (state.step === "normal" && !ended) {
       if (onSpot) trigger = { kind: "hot-spot", square: landed };
       else if (capturedPiece) trigger = { kind: "capture" };
-      else if (next.players[mover].kickoffCount >= 3) trigger = { kind: "kickoff" };
+      else if (next.players[mover].kickoffCount >= KICKOFF_EVERY) trigger = { kind: "kickoff" };
     }
+    // Hot Spots stay put until used; a used one jumps to a new square in the same half.
     if (onSpot && (trigger.kind === "hot-spot" || trigger.kind === "promotion")) {
       next = { ...next, hotSpots: relocateHotSpot(next, landed, rng) };
-    } else if (next.hotSpots.length) {
-      // Keep the pitch moving: one Hot Spot, the one that has stayed put longest, jumps somewhere new after every move.
-      const drifting = next.hotSpots[0]; // relocating appends, so index 0 is always the one that has sat longest
-      next = { ...next, hotSpots: relocateHotSpot(next, drifting, rng) };
+      next = withPlayer(next, mover, { hotSpotRest: HOT_SPOT_REST });
     }
-    if (trigger.kind !== "none" && trigger.kind !== "promotion") next = withPlayer(next, mover, { kickoffCount: 0 });
+    // Any question (a "Who am I?" too) restarts the Kick-off count.
+    if (trigger.kind !== "none") next = withPlayer(next, mover, { kickoffCount: 0 });
   }
 
   return { state: next, trigger, san, captured: capturedPiece ? ROLE_CHAR[capturedPiece.role] : null, check, landed };
@@ -478,11 +541,11 @@ export function resolvePromotion(state: GameState, square: string, cluesShown: n
 }
 
 /** For bots: the piece they aim for maps to an old-style difficulty for their answer odds. */
-export const PROMOTION_AIM: Record<PromoRole, { clues: number; difficulty: Difficulty; worldie: boolean }> = {
-  q: { clues: 1, difficulty: "hard", worldie: true },
-  r: { clues: 2, difficulty: "hard", worldie: false },
-  b: { clues: 3, difficulty: "medium", worldie: false },
-  n: { clues: 4, difficulty: "easy", worldie: false },
+export const PROMOTION_AIM: Record<PromoRole, { clues: number; difficulty: Difficulty; puskas: boolean }> = {
+  q: { clues: 1, difficulty: "hard", puskas: true },
+  r: { clues: 2, difficulty: "hard", puskas: false },
+  b: { clues: 3, difficulty: "medium", puskas: false },
+  n: { clues: 4, difficulty: "easy", puskas: false },
 };
 
 export interface TurnInfo {
@@ -558,9 +621,14 @@ export function resign(state: GameState, loser: Color): GameState {
 
 // ---------------------------------------------------------------- power-ups
 
+/** Does the "next power-up costs double" penalty apply to this power-up? Cheap ones (under 3 Form) neither pay it nor clear it. */
+export function doubles(id: PowerUpId): boolean {
+  return POWER_UP_BY_ID[id].cost >= DOUBLE_COST_MIN;
+}
+
 export function powerCost(state: GameState, color: Color, id: PowerUpId): number {
   const base = POWER_UP_BY_ID[id].cost;
-  return state.players[color].doubleNextPower ? base * 2 : base;
+  return state.players[color].doubleNextPower && doubles(id) ? base * 2 : base;
 }
 
 /** Why a power-up can't be used right now, or null if it can (targets aside). */
@@ -576,9 +644,17 @@ export function powerBlocked(state: GameState, id: PowerUpId): string | null {
   const cost = powerCost(state, color, id);
   if (me.form < cost) return `Needs ${cost} Form`;
   const pos = positionOf(state.fen);
-  if ((id === "park-the-bus" || id === "scout-report") && pos.isCheck()) return "Not while in check";
+  if ((id === "park-the-bus" || id === "scout-report" || id === "formation-change") && pos.isCheck()) return "Not while in check";
   if (id === "masterclass" && legalMoves(state).moves.length === 0) return "No move to play";
-  if (id === "var-review" && varTarget(state) === null) return "Nothing to review yet";
+  if (id === "var-review") {
+    const i = varTarget(state);
+    if (i === null) return "Nothing to review yet";
+    // The cost comes out of the Form you had before the move being reviewed.
+    if (state.snapshots[i].snap.players[color].form < cost) return `Needs ${cost} Form from before that move`;
+  }
+  if (id === "extra-time" && !legalMoves({ ...state, extraTimePending: true }).moves.some((m) => capturedSquare(state.fen, parseUci(m) as NormalMove) === null)) {
+    return "No quiet move to start with";
+  }
   if (id === "substitution" && !state.captured[color].includes("p")) return "No captured pawns to bring back";
   return null;
 }
@@ -642,6 +718,7 @@ export function usePowerUp(state: GameState, id: PowerUpId, targets: string[] = 
     case "tactical-foul": {
       if (!piece || piece.color !== enemy) return fail("Pick an enemy piece");
       if (piece.role === "king") return fail("Not the king");
+      if (piece.role === "queen") return fail("Not the queen");
       if (pos.ctx().checkers.has(sq!)) return fail("Not a piece that is giving check");
       const f: Frozen = { square: targets[0], owner: enemy, reason: "foul" };
       next = { ...next, frozen: [...next.frozen, f] };
@@ -654,14 +731,17 @@ export function usePowerUp(state: GameState, id: PowerUpId, targets: string[] = 
       break;
     case "var-review": {
       const i = varTarget(state)!;
-      const snap = state.snapshots[i].snap;
-      next = { ...next, ...snap, snapshots: state.snapshots.slice(0, i) };
+      const { players: before, ...snap } = state.snapshots[i].snap;
+      // Everything goes back to before the move, Form and cooldowns included. Only the clocks keep running.
+      const restore = (c: Color): PlayerState => ({ ...before[c], clockMs: state.players[c].clockMs });
+      next = { ...next, ...snap, players: { white: restore("white"), black: restore("black") }, snapshots: state.snapshots.slice(0, i) };
       note = `VAR Review: ${me.name}'s last move and the reply are overturned`;
       break;
     }
     case "counter-attack": {
       if (!piece || piece.color !== color || piece.role !== "pawn") return fail("Pick one of your pawns");
-      if (!counterAttackMove(state.fen, targets[0])) return fail("That pawn can't go two squares");
+      const why = counterAttackBlocked(state.fen, targets[0]);
+      if (why) return fail(why);
       next = { ...next, counterAttack: targets[0] };
       note = `${me.name} launched a Counter-Attack: the ${targets[0]} pawn can move two squares`;
       break;
@@ -680,8 +760,8 @@ export function usePowerUp(state: GameState, id: PowerUpId, targets: string[] = 
       break;
     }
     case "golden-boot":
-      next = withPlayer(next, color, { goldenBoot: true });
-      note = `${me.name} laced up the Golden Boot: next capture is worth +3 Form`;
+      next = withPlayer(next, color, { goldenBootMoves: GOLDEN_BOOT_MOVES });
+      note = `${me.name} laced up the Golden Boot: every capture in the next ${GOLDEN_BOOT_MOVES} moves is worth +${GOLDEN_BOOT_FORM} Form`;
       break;
     case "formation-change": {
       const sq2 = targets[1] !== undefined ? parseSquare(targets[1]) : undefined;
@@ -689,9 +769,14 @@ export function usePowerUp(state: GameState, id: PowerUpId, targets: string[] = 
       if (!piece || !p2 || sq === sq2 || piece.color !== color || p2.color !== color) return fail("Pick two of your pieces");
       if (piece.role === "king" || p2.role === "king") return fail("Not the king");
       if (piece.role === p2.role) return fail("Pick two different pieces");
-      const backRanks = [0, 7];
-      if ((piece.role === "pawn" && backRanks.includes(squareRank(sq2!))) || (p2.role === "pawn" && backRanks.includes(squareRank(sq!)))) {
-        return fail("A pawn can't go on the first or last rank");
+      if (state.frozen.some((f) => f.owner === color && (f.square === targets[0] || f.square === targets[1]))) return fail("Not a frozen piece");
+      // A pawn can land on its 2nd to 5th rank only: never the back rank, and never close enough to promote.
+      const pawnRankOk = (to: Square) => {
+        const rel = color === "white" ? squareRank(to) + 1 : 8 - squareRank(to);
+        return rel >= 2 && rel <= 5;
+      };
+      if ((piece.role === "pawn" && !pawnRankOk(sq2!)) || (p2.role === "pawn" && !pawnRankOk(sq!))) {
+        return fail("A pawn can only go on its 2nd to 5th rank");
       }
       s.board.set(sq!, p2);
       s.board.set(sq2!, piece);
@@ -738,9 +823,10 @@ export function usePowerUp(state: GameState, id: PowerUpId, targets: string[] = 
 
   const cost = powerCost(state, color, id);
   next = withPlayer(next, color, {
-    form: next.players[color].form - cost,
+    form: Math.max(0, next.players[color].form - cost),
     cooldowns: { ...next.players[color].cooldowns, [id]: def.cooldown },
-    doubleNextPower: false,
+    // Paying a doubled price clears the red card; the cheap power-ups don't count.
+    doubleNextPower: doubles(id) ? false : next.players[color].doubleNextPower,
   });
   next = { ...next, powerUsed: true, powerUsedId: id, log: [...next.log, note] };
   return { state: next, note };
@@ -762,7 +848,7 @@ export function attackedSquares(fen: string, by: Color): string[] {
 export interface AnswerCtx {
   color: Color;
   difficulty: Difficulty;
-  worldie: boolean;
+  puskas: boolean;
   bonus: boolean;
   correct: boolean;
   ms: number;
@@ -770,7 +856,11 @@ export interface AnswerCtx {
   landed: string | null;
 }
 
-export const REWARD: Record<Difficulty | "worldie", number> = { easy: 1, medium: 2, hard: 4, worldie: 6 };
+/** Form for a right answer (doubled in a Club Bonus Round). */
+export const REWARD: Record<Difficulty | "puskas", number> = { easy: 1, medium: 2, hard: 3, puskas: 5 };
+/** Answer a Screamer or Puskás inside this time for +1. */
+export const QUICK_MS = 5000;
+export const HAT_TRICK_BONUS = 2;
 
 export interface AnswerOutcome {
   state: GameState;
@@ -786,17 +876,20 @@ export function applyAnswer(state: GameState, a: AnswerCtx): AnswerOutcome {
   let next = state;
   let gained = 0;
   if (a.correct) {
-    const base = REWARD[a.worldie ? "worldie" : a.difficulty] * (a.bonus ? 2 : 1);
+    const base = REWARD[a.puskas ? "puskas" : a.difficulty] * (a.bonus ? 2 : 1);
     gained = base;
     lines.push(`+${base} Form${a.bonus ? " (Club Bonus Round, doubled)" : ""}`);
-    if (a.ms < 5000) { gained += 1; lines.push("+1 quick answer"); }
+    if (a.ms < QUICK_MS && (a.puskas || a.difficulty === "hard")) { gained += 1; lines.push("+1 quick answer"); }
     let streak = me.rightStreak + 1;
-    if (streak >= 3) { gained += 3; streak = 0; lines.push("Hat-trick! +3 Form"); }
+    if (streak >= 3) { gained += HAT_TRICK_BONUS; streak = 0; lines.push(`Hat-trick! +${HAT_TRICK_BONUS} Form`); }
+    // Catch-up: whoever is behind on material gets a little extra.
+    const mat = material(state.fen);
+    if (mat[a.color] < mat[enemy]) { gained += 1; lines.push("+1 catch-up (you're behind on material)"); }
     next = withPlayer(next, a.color, { form: addForm(me.form, gained), rightStreak: streak, wrongStreak: 0 });
   } else {
     let wrong = me.wrongStreak + 1;
     let doubleNext = me.doubleNextPower;
-    if (a.worldie) {
+    if (a.puskas) {
       next = withPlayer(next, a.color, { sentOff: true });
       lines.push("Sent off! You lose your next turn and the opponent gets a Free Kick");
     } else if (a.difficulty === "hard") {

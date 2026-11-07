@@ -121,19 +121,19 @@ export function RulesScreen({ onBack }: { onBack: () => void }) {
       <h1 id="rules-title">How to play</h1>
       <p>It's chess, and your moves are always free. Some moves bring up a football question for the player who made them:</p>
       <ul>
-        <li><b>Hot Spot</b> (circled square): a Club Bonus Round on your club, double Form.</li>
+        <li><b>Hot Spot</b> (circled square): a Club Bonus Round on your club, double Form. After you claim one, Hot Spots rest for 4 of your moves.</li>
         <li><b>Capture</b>: pick one of three cards.</li>
-        <li><b>Kick-off</b>: every 3rd move with no other question.</li>
+        <li><b>Kick-off</b>: every 4th move with no other question.</li>
       </ul>
       <p>Each card shows a topic and a difficulty. Harder pays more, but costs more if you're wrong:</p>
       <ul>
         <li>Tap-in (easy): +1 Form, no risk.</li>
         <li>Highlight (medium): +2 Form. Wrong and your opponent gets +2.</li>
-        <li>Screamer (hard): +4 Form. Wrong and the piece you moved is booked (frozen) next turn.</li>
-        <li>Puskás (a Screamer you upgrade): +6 Form in 8 seconds, no hints. Wrong and you're sent off: you miss a turn and your opponent takes a Free Kick.</li>
+        <li>Screamer (hard): +3 Form. Wrong and the piece you moved is booked (frozen) next turn.</li>
+        <li>Puskás (a Screamer you upgrade): +5 Form in 8 seconds, no hints. Wrong and you're sent off: you miss a turn and your opponent takes a Free Kick.</li>
       </ul>
-      <p>Answer within 5 seconds for +1, get three in a row for a hat-trick (+3). Form is capped at 12.</p>
-      <p><b>Power-ups</b> cost Form, one per turn before you move. Each has a cooldown and starts the game locked. <b>Hints</b> during a question: 50:50, Ask the Crowd, Phone a friend.</p>
+      <p>Answer a Screamer or Puskás within 5 seconds for +1, and get three in a row for a hat-trick (+2). If you're behind on material, every right answer earns +1 more. Form is capped at 12.</p>
+      <p><b>Power-ups</b> cost Form, one per turn before you move. Each has a cooldown and starts the game locked, and its stars show roughly how much it can swing the board. <b>Hints</b> during a question: 50:50, Ask the Crowd, Phone a friend.</p>
       <p><b>Promotion</b> is a "Who am I?": five clues about a footballer, one guess. Right on clue 1 earns a queen, clue 2 a rook, clue 3 a bishop, later a knight. Wrong: a knight, and your opponent gets +2 Form.</p>
       <p>Checkmate wins. Any draw goes to a Penalty Shootout of five questions each.</p>
       <button type="button" className="ghost" onClick={onBack}>Back</button>
