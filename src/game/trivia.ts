@@ -22,20 +22,43 @@ export interface SeenStore {
   delete(id: string): void;
 }
 
-const SEEN_KEY = "cft.seen.v1";
+/** Before each player had their own list, everyone on the device shared this one. */
+const LEGACY_SEEN_KEY = "cft.seen.v1";
+const SEEN_PREFIX = "cft.seen.v2.";
 
-/** Seen question ids, kept in browser storage so questions don't repeat between games. */
-export function browserSeenStore(): SeenStore {
+/** The storage key for a player's seen list: names match ignoring case and spaces. */
+export function seenKey(player: string): string {
+  return SEEN_PREFIX + (player.trim().toLowerCase().replace(/\s+/g, " ") || "player");
+}
+
+const stores = new Map<string, SeenStore>();
+
+/**
+ * Seen question ids for one player, kept in browser storage so their questions
+ * don't repeat between games. Each player name has its own list. The first
+ * player to play after the update takes over the old shared list.
+ */
+export function browserSeenStore(player = "Player 1", storage: Storage | undefined = globalThis.localStorage): SeenStore {
+  const key = seenKey(player);
+  const cached = stores.get(key);
+  if (cached) return cached;
   let ids = new Set<string>();
   try {
-    ids = new Set(JSON.parse(localStorage.getItem(SEEN_KEY) ?? "[]") as string[]);
+    let raw = storage?.getItem(key) ?? null;
+    if (raw === null) {
+      raw = storage?.getItem(LEGACY_SEEN_KEY) ?? null;
+      if (raw !== null) { storage?.setItem(key, raw); storage?.removeItem(LEGACY_SEEN_KEY); }
+    }
+    ids = new Set(JSON.parse(raw ?? "[]") as string[]);
   } catch { /* private browsing: forget between games */ }
-  const save = () => { try { localStorage.setItem(SEEN_KEY, JSON.stringify([...ids])); } catch { /* ignore */ } };
-  return {
+  const save = () => { try { storage?.setItem(key, JSON.stringify([...ids])); } catch { /* ignore */ } };
+  const store: SeenStore = {
     has: (id) => ids.has(id),
     add: (id) => { ids.add(id); save(); },
     delete: (id) => { ids.delete(id); save(); },
   };
+  stores.set(key, store);
+  return store;
 }
 
 export function memorySeenStore(): SeenStore {

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import questions from "../../data/questions.json";
 import whoami from "../../data/whoami.json";
-import { QuestionBank, askTheCrowd, fiftyFifty } from "./trivia";
+import { QuestionBank, askTheCrowd, browserSeenStore, fiftyFifty, seenKey } from "./trivia";
 import { WhoAmIBank, type WhoAmI } from "./whoami";
 import { shootoutWinner } from "./useGame";
 import { CLUBS } from "./clubs";
@@ -66,5 +66,41 @@ describe("Penalty Shootout", () => {
     expect(shootoutWinner(k("1111"))).toBeNull();
     expect(shootoutWinner(k("1111111111"))).toBeNull();
     expect(shootoutWinner(k("111111111110"))).toBe("white");
+  });
+});
+
+describe("seen lists", () => {
+  function fakeStorage(init: Record<string, string> = {}): Storage {
+    const m = new Map(Object.entries(init));
+    return {
+      get length() { return m.size; },
+      clear: () => m.clear(),
+      getItem: (k) => m.get(k) ?? null,
+      key: (i) => [...m.keys()][i] ?? null,
+      removeItem: (k) => { m.delete(k); },
+      setItem: (k, v) => { m.set(k, v); },
+    };
+  }
+  it("keeps a separate list for each player, matching names loosely", () => {
+    const storage = fakeStorage();
+    const ryan = browserSeenStore("Ryan-test", storage);
+    const ollie = browserSeenStore("Ollie-test", storage);
+    ryan.add("tit-0001");
+    expect(ryan.has("tit-0001")).toBe(true);
+    expect(ollie.has("tit-0001")).toBe(false);
+    expect(browserSeenStore("  ryan-TEST ", storage)).toBe(ryan);
+    expect(JSON.parse(storage.getItem(seenKey("Ryan-test"))!)).toEqual(["tit-0001"]);
+  });
+  it("hands the old shared list to the first player, once", () => {
+    const storage = fakeStorage({ "cft.seen.v1": JSON.stringify(["gol-0001"]) });
+    expect(browserSeenStore("Freddie-test", storage).has("gol-0001")).toBe(true);
+    expect(storage.getItem("cft.seen.v1")).toBeNull();
+    expect(browserSeenStore("Guest-test", storage).has("gol-0001")).toBe(false);
+  });
+});
+
+describe("question sources", () => {
+  it("every question links to the page it was checked against", () => {
+    for (const q of qs) expect(q.source, q.id).toMatch(/^https:\/\//);
   });
 });

@@ -12,7 +12,7 @@ import {
   resign as resignRule, resolveMove, resolvePromotion, setClock, skipExtraTime, spendForm, timeout, turnOf, usePowerUp, endInDraw,
   type MoveResult, type PlayerInit,
 } from "./rules";
-import { QuestionBank, TIMER_MS, askTheCrowd, browserSeenStore, fiftyFifty, phoneAFriend, type Card } from "./trivia";
+import { QuestionBank, TIMER_MS, askTheCrowd, browserSeenStore, fiftyFifty, memorySeenStore, phoneAFriend, type Card } from "./trivia";
 import { CLUE_MS, WhoAmIBank, type WhoAmI } from "./whoami";
 import type { Color, GameOptions, GameState, PowerUpId, Question, TriviaHintId } from "./types";
 
@@ -46,23 +46,30 @@ export interface Overlay {
   scout?: string;
 }
 
-interface Data {
+interface Banks {
   bank: QuestionBank;
   whoami: WhoAmIBank;
 }
+/** Each side draws from its own banks, so each human player has their own "seen" list. */
+type Data = Record<Color, Banks>;
 
-let dataPromise: Promise<Data> | null = null;
-function loadData(): Promise<Data> {
-  if (!dataPromise) {
-    dataPromise = Promise.all([import("../../data/questions.json"), import("../../data/whoami.json")]).then(([q, w]) => {
-      const seen = browserSeenStore();
-      return {
-        bank: new QuestionBank((q.default as { questions: Question[] }).questions, seen),
-        whoami: new WhoAmIBank((w.default as { sets: WhoAmI[] }).sets, seen),
-      };
-    });
+let rawPromise: Promise<{ questions: Question[]; sets: WhoAmI[] }> | null = null;
+function loadData(players: SetupChoice["players"]): Promise<Data> {
+  if (!rawPromise) {
+    rawPromise = Promise.all([import("../../data/questions.json"), import("../../data/whoami.json")]).then(([q, w]) => ({
+      questions: (q.default as { questions: Question[] }).questions,
+      sets: (w.default as { sets: WhoAmI[] }).sets,
+    }));
   }
-  return dataPromise;
+  return rawPromise.then(({ questions, sets }) => {
+    const banks = (c: Color): Banks => {
+      const p = players[c];
+      // Bots don't need to remember what they've been asked between games.
+      const seen = p.kind === "human" ? browserSeenStore(p.name) : memorySeenStore();
+      return { bank: new QuestionBank(questions, seen), whoami: new WhoAmIBank(sets, seen) };
+    };
+    return { white: banks("white"), black: banks("black") };
+  });
 }
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -124,7 +131,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     else if (p.kind === "whoami") go({ ...p, clueAt: p.clueAt + d });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paused]);
-  useEffect(() => { loadData().then((d) => alive.current && setData(d)); }, []);
+  useEffect(() => { loadData(setup.players).then((d) => alive.current && setData(d)); }, []);
   useEffect(() => {
     loadBots().then((m) => {
       if (!alive.current) return;
@@ -171,7 +178,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     if (next.pendingDraw && data) {
       setNote(`It's a draw (${next.pendingDraw}), so it goes to a Penalty Shootout!`);
       play("kickoff");
-      go({ kind: "shootout", kicks: [], q: data.bank.any("medium"), startedAt: Date.now(), choice: null, taker: "white" });
+      go({ kind: "shootout", kicks: [], q: data.white.bank.any("medium"), startedAt: Date.now(), choice: null, taker: "white" });
       return;
     }
     if (!notes.length) setNote(`${next.players[turnOf(next)].name} to move`);
@@ -191,7 +198,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     if (t.kind === "promotion") {
       play("kickoff");
       setNote(`${name} reaches the end: "Who am I?" decides the new piece`);
-      go({ kind: "whoami", color: mover, set: data.whoami.draw(r.state.players[mover].club, t.bonus), square: t.square, clues: 1, clueAt: Date.now(), bonus: t.bonus });
+      go({ kind: "whoami", color: mover, set: data[mover].whoami.draw(r.state.players[mover].club, t.bonus), square: t.square, clues: 1, clueAt: Date.now(), bonus: t.bonus });
       return;
     }
     const bonus = t.kind === "hot-spot";
@@ -199,7 +206,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     else play("kickoff");
     const label = bonus ? "Club Bonus Round: double Form" : t.kind === "capture" ? "Capture: pick a question" : "Kick-off: pick a question";
     setNote(`${name}: ${label}`);
-    go({ kind: "cards", color: mover, cards: data.bank.deal(r.state.players[mover].club, bonus), bonus, landed: r.landed, label });
+    go({ kind: "cards", color: mover, cards: data[mover].bank.deal(r.state.players[mover].club, bonus), bonus, landed: r.landed, label });
   }, [data, endTurn, go, play, react, setGame]);
 
   const move = useCallback((uci: string): boolean => {
@@ -307,7 +314,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     const isWorldie = worldie && card.difficulty === "hard";
     play("select");
     go({
-      kind: "question", color: p.color, q: data.bank.draw(card), card, worldie: isWorldie, bonus: p.bonus, landed: p.landed,
+      kind: "question", color: p.color, q: data[p.color].bank.draw(card), card, worldie: isWorldie, bonus: p.bonus, landed: p.landed,
       startedAt: Date.now(), limitMs: isWorldie ? TIMER_MS.worldie : TIMER_MS.normal, hidden: [], label: cardLabel(card, isWorldie),
     });
   }, [data, go, play]);
@@ -400,7 +407,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
         react(opposite(winner), "loss");
         go({ kind: "over" });
       } else {
-        go({ kind: "shootout", kicks, q: data.bank.any("medium"), startedAt: Date.now(), choice: null, taker: opposite(p.taker) });
+        go({ kind: "shootout", kicks, q: data[opposite(p.taker)].bank.any("medium"), startedAt: Date.now(), choice: null, taker: opposite(p.taker) });
       }
     }, 1800);
   }, [data, go, play, react, setGame]);
@@ -420,7 +427,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     function endTurnDraw(s: GameState) {
       setGame(s);
       if (s.outcome) { play("fulltime"); go({ kind: "over" }); return; }
-      if (data) { setNote("Draw agreed. Penalty Shootout!"); go({ kind: "shootout", kicks: [], q: data.bank.any("medium"), startedAt: Date.now(), choice: null, taker: "white" }); }
+      if (data) { setNote("Draw agreed. Penalty Shootout!"); go({ kind: "shootout", kicks: [], q: data.white.bank.any("medium"), startedAt: Date.now(), choice: null, taker: "white" }); }
     }
   }, [data, go, play, setGame]);
 
