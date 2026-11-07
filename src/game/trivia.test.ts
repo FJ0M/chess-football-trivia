@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import questions from "../../data/questions.json";
 import whoami from "../../data/whoami.json";
-import { QuestionBank, askTheCrowd, fiftyFifty } from "./trivia";
+import { QuestionBank, askTheCrowd, browserSeenStore, fiftyFifty, seenKey } from "./trivia";
 import { WhoAmIBank, type WhoAmI } from "./whoami";
 import { shootoutWinner } from "./useGame";
 import { CLUBS } from "./clubs";
@@ -69,6 +69,42 @@ describe("Penalty Shootout", () => {
   });
 });
 
+describe("seen lists", () => {
+  function fakeStorage(init: Record<string, string> = {}): Storage {
+    const m = new Map(Object.entries(init));
+    return {
+      get length() { return m.size; },
+      clear: () => m.clear(),
+      getItem: (k) => m.get(k) ?? null,
+      key: (i) => [...m.keys()][i] ?? null,
+      removeItem: (k) => { m.delete(k); },
+      setItem: (k, v) => { m.set(k, v); },
+    };
+  }
+  it("keeps a separate list for each player, matching names loosely", () => {
+    const storage = fakeStorage();
+    const ryan = browserSeenStore("Ryan-test", storage);
+    const ollie = browserSeenStore("Ollie-test", storage);
+    ryan.add("tit-0001");
+    expect(ryan.has("tit-0001")).toBe(true);
+    expect(ollie.has("tit-0001")).toBe(false);
+    expect(browserSeenStore("  ryan-TEST ", storage)).toBe(ryan);
+    expect(JSON.parse(storage.getItem(seenKey("Ryan-test"))!)).toEqual(["tit-0001"]);
+  });
+  it("hands the old shared list to the first player, once", () => {
+    const storage = fakeStorage({ "cft.seen.v1": JSON.stringify(["gol-0001"]) });
+    expect(browserSeenStore("Freddie-test", storage).has("gol-0001")).toBe(true);
+    expect(storage.getItem("cft.seen.v1")).toBeNull();
+    expect(browserSeenStore("Guest-test", storage).has("gol-0001")).toBe(false);
+  });
+});
+
+describe("question sources", () => {
+  it("every question links to the page it was checked against", () => {
+    for (const q of qs) expect(q.source, q.id).toMatch(/^https:\/\//);
+  });
+});
+
 describe("Who am I? club sets", () => {
   it("about half of a club fan's sets are about their club, even without a Hot Spot", async () => {
     const { WhoAmIBank } = await import("./whoami");
@@ -83,5 +119,37 @@ describe("Who am I? club sets", () => {
     for (let i = 0; i < 400; i++) if (bank.draw("west-ham").club === "west-ham") club++;
     // Half the draws ask for a club set; the other half draw from everything, club sets included.
     expect(club).toBeGreaterThan(240);
+  });
+});
+
+describe("Who am I? typed answers", () => {
+  it("ignores capitals and accents, takes the surname alone, and allows a typo or two", async () => {
+    const { isRightGuess } = await import("./whoami");
+    const set = (name: string, aliases: string[] = []) => ({ id: "x", clues: [], options: [name, "A B", "C D", "E F"], answer: 0, name, aliases, club: null, verified: true });
+    const aguero = set("Sergio Agüero", ["Kun"]);
+    for (const t of ["sergio aguero", "AGUERO", "Agüero", "aguerro", "kun", " Sergio  Agüero "]) expect(isRightGuess(aguero, t)).toBe(true);
+    expect(isRightGuess(aguero, "Sergio")).toBe(false);
+    expect(isRightGuess(aguero, "")).toBe(false);
+    const ode = set("Martin Ødegaard");
+    expect(isRightGuess(ode, "odegaard")).toBe(true);
+    expect(isRightGuess(ode, "oedegard")).toBe(true);
+    const vvd = set("Virgil van Dijk");
+    for (const t of ["van dijk", "vandijk", "Van Dyk", "virgil van dijk"]) expect(isRightGuess(vvd, t)).toBe(true);
+    const kante = set("N'Golo Kanté");
+    expect(isRightGuess(kante, "kante")).toBe(true);
+    expect(isRightGuess(kante, "ngolo kante")).toBe(true);
+    // A typo away, but it's another footballer's name: wrong.
+    expect(isRightGuess(kante, "Kane", ["Harry Kane"])).toBe(false);
+    expect(isRightGuess(set("Joe Cole", []), "Andy Cole", ["Andy Cole"])).toBe(false);
+    expect(isRightGuess(set("Mohamed Salah"), "Sadio Mane")).toBe(false);
+  });
+  it("every set in the bank accepts its own name and surname", () => {
+    const bank = new WhoAmIBank((whoami as { sets: WhoAmI[] }).sets, { has: () => false, add: () => {}, delete: () => {} });
+    for (const s of (whoami as { sets: WhoAmI[] }).sets) {
+      const name = s.name ?? s.options[s.answer];
+      expect(bank.check(s, name)).toBe(true);
+      expect(bank.check(s, name.split(" ").slice(1).join(" ") || name)).toBe(true);
+      for (const other of s.options.filter((_, i) => i !== s.answer)) expect(bank.check(s, other)).toBe(false);
+    }
   });
 });

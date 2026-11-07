@@ -62,15 +62,15 @@ export const BOT_PROFILES: Record<BotId, BotProfile> = {
     levels: {
       low: {
         chess: chess(950, 5, 3, 110, 0.2),
-        trivia: trivia(0.8, 0.62, 0.45, 0.3, 0.88, [4500, 10000], { easy: 3, medium: 6, hard: 1 }, 0.1),
+        trivia: trivia(0.8, 0.62, 0.45, 0.3, 0.88, [3500, 8000], { easy: 3, medium: 6, hard: 1 }, 0.1),
       },
       medium: {
         chess: chess(1300, 6, 3, 80, 0.1),
-        trivia: trivia(0.88, 0.72, 0.55, 0.4, 0.92, [4000, 9000], { easy: 2, medium: 7, hard: 1 }, 0.15),
+        trivia: trivia(0.88, 0.72, 0.55, 0.4, 0.92, [3000, 7500], { easy: 2, medium: 7, hard: 1 }, 0.15),
       },
       hard: {
         chess: chess(1600, 8, 3, 60, 0.06),
-        trivia: trivia(0.93, 0.8, 0.66, 0.5, 0.96, [3500, 8000], { easy: 1, medium: 7, hard: 2 }, 0.2),
+        trivia: trivia(0.93, 0.8, 0.66, 0.5, 0.96, [3000, 7000], { easy: 1, medium: 7, hard: 2 }, 0.2),
       },
     },
     favouritePowerUps: ["tactical-foul", "red-card", "golden-boot", "park-the-bus"],
@@ -85,15 +85,15 @@ export const BOT_PROFILES: Record<BotId, BotProfile> = {
     levels: {
       low: {
         chess: chess(1600, 8, 3, 50, 0.05),
-        trivia: trivia(0.55, 0.33, 0.18, 0.1, 0.55, [7000, 13000], { easy: 8, medium: 2, hard: 0 }, 0),
+        trivia: trivia(0.55, 0.33, 0.18, 0.1, 0.55, [5000, 9000], { easy: 8, medium: 2, hard: 0 }, 0),
       },
       medium: {
         chess: chess(1800, 8, 3, 35, 0.03),
-        trivia: trivia(0.65, 0.42, 0.25, 0.15, 0.65, [7000, 13000], { easy: 7, medium: 2, hard: 1 }, 0.05),
+        trivia: trivia(0.65, 0.42, 0.25, 0.15, 0.65, [5000, 9000], { easy: 7, medium: 2, hard: 1 }, 0.05),
       },
       hard: {
         chess: chess(2150, 10, 2, 20, 0.012),
-        trivia: trivia(0.72, 0.5, 0.32, 0.2, 0.72, [6000, 12000], { easy: 6, medium: 3, hard: 1 }, 0.05),
+        trivia: trivia(0.72, 0.5, 0.32, 0.2, 0.72, [4500, 8500], { easy: 6, medium: 3, hard: 1 }, 0.05),
       },
     },
     favouritePowerUps: ["extra-time", "super-sub", "park-the-bus", "formation-change"],

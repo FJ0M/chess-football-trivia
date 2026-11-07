@@ -514,10 +514,10 @@ export function playMove(state: GameState, uci: string, rng: Rng = Math.random):
 }
 
 /**
- * Promotion is a "Who am I?": five clues, one guess. The earlier the right guess,
- * the better the piece. Index = clues shown minus one.
+ * Promotion is a "Who am I?": five clues, one typed guess. The earlier the right guess,
+ * the better the piece. Index = clues shown minus one: queen on clue 1 or 2, rook 3, bishop 4, knight 5.
  */
-export const WHO_AM_I_PIECES: PromoRole[] = ["q", "r", "b", "n", "n"];
+export const WHO_AM_I_PIECES: PromoRole[] = ["q", "q", "r", "b", "n"];
 export const WHO_AM_I_PENALTY = 2;
 
 /** Sets the promoted piece once the "Who am I?" is over. Wrong: a knight, and the opponent gets +2 Form. */
@@ -544,10 +544,10 @@ export function resolvePromotion(state: GameState, square: string, cluesShown: n
 
 /** For bots: the piece they aim for maps to an old-style difficulty for their answer odds. */
 export const PROMOTION_AIM: Record<PromoRole, { clues: number; difficulty: Difficulty; puskas: boolean }> = {
-  q: { clues: 1, difficulty: "hard", puskas: true },
-  r: { clues: 2, difficulty: "hard", puskas: false },
-  b: { clues: 3, difficulty: "medium", puskas: false },
-  n: { clues: 4, difficulty: "easy", puskas: false },
+  q: { clues: 2, difficulty: "hard", puskas: true },
+  r: { clues: 3, difficulty: "hard", puskas: false },
+  b: { clues: 4, difficulty: "medium", puskas: false },
+  n: { clues: 5, difficulty: "easy", puskas: false },
 };
 
 export interface TurnInfo {
@@ -933,6 +933,27 @@ export function timeout(state: GameState, loser: Color): GameState {
 
 export function setClock(state: GameState, color: Color, ms: number): GameState {
   return withPlayer(state, color, { clockMs: ms });
+}
+
+/** Seconds added to your clock after each move you make (timed games). */
+export const INCREMENT_MS = 3000;
+
+/** Adds the per-move increment to a player's clock (timed games only). */
+export function addIncrement(state: GameState, color: Color): GameState {
+  const ms = state.players[color].clockMs;
+  return ms === null ? state : withPlayer(state, color, { clockMs: ms + INCREMENT_MS });
+}
+
+/** `next` with the clocks from `live`: a state saved earlier (e.g. before a result screen) mustn't wind the clocks back. */
+export function withClocksFrom(next: GameState, live: GameState): GameState {
+  if (!next.options.timed) return next;
+  return {
+    ...next,
+    players: {
+      white: { ...next.players.white, clockMs: live.players.white.clockMs },
+      black: { ...next.players.black, clockMs: live.players.black.clockMs },
+    },
+  };
 }
 
 /** Extra Time's second move is optional: passing hands the turn back as if it had not been played. */

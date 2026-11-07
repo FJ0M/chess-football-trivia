@@ -124,6 +124,11 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 .screen .clues { margin: 0; padding-left: 20px; display: grid; gap: 4px; font-size: 14px; line-height: 1.3; }
 .screen .clues li { animation: pop .25s ease-out; }
 .screen .fine { font-size: 11px; opacity: .75; }
+.screen .whoami-stage { min-height: min(92vw, 520px); min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; }
+.screen .board[hidden] { display: none; }
+.screen .guess { display: flex; gap: 8px; }
+.screen .guess input { flex: 1; width: 0; min-width: 0; font: inherit; font-size: 16px; padding: 10px 12px; border-radius: 10px; border: 2px solid currentColor; background: rgba(255,255,255,.9); color: #111; }
+.screen .guess button { font: inherit; padding: 0 16px; border-radius: 10px; }
 .screen .result .lines { margin: 0; padding-left: 18px; font-size: 14px; }
 .screen .result .explain { margin: 0; font-size: 13px; opacity: .85; }
 .screen .pw.on { outline: 2px solid currentColor; outline-offset: -2px; }

@@ -6,7 +6,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { GameStyle } from "../theme/themes";
 import type { SfxName } from "../audio/sfx";
 import type { PassAndPlayView } from "../settings/settings";
-import { useGame, cardLabel, type Phase, type SetupChoice } from "../game/useGame";
+import { useGame, cardLabel, clockOwner, RESULT_MS, type Phase, type SetupChoice } from "../game/useGame";
 import { FORM_CAP, POWER_UPS, POWER_UP_BY_ID, TRIVIA_HINTS, fergieMs, fmtSeconds, type PowerUpDef } from "../game/powerups";
 import {
   KICKOFF_EVERY, REWARD, destsFor, isPromotion, pieceAt, powerBlocked, powerCost, powerTargets, resolveMove, turnOf, WHO_AM_I_PIECES, ROLE_NAME,
@@ -17,6 +17,7 @@ import { ODDS_NAME } from "../game/handicap";
 import { useMatchStats } from "../game/useMatchStats";
 import type { MatchStats } from "../game/history";
 import { CLUE_MS } from "../game/whoami";
+import { TIMER_MS } from "../game/trivia";
 import type { Color, GameState, Outcome, PowerUpId } from "../game/types";
 
 const GLYPH: Record<string, string> = { k: "♚", q: "♛", r: "♜", b: "♝", n: "♞", p: "♟" };
@@ -104,8 +105,10 @@ export function GameScreen({ style, play, setup, view, paused, onPause, onExit, 
         <span>{game.options.chess960 ? `Chess960 · No. ${game.options.position}` : game.options.trivia ? "Football trivia" : "Plain chess"}</span>
         <span>Move {Math.ceil((game.history.length + 1) / 2)}</span>
       </div>
-      <PlayerBar game={game} color={top} active={active} bubble={g.bubble} />
-      <div className="board" role="grid" aria-label="Chess board">
+      <PlayerBar game={game} color={top} active={active} ticking={clockOwner(game, phase)} bubble={g.bubble} />
+      {/* During a "Who am I?" the board is hidden (and the clocks stop): it's just the footballer. */}
+      {phase.kind === "whoami" && <div className="whoami-stage"><Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} /></div>}
+      <div className="board" role="grid" aria-label="Chess board" hidden={phase.kind === "whoami"}>
         {rows.map((r) => cols.map((c) => {
           const sq = FILES[c] + (r + 1);
           const p = board[r][c];
@@ -133,11 +136,11 @@ export function GameScreen({ style, play, setup, view, paused, onPause, onExit, 
         {style.id === "tactics" && last && <MarkerArrow from={last[0]} to={last[1]} orientation={orientation} color="#fff7a8" id="ah" />}
         {g.overlay.tip && <MarkerArrow from={g.overlay.tip[0]} to={g.overlay.tip[1]} orientation={orientation} color="#ff2d95" id="tip" outline />}
       </div>
-      <PlayerBar game={game} color={bottom} active={active} bubble={g.bubble} />
+      <PlayerBar game={game} color={bottom} active={active} ticking={clockOwner(game, phase)} bubble={g.bubble} />
 
       <div className="controls">
-        <Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} />
-        {game.options.trivia && phase.kind !== "over" && phase.kind !== "shootout" && (
+        {phase.kind !== "whoami" && <Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} />}
+        {game.options.trivia && phase.kind !== "over" && phase.kind !== "shootout" && phase.kind !== "whoami" && (
           <PowerBar game={game} phase={phase} color={local ? active : humans[0] ?? turn} enabled={humanToAct && phase.kind === "move"} onPick={g.choosePower} play={play} />
         )}
         {style.id === "broadcast" ? <div className="ticker"><b>LIVE</b> · {selNote ?? g.note}</div> : <p className="hint" aria-live="polite">{selNote ?? g.note}</p>}
@@ -185,7 +188,7 @@ function handicapTag(game: GameState, color: Color): string {
   return h.odds !== "none" ? `Gave ${h.odds === "p" ? "a pawn" : `a ${ODDS_NAME[h.odds].toLowerCase()}`}` : "";
 }
 
-function PlayerBar({ game, color, active, bubble }: { game: GameState; color: Color; active: Color; bubble: { color: Color; text: string } | null }): ReactNode {
+function PlayerBar({ game, color, active, ticking, bubble }: { game: GameState; color: Color; active: Color; ticking: Color | null; bubble: { color: Color; text: string } | null }): ReactNode {
   const p = game.players[color];
   const status = [
     p.sentOff ? "Sent off" : "",
@@ -203,7 +206,7 @@ function PlayerBar({ game, color, active, bubble }: { game: GameState; color: Co
       {bubble?.color === color && <span className="bubble" role="status">{bubble.text}</span>}
       <span className="form">
         {game.options.trivia && <>Form {p.form}</>}
-        {p.clockMs !== null && <StadiumClock ms={p.clockMs} running={active === color && !game.outcome} />}
+        {p.clockMs !== null && <StadiumClock ms={p.clockMs} running={ticking === color && !game.outcome} />}
       </span>
     </div>
   );
@@ -270,29 +273,7 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
   }
 
   if (phase.kind === "whoami") {
-    const name = game.players[phase.color].name;
-    const piece = WHO_AM_I_PIECES[phase.clues - 1];
-    const next = phase.clues < 5 ? Math.max(0, Math.ceil((CLUE_MS - (g.now - phase.clueAt)) / 1000)) : Math.max(0, Math.ceil((CLUE_MS - (g.now - phase.clueAt)) / 1000));
-    return (
-      <div className="quiz whoami">
-        <div className="meta"><span>Promotion · Who am I?{phase.bonus ? ` · ${clubShort(game.players[phase.color].club)}` : ""}</span><span>{name} · guess now for a {ROLE_NAME[piece]}</span></div>
-        <ol className="clues">
-          {phase.set.clues.slice(0, phase.clues).map((c, i) => <li key={i}>{c}</li>)}
-        </ol>
-        <div className="timer live" style={timerStyle(phase.clueAt, CLUE_MS)} />
-        <div className="answers">
-          {phase.set.options.map((o, k) => (
-            <button key={k} type="button" disabled={!humanToAct} onClick={() => g.guess(k)}><b>{"ABCD"[k]}</b><span>{o}</span></button>
-          ))}
-        </div>
-        {humanToAct && (
-          <button type="button" className="cta" onClick={g.nextClue}>
-            {phase.clues < 5 ? `Next clue (${next}s): drops to a ${ROLE_NAME[WHO_AM_I_PIECES[phase.clues]]}` : `Last clue: ${next}s to guess`}
-          </button>
-        )}
-        <small className="fine">One guess only. Wrong or out of time: a knight, and your opponent gets +2 Form.</small>
-      </div>
-    );
+    return <WhoAmIPanel g={g} phase={phase} game={game} humanToAct={humanToAct} timerStyle={timerStyle} />;
   }
 
   if (phase.kind === "result") {
@@ -306,6 +287,7 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
         </div>
         <ul className="lines">{phase.lines.map((l) => <li key={l}>{l}</li>)}</ul>
         {phase.explanation && <p className="explain">{phase.explanation}</p>}
+        <div className="timer live" style={timerStyle(phase.shownAt, RESULT_MS)} />
         {!phase.auto && <button type="button" className="cta" onClick={g.continueOn}>Play on</button>}
       </div>
     );
@@ -319,7 +301,7 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
       <div className="quiz">
         <div className="meta"><span>Penalty Shootout · {taker.name} to take</span><span>{game.players.white.name} {tally("white") || "–"} | {game.players.black.name} {tally("black") || "–"}</span></div>
         <p className="q">{phase.q.question}</p>
-        <div className="timer live" style={timerStyle(phase.startedAt, 15000)} />
+        <div className="timer live" style={timerStyle(phase.startedAt, TIMER_MS.normal)} />
         <div className="answers">
           {phase.q.options.map((o, k) => (
             <button key={k} type="button" disabled={!takerHuman || phase.choice !== null} className={phase.choice === null ? "" : k === phase.q.answer ? "right" : k === phase.choice ? "wrong" : "dim"} onClick={() => g.kick(k)}>
@@ -360,6 +342,45 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
       </div>
       <p className="q small">{phase.kind === "target" ? `Pick a target to finish ${POWER_UP_BY_ID[phase.power].name}.` : mover.kind === "bot" ? `${mover.name} is thinking…` : game.step === "extra-time" ? "Second move: no captures or checks. You can skip it if it would hurt you." : game.options.trivia ? `Questions come on captures, every ${KICKOFF_EVERY}th quiet move and on Hot Spots (circled squares).` : "Plain chess: no trivia this game."}</p>
       {game.step === "extra-time" && humanToAct && phase.kind === "move" && <button type="button" className="cta" onClick={g.skipExtra}>Skip the second move</button>}
+    </div>
+  );
+}
+
+function WhoAmIPanel({ g, phase, game, humanToAct, timerStyle }: {
+  g: G; phase: Extract<Phase, { kind: "whoami" }>; game: GameState; humanToAct: boolean; timerStyle: (startedAt: number, limit: number) => React.CSSProperties;
+}): ReactNode {
+  const [text, setText] = useState("");
+  const input = useRef<HTMLInputElement>(null);
+  useEffect(() => { if (humanToAct) input.current?.focus(); }, [humanToAct]);
+  const name = game.players[phase.color].name;
+  const piece = WHO_AM_I_PIECES[phase.clues - 1];
+  const next = Math.max(0, Math.ceil((CLUE_MS - (g.now - phase.clueAt)) / 1000));
+  const submit = (e: React.FormEvent) => { e.preventDefault(); if (text.trim()) g.guess(text); };
+  return (
+    <div className="quiz whoami">
+      <div className="meta"><span>Promotion · Who am I?{phase.bonus ? ` · ${clubShort(game.players[phase.color].club)}` : ""}</span><span>{name} · guess now for a {ROLE_NAME[piece]}</span></div>
+      <p className="fine">The clock is paused and the board is hidden. Type the footballer's name.</p>
+      <ol className="clues">
+        {phase.set.clues.slice(0, phase.clues).map((c, i) => <li key={i}>{c}</li>)}
+      </ol>
+      <div className="timer live" style={timerStyle(phase.clueAt, CLUE_MS)} />
+      {humanToAct ? (
+        <form className="guess" onSubmit={submit}>
+          <input
+            ref={input} type="text" value={text} onChange={(e) => setText(e.target.value)} placeholder="Who am I?"
+            aria-label="Your answer" autoComplete="off" autoCorrect="off" autoCapitalize="words" spellCheck={false} enterKeyHint="go"
+          />
+          <button type="submit" className="go" disabled={!text.trim()}>Guess</button>
+        </form>
+      ) : (
+        <p className="q small">{name} is thinking…</p>
+      )}
+      {humanToAct && (
+        <button type="button" className="cta" onClick={g.nextClue}>
+          {phase.clues < 5 ? `Next clue (${next}s): drops to a ${ROLE_NAME[WHO_AM_I_PIECES[phase.clues]]}` : `Last clue: ${next}s to guess`}
+        </button>
+      )}
+      <small className="fine">One guess. Capitals and accents don't matter, the surname is enough, and a small typo is fine. Wrong or out of time: a knight, and your opponent gets +2 Form.</small>
     </div>
   );
 }
