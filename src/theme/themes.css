@@ -33,7 +33,12 @@
 .pw { display: grid; justify-items: center; gap: 3px; padding: 8px 4px; text-align: center; font-size: 11px; line-height: 1.15; }
 .pw svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .pw .cost { font-variant-numeric: tabular-nums; font-size: 10px; opacity: .8; }
-.pw.locked { opacity: .42; }
+.pw.faded { opacity: .35; filter: grayscale(.6); }
+.pw.locked { cursor: default; }
+.pw .stars { font-size: 9px; letter-spacing: 1px; line-height: 1; color: #e0a800; }
+.pw .stars .off { opacity: .25; }
+.confirm-head .stars { font-size: 12px; letter-spacing: 1px; color: #e0a800; }
+.confirm-head .stars .off { opacity: .25; }
 
 /* ---------- 1 Floodlit ---------- */
 .style-floodlit { background: radial-gradient(120% 60% at 50% -10%, #3a4f86 0%, #101a38 45%, #070c1d 100%); color: #e9eefc; font-family: "Saira", sans-serif;
@@ -174,7 +179,7 @@
 .style-broadcast .quiz button b { color: #00e0c6; }
 .style-broadcast .timer { background: rgba(255,255,255,.1); color: #ff4b55; height: 4px; }
 .style-broadcast .pw { background: rgba(255,255,255,.07); border-bottom: 3px solid #00e0c6; font-family: "Barlow Condensed", sans-serif; font-weight: 600; font-size: 13px; text-transform: uppercase; }
-.style-broadcast .pw.locked { border-color: #555; }
+.style-broadcast .pw.faded { border-color: #555; }
 .style-broadcast .ticker { margin: 0 -14px -14px; background: #eafcff; color: #04161a; font-family: "Barlow Condensed", sans-serif; font-weight: 600; font-size: 13px; padding: 5px 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .style-broadcast .ticker b { color: #ff4b55; font-style: italic; }
 
@@ -244,7 +249,7 @@
 .style-pundit .pw { border-right: 1px solid #0e0e0d; font-weight: 600; }
 .style-pundit .pw:last-child { border-right: 0; }
 .style-pundit .pw .cost { font-family: "IBM Plex Mono", monospace; color: #ff5a1f; opacity: 1; }
-.style-pundit .pw.locked .cost { color: inherit; }
+.style-pundit .pw.faded .cost { color: inherit; }
 
 @media (prefers-reduced-motion: no-preference) {
   .timer::after { animation: drain 14s linear infinite; }

@@ -8,9 +8,13 @@ import type { SfxName } from "../audio/sfx";
 import type { PassAndPlayView } from "../settings/settings";
 import { useGame, cardLabel, type Phase, type SetupChoice } from "../game/useGame";
 import { FORM_CAP, POWER_UPS, POWER_UP_BY_ID, TRIVIA_HINTS, fergieMs, fmtSeconds, type PowerUpDef } from "../game/powerups";
-import { destsFor, isPromotion, pieceAt, powerBlocked, powerCost, powerTargets, turnOf, WHO_AM_I_PIECES, ROLE_NAME } from "../game/rules";
+import {
+  KICKOFF_EVERY, REWARD, destsFor, isPromotion, pieceAt, powerBlocked, powerCost, powerTargets, resolveMove, turnOf, WHO_AM_I_PIECES, ROLE_NAME,
+} from "../game/rules";
 import { clubShort } from "../game/clubs";
 import { PowerIcon } from "./PowerIcons";
+import { useMatchStats } from "../game/useMatchStats";
+import type { MatchStats } from "../game/history";
 import { CLUE_MS } from "../game/whoami";
 import type { Color, GameState, Outcome, PowerUpId } from "../game/types";
 
@@ -25,12 +29,13 @@ interface Props {
   paused: boolean;
   onPause: () => void;
   onExit: () => void;
-  onFinish: (game: GameState) => void;
+  onFinish: (game: GameState, stats: MatchStats) => void;
 }
 
 export function GameScreen({ style, play, setup, view, paused, onPause, onExit, onFinish }: Props) {
   const g = useGame(setup, play, paused);
   const { game, phase } = g;
+  const stats = useMatchStats(game, phase);
   const [sel, setSel] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<"resign" | "draw" | null>(null);
 
@@ -38,11 +43,11 @@ export function GameScreen({ style, play, setup, view, paused, onPause, onExit, 
   const active: Color = "color" in phase ? phase.color : phase.kind === "shootout" ? phase.taker : turn;
   const humans = (["white", "black"] as Color[]).filter((c) => game.players[c].kind === "human");
   const local = game.options.mode === "local";
-  // "Flip the screen" turns the whole card round for Black, so the board inside is drawn from Black's side:
+  // "Flat on the table" turns the whole card round for Black, so the board inside is drawn from Black's side:
   // after the 180° turn the pieces stay where they sit on the table and only the screen faces the other way.
-  const orientation: Color = local ? (view === "hand-over" || view === "flip" ? active : "white") : humans[0] ?? "white";
-  const turned = local && view === "face-to-face" && active === "black";
-  /** "Flip the screen": the whole game turns 180 degrees for Black, so the board and every card face them. */
+  // "Pass the phone" just draws the board from the side of whoever is up.
+  const orientation: Color = local ? active : humans[0] ?? "white";
+  /** "Flat on the table": the whole game turns 180 degrees for Black, so the board and every card face them. */
   const flipAll = local && view === "flip" && active === "black";
   const humanToAct = game.players[active].kind === "human";
   // When the whole screen turns round, mirror the scroll position so the player now facing it
@@ -66,7 +71,9 @@ export function GameScreen({ style, play, setup, view, paused, onPause, onExit, 
     if (phase.kind !== "move" || !humanToAct) return;
     const piece = pieceAt(game.fen, sq);
     if (sel && dests.get(sel)?.includes(sq)) {
-      const uci = sel + sq + (isPromotion(game, sel, sq) ? "q" : "");
+      // The "Who am I?" decides the real piece, so any promotion the rules allow will do
+      // (during Extra Time or a Free Kick a queen might give check where a knight doesn't).
+      const uci = isPromotion(game, sel, sq) ? (["q", "r", "b", "n"].map((r) => sel + sq + r).find((u) => resolveMove(game, u)) ?? sel + sq + "q") : sel + sq;
       setSel(null);
       g.move(uci);
       return;
@@ -81,7 +88,7 @@ export function GameScreen({ style, play, setup, view, paused, onPause, onExit, 
   }
   const [selNote, setSelNote] = useState<string | null>(null);
   useEffect(() => { setSelNote(null); }, [game, phase]);
-  useEffect(() => { if (game.outcome) onFinish(game); }, [game.outcome]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (game.outcome) onFinish(game, stats.current); }, [game.outcome]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const rows = orientation === "white" ? [7, 6, 5, 4, 3, 2, 1, 0] : [0, 1, 2, 3, 4, 5, 6, 7];
   const cols = orientation === "white" ? [0, 1, 2, 3, 4, 5, 6, 7] : [7, 6, 5, 4, 3, 2, 1, 0];
@@ -91,12 +98,12 @@ export function GameScreen({ style, play, setup, view, paused, onPause, onExit, 
   const bottom: Color = orientation;
 
   return (
-    <div className={`screen style-${style.id}${turned ? " f2f-black" : ""}${local && view === "flip" ? " flip-mode" : ""}${flipAll ? " flip-all" : ""}`}>
+    <div className={`screen style-${style.id}${local && view === "flip" ? " flip-mode" : ""}${flipAll ? " flip-all" : ""}`}>
       <div className="strip">
-        <span>{game.options.chess960 ? `Chess960 · No. ${game.options.position}` : game.options.trivia ? "Chess Football Trivia" : "Plain chess"}</span>
+        <span>{game.options.chess960 ? `Chess960 · No. ${game.options.position}` : game.options.trivia ? "Football trivia" : "Plain chess"}</span>
         <span>Move {Math.ceil((game.history.length + 1) / 2)}</span>
       </div>
-      <PlayerBar game={game} color={top} active={active} bubble={g.bubble} flipped={local && view === "face-to-face" && top === "black"} />
+      <PlayerBar game={game} color={top} active={active} bubble={g.bubble} />
       <div className="board" role="grid" aria-label="Chess board">
         {rows.map((r) => cols.map((c) => {
           const sq = FILES[c] + (r + 1);
@@ -106,6 +113,7 @@ export function GameScreen({ style, play, setup, view, paused, onPause, onExit, 
             last && (last[0] === sq || last[1] === sq) ? "last" : "",
             sel === sq ? "sel" : "",
             game.hotSpots.includes(sq) ? "hot" : "",
+            game.hotSpots.includes(sq) && game.players[turn].hotSpotRest > 0 ? "resting" : "",
             game.frozen.some((f) => f.square === sq) ? "frozen" : "",
             targets.has(sq) ? "target" : "",
             phase.kind === "target" && phase.first === sq ? "sel" : "",
@@ -126,7 +134,7 @@ export function GameScreen({ style, play, setup, view, paused, onPause, onExit, 
       </div>
       <PlayerBar game={game} color={bottom} active={active} bubble={g.bubble} />
 
-      <div className={`controls${turned ? " turned" : ""}`}>
+      <div className="controls">
         <Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} />
         {game.options.trivia && phase.kind !== "over" && phase.kind !== "shootout" && (
           <PowerBar game={game} phase={phase} color={local ? active : humans[0] ?? turn} enabled={humanToAct && phase.kind === "move"} onPick={g.choosePower} play={play} />
@@ -168,11 +176,16 @@ function boardArray(fen: string): Array<Array<{ role: string; color: Color } | n
   return out;
 }
 
-function PlayerBar({ game, color, active, bubble, flipped }: { game: GameState; color: Color; active: Color; bubble: { color: Color; text: string } | null; flipped?: boolean }): ReactNode {
+function PlayerBar({ game, color, active, bubble }: { game: GameState; color: Color; active: Color; bubble: { color: Color; text: string } | null }): ReactNode {
   const p = game.players[color];
-  const status = [p.sentOff ? "Sent off" : "", p.doubleNextPower ? "Red card" : "", p.goldenBoot ? "Golden Boot" : "", p.wrongStreak >= 2 ? "Booked" : ""].filter(Boolean);
+  const status = [
+    p.sentOff ? "Sent off" : "",
+    p.doubleNextPower ? "Red card: next power-up costs double" : p.wrongStreak >= 2 ? "Yellow card" : "",
+    p.goldenBootMoves > 0 ? `Golden Boot (${p.goldenBootMoves})` : "",
+    p.hotSpotRest > 0 ? `Hot Spots in ${p.hotSpotRest}` : "",
+  ].filter(Boolean);
   return (
-    <div className={`player${active === color ? " up" : ""}${flipped ? " turned" : ""}`}>
+    <div className={`player${active === color ? " up" : ""}`}>
       <div className="who">
         <span className="badge">{p.name[0]?.toUpperCase()}</span>
         <span>{p.name} <span className="tag">{color === "white" ? "White" : "Black"} · {clubShort(p.club)}{p.kind === "bot" ? " · Bot" : ""}{status.length ? ` · ${status.join(", ")}` : ""}</span></span>
@@ -203,13 +216,13 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
             <button key={i} type="button" className={`qcard d-${c.difficulty}`} disabled={!humanToAct} onClick={() => g.pickCard(i, false)}>
               <b>{c.topic}</b>
               <span>{cardLabel(c).split(" · ")[1]}</span>
-              <small>+{({ easy: 1, medium: 2, hard: 4 } as const)[c.difficulty] * (phase.bonus ? 2 : 1)} Form · {({ easy: "no risk", medium: "wrong: opponent +2", hard: "wrong: piece booked" } as const)[c.difficulty]}</small>
+              <small>+{REWARD[c.difficulty] * (phase.bonus ? 2 : 1)} Form · {({ easy: "no risk", medium: "wrong: opponent +2", hard: "wrong: piece booked" } as const)[c.difficulty]}</small>
             </button>
           ))}
         </div>
         {humanToAct && (
-          <button type="button" className="worldie" onClick={() => g.pickCard(phase.cards.findIndex((c) => c.difficulty === "hard"), true)}>
-            Go for a Puskás: turn the Screamer into the goal of the season. +{6 * (phase.bonus ? 2 : 1)} Form, 8 seconds, no hints. Wrong and you're sent off
+          <button type="button" className="cta" onClick={() => g.pickCard(phase.cards.findIndex((c) => c.difficulty === "hard"), true)}>
+            Go for a Puskás: turn the Screamer into the goal of the season. +{REWARD.puskas * (phase.bonus ? 2 : 1)} Form, 8 seconds, no hints. Wrong and you're sent off
           </button>
         )}
       </div>
@@ -233,7 +246,7 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
             </button>
           ))}
         </div>
-        {humanToAct && !phase.worldie && (
+        {humanToAct && !phase.puskas && (
           <div className="thints">
             {TRIVIA_HINTS.map((h) => (
               <button key={h.id} type="button" disabled={form < h.cost} onClick={() => g.useHint(h.id)}>
@@ -263,7 +276,7 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
           ))}
         </div>
         {humanToAct && (
-          <button type="button" className="worldie" onClick={g.nextClue}>
+          <button type="button" className="cta" onClick={g.nextClue}>
             {phase.clues < 5 ? `Next clue (${next}s): drops to a ${ROLE_NAME[WHO_AM_I_PIECES[phase.clues]]}` : `Last clue: ${next}s to guess`}
           </button>
         )}
@@ -283,7 +296,7 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
         </div>
         <ul className="lines">{phase.lines.map((l) => <li key={l}>{l}</li>)}</ul>
         {phase.explanation && <p className="explain">{phase.explanation}</p>}
-        {!phase.auto && <button type="button" className="worldie" onClick={g.continueOn}>Play on</button>}
+        {!phase.auto && <button type="button" className="cta" onClick={g.continueOn}>Play on</button>}
       </div>
     );
   }
@@ -313,7 +326,7 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
       <div className="quiz result">
         <div className="meta"><span>Full time</span></div>
         <p className="q">{outcomeText(game, game.outcome)}</p>
-        <button type="button" className="worldie" onClick={onExit}>New game</button>
+        <button type="button" className="cta" onClick={onExit}>New game</button>
       </div>
     );
   }
@@ -335,8 +348,8 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
         <span>{game.step === "free-kick" ? "Free Kick" : game.step === "extra-time" ? "Extra Time" : phase.kind === "target" ? POWER_UP_BY_ID[phase.power].name : "Open play"}</span>
         <span>{mover.name} to move</span>
       </div>
-      <p className="q small">{phase.kind === "target" ? `Pick a target to finish ${POWER_UP_BY_ID[phase.power].name}.` : mover.kind === "bot" ? `${mover.name} is thinking…` : game.step === "extra-time" ? "Second move: no captures or checks. You can skip it if it would hurt you." : game.options.trivia ? "Questions come on captures, every 3rd move and on Hot Spots (circled squares)." : "Plain chess: no trivia this game."}</p>
-      {game.step === "extra-time" && humanToAct && phase.kind === "move" && <button type="button" className="worldie" onClick={g.skipExtra}>Skip the second move</button>}
+      <p className="q small">{phase.kind === "target" ? `Pick a target to finish ${POWER_UP_BY_ID[phase.power].name}.` : mover.kind === "bot" ? `${mover.name} is thinking…` : game.step === "extra-time" ? "Second move: no captures or checks. You can skip it if it would hurt you." : game.options.trivia ? `Questions come on captures, every ${KICKOFF_EVERY}th quiet move and on Hot Spots (circled squares).` : "Plain chess: no trivia this game."}</p>
+      {game.step === "extra-time" && humanToAct && phase.kind === "move" && <button type="button" className="cta" onClick={g.skipExtra}>Skip the second move</button>}
     </div>
   );
 }
@@ -384,7 +397,7 @@ function PowerBar({ game, phase, color, enabled, onPick, play }: { game: GameSta
       </div>
       {def && (
         <div className="confirm" role="dialog" aria-label={`Use ${def.name}?`}>
-          <div className="confirm-head"><PowerIcon id={def.id} className="pw-icon big" /><b>{def.name}</b><span className="cost">{pendingCost} Form</span></div>
+          <div className="confirm-head"><PowerIcon id={def.id} className="pw-icon big" /><b>{def.name}</b><Stars n={def.stars} /><span className="cost">{pendingCost} Form</span></div>
           <p>{powerEffect(game, def)}{def.rule ? `. ${def.rule}.` : "."}</p>
           {pendingBlocked ? <p className="why">{pendingBlocked}</p> : <p className="fine">Once you confirm it can't be cancelled{def.target !== "none" ? ": you'll have to pick a target" : ""}.</p>}
           <div className="row-btns">
@@ -399,21 +412,33 @@ function PowerBar({ game, phase, color, enabled, onPick, play }: { game: GameSta
           const cd = me.cooldowns[p.id];
           const cost = powerCost(game, color, p.id);
           const on = (phase.kind === "target" || phase.kind === "thinking") && phase.power === p.id;
+          // Faded: you can't afford it or it's cooling down. Other reasons show when you tap it.
+          const faded = cd > 0 || me.form < cost;
           const tap = () => {
             if (!enabled) return;
             play("select");
             setPending((cur) => (cur === p.id ? null : p.id));
           };
           return (
-            <button key={p.id} type="button" title={`${powerEffect(game, p)}${p.rule ? `. ${p.rule}` : ""}`} className={`pw${blocked || !enabled ? " locked" : ""}${on || pending === p.id ? " on" : ""}${me.form >= cost ? " afford" : ""}`} onClick={tap}>
+            <button key={p.id} type="button" title={`${powerEffect(game, p)}${p.rule ? `. ${p.rule}` : ""}`} className={`pw${faded ? " faded" : ""}${blocked || !enabled ? " locked" : ""}${on || pending === p.id ? " on" : ""}${me.form >= cost ? " afford" : ""}`} onClick={tap}>
               <PowerIcon id={p.id} className="pw-icon" />
               <span>{p.name}</span>
+              <Stars n={p.stars} />
               <span className="cost">{cost} Form{cd > 0 ? ` · ${cd} to go` : ""}</span>
             </button>
           );
         })}
       </div>
     </div>
+  );
+}
+
+/** Power-up value, 1 to 5 stars: roughly how much it swings the board. */
+function Stars({ n }: { n: number }) {
+  return (
+    <span className="stars" role="img" aria-label={`Value ${n} out of 5`} title={`Value: ${n} out of 5 stars`}>
+      {"★".repeat(n)}<span className="off">{"★".repeat(5 - n)}</span>
+    </span>
   );
 }
 
@@ -428,10 +453,11 @@ function StadiumClock({ ms, running }: { ms: number; running: boolean }) {
   );
 }
 
-function MarkerArrow({ from, to, orientation, color, id, outline }: { from: string; to: string; orientation: Color; color: string; id: string; outline?: boolean }) {
+/** A marker-pen arrow between two squares. `n` is the board size (8, or 4 for the Settings preview). */
+export function MarkerArrow({ from, to, orientation, color, id, outline, n = 8 }: { from: string; to: string; orientation: Color; color: string; id: string; outline?: boolean; n?: number }) {
   const xy = (sq: string) => {
     const f = FILES.indexOf(sq[0]), r = Number(sq[1]) - 1;
-    return orientation === "white" ? [f + 0.5, 7 - r + 0.5] : [7 - f + 0.5, r + 0.5];
+    return orientation === "white" ? [f + 0.5, n - 1 - r + 0.5] : [n - 1 - f + 0.5, r + 0.5];
   };
   const [x1, y1] = xy(from);
   const [x2, y2] = xy(to);
@@ -439,7 +465,7 @@ function MarkerArrow({ from, to, orientation, color, id, outline }: { from: stri
   const ex = x2 - ((x2 - x1) / len) * 0.3, ey = y2 - ((y2 - y1) / len) * 0.3;
   const mx = (x1 + ex) / 2 + ((ey - y1) / len) * 0.4, my = (y1 + ey) / 2 - ((ex - x1) / len) * 0.4;
   return (
-    <svg className="arrow" viewBox="0 0 8 8" aria-hidden="true">
+    <svg className="arrow" viewBox={`0 0 ${n} ${n}`} aria-hidden="true">
       <defs>
         <marker id={id} viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto">
           <path d="M0 0L10 5L0 10z" fill={color} stroke={outline ? "#fff" : "none"} strokeWidth="1.2" />

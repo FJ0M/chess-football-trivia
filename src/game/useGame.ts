@@ -29,7 +29,7 @@ export type Phase =
   | { kind: "thinking"; power: PowerUpId }
   | { kind: "cards"; color: Color; cards: Card[]; bonus: boolean; landed: string | null; label: string }
   | {
-      kind: "question"; color: Color; q: Question; card: Card; worldie: boolean; bonus: boolean; landed: string | null;
+      kind: "question"; color: Color; q: Question; card: Card; puskas: boolean; bonus: boolean; landed: string | null;
       startedAt: number; limitMs: number; hidden: number[]; crowd?: number[]; friend?: number; label: string;
     }
   | { kind: "whoami"; color: Color; set: WhoAmI; square: string; clues: number; clueAt: number; bonus: boolean }
@@ -73,12 +73,12 @@ function loadData(players: SetupChoice["players"]): Promise<Data> {
 }
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
-/** Difficulty names, as goals: Tap-in, Highlight, Screamer, and the Puskás (the Worldie upgrade of a Screamer). */
+/** Difficulty names, as goals: Tap-in, Highlight, Screamer, and the Puskás (the top-tier upgrade of a Screamer). */
 export const DIFF_LABEL = { easy: "Tap-in", medium: "Highlight", hard: "Screamer" } as const;
 export const TOP_TIER = "Puskás";
 
-export function cardLabel(c: Card, worldie = false): string {
-  return `${c.topic} · ${worldie ? TOP_TIER : DIFF_LABEL[c.difficulty]}`;
+export function cardLabel(c: Card, puskas = false): string {
+  return `${c.topic} · ${puskas ? TOP_TIER : DIFF_LABEL[c.difficulty]}`;
 }
 
 export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused = false) {
@@ -198,7 +198,9 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     if (t.kind === "promotion") {
       play("kickoff");
       setNote(`${name} reaches the end: "Who am I?" decides the new piece`);
-      go({ kind: "whoami", color: mover, set: data[mover].whoami.draw(r.state.players[mover].club, t.bonus), square: t.square, clues: 1, clueAt: Date.now(), bonus: t.bonus });
+      const club = r.state.players[mover].club;
+      const set = data[mover].whoami.draw(club, t.bonus);
+      go({ kind: "whoami", color: mover, set, square: t.square, clues: 1, clueAt: Date.now(), bonus: !!club && set.club === club });
       return;
     }
     const bonus = t.kind === "hot-spot";
@@ -307,15 +309,15 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
   }, [applyPower, go, play]);
 
   // ------------------------------------------------------------ questions
-  const pickCard = useCallback((index: number, worldie: boolean) => {
+  const pickCard = useCallback((index: number, puskas: boolean) => {
     const p = phaseRef.current;
     if (p.kind !== "cards" || !data) return;
     const card = p.cards[index];
-    const isWorldie = worldie && card.difficulty === "hard";
+    const isPuskas = puskas && card.difficulty === "hard";
     play("select");
     go({
-      kind: "question", color: p.color, q: data[p.color].bank.draw(card), card, worldie: isWorldie, bonus: p.bonus, landed: p.landed,
-      startedAt: Date.now(), limitMs: isWorldie ? TIMER_MS.worldie : TIMER_MS.normal, hidden: [], label: cardLabel(card, isWorldie),
+      kind: "question", color: p.color, q: data[p.color].bank.draw(card), card, puskas: isPuskas, bonus: p.bonus, landed: p.landed,
+      startedAt: Date.now(), limitMs: isPuskas ? TIMER_MS.puskas : TIMER_MS.normal, hidden: [], label: cardLabel(card, isPuskas),
     });
   }, [data, go, play]);
 
@@ -325,7 +327,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     const ms = Date.now() - p.startedAt;
     const correct = choice === p.q.answer && ms <= p.limitMs + 250;
     const out = applyAnswer(gameRef.current, {
-      color: p.color, difficulty: p.card.difficulty, worldie: p.worldie, bonus: p.bonus, correct, ms, landed: p.landed,
+      color: p.color, difficulty: p.card.difficulty, puskas: p.puskas, bonus: p.bonus, correct, ms, landed: p.landed,
     });
     setGame(out.state);
     if (correct) { play("correct"); setTimeout(() => play("form"), 300); react(p.color, "ownRight"); }
@@ -340,7 +342,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
 
   const useHint = useCallback((id: TriviaHintId) => {
     const p = phaseRef.current;
-    if (p.kind !== "question" || p.worldie) return;
+    if (p.kind !== "question" || p.puskas) return;
     const def = TRIVIA_HINTS.find((h) => h.id === id)!;
     const g = gameRef.current;
     if (g.players[p.color].form < def.cost) { play("locked"); setNote(`${def.name} needs ${def.cost} Form`); return; }
@@ -533,10 +535,10 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     } else if (p.kind === "cards") {
       await wait(1100);
       if (!still()) return;
-      const c = await bot.chooseCard({ cards: p.cards, worldieAllowed: true, form: gameRef.current.players[color].form, bonusRound: p.bonus });
-      pickCard(Math.min(2, Math.max(0, c.index)), c.worldie);
+      const c = await bot.chooseCard({ cards: p.cards, puskasAllowed: true, form: gameRef.current.players[color].form, bonusRound: p.bonus });
+      pickCard(Math.min(2, Math.max(0, c.index)), c.puskas);
     } else if (p.kind === "question") {
-      const a = await bot.answer({ question: p.q, worldie: p.worldie, removed: p.hidden });
+      const a = await bot.answer({ question: p.q, puskas: p.puskas, removed: p.hidden });
       await wait(Math.min(a.delayMs, p.limitMs + 100));
       if (!still()) return;
       answer(a.delayMs > p.limitMs ? null : a.choice);
@@ -550,7 +552,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
         play("tick");
       }
       const set = p.set;
-      const a = await bot.answer({ question: { options: set.options, answer: set.answer, difficulty: aim.difficulty, club: set.club }, worldie: aim.worldie });
+      const a = await bot.answer({ question: { options: set.options, answer: set.answer, difficulty: aim.difficulty, club: set.club }, puskas: aim.puskas });
       await wait(Math.min(2500, Math.max(900, a.delayMs / 3)));
       if (!alive.current || phaseRef.current.kind !== "whoami") return;
       guess(a.choice);

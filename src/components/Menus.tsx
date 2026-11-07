@@ -2,22 +2,25 @@
 
 import { useState } from "react";
 import { loadScores, resetScores } from "../game/scores";
+import { clearHistory, loadHistory, resultKind, resultText, type HistoryEntry } from "../game/history";
+import type { Color } from "../game/types";
 
 const LEVEL = { low: "Easy", medium: "Medium", hard: "Hard" } as Record<string, string>;
 const BOT = { ollie: "Ollie", ryan: "Ryan", freddie: "Freddie" } as Record<string, string>;
 
-export function MainMenu({ onPlay, onSettings, onScores, onRules }: { onPlay: (mode: "bot" | "local") => void; onSettings: () => void; onScores: () => void; onRules: () => void }) {
+export function MainMenu({ onPlay, onSettings, onScores, onHistory, onRules }: { onPlay: (mode: "bot" | "local") => void; onSettings: () => void; onScores: () => void; onHistory: () => void; onRules: () => void }) {
   return (
     <nav className="menu" aria-label="Main menu">
       <div className="menu-title">
         <img className="menu-logo" src={`${import.meta.env.BASE_URL}icons/logo.svg`} alt="" width="72" height="72" />
         <span className="kicker">The manager's whiteboard</span>
-        <h1>Chess Football Trivia</h1>
+        <h1>They Think It's Checkmate</h1>
         <p>Play chess, answer football questions, spend your Form on power-ups.</p>
       </div>
       <button type="button" className="menu-btn primary" onClick={() => onPlay("bot")}><b>Play a bot</b><small>Freddie, Ryan or Ollie</small></button>
       <button type="button" className="menu-btn" onClick={() => onPlay("local")}><b>Pass and Play</b><small>Two players, one device</small></button>
       <button type="button" className="menu-btn" onClick={onScores}><b>High scores</b><small>Your record against each bot</small></button>
+      <button type="button" className="menu-btn" onClick={onHistory}><b>Game history</b><small>Every game you've finished on this device</small></button>
       <button type="button" className="menu-btn" onClick={onRules}><b>How to play</b><small>Triggers, Form and power-ups</small></button>
       <button type="button" className="menu-btn" onClick={onSettings}><b>Settings</b><small>Style, sound and music</small></button>
     </nav>
@@ -53,25 +56,84 @@ export function ScoresScreen({ onBack }: { onBack: () => void }) {
   );
 }
 
+const BADGE = { won: "W", lost: "L", drawn: "D", decided: "FT" } as const;
+const pct = (r: number, a: number) => (a ? ` (${Math.round((100 * r) / a)}%)` : "");
+
+function when(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return `${d.toLocaleDateString(undefined, { day: "numeric", month: "short", year: d.getFullYear() === new Date().getFullYear() ? undefined : "numeric" })}, ${d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}`;
+}
+
+function HistoryRow({ e }: { e: HistoryEntry }) {
+  const kind = resultKind(e);
+  const them: Color | undefined = e.you ? (e.you === "white" ? "black" : "white") : undefined;
+  const title = e.you && them ? `vs ${e.names[them]}${e.botLevel ? ` · ${LEVEL[e.botLevel] ?? e.botLevel}` : ""}` : `${e.names.white} v ${e.names.black}`;
+  const facts = [resultText(e), `${e.moves} move${e.moves === 1 ? "" : "s"}`, e.you ? `played ${e.you === "white" ? "White" : "Black"}` : "", e.chess960 ? "Chess960" : ""].filter(Boolean);
+  const tally = (c: Color) => `${e.quiz[c].right}/${e.quiz[c].asked}`;
+  let numbers: string;
+  if (!e.trivia) numbers = "Plain chess, no trivia";
+  else if (e.you) numbers = `Form earned +${e.formEarned[e.you]} · Trivia ${tally(e.you)}${pct(e.quiz[e.you].right, e.quiz[e.you].asked)}`;
+  else numbers = `Form earned ${e.names.white} +${e.formEarned.white}, ${e.names.black} +${e.formEarned.black} · Trivia ${e.names.white} ${tally("white")}, ${e.names.black} ${tally("black")}`;
+  return (
+    <li className={`hist hist-${kind}`}>
+      <span className="hist-badge" aria-hidden="true">{BADGE[kind]}</span>
+      <div className="hist-body">
+        <div className="hist-top"><b>{title}</b><time dateTime={e.at}>{when(e.at)}</time></div>
+        <span>{facts.join(" · ")}</span>
+        <small>{numbers}</small>
+      </div>
+    </li>
+  );
+}
+
+export function HistoryScreen({ onBack }: { onBack: () => void }) {
+  const [list, setList] = useState(loadHistory);
+  const [confirm, setConfirm] = useState(false);
+  const bot = list.filter((e) => e.you);
+  const record = { won: bot.filter((e) => resultKind(e) === "won").length, drawn: bot.filter((e) => resultKind(e) === "drawn").length, lost: bot.filter((e) => resultKind(e) === "lost").length };
+  return (
+    <section className="setup history" aria-labelledby="history-title">
+      <div className="setup-head"><button type="button" className="ghost" onClick={onBack}>Back</button><h1 id="history-title">Game history</h1></div>
+      {list.length ? (
+        <>
+          <p className="muted">{list.length} game{list.length === 1 ? "" : "s"}{bot.length ? ` · vs bots: won ${record.won}, drawn ${record.drawn}, lost ${record.lost}` : ""}</p>
+          <ol className="hist-list">{list.map((e, i) => <HistoryRow key={`${e.at}-${i}`} e={e} />)}</ol>
+        </>
+      ) : <p className="muted">No finished games yet. Play one and it shows up here.</p>}
+      <div className="row-btns">
+        <button type="button" className="ghost" onClick={onBack}>Back</button>
+        {list.length > 0 && (confirm ? (
+          <>
+            <span className="muted">Clear all {list.length}?</span>
+            <button type="button" className="ghost" onClick={() => { clearHistory(); setList([]); setConfirm(false); }}>Yes, clear</button>
+            <button type="button" className="ghost" onClick={() => setConfirm(false)}>No</button>
+          </>
+        ) : <button type="button" className="ghost" onClick={() => setConfirm(true)}>Clear history</button>)}
+      </div>
+    </section>
+  );
+}
+
 export function RulesScreen({ onBack }: { onBack: () => void }) {
   return (
     <section className="setup rules" aria-labelledby="rules-title">
       <h1 id="rules-title">How to play</h1>
       <p>It's chess, and your moves are always free. Some moves bring up a football question for the player who made them:</p>
       <ul>
-        <li><b>Hot Spot</b> (circled square): a Club Bonus Round on your club, double Form.</li>
+        <li><b>Hot Spot</b> (circled square): a Club Bonus Round on your club, double Form. After you claim one, Hot Spots rest for 4 of your moves.</li>
         <li><b>Capture</b>: pick one of three cards.</li>
-        <li><b>Kick-off</b>: every 3rd move with no other question.</li>
+        <li><b>Kick-off</b>: every 4th move with no other question.</li>
       </ul>
       <p>Each card shows a topic and a difficulty. Harder pays more, but costs more if you're wrong:</p>
       <ul>
         <li>Tap-in (easy): +1 Form, no risk.</li>
         <li>Highlight (medium): +2 Form. Wrong and your opponent gets +2.</li>
-        <li>Screamer (hard): +4 Form. Wrong and the piece you moved is booked (frozen) next turn.</li>
-        <li>Puskás (a Screamer you upgrade): +6 Form in 8 seconds, no hints. Wrong and you're sent off: you miss a turn and your opponent takes a Free Kick.</li>
+        <li>Screamer (hard): +3 Form. Wrong and the piece you moved is booked (frozen) next turn.</li>
+        <li>Puskás (a Screamer you upgrade): +5 Form in 8 seconds, no hints. Wrong and you're sent off: you miss a turn and your opponent takes a Free Kick.</li>
       </ul>
-      <p>Answer within 5 seconds for +1, get three in a row for a hat-trick (+3). Form is capped at 12.</p>
-      <p><b>Power-ups</b> cost Form, one per turn before you move. Each has a cooldown and starts the game locked. <b>Hints</b> during a question: 50:50, Ask the Crowd, Phone a friend.</p>
+      <p>Answer a Screamer or Puskás within 5 seconds for +1, and get three in a row for a hat-trick (+2). If you're behind on material, every right answer earns +1 more. Form is capped at 12.</p>
+      <p><b>Power-ups</b> cost Form, one per turn before you move. Each has a cooldown and starts the game locked, and its stars show roughly how much it can swing the board. <b>Hints</b> during a question: 50:50, Ask the Crowd, Phone a friend.</p>
       <p><b>Promotion</b> is a "Who am I?": five clues about a footballer, one guess. Right on clue 1 earns a queen, clue 2 a rook, clue 3 a bishop, later a knight. Wrong: a knight, and your opponent gets +2 Form.</p>
       <p>Checkmate wins. Any draw goes to a Penalty Shootout of five questions each.</p>
       <button type="button" className="ghost" onClick={onBack}>Back</button>

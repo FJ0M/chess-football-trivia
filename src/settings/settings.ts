@@ -9,14 +9,16 @@ export interface Settings {
   musicVolume: number;
   /** "match" plays the track that goes with the chosen style. */
   musicTrack: "match" | MusicTrackId;
-  /** Pass and Play: turn the whole screen to face whoever is up (device flat on the table), flip just the board (hand the device over), keep the board fixed and turn the controls, or none. */
+  /** Pass and Play: "flip" = Flat on the table (the whole screen turns to face whoever is up), "hand-over" = Pass the phone (only the board flips). */
   passAndPlayView: PassAndPlayView;
 }
 
-export type PassAndPlayView = "flip" | "hand-over" | "face-to-face" | "off";
-const VIEWS: PassAndPlayView[] = ["flip", "hand-over", "face-to-face", "off"];
-/** Saves from before "flip" existed had "hand-over" as the default; they move to the new default once. */
+export type PassAndPlayView = "flip" | "hand-over";
+export const VIEWS: PassAndPlayView[] = ["flip", "hand-over"];
+/** Saves from before "flip" existed had "hand-over" as the default; they move to the new default once (version 1 to 2). */
 const VIEW_VERSION = 2;
+/** The two views removed in playtest round 3 map to the closest one left. */
+const RETIRED_VIEWS = new Map<unknown, PassAndPlayView>([["face-to-face", "flip"], ["off", "hand-over"]]);
 
 export const DEFAULT_SETTINGS: Settings = {
   style: DEFAULT_STYLE,
@@ -46,7 +48,8 @@ export function sanitize(raw: unknown): Settings {
     musicOn: typeof r.musicOn === "boolean" ? r.musicOn : d.musicOn,
     musicVolume: clamp01(r.musicVolume, d.musicVolume),
     musicTrack: track,
-    passAndPlayView: VIEWS.includes(r.passAndPlayView as PassAndPlayView) ? (r.passAndPlayView as PassAndPlayView) : d.passAndPlayView,
+    passAndPlayView: VIEWS.includes(r.passAndPlayView as PassAndPlayView) ? (r.passAndPlayView as PassAndPlayView)
+      : RETIRED_VIEWS.get(r.passAndPlayView) ?? d.passAndPlayView,
   };
 }
 
@@ -54,7 +57,9 @@ export function loadSettings(storage: Pick<Storage, "getItem"> | undefined = saf
   try {
     const text = storage?.getItem(KEY);
     const raw = text ? JSON.parse(text) : {};
-    if (raw && typeof raw === "object" && raw.viewVersion !== VIEW_VERSION && raw.passAndPlayView === "hand-over") raw.passAndPlayView = "flip";
+    if (raw && typeof raw === "object") {
+      if (raw.viewVersion !== VIEW_VERSION && raw.passAndPlayView === "hand-over") raw.passAndPlayView = "flip";
+    }
     return sanitize(raw);
   } catch {
     return { ...DEFAULT_SETTINGS };

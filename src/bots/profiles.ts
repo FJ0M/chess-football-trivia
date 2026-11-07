@@ -21,12 +21,12 @@ const trivia = (
   easy: number,
   medium: number,
   hard: number,
-  worldie: number,
+  puskas: number,
   ownClubAccuracy: number,
   answerMs: [number, number],
   cardWeights: TriviaSkill["cardWeights"],
-  worldieRate: number,
-): TriviaSkill => ({ accuracy: { easy, medium, hard, worldie }, ownClubAccuracy, answerMs, cardWeights, worldieRate });
+  puskasRate: number,
+): TriviaSkill => ({ accuracy: { easy, medium, hard, puskas }, ownClubAccuracy, answerMs, cardWeights, puskasRate });
 
 export const BOT_PROFILES: Record<BotId, BotProfile> = {
   ollie: {
@@ -34,7 +34,7 @@ export const BOT_PROFILES: Record<BotId, BotProfile> = {
     name: "Ollie",
     club: "west-ham",
     clubName: "West Ham",
-    blurb: "Knows every answer, hangs every piece. Goes for Worldies and raids with his queen.",
+    blurb: "Knows every answer, hangs every piece. Goes for Puskás goals and raids with his queen.",
     style: "chaotic",
     levels: {
       low: {

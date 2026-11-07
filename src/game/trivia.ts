@@ -198,4 +198,4 @@ export function phoneAFriend(q: Question, rng: Rng = Math.random, hidden: number
   return wrong.length ? pick(wrong, rng) : q.answer;
 }
 
-export const TIMER_MS = { normal: 15_000, worldie: 8_000 };
+export const TIMER_MS = { normal: 15_000, puskas: 8_000 };

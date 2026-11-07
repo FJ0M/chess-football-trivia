@@ -25,28 +25,28 @@ import { chess960Fen, mulberry32, nodeEngine, type GameResult } from "./match";
 
 const STANDARD = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
-// Costs from the design doc; cooldowns in own moves (start locked).
+// Costs from the design doc (playtest round 3); cooldowns in own moves (start locked).
 const POWER_UPS: Record<string, { cost: number; cooldown: number }> = {
-  "tactical-foul": { cost: 3, cooldown: 6 },
-  "var-review": { cost: 3, cooldown: 8 },
-  "golden-boot": { cost: 5, cooldown: 6 },
-  "managers-tip": { cost: 2, cooldown: 8 },
-  "super-sub": { cost: 6, cooldown: 12 },
-  "red-card": { cost: 7, cooldown: 12 },
-  "extra-time": { cost: 8, cooldown: 16 },
+  "tactical-foul": { cost: 5, cooldown: 10 },
+  "var-review": { cost: 6, cooldown: 15 },
+  "golden-boot": { cost: 2, cooldown: 8 },
+  "managers-tip": { cost: 4, cooldown: 10 },
+  "super-sub": { cost: 7, cooldown: 15 },
+  "red-card": { cost: 5, cooldown: 15 },
+  "extra-time": { cost: 10, cooldown: 25 },
 };
-const REWARD: Record<Difficulty | "worldie", number> = { easy: 1, medium: 2, hard: 4, worldie: 6 };
+const REWARD: Record<Difficulty | "puskas", number> = { easy: 1, medium: 2, hard: 3, puskas: 5 };
 const FORM_CAP = 12;
 
 export function triviaFromAccuracy(a: number): TriviaSkill {
   const c = (x: number) => Math.min(0.99, Math.max(0.01, x));
   return {
-    accuracy: { easy: c(a + 0.2), medium: c(a), hard: c(a - 0.2), worldie: c(a - 0.3) },
+    accuracy: { easy: c(a + 0.2), medium: c(a), hard: c(a - 0.2), puskas: c(a - 0.3) },
     ownClubAccuracy: c(a + 0.1),
     answerMs: [3000, 9000],
     // Sensible play: go harder when you're good at it.
     cardWeights: a >= 0.75 ? { easy: 1, medium: 3, hard: 6 } : a >= 0.5 ? { easy: 2, medium: 6, hard: 2 } : { easy: 7, medium: 3, hard: 0 },
-    worldieRate: a >= 0.85 ? 0.4 : 0,
+    puskasRate: a >= 0.85 ? 0.4 : 0,
   };
 }
 
@@ -98,7 +98,8 @@ interface Side {
   streak: number;
   cooldown: Record<string, number>;
   frozen: Square | null;
-  goldenBoot: boolean;
+  /** Own moves left on a Golden Boot (+2 per capture). */
+  goldenBoot: number;
   skipNext: boolean;
   lastEval: number;
   stats: { questions: number; right: number; formEarned: number; powerUps: Record<string, number> };
@@ -110,7 +111,7 @@ const newSide = (): Side => ({
   streak: 0,
   cooldown: Object.fromEntries(Object.entries(POWER_UPS).map(([k, v]) => [k, v.cooldown])),
   frozen: null,
-  goldenBoot: false,
+  goldenBoot: 0,
   skipNext: false,
   lastEval: 0,
   stats: { questions: 0, right: 0, formEarned: 0, powerUps: {} },
@@ -222,24 +223,24 @@ export async function playFullGame(white: FullPlayer, black: FullPlayer, startFe
     const diffs: Difficulty[] = ["easy", "medium", "hard"];
     const clubCard = bonus ? -1 : rng() < 1 / 3 ? Math.floor(rng() * 3) : -2;
     const cards = diffs.map((d, i) => ({ topic: "x", difficulty: d, club: bonus || i === clubCard ? p.club : null }));
-    const pick = p.bot.chooseCard({ cards, worldieAllowed: true, form: side.form, bonusRound: bonus, evalCp: side.lastEval });
+    const pick = p.bot.chooseCard({ cards, puskasAllowed: true, form: side.form, bonusRound: bonus, evalCp: side.lastEval });
     const card = cards[pick.index];
     const question = { options: ["a", "b", "c", "d"], answer: 0, difficulty: card.difficulty, club: card.club };
-    const ans = p.bot.answer({ question, worldie: pick.worldie });
-    const timer = pick.worldie ? 8000 : 15000;
+    const ans = p.bot.answer({ question, puskas: pick.puskas });
+    const timer = pick.puskas ? 8000 : 15000;
     const right = ans.choice === 0 && ans.delayMs <= timer;
     side.stats.questions++;
     side.sinceQuestion = 0;
     if (right) {
       side.stats.right++;
       side.streak++;
-      let n = REWARD[pick.worldie ? "worldie" : card.difficulty] * (bonus ? 2 : 1);
-      if (ans.delayMs < 5000) n++;
-      if (side.streak % 3 === 0) n += 3;
+      let n = REWARD[pick.puskas ? "puskas" : card.difficulty] * (bonus ? 2 : 1);
+      if (ans.delayMs < 5000 && (pick.puskas || card.difficulty === "hard")) n++;
+      if (side.streak % 3 === 0) n += 2;
       award(side, n);
     } else {
       side.streak = 0;
-      if (pick.worldie) side.skipNext = true;
+      if (pick.puskas) side.skipNext = true;
       else if (card.difficulty === "hard") side.frozen = movedTo;
       else if (card.difficulty === "medium") award(other, 2);
     }
@@ -307,7 +308,7 @@ export async function playFullGame(white: FullPlayer, black: FullPlayer, startFe
             tip = true;
             break;
           case "golden-boot":
-            side.goldenBoot = true;
+            side.goldenBoot = 3;
             break;
           case "extra-time":
             extraTime = true;
@@ -334,16 +335,14 @@ export async function playFullGame(white: FullPlayer, black: FullPlayer, startFe
     if (frozenThisTurn !== null && side.frozen === frozenThisTurn) side.frozen = null;
     side.sinceQuestion++;
 
-    if (f.capture && side.goldenBoot) {
-      award(side, 3);
-      side.goldenBoot = false;
-    }
+    if (f.capture && side.goldenBoot > 0) award(side, 2);
+    if (!freeKick && side.goldenBoot > 0) side.goldenBoot--;
     if (!freeKick && !pos.isEnd()) {
       if (hot.has(to)) {
         ask(c, to, true);
         hot.delete(to);
         hot.add(randSq([2, 3, 4, 5]));
-      } else if (f.capture || side.sinceQuestion >= 3) ask(c, to, false);
+      } else if (f.capture || side.sinceQuestion >= 4) ask(c, to, false);
     }
 
     if (extraTime && !pos.isEnd() && !pos.isCheck()) {
