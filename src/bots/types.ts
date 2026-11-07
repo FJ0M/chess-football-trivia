@@ -111,7 +111,7 @@ export interface CardRequest {
   cards: CardOffer[];
   puskasAllowed: boolean;
   form: number;
-  /** Hot Spot round: every card is a club card and rewards are doubled. */
+  /** Hot Spot round: every card is a club card (normal rewards). */
   bonusRound?: boolean;
   /** Eval from the bot's side in centipawns, if known. Bots play safer when well ahead. */
   evalCp?: number;

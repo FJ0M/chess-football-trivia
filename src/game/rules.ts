@@ -82,7 +82,6 @@ function newPlayer(p: PlayerInit, timed: boolean, minutes: number): PlayerState 
     wrongStreak: 0,
     doubleNextPower: false,
     goldenBootMoves: 0,
-    hotSpotRest: 0,
     sentOff: false,
     clockMs: timed ? minutes * 60 * 1000 : null,
   };
@@ -158,8 +157,6 @@ function pickFrom<T>(list: T[], rng: Rng): T | undefined {
 
 /** Hot Spots per half of the board (2 in all). They stay put until someone lands on one. */
 export const HOT_SPOTS_PER_HALF = 1;
-/** After you claim a Hot Spot, it's this many of your moves before Hot Spots count for you again. */
-export const HOT_SPOT_REST = 4;
 
 export function pickHotSpots(fen: string, rng: Rng): string[] {
   const exclude = firstMoveReach(fen);
@@ -479,7 +476,6 @@ export function playMove(state: GameState, uci: string, rng: Rng = Math.random):
   }
   if (state.step === "normal") {
     if (me.goldenBootMoves > 0) patch.goldenBootMoves = me.goldenBootMoves - 1;
-    if (me.hotSpotRest > 0) patch.hotSpotRest = me.hotSpotRest - 1;
     const used = state.powerUsedId;
     const cd = { ...me.cooldowns };
     for (const id of Object.keys(cd) as PowerUpId[]) if (id !== used && cd[id] > 0) cd[id] -= 1;
@@ -492,8 +488,7 @@ export function playMove(state: GameState, uci: string, rng: Rng = Math.random):
   let trigger: Trigger = { kind: "none" };
   const ended = after.isCheckmate() || after.isStalemate();
   if (state.options.trivia) {
-    // A Hot Spot only counts if you haven't claimed one in your last few moves (checked before this move's count-down).
-    const onSpot = next.hotSpots.includes(landed) && me.hotSpotRest === 0;
+    const onSpot = next.hotSpots.includes(landed);
     if (move.promotion) {
       trigger = { kind: "promotion", role: ROLE_CHAR[move.promotion] as PromoRole, square: makeSquare(move.to), bonus: onSpot };
     } else if (state.step === "normal" && !ended) {
@@ -504,7 +499,6 @@ export function playMove(state: GameState, uci: string, rng: Rng = Math.random):
     // Hot Spots stay put until used; a used one jumps to a new square in the same half.
     if (onSpot && (trigger.kind === "hot-spot" || trigger.kind === "promotion")) {
       next = { ...next, hotSpots: relocateHotSpot(next, landed, rng) };
-      next = withPlayer(next, mover, { hotSpotRest: HOT_SPOT_REST });
     }
     // Any question (a "Who am I?" too) restarts the Kick-off count.
     if (trigger.kind !== "none") next = withPlayer(next, mover, { kickoffCount: 0 });
@@ -858,7 +852,7 @@ export interface AnswerCtx {
   landed: string | null;
 }
 
-/** Form for a right answer (doubled in a Club Bonus Round). */
+/** Form for a right answer. A Club Bonus Round (Hot Spot) pays the same: it's a club question, not double Form. */
 export const REWARD: Record<Difficulty | "puskas", number> = { easy: 1, medium: 2, hard: 3, puskas: 5 };
 /** Answer a Screamer or Puskás inside this time for +1. */
 export const QUICK_MS = 5000;
@@ -878,9 +872,9 @@ export function applyAnswer(state: GameState, a: AnswerCtx): AnswerOutcome {
   let next = state;
   let gained = 0;
   if (a.correct) {
-    const base = REWARD[a.puskas ? "puskas" : a.difficulty] * (a.bonus ? 2 : 1);
+    const base = REWARD[a.puskas ? "puskas" : a.difficulty];
     gained = base;
-    lines.push(`+${base} Form${a.bonus ? " (Club Bonus Round, doubled)" : ""}`);
+    lines.push(`+${base} Form${a.bonus ? " (Club Bonus Round)" : ""}`);
     if (a.ms < QUICK_MS && (a.puskas || a.difficulty === "hard")) { gained += 1; lines.push("+1 quick answer"); }
     let streak = me.rightStreak + 1;
     if (streak >= 3) { gained += HAT_TRICK_BONUS; streak = 0; lines.push(`Hat-trick! +${HAT_TRICK_BONUS} Form`); }

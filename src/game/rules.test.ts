@@ -75,27 +75,6 @@ describe("Hot Spots", () => {
     expect(r.state.hotSpots).toHaveLength(2);
     expect(r.state.hotSpots.filter((s) => "34".includes(s[1]))).toHaveLength(1);
   });
-  it("after claiming a Hot Spot, they don't count for you for your next 4 moves", () => {
-    let g: GameState = { ...game(), hotSpots: ["f3", "f6"] };
-    let r = playMove(g, resolveMove(g, "g1f3")!);
-    expect(r.trigger.kind).toBe("hot-spot");
-    expect(r.state.players.white.hotSpotRest).toBe(4);
-    g = finishTurn(r.state).state;
-    g = finishTurn(playMove(g, resolveMove(g, "b8c6")!).state).state;
-    const kinds: string[] = [];
-    for (const [w, b] of [["f3g1", "c6b8"], ["g1f3", "b8c6"], ["f3g1", "c6b8"], ["g1f3", "b8c6"]]) {
-      g = { ...g, hotSpots: ["f3", "a6"] };
-      r = playMove(g, resolveMove(g, w)!);
-      kinds.push(r.trigger.kind);
-      g = finishTurn(r.state).state;
-      g = finishTurn(playMove(g, resolveMove(g, b)!).state).state;
-    }
-    expect(kinds.filter((k) => k === "hot-spot")).toEqual([]);
-    g = { ...g, hotSpots: ["e3", "a6"] };
-    expect(g.players.white.hotSpotRest).toBe(0);
-    expect(playMove(g, resolveMove(g, "f3e5")!).trigger.kind).not.toBe("hot-spot");
-    expect(playMove(g, resolveMove(g, "e2e3")!).trigger.kind).toBe("hot-spot");
-  });
   it("Hot Spots stay put until someone lands on one", () => {
     let g = game();
     g = { ...g, hotSpots: ["a3", "h5"] };
@@ -149,13 +128,14 @@ describe("triggers", () => {
 
 describe("answers", () => {
   const ctx = { color: "white" as const, puskas: false, bonus: false, ms: 9000, landed: "e4" };
-  it("rewards 1/2/3/5, doubled in a bonus round, with a quick bonus on Screamers and Puskás only", () => {
+  it("rewards 1/2/3/5 (not doubled in a Club Bonus Round), with a quick bonus on Screamers and Puskás only", () => {
     const g = game();
     expect(applyAnswer(g, { ...ctx, difficulty: "easy", correct: true }).state.players.white.form).toBe(1);
     expect(applyAnswer(g, { ...ctx, difficulty: "medium", correct: true }).state.players.white.form).toBe(2);
     expect(applyAnswer(g, { ...ctx, difficulty: "hard", correct: true }).state.players.white.form).toBe(3);
     expect(applyAnswer(g, { ...ctx, difficulty: "hard", puskas: true, correct: true }).state.players.white.form).toBe(5);
-    expect(applyAnswer(g, { ...ctx, difficulty: "medium", bonus: true, correct: true, ms: 2000 }).state.players.white.form).toBe(4);
+    expect(applyAnswer(g, { ...ctx, difficulty: "medium", bonus: true, correct: true, ms: 2000 }).state.players.white.form).toBe(2);
+    expect(applyAnswer(g, { ...ctx, difficulty: "hard", bonus: true, correct: true }).state.players.white.form).toBe(3);
     expect(applyAnswer(g, { ...ctx, difficulty: "easy", correct: true, ms: 2000 }).state.players.white.form).toBe(1);
     expect(applyAnswer(g, { ...ctx, difficulty: "hard", correct: true, ms: 2000 }).state.players.white.form).toBe(4);
   });
@@ -271,7 +251,7 @@ describe("power-ups", () => {
     const r = playMove(g, "e2e4");
     expect(r.trigger.kind).toBe("hot-spot");
     g = applyAnswer(r.state, { color: "white", difficulty: "hard", puskas: false, bonus: true, correct: true, ms: 9000, landed: r.landed }).state;
-    expect(g.players.white.form).toBe(12);
+    expect(g.players.white.form).toBe(9);
     g = finishTurn(g).state;
     const r2 = playMove(g, "e7e5");
     g = applyAnswer(r2.state, { color: "black", difficulty: "hard", puskas: false, bonus: false, correct: false, ms: 9000, landed: r2.landed }).state;
