@@ -295,7 +295,7 @@ describe("ratings", () => {
       expect(b.ratings.medium.match).toBeLessThan(b.ratings.hard.match);
     }
     // 2500 chess with no football knowledge beats perfect trivia with 600 chess.
-    expect(matchRating(2500, 0.25)).toBeGreaterThan(matchRating(600, 1));
+    expect(matchRating(2500, 800)).toBeGreaterThan(matchRating(600, 2200));
   });
 });
 

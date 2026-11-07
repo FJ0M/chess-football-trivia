@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { loadScores, resetScores } from "../game/scores";
+import { TRIVIA_WEIGHT, TRIVIA_BASE, loadTriviaRating, resetTriviaRating, triviaTitle } from "../game/triviaElo";
 import { clearHistory, loadHistory, resultKind, resultText, type HistoryEntry } from "../game/history";
 import type { Color } from "../game/types";
 import { BOT_NAMES, LADDER_BOT_IDS } from "../game/bots";
@@ -33,11 +34,32 @@ export function MainMenu({ onPlay, onSettings, onScores, onHistory, onRules }: {
 
 export function ScoresScreen({ onBack }: { onBack: () => void }) {
   const [scores, setScores] = useState(loadScores);
+  const [trivia, setTrivia] = useState(loadTriviaRating);
   const bots = Object.entries(scores.bots).sort(([a], [b]) => a.localeCompare(b));
+  const best = scores.best;
   const local = Object.entries(scores.local).sort(([, a], [, b]) => b - a);
   return (
     <section className="setup scores" aria-labelledby="scores-title">
       <h1 id="scores-title">High scores</h1>
+      <div className="score-cards">
+        <div className="score-card">
+          <small>Best win</small>
+          {best ? (
+            <>
+              <b>{best.match}</b>
+              <span>{BOT[best.botId] ?? best.botId}{levelTag(best.botId, best.level)}</span>
+              <small>Chess {best.chess} · Trivia {best.triviaElo}</small>
+            </>
+          ) : <span>Beat a bot to set one</span>}
+        </div>
+        <div className="score-card">
+          <small>Your trivia Elo</small>
+          <b>{trivia.rating}</b>
+          <span>{trivia.answers ? triviaTitle(trivia.rating) : "Answer questions against a bot"}</span>
+          <small>{trivia.answers} question{trivia.answers === 1 ? "" : "s"} answered</small>
+        </div>
+      </div>
+      <p className="muted">The high score is the highest combined rating you've beaten: the bot's chess Elo, plus {TRIVIA_WEIGHT} × how far its trivia Elo is above or below an average quizzer ({TRIVIA_BASE}). Chess counts for more because it decides more games.</p>
       <h3>vs bots</h3>
       {bots.length ? (
         <table>
@@ -54,7 +76,7 @@ export function ScoresScreen({ onBack }: { onBack: () => void }) {
       {local.length ? <ol>{local.map(([n, w]) => <li key={n}>{n}: {w}</li>)}</ol> : <p className="muted">No Pass and Play games yet.</p>}
       <div className="row-btns">
         <button type="button" className="ghost" onClick={onBack}>Back</button>
-        <button type="button" className="ghost" onClick={() => { resetScores(); setScores(loadScores()); }}>Reset</button>
+        <button type="button" className="ghost" onClick={() => { resetScores(); resetTriviaRating(); setScores(loadScores()); setTrivia(loadTriviaRating()); }}>Reset</button>
       </div>
     </section>
   );

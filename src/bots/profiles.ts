@@ -1,3 +1,4 @@
+import { combinedRating, triviaEloFromAccuracy } from "../game/triviaElo";
 import type { BotId, BotLevel, BotProfile, ChessStrength, ClassicBotId, LadderBotId, TriviaSkill } from "./types";
 
 // The three bots are mirror images: Ollie out-quizzes you, Freddie out-plays
@@ -213,24 +214,19 @@ export const LADDER_IDS: LadderBotId[] = ["pawny", "eezy", "chillwall", "gambit-
 export const BOT_IDS: BotId[] = [...LADDER_IDS, ...CLASSIC_IDS];
 export const BOT_LEVELS: BotLevel[] = ["low", "medium", "hard"];
 
-/**
- * Provisional: chess Elo points per percentage point of trivia accuracy above
- * or below an average quizzer (55%). Early full-game playtests show chess
- * skill dominates (Ollie's great trivia won 1 of 47 games against 1320+
- * chess), so trivia moves the match rating by at most about 150. Calibrate
- * with a longer full-game playtest (tools/playtest/fullgame.ts).
- */
-export const TRIVIA_ELO_PER_POINT = 4;
-export const AVERAGE_TRIVIA_ACCURACY = 0.55;
-
 /** Average accuracy over easy, medium and hard questions. */
 export function triviaAccuracy(t: TriviaSkill): number {
   return (t.accuracy.easy + t.accuracy.medium + t.accuracy.hard) / 3;
 }
 
+/** Trivia Elo from the bot's accuracy at each difficulty (src/game/triviaElo.ts). */
+export function triviaElo(t: TriviaSkill): number {
+  return triviaEloFromAccuracy(t.accuracy);
+}
+
 /** Combined chess + trivia rating, for the "best opponent beaten" high score. */
-export function matchRating(chessRating: number, accuracy: number): number {
-  return Math.round(chessRating + (accuracy - AVERAGE_TRIVIA_ACCURACY) * 100 * TRIVIA_ELO_PER_POINT);
+export function matchRating(chessRating: number, trivia: number): number {
+  return combinedRating(chessRating, trivia);
 }
 
 export interface BotRating {
@@ -238,6 +234,8 @@ export interface BotRating {
   chess: number;
   /** Share of questions answered right, 0 to 1. */
   trivia: number;
+  /** Trivia Elo, on the same scale as chess Elo. */
+  triviaElo: number;
   /** Combined rating, for the high score. */
   match: number;
 }
@@ -248,7 +246,8 @@ export const BOTS = BOT_IDS.map((id) => {
   const rate = (l: BotLevel): BotRating => {
     const { chess, trivia } = p.levels[l];
     const acc = triviaAccuracy(trivia);
-    return { chess: chess.rating, trivia: Math.round(acc * 100) / 100, match: matchRating(chess.rating, acc) };
+    const elo = triviaElo(trivia);
+    return { chess: chess.rating, trivia: Math.round(acc * 100) / 100, triviaElo: elo, match: matchRating(chess.rating, elo) };
   };
   return {
     id,

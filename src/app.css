@@ -177,6 +177,11 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 .scores table { width: 100%; border-collapse: collapse; font-size: 14px; }
 .scores th, .scores td { text-align: left; padding: 5px 4px; border-bottom: 1px solid #c9d1d4; }
 .scores .muted { opacity: .7; margin: 0; }
+.score-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.score-card { display: grid; gap: 1px; padding: 10px; border-radius: 10px; border: 2px solid #c9d1d4; background: #fff; color: #18304a; min-width: 0; }
+.score-card b { font-size: 26px; line-height: 1.1; }
+.score-card small { font-size: 12px; opacity: .75; }
+.score-card span { font-size: 14px; overflow-wrap: break-word; }
 .row-btns { display: flex; gap: 8px; }
 .rules ul { margin: 0; padding-left: 20px; } .rules p { margin: 0; }
 .sheet.pause { gap: 8px; }

@@ -101,7 +101,7 @@ export function SetupScreen({ mode, onStart, onBack }: { mode: "bot" | "local"; 
           ))}
           {bot && (
             <p className="bot-blurb">
-              <b>{bot.name}</b>{rating ? ` · ${rating.chess} chess · ${Math.round(rating.trivia * 100)}% trivia · ${rating.match} combined` : ""}<br />
+              <b>{bot.name}</b>{rating ? ` · Chess ${rating.chess} · Trivia ${rating.triviaElo ?? "?"} · Combined ${rating.match}` : ""}<br />
               {bot.blurb}
             </p>
           )}

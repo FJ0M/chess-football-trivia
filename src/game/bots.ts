@@ -23,7 +23,7 @@ export const BOT_NAMES: Record<string, string> = {
   "mo-mate": "Mo Mate", knightingale: "Florence Knightingale", rookland: "Ragnar Rookland",
 };
 
-export interface BotRatingMeta { chess: number; trivia: number; match: number }
+export interface BotRatingMeta { chess: number; trivia: number; triviaElo: number; match: number }
 export interface BotMeta {
   id: BotId; name: string; club: string; blurb: string;
   /** One strength only (the Elo ladder): no level picker. */
