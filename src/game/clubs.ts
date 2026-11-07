@@ -104,3 +104,22 @@ export const CLUB_BY_ID: Record<string, Club> = Object.fromEntries(CLUBS.map((c)
 export function clubShort(id: string | null | undefined): string {
   return (id && CLUB_BY_ID[id]?.short) || "No club";
 }
+
+/** Lower case, no accents, "&" read as "and", so "brighton and hove" finds "Brighton & Hove Albion". */
+const fold = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+/** Sort key: a leading "AFC" is ignored, so Bournemouth sits under B and Wimbledon under W. */
+const sortKey = (c: Club) => fold(c.name).replace(/^afc /, "");
+
+/** Every club in one A to Z list. No divisions, so it doesn't go out of date when clubs go up or down. */
+export const CLUBS_AZ: Club[] = [...CLUBS].sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
+
+/** Clubs whose full or short name contains every word typed, in A to Z order. Names that start with the search come first. */
+export function searchClubs(query: string): Club[] {
+  const q = fold(query);
+  if (!q) return CLUBS_AZ;
+  const words = q.split(" ");
+  const hay = (c: Club) => `${fold(c.name)} ${fold(c.short)}`;
+  const hits = CLUBS_AZ.filter((c) => words.every((w) => hay(c).includes(w)));
+  const starts = (c: Club) => sortKey(c).startsWith(q) || fold(c.short).startsWith(q) || fold(c.name).startsWith(q);
+  return [...hits.filter(starts), ...hits.filter((c) => !starts(c))];
+}
