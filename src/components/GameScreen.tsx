@@ -19,6 +19,9 @@ import type { MatchStats } from "../game/history";
 import { CLUE_MS } from "../game/whoami";
 import { TIMER_MS } from "../game/trivia";
 import type { Color, GameState, Outcome, PowerUpId } from "../game/types";
+import { material, type BenchRole } from "../game/material";
+import { useCommentary } from "../game/useCommentary";
+import { BoardFx, EbkBadge, ScreenFx } from "./MatchFx";
 
 const GLYPH: Record<string, string> = { k: "♚", q: "♛", r: "♜", b: "♝", n: "♞", p: "♟" };
 const FILES = "abcdefgh";
@@ -28,13 +31,17 @@ interface Props {
   play: (s: SfxName) => void;
   setup: SetupChoice;
   view: PassAndPlayView;
+  /** Animations on (off with the Reduce motion setting or the phone's own setting). */
+  motion?: boolean;
+  /** The commentator's ticker under the board. */
+  commentary?: boolean;
   paused: boolean;
   onPause: () => void;
   onExit: () => void;
   onFinish: (game: GameState, stats: MatchStats) => void;
 }
 
-export function GameScreen({ style, play, setup, view, paused, onPause, onExit, onFinish }: Props) {
+export function GameScreen({ style, play, setup, view, motion = true, commentary = true, paused, onPause, onExit, onFinish }: Props) {
   const g = useGame(setup, play, paused);
   const { game, phase } = g;
   const stats = useMatchStats(game, phase);
@@ -98,14 +105,20 @@ export function GameScreen({ style, play, setup, view, paused, onPause, onExit, 
   const last = game.lastMove;
   const top: Color = orientation === "white" ? "black" : "white";
   const bottom: Color = orientation;
+  const mat = material(game.captured);
+  const names = { white: callName(game, "white"), black: callName(game, "black") };
+  const line = useCommentary(game, g.events, commentary && phase.kind !== "whoami", names, g.evaluate);
+  const osReduce = usePrefersReducedMotion();
+  const fx = motion && !osReduce;
 
   return (
     <div className={`screen style-${style.id}${local && view === "flip" ? " flip-mode" : ""}${flipAll ? " flip-all" : ""}`}>
       <div className="strip">
         <span>{game.options.chess960 ? `Chess960 · No. ${game.options.position}` : game.options.trivia ? "Football trivia" : "Plain chess"}</span>
+        <Scoreline game={game} score={mat.score} />
         <span>Move {Math.ceil((game.history.length + 1) / 2)}</span>
       </div>
-      <PlayerBar game={game} color={top} active={active} ticking={clockOwner(game, phase)} bubble={g.bubble} />
+      <PlayerBar game={game} color={top} active={active} ticking={clockOwner(game, phase)} bubble={g.bubble} bench={mat.bench[top]} lead={mat.score[top] - mat.score[bottom]} ebk={g.ebk[top]} />
       {/* During a "Who am I?" the board is hidden (and the clocks stop): it's just the footballer. */}
       {phase.kind === "whoami" && <div className="whoami-stage"><Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} /></div>}
       <div className="board" role="grid" aria-label="Chess board" hidden={phase.kind === "whoami"}>
@@ -124,18 +137,28 @@ export function GameScreen({ style, play, setup, view, paused, onPause, onExit, 
             g.overlay.scout === sq ? "scout" : "",
           ].join(" ");
           const isDest = !!sel && !!dests.get(sel)?.includes(sq);
+          // Coordinates sit inside the edge squares: files along the bottom row, ranks up the left column.
+          const fileMark = r === rows[7] ? FILES[c] : null;
+          const rankMark = c === cols[0] ? String(r + 1) : null;
           return (
             <button key={sq} type="button" className={cls} onClick={() => tap(sq)} aria-label={`${sq}${p ? ` ${p.color} ${ROLE_NAME[p.role]}` : ""}`}>
               {game.hotSpots.includes(sq) && <HotSpotIcon />}
               {p && <span className={`pc ${p.color === "white" ? "w" : "b"}`}>{GLYPH[p.role]}{"︎"}</span>}
               {isDest && <span className={p ? "dot cap" : "dot"} />}
+              {rankMark && <span className="coord rank" aria-hidden="true">{rankMark}</span>}
+              {fileMark && <span className="coord file" aria-hidden="true">{fileMark}</span>}
+              {g.overlay.scout === sq && <span className="scout-tag" aria-hidden="true"><ScoutEye /></span>}
             </button>
           );
         }))}
-        {style.id === "tactics" && last && <MarkerArrow from={last[0]} to={last[1]} orientation={orientation} color="#fff7a8" id="ah" />}
+        {/* No last-move arrow while a Scout Report is showing, so the only marking is the scouted piece. */}
+        {style.id === "tactics" && last && !g.overlay.scout && <MarkerArrow from={last[0]} to={last[1]} orientation={orientation} color="#fff7a8" id="ah" />}
         {g.overlay.tip && <MarkerArrow from={g.overlay.tip[0]} to={g.overlay.tip[1]} orientation={orientation} color="#ff2d95" id="tip" outline />}
+        {fx && <BoardFx events={g.events} now={g.now} orientation={orientation} />}
       </div>
-      <PlayerBar game={game} color={bottom} active={active} ticking={clockOwner(game, phase)} bubble={g.bubble} />
+      <PlayerBar game={game} color={bottom} active={active} ticking={clockOwner(game, phase)} bubble={g.bubble} bench={mat.bench[bottom]} lead={mat.score[bottom] - mat.score[top]} ebk={g.ebk[bottom]} />
+      {line && <p className="commentary" aria-live="polite"><Mic /><span key={line.id}>{line.text}</span></p>}
+      {fx && <ScreenFx events={g.events} now={g.now} names={{ white: game.players.white.name, black: game.players.black.name }} />}
 
       <div className="controls">
         {phase.kind !== "whoami" && <Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} />}
@@ -187,7 +210,9 @@ function handicapTag(game: GameState, color: Color): string {
   return h.odds !== "none" ? `Gave ${h.odds === "p" ? "a pawn" : `a ${ODDS_NAME[h.odds].toLowerCase()}`}` : "";
 }
 
-function PlayerBar({ game, color, active, ticking, bubble }: { game: GameState; color: Color; active: Color; ticking: Color | null; bubble: { color: Color; text: string } | null }): ReactNode {
+function PlayerBar({ game, color, active, ticking, bubble, bench, lead, ebk }: {
+  game: GameState; color: Color; active: Color; ticking: Color | null; bubble: { color: Color; text: string } | null; bench: BenchRole[]; lead: number; ebk: boolean;
+}): ReactNode {
   const p = game.players[color];
   const status = [
     p.sentOff ? "Sent off" : "",
@@ -199,7 +224,14 @@ function PlayerBar({ game, color, active, ticking, bubble }: { game: GameState; 
     <div className={`player${active === color ? " up" : ""}`}>
       <div className="who">
         <span className="badge">{p.name[0]?.toUpperCase()}</span>
-        <span>{p.name} <span className="tag">{color === "white" ? "White" : "Black"} · {clubShort(p.club)}{p.kind === "bot" ? " · Bot" : ""}{status.length ? ` · ${status.join(", ")}` : ""}</span></span>
+        <span className="who-text">
+          <span>{p.name}{ebk && <EbkBadge className="ebk-mini" />} <span className="tag">{color === "white" ? "White" : "Black"} · {clubShort(p.club)}{p.kind === "bot" ? " · Bot" : ""}{status.length ? ` · ${status.join(", ")}` : ""}</span></span>
+          {/* The bench: the opponent's pieces this player has taken (they're the other colour). */}
+          <span className="bench" aria-label={bench.length ? `Taken: ${bench.map((r) => ROLE_NAME[r]).join(", ")}` : "Nothing taken yet"}>
+            {bench.map((r, i) => <span key={i} className={`bp ${color === "white" ? "b" : "w"}`}>{GLYPH[r]}{"︎"}</span>)}
+            {lead > 0 && <b className="lead">+{lead}</b>}
+          </span>
+        </span>
       </div>
       {bubble?.color === color && <span className="bubble" role="status">{bubble.text}</span>}
       <span className="form">
@@ -207,6 +239,62 @@ function PlayerBar({ game, color, active, ticking, bubble }: { game: GameState; 
         {p.clockMs !== null && <StadiumClock ms={p.clockMs} running={ticking === color && !game.outcome} />}
       </span>
     </div>
+  );
+}
+
+/** "3-1" in the strip: the points of the pieces each side has taken, White (home) first. */
+function Scoreline({ game, score }: { game: GameState; score: Record<Color, number> }) {
+  const w = abbr(game.players.white.name), b0 = abbr(game.players.black.name);
+  const b = b0 === w ? abbr(game.players.black.name, true) : b0;
+  return (
+    <span className="scoreline" aria-label={`Material score: ${game.players.white.name} ${score.white}, ${game.players.black.name} ${score.black}`}>
+      <span>{w}</span><b>{score.white}-{score.black}</b><span>{b}</span>
+    </span>
+  );
+}
+
+/** A TV-style three-letter name: "Ryan" is RYA. Two players with the same start get initials and digits ("Player 1" is P1). */
+function abbr(name: string, alt = false): string {
+  const clean = name.trim() || "?";
+  if (alt || /\d$/.test(clean)) return (clean[0] + (clean.match(/\d+$/)?.[0] ?? clean.slice(-1))).toUpperCase();
+  return clean.replace(/\s+/g, "").slice(0, 3).toUpperCase();
+}
+
+/** The name the commentator uses: "You" reads oddly in third person, so it's your club instead. */
+function callName(game: GameState, c: Color): string {
+  const p = game.players[c];
+  if (p.name.trim().toLowerCase() !== "you") return p.name;
+  return p.club ? clubShort(p.club) : c === "white" ? "White" : "Black";
+}
+
+function usePrefersReducedMotion(): boolean {
+  const media = () => (typeof window !== "undefined" && window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null);
+  const [reduce, setReduce] = useState(() => !!media()?.matches);
+  useEffect(() => {
+    const q = media();
+    if (!q) return;
+    const on = () => setReduce(q.matches);
+    q.addEventListener?.("change", on);
+    return () => q.removeEventListener?.("change", on);
+  }, []);
+  return reduce;
+}
+
+function Mic() {
+  return (
+    <svg className="mic" viewBox="0 0 24 24" aria-label="Commentator" role="img">
+      <rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor" />
+      <path d="M6 11a6 6 0 0 0 12 0M12 17v4M8.5 21h7" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function ScoutEye() {
+  return (
+    <svg viewBox="0 0 24 24">
+      <path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 12 2 12z" fill="#fff" stroke="#14532d" strokeWidth="2" />
+      <circle cx="12" cy="12" r="3.2" fill="#14532d" />
+    </svg>
   );
 }
 

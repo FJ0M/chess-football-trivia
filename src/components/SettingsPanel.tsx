@@ -63,6 +63,18 @@ export function SettingsPanel({ settings, onChange, onClose, play }: Props) {
           </select>
         </label>
 
+        <h3>Match</h3>
+        <label className="toggle" htmlFor="commentary-on">
+          <input type="checkbox" id="commentary-on" checked={settings.commentary} onChange={(e) => set("commentary", e.target.checked)} />
+          <span>Commentator</span>
+        </label>
+        <p className="sheet-note">A line of text commentary under the board. It reacts to the game but never gives hints.</p>
+        <label className="toggle" htmlFor="reduce-motion">
+          <input type="checkbox" id="reduce-motion" checked={settings.reduceMotion} onChange={(e) => set("reduceMotion", e.target.checked)} />
+          <span>Reduce motion</span>
+        </label>
+        <p className="sheet-note">Turns off the celebrations and board animations. Your phone's own reduce-motion setting does this too.</p>
+
         <h3>Pass and Play</h3>
         <p className="sheet-note">How the screen faces each player</p>
         <div className="view-list" role="radiogroup" aria-label="Pass and Play view">

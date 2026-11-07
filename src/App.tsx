@@ -68,7 +68,7 @@ export function App() {
       {screen === "history" && <HistoryScreen onBack={() => setScreen("menu")} />}
       {screen === "rules" && <RulesScreen onBack={() => setScreen("menu")} />}
       {screen === "game" && setup && (
-        <GameScreen key={gameKey} style={style} play={play} setup={setup} view={settings.passAndPlayView} paused={paused || open}
+        <GameScreen key={gameKey} style={style} play={play} setup={setup} view={settings.passAndPlayView} motion={!settings.reduceMotion} commentary={settings.commentary} paused={paused || open}
           onPause={() => setPaused(true)} onExit={() => setScreen("menu")}
           onFinish={(g: GameState, stats: MatchStats) => {
             const human = g.players.white.kind === "human" ? "white" : "black";

@@ -11,6 +11,10 @@ export interface Settings {
   musicTrack: "match" | MusicTrackId;
   /** Pass and Play: "flip" = Flat on the table (the whole screen turns to face whoever is up), "hand-over" = Pass the phone (only the board flips). */
   passAndPlayView: PassAndPlayView;
+  /** Turns off the celebrations and board animations (the phone's own reduce-motion setting does too). */
+  reduceMotion: boolean;
+  /** The commentator's text ticker under the board. */
+  commentary: boolean;
 }
 
 export type PassAndPlayView = "flip" | "hand-over";
@@ -28,6 +32,8 @@ export const DEFAULT_SETTINGS: Settings = {
   musicVolume: 0.35,
   musicTrack: "match",
   passAndPlayView: "flip",
+  reduceMotion: false,
+  commentary: true,
 };
 
 const KEY = "cft.settings.v1";
@@ -50,6 +56,8 @@ export function sanitize(raw: unknown): Settings {
     musicTrack: track,
     passAndPlayView: VIEWS.includes(r.passAndPlayView as PassAndPlayView) ? (r.passAndPlayView as PassAndPlayView)
       : RETIRED_VIEWS.get(r.passAndPlayView) ?? d.passAndPlayView,
+    reduceMotion: typeof r.reduceMotion === "boolean" ? r.reduceMotion : d.reduceMotion,
+    commentary: typeof r.commentary === "boolean" ? r.commentary : d.commentary,
   };
 }
 
