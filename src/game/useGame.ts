@@ -377,7 +377,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     const p = phaseRef.current;
     if (p.kind !== "whoami" || !data) return;
     const typed = typeof input === "string" ? input.trim() : null;
-    const correct = typeof input === "number" ? input === p.set.answer : typed ? data.whoami.check(p.set, typed) : false;
+    const correct = typeof input === "number" ? input === p.set.answer : typed ? data[p.color].whoami.check(p.set, typed) : false;
     const name = p.set.name ?? p.set.options[p.set.answer];
     const choice = input === null || (typed !== null && !typed) ? null : 0;
     const res = resolvePromotion(gameRef.current, p.square, p.clues, correct);

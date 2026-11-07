@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ClubPicker } from "./ClubPicker";
+import { HandicapSetup, NO_HANDICAP, sanitizeHandicap, type HandicapChoice } from "./HandicapSetup";
 import { backRank, randomPosition, STANDARD_POSITION } from "../game/chess960";
 import { botList, loadBots, type BotLevel, type BotMeta } from "../game/bots";
 import type { SetupChoice } from "../game/useGame";
@@ -19,12 +20,13 @@ interface Saved {
   timed: boolean;
   minutes: number;
   chess960: boolean;
+  handicap: HandicapChoice;
 }
 
 const KEY = "cft.setup.v1";
 const DEFAULTS: Saved = {
   mode: "bot", botId: "ryan", botLevel: "medium", side: "white", names: ["You", "Player 2"], clubs: ["west-ham", "brighton"],
-  trivia: true, timed: false, minutes: DEFAULT_MINUTES, chess960: false,
+  trivia: true, timed: false, minutes: DEFAULT_MINUTES, chess960: false, handicap: NO_HANDICAP,
 };
 
 function loadSaved(): Saved {
@@ -32,6 +34,7 @@ function loadSaved(): Saved {
     const raw = JSON.parse(localStorage.getItem(KEY) ?? "{}");
     const out: Saved = { ...DEFAULTS, ...(raw && typeof raw === "object" ? raw : {}) };
     if (!(TIME_CONTROLS as readonly number[]).includes(out.minutes)) out.minutes = DEFAULT_MINUTES;
+    out.handicap = sanitizeHandicap(out.handicap);
     return out;
   } catch { return DEFAULTS; }
 }
@@ -49,7 +52,9 @@ export function SetupScreen({ mode, onStart, onBack }: { mode: "bot" | "local"; 
 
   function start() {
     const side: Color = s.side === "random" ? (Math.random() < 0.5 ? "white" : "black") : s.side;
-    const options = { mode: s.mode, trivia: s.trivia, timed: s.timed, minutes: s.minutes, chess960: s.chess960, position: s.chess960 ? position : STANDARD_POSITION };
+    const hc = s.handicap;
+    const handicap = s.mode === "local" && hc.weaker !== "none" ? { weaker: hc.weaker, odds: hc.odds, formBoost: s.trivia ? hc.formBoost : 1 } : null;
+    const options = { mode: s.mode, trivia: s.trivia, timed: s.timed, minutes: s.minutes, chess960: s.chess960, position: s.chess960 ? position : STANDARD_POSITION, handicap };
     const human = (i: 0 | 1) => ({ name: s.names[i].trim() || `Player ${i + 1}`, kind: "human" as const, club: s.clubs[i] || null });
     let players: SetupChoice["players"];
     if (s.mode === "bot" && bot) {
@@ -135,6 +140,13 @@ export function SetupScreen({ mode, onStart, onBack }: { mode: "bot" | "local"; 
           <span>Position {position}: <b>{backRank(position).split("").join(" ")}</b></span>
           <button type="button" className="ghost" onClick={() => setPosition(randomPosition())}>Reroll</button>
         </div>
+      )}
+
+      {s.mode === "local" && (
+        <>
+          <h3>Handicap</h3>
+          <HandicapSetup value={s.handicap} onChange={(v) => set("handicap", v)} names={s.names} trivia={s.trivia} />
+        </>
       )}
 
       <button type="button" className="kickoff" onClick={start} disabled={s.mode === "bot" && !bot}>Kick off</button>

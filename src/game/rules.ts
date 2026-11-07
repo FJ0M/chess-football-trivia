@@ -10,6 +10,7 @@ import { chessgroundDests } from "chessops/compat";
 import type { Setup } from "chessops/setup";
 import type { NormalMove, Role, Square } from "chessops/types";
 import { startFen } from "./chess960";
+import { ODDS_POINTS, applyOdds, boostForm, isActive } from "./handicap";
 import {
   DEFAULT_MINUTES, DOUBLE_COST_MIN, FORM_CAP, GOLDEN_BOOT_FORM, GOLDEN_BOOT_MOVES, POWER_UP_BY_ID, fergieMs, fmtSeconds, startingCooldowns,
 } from "./powerups";
@@ -88,7 +89,8 @@ function newPlayer(p: PlayerInit, timed: boolean, minutes: number): PlayerState 
 }
 
 export function newGame(options: GameOptions, players: Record<Color, PlayerInit>, rng: Rng = Math.random): GameState {
-  const fen = startFen(options.chess960 ? options.position : 518);
+  const handicap = options.mode === "local" && isActive(options.handicap) ? options.handicap : null;
+  const fen = handicap ? applyOdds(startFen(options.chess960 ? options.position : 518), handicap) : startFen(options.chess960 ? options.position : 518);
   return {
     options,
     fen,
@@ -882,10 +884,20 @@ export function applyAnswer(state: GameState, a: AnswerCtx): AnswerOutcome {
     if (a.ms < QUICK_MS && (a.puskas || a.difficulty === "hard")) { gained += 1; lines.push("+1 quick answer"); }
     let streak = me.rightStreak + 1;
     if (streak >= 3) { gained += HAT_TRICK_BONUS; streak = 0; lines.push(`Hat-trick! +${HAT_TRICK_BONUS} Form`); }
-    // Catch-up: whoever is behind on material gets a little extra.
+    // Catch-up: whoever is behind on material gets a little extra. Handicap odds count as already given,
+    // so the player giving them isn't "behind" just because of the odds.
     const mat = material(state.fen);
+    const h = state.options.mode === "local" && isActive(state.options.handicap) ? state.options.handicap : null;
+    if (h) mat[opposite(h.weaker)] += ODDS_POINTS[h.odds];
     if (mat[a.color] < mat[enemy]) { gained += 1; lines.push("+1 catch-up (you're behind on material)"); }
-    next = withPlayer(next, a.color, { form: addForm(me.form, gained), rightStreak: streak, wrongStreak: 0 });
+    let carry = me.formCarry ?? 0;
+    if (h && h.weaker === a.color && h.formBoost !== 1) {
+      const boosted = boostForm(gained, h.formBoost, carry);
+      if (boosted.gained !== gained) lines.push(`Handicap x${h.formBoost}: +${boosted.gained} Form in all`);
+      gained = boosted.gained;
+      carry = boosted.carry;
+    }
+    next = withPlayer(next, a.color, { form: addForm(me.form, gained), formCarry: carry, rightStreak: streak, wrongStreak: 0 });
   } else {
     let wrong = me.wrongStreak + 1;
     let doubleNext = me.doubleNextPower;
