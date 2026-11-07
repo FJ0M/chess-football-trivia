@@ -1,6 +1,8 @@
 // Shared game types. Everything in GameState is plain data so it can be copied,
 // snapshotted (for VAR Review) and handed to the bots.
 
+import type { Handicap } from "./handicap";
+
 export type Color = "white" | "black";
 export type Difficulty = "easy" | "medium" | "hard";
 export type PromoRole = "n" | "b" | "r" | "q";
@@ -43,6 +45,8 @@ export interface PlayerState {
   botId?: string;
   club: string | null;
   form: number;
+  /** Form boost (handicap): the fraction of a Form point carried to the next right answer. */
+  formCarry?: number;
   /** Own moves left before each power-up can be used again. 0 = ready. */
   cooldowns: Record<PowerUpId, number>;
   /** Moves made since the last question (Kick-off fires on the 4th quiet move). */
@@ -109,6 +113,8 @@ export interface GameOptions {
   minutes?: number;
   chess960: boolean;
   position: number;
+  /** Pass and Play only: piece odds and a Form boost for the weaker player. */
+  handicap?: Handicap | null;
 }
 
 export interface GameState {
