@@ -548,8 +548,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
         const me = g.players[color];
         const res = await bot.chooseMove({
           fen: g.fen, chess960: g.options.chess960, allowedMoves: allowed, managersTip,
-          // Hot Spots only count when the bot isn't resting after its last one.
-          hotSpots: me.hotSpotRest > 0 ? [] : g.hotSpots, goldenBoot: me.goldenBootMoves > 0,
+          hotSpots: g.hotSpots, goldenBoot: me.goldenBootMoves > 0,
         });
         await wait(Math.min(res.thinkMs, 2500));
         uci = resolveMove(gameRef.current, res.uci) ?? allowed[Math.floor(Math.random() * allowed.length)];

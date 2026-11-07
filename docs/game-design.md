@@ -56,7 +56,7 @@ Before each game every player picks the club they support from all 92 Premier Le
 
 ## Menus
 
-The game opens on a **main menu** in the Tactics Board style: Play a bot (pick a ladder bot, or Freddie, Ryan or Ollie and Easy, Medium or Hard), Pass and Play, High scores, Game history, How to play and Settings. The setup screen then takes clubs (one A to Z list of all 92 with a search box, not grouped by division, so it doesn't date when clubs go up or down), colour, and the Trivia, Timed and Chess960 toggles. During a game the **Menu** button (or the title bar) pauses everything, including clocks, question timers and bots, with Resume, Restart, Settings and Quit to menu. High scores keep your record (played, won, drawn, lost, best winning run) against each bot at each level, plus Pass and Play wins by name, on the device. **Game history** lists the last 100 finished games, newest first (no replays): date, opponent and level, result and how it ended, moves, Form earned and trivia score (right/asked, including Who am I? and shootout kicks).
+The game opens on a **main menu** in the Tactics Board style: Play a bot (pick a ladder bot, or Freddie, Ryan or Ollie and Easy, Medium or Hard), Pass and Play, High scores, Game history, How to play and Settings. The setup screen then takes clubs (one A to Z list of all 92 with a search box, not grouped by division, so it doesn't date when clubs go up or down), colour, and the Trivia, Timed and Chess960 toggles. During a game the **Menu** button (or the title bar) pauses everything, including clocks, question timers and bots, with Resume, Restart, Settings and Quit to menu. High scores keep your record (played, won, drawn, lost, best winning run) against each bot at each level, plus Pass and Play wins by name, on the device. The top of the page shows your **best win** (the bot with the highest combined chess + trivia rating you have beaten) and your **trivia Elo**, which moves with your answers against bots and tops out at the title Elite Ball Knowledge (docs/bots.md). **Game history** lists the last 100 finished games, newest first (no replays): date, opponent and level, result and how it ended, moves, Form earned and trivia score (right/asked, including Who am I? and shootout kicks).
 
 ## When trivia comes up
 
@@ -196,7 +196,7 @@ Playtest round 3 (Freddie, 7 Nov 2026) added one bot at each of 400, 600, 800, 1
 Every bot (ladder and originals) also plays the game around the chess (review bug 10 and "easy bots"):
 
 - **It sees the evaluation.** Before deciding on a power-up, the bot takes a quick look at the position with the engine (depth 8 at most). So Park the Bus fires when it's losing, VAR Review fires when the score has swung against it since its last move, and it picks safer cards when it's well ahead.
-- **It chases Hot Spots.** A move onto a Hot Spot gets a bonus worth up to 0.7 of a pawn, scaled by how well the bot knows its own club, so good quizzers go for them and poor ones mostly don't. Not while the bot is resting after its last Hot Spot.
+- **It chases Hot Spots.** A move onto a Hot Spot gets a bonus worth up to 0.4 of a pawn, scaled by how well the bot knows its own club, so good quizzers go for them and poor ones mostly don't.
 - **It uses hints.** On a Highlight or Screamer it rates below 65%, the bot buys a 50:50 if it has the Form (never on a Tap-in or a Puskás).
 - **Golden Boot only pays.** The bot buys it only when the engine's best move is a capture, and while it runs the bot likes captures a bit more, so it doesn't lose Form on it.
 

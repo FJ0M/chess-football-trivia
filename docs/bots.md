@@ -31,7 +31,7 @@ Ladder bots run the same code as the originals. What differs is in the profile: 
 ## Playing the game around the chess (review bug 10)
 
 - **Evaluation.** `bot.choosePowerUp()` is async: the bot first analyses the position (depth up to 8). It uses that score for Park the Bus (when behind by 1.5 pawns or more), for VAR Review (when the score has dropped 2.5 pawns or more since the eval it expected after its own last move, or after its own blunder) and for picking safer cards when well ahead. The card choice reuses the eval from the bot's own move.
-- **Hot Spots.** The game passes the Hot Spots that count (none while the bot is resting). Moves onto one get a bonus of `(own-club accuracy − 0.45) × 150` centipawns, capped at 70. Hot Spot moves that aren't in the engine's top lines get a separate search so they can be considered.
+- **Hot Spots.** The game passes the Hot Spots. Moves onto one get a bonus of `(own-club accuracy − 0.5) × 100` centipawns, capped at 40 (a Hot Spot is a club question at normal Form since round 3). Hot Spot moves that aren't in the engine's top lines get a separate search so they can be considered.
 - **Hints.** `bot.chooseHint()` buys a 50:50 on a Highlight or Screamer the bot rates below 65%, if it can pay and keep any reserve it saves for. Never on a Tap-in or a Puskás.
 - **Golden Boot.** Bought only when the engine's best move is a capture (it costs 2 and pays 2 a capture). While it runs, captures get a 40 cp bonus.
 
@@ -56,20 +56,37 @@ The first draft of every bot played about 400 points too strong, and these numbe
 
 A simple improvement for later: after each game, suggest moving up a level after a win and down after a loss, so the suggestion fixes itself.
 
-## Trivia rating and high score (provisional)
+## Trivia Elo and the high score
 
-Freddie's idea is that the high score is the biggest combined rating you've beaten, with trivia weighted by what it is actually worth. Each bot level now carries three numbers in `BOTS[i].ratings[level]`:
+Freddie's idea (4 and 7 Nov 2026): a trivia rating next to the chess one, and a high score that is the biggest combined rating you've beaten, with the two balanced so they compare fairly. The code is in `src/game/triviaElo.ts`.
 
-- `chess`: the measured Elo above.
-- `trivia`: average accuracy across easy, medium and hard.
-- `match`: chess + (accuracy − 55%) × 4 per point. An average quizzer (55%) gets their chess rating, and a perfect one gets +180.
+**Trivia Elo** uses the chess Elo curve. Each question has a rating: Tap-in 1000, Highlight 1300, Screamer 1600, Puskás 1800. A quizzer rated R gets a question rated Q right with chance 1 / (1 + 10^((Q − R) / 400)), so someone rated 1600 gets half their Screamers right. A 55% quizzer comes out at about 1350, and each extra 10% of accuracy adds about 105.
 
-| Match rating | Ollie | Ryan | Freddie |
+- **Bots** get theirs from their accuracy at each difficulty (the best-fitting rating).
+- **You** start at 1350, and your rating moves after each game against a bot, one answer at a time, like a chess rating (K = 40 for your first 30 answers, then 24, then 16 after 100). Only question cards count, not "Who am I?" or shootout kicks. Pass and Play doesn't count, because two people share the device.
+- Labels build up to **Elite Ball Knowledge** at 1800: Plastic, Casual fan (1000), Matchday regular (1200), Season-ticket holder (1400), Pundit (1600).
+
+**Combined rating** = chess Elo + `TRIVIA_WEIGHT` × (trivia Elo − 1350). An average quizzer's combined rating is just their chess rating. The weight says how many chess Elo points one trivia Elo point is worth in a real game. It is 0.35 for now, from the earlier finding that chess decides most games; the full-game playtest below measures it.
+
+**High score.** The High scores page shows your **best win**: the bot with the highest combined rating you've beaten, with its chess and trivia Elo. It also shows your trivia Elo and title. Reset clears both.
+
+| Bot | Chess | Trivia Elo | Combined |
 | --- | --- | --- | --- |
-| Low | 534 | 979 | 1521 |
-| Medium | 728 | 1367 | 1756 |
-| Hard | 1052 | 1699 | 2135 |
-
-The weighting (4 Elo per accuracy point) is a first guess. The full-game playtest (`tools/playtest/fullgame.ts`, simplified trivia, Form and power-up rules) was cut short. What it did show is that chess dominates. Ollie earned noticeably more Form, but won only 1 of 47 games against opponents of 1320 chess or stronger who answer 55% of questions right. So "2500 chess with no football knowledge" really does beat "perfect trivia with weak chess", and the trivia weighting should stay small. A longer run of the trivia-accuracy grid (same chess, 15% to 95% trivia) would pin the number down.
+| Pawny Dribbles | 400 | 1317 | 388 |
+| Eezy Peasy | 600 | 1609 | 691 |
+| Billy Chillwall | 800 | 1411 | 821 |
+| Gambit Gary | 1000 | 1699 | 1122 |
+| Mo Mate | 1200 | 1490 | 1249 |
+| Florence Knightingale | 1400 | 1532 | 1464 |
+| Ragnar Rookland | 1600 | 1269 | 1572 |
+| Ollie (low) | 450 | 1584 | 532 |
+| Ollie (medium) | 600 | 1744 | 738 |
+| Ollie (hard) | 900 | 1877 | 1084 |
+| Ryan (low) | 950 | 1428 | 977 |
+| Ryan (medium) | 1300 | 1532 | 1364 |
+| Ryan (hard) | 1600 | 1631 | 1698 |
+| Freddie (low) | 1600 | 1146 | 1529 |
+| Freddie (medium) | 1800 | 1238 | 1761 |
+| Freddie (hard) | 2150 | 1314 | 2137 |
 
 Known harness issue: when many games run in parallel, a Stockfish child process sometimes exits (code 7) and the run stops. Run fewer shards at once, or add a restart.

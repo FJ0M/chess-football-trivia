@@ -36,11 +36,12 @@ const PROMOTION_AIM: Partial<Record<BotId, Record<BotLevel, PromotionRole>>> = {
 /** Depth of the bot's quick look at the position before it decides on a power-up. */
 const LOOK_DEPTH = 8;
 
-/** What a Hot Spot is worth to a bot in centipawns: good quizzers on their own club chase them. */
+/** What a Hot Spot is worth to a bot in centipawns: good quizzers on their own club chase them a little. */
 export function hotSpotValue(profile: BotProfile, level: BotLevel): number {
   if (profile.hotSpotCp !== undefined) return profile.hotSpotCp;
   const acc = profile.levels[level].trivia.ownClubAccuracy;
-  return Math.max(0, Math.min(70, Math.round((acc - 0.45) * 150)));
+  // A Hot Spot is a club question at normal Form (playtest round 3), so it's worth less than a pawn.
+  return Math.max(0, Math.min(40, Math.round((acc - 0.5) * 100)));
 }
 
 export interface Bot {

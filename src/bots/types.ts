@@ -105,7 +105,7 @@ export interface MoveRequest {
   allowedMoves?: string[];
   /** The bot bought Manager's Tip this turn: play the engine's top move. */
   managersTip?: boolean;
-  /** Hot Spot squares that count for the bot this move (leave out while it is resting). */
+  /** Hot Spot squares: the bot steers towards them if it rates its club questions. */
   hotSpots?: string[];
   /** Golden Boot is running: captures earn Form, so the bot likes them more. */
   goldenBoot?: boolean;
