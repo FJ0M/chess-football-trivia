@@ -14,7 +14,7 @@ export function MainMenu({ onPlay, onSettings, onScores, onHistory, onRules }: {
       <div className="menu-title">
         <img className="menu-logo" src={`${import.meta.env.BASE_URL}icons/logo.svg`} alt="" width="72" height="72" />
         <span className="kicker">The manager's whiteboard</span>
-        <h1>Chess Football Trivia</h1>
+        <h1>They Think It's Checkmate</h1>
         <p>Play chess, answer football questions, spend your Form on power-ups.</p>
       </div>
       <button type="button" className="menu-btn primary" onClick={() => onPlay("bot")}><b>Play a bot</b><small>Freddie, Ryan or Ollie</small></button>

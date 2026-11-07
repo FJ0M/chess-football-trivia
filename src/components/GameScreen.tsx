@@ -96,7 +96,7 @@ export function GameScreen({ style, play, setup, view, paused, onPause, onExit, 
   return (
     <div className={`screen style-${style.id}${local && view === "flip" ? " flip-mode" : ""}${flipAll ? " flip-all" : ""}`}>
       <div className="strip">
-        <span>{game.options.chess960 ? `Chess960 · No. ${game.options.position}` : game.options.trivia ? "Chess Football Trivia" : "Plain chess"}</span>
+        <span>{game.options.chess960 ? `Chess960 · No. ${game.options.position}` : game.options.trivia ? "Football trivia" : "Plain chess"}</span>
         <span>Move {Math.ceil((game.history.length + 1) / 2)}</span>
       </div>
       <PlayerBar game={game} color={top} active={active} bubble={g.bubble} />
