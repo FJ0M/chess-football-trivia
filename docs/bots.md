@@ -66,7 +66,18 @@ Freddie's idea (4 and 7 Nov 2026): a trivia rating next to the chess one, and a 
 - **You** start at 1350, and your rating moves after each game against a bot, one answer at a time, like a chess rating (K = 40 for your first 30 answers, then 24, then 16 after 100). Only question cards count, not "Who am I?" or shootout kicks. Pass and Play doesn't count, because two people share the device.
 - Labels build up to **Elite Ball Knowledge** at 1800: Plastic, Casual fan (1000), Matchday regular (1200), Season-ticket holder (1400), Pundit (1600).
 
-**Combined rating** = chess Elo + `TRIVIA_WEIGHT` × (trivia Elo − 1350). An average quizzer's combined rating is just their chess rating. The weight says how many chess Elo points one trivia Elo point is worth in a real game. It is 0.35 for now, from the earlier finding that chess decides most games; the full-game playtest below measures it.
+**Combined rating** = chess Elo + `TRIVIA_WEIGHT` × (trivia Elo − 1350). An average quizzer's combined rating is just their chess rating. The weight says how many chess Elo points one trivia Elo point is worth in a real game. It is 0.35, measured with the full-game playtest below.
+
+**Measuring the weight** (7 Nov 2026, `tools/playtest/fullgame.ts`, 96 games with the round-3 Form rules). Both sides play Stockfish `UCI_Elo 1320` chess; only their trivia accuracy differs. A Stockfish 1600 side was added as a check on the chess scale, and it fitted at 1599.
+
+| Trivia accuracy | Trivia Elo | Plays like (chess Elo) |
+| --- | --- | --- |
+| 35% | 1143 | 1247 |
+| 55% | 1352 | 1320 (anchor) |
+| 75% | 1572 | 1440 |
+| 95% | 1795 | 1484 |
+
+Going from 35% to 95% (650 trivia Elo) was worth about 240 chess Elo, so 0.36 chess points per trivia point. The steps in between ranged from 0.2 to 0.55, because 24 games a pairing is still noisy. Trivia matters more than the early run suggested, but chess still decides most games, and the gains taper off at the top.
 
 **High score.** The High scores page shows your **best win**: the bot with the highest combined rating you've beaten, with its chess and trivia Elo. It also shows your trivia Elo and title. Reset clears both.
 

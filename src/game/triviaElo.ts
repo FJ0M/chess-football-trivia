@@ -19,7 +19,7 @@ export const TRIVIA_START = 1350;
 /**
  * How many chess Elo points one trivia Elo point is worth in a real game, from the
  * full-game playtest (tools/playtest/fullgame.ts, docs/bots.md): same chess, different
- * trivia. Chess still decides most games, so trivia counts for less than half.
+ * trivia. 35% to 95% accuracy (650 trivia Elo) played like 240 chess Elo, so about 0.36.
  */
 export const TRIVIA_WEIGHT = 0.35;
 
