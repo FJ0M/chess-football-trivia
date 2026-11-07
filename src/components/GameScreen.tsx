@@ -431,10 +431,11 @@ function StadiumClock({ ms, running }: { ms: number; running: boolean }) {
   );
 }
 
-function MarkerArrow({ from, to, orientation, color, id, outline }: { from: string; to: string; orientation: Color; color: string; id: string; outline?: boolean }) {
+/** A marker-pen arrow between two squares. `n` is the board size (8, or 4 for the Settings preview). */
+export function MarkerArrow({ from, to, orientation, color, id, outline, n = 8 }: { from: string; to: string; orientation: Color; color: string; id: string; outline?: boolean; n?: number }) {
   const xy = (sq: string) => {
     const f = FILES.indexOf(sq[0]), r = Number(sq[1]) - 1;
-    return orientation === "white" ? [f + 0.5, 7 - r + 0.5] : [7 - f + 0.5, r + 0.5];
+    return orientation === "white" ? [f + 0.5, n - 1 - r + 0.5] : [n - 1 - f + 0.5, r + 0.5];
   };
   const [x1, y1] = xy(from);
   const [x2, y2] = xy(to);
@@ -442,7 +443,7 @@ function MarkerArrow({ from, to, orientation, color, id, outline }: { from: stri
   const ex = x2 - ((x2 - x1) / len) * 0.3, ey = y2 - ((y2 - y1) / len) * 0.3;
   const mx = (x1 + ex) / 2 + ((ey - y1) / len) * 0.4, my = (y1 + ey) / 2 - ((ex - x1) / len) * 0.4;
   return (
-    <svg className="arrow" viewBox="0 0 8 8" aria-hidden="true">
+    <svg className="arrow" viewBox={`0 0 ${n} ${n}`} aria-hidden="true">
       <defs>
         <marker id={id} viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto">
           <path d="M0 0L10 5L0 10z" fill={color} stroke={outline ? "#fff" : "none"} strokeWidth="1.2" />

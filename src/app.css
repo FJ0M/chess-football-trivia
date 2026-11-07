@@ -51,8 +51,15 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 .style-step .mid { display: grid; gap: 6px; justify-items: center; text-align: center; min-width: 0; }
 .style-step strong em { font-style: normal; font-size: 11px; font-weight: 600; color: var(--sheet-accent); margin-left: 6px; text-transform: uppercase; letter-spacing: .06em; }
 .style-step small { color: var(--sheet-muted); min-height: 2.6em; }
-.mini-board { display: grid; grid-template-columns: repeat(4, 28px); grid-auto-rows: 28px; border: 3px solid; border-radius: 6px; overflow: hidden; }
-.mini-board i { display: grid; place-items: center; font-style: normal; font-size: 18px; line-height: 1; }
+/* The preview reuses the real style CSS on a small .screen; these rules only shrink it. Squares are fixed 30px squares. */
+.screen.style-preview { width: auto; max-width: 100%; margin: 0; padding: 10px; gap: 8px; justify-items: center; border-radius: 10px; }
+.style-preview .board { grid-template-columns: repeat(4, 30px); grid-template-rows: repeat(4, 30px); width: auto; aspect-ratio: auto; }
+.style-preview .board::before, .style-preview .board::after { display: none; }
+.style-preview .sq { width: 30px; height: 30px; }
+.style-preview .pc { font-size: 20px; }
+.style-preview .quiz { width: 100%; max-width: 220px; box-sizing: border-box; padding: 8px; gap: 4px; transform: none; text-align: left; }
+.style-preview .quiz .q { font-size: 13px; }
+.style-preview .quiz .meta { font-size: 9px; }
 .style-step .dots { display: flex; gap: 0; justify-content: center; flex-wrap: wrap; }
 .style-step .dots button { width: 15px; height: 20px; padding: 0; border: 0; background: none; cursor: pointer; display: grid; place-items: center; }
 .style-step .dots button::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--sheet-line); }
