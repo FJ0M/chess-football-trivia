@@ -1,7 +1,7 @@
 // Pick a mode, opponent, clubs and the game toggles before kick-off.
 
 import { useEffect, useState } from "react";
-import { CLUBS, DIVISIONS } from "../game/clubs";
+import { ClubPicker } from "./ClubPicker";
 import { backRank, randomPosition, STANDARD_POSITION } from "../game/chess960";
 import { botList, loadBots, type BotLevel, type BotMeta } from "../game/bots";
 import type { SetupChoice } from "../game/useGame";
@@ -62,14 +62,8 @@ export function SetupScreen({ mode, onStart, onBack }: { mode: "bot" | "local"; 
   }
 
   const clubSelect = (i: 0 | 1) => (
-    <select value={s.clubs[i]} onChange={(e) => set("clubs", (i === 0 ? [e.target.value, s.clubs[1]] : [s.clubs[0], e.target.value]) as [string, string])} aria-label={`${s.names[i] || "Player"}'s club`}>
-      <option value="">No club (general questions only)</option>
-      {DIVISIONS.map((d) => (
-        <optgroup key={d} label={d}>
-          {CLUBS.filter((c) => c.division === d).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-        </optgroup>
-      ))}
-    </select>
+    <ClubPicker value={s.clubs[i]} label={s.mode === "bot" ? "Your club" : i === 0 ? "White's club" : "Black's club"}
+      onChange={(id) => set("clubs", (i === 0 ? [id, s.clubs[1]] : [s.clubs[0], id]) as [string, string])} />
   );
 
   return (
@@ -101,7 +95,7 @@ export function SetupScreen({ mode, onStart, onBack }: { mode: "bot" | "local"; 
             ))}
           </div>
           <h3>You</h3>
-          <label className="field"><span>Your club</span>{clubSelect(0)}</label>
+          <div className="field"><span>Your club</span>{clubSelect(0)}</div>
           <div className="seg small" role="radiogroup" aria-label="Your colour">
             {(["white", "black", "random"] as const).map((c) => (
               <button key={c} type="button" role="radio" aria-checked={s.side === c} className={s.side === c ? "on" : ""} onClick={() => set("side", c)}>
@@ -118,7 +112,7 @@ export function SetupScreen({ mode, onStart, onBack }: { mode: "bot" | "local"; 
               <label className="field"><span>Name</span>
                 <input value={s.names[i]} maxLength={16} onChange={(e) => set("names", (i === 0 ? [e.target.value, s.names[1]] : [s.names[0], e.target.value]) as [string, string])} />
               </label>
-              <label className="field"><span>Club</span>{clubSelect(i)}</label>
+              <div className="field"><span>Club</span>{clubSelect(i)}</div>
             </div>
           ))}
         </>

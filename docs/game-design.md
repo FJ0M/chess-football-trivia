@@ -27,7 +27,7 @@ All numbers below (Form costs, timers, bot accuracy) are first guesses to tune i
 There are two ways to play, and both use the same rules.
 
 - **vs Bot.** Pick Freddie, Ryan or Ollie. You answer questions yourself; the bot "answers" using its trivia profile and talks trash throughout.
-- **Pass and Play.** Two people on one device. Whoever triggered the question answers it, and the other player hands over the device without peeking (honour system, as at the pub). The screen faces whoever is up. **Flip the screen** (the default, on phones, tablets and computers) turns the whole game round 180 degrees on Black's turn, so the board, question card and power-ups all face them with the device flat on the table. **Hand over** flips only the board, for passing the device across. **Face to face** (a tablet flat on the table) keeps the board fixed and turns the question card and controls 180 degrees towards Black. Both can be switched off in Settings.
+- **Pass and Play.** Two people on one device. Whoever triggered the question answers it, and the other player hands over the device without peeking (honour system, as at the pub). The screen faces whoever is up. Settings has two views, each with a picture. **Flat on the table** (the default, on phones, tablets and computers) turns the whole game round 180 degrees on Black's turn, so the board, question card and power-ups all face them with the device flat on the table. **Pass the phone** flips only the board, for handing the device across. (The old Face to face and Off views were removed in playtest round 3; saved settings move to Flat on the table and Pass the phone.)
 
 Each game also has a **Plain Chess** toggle (no trivia) and a **Timed** toggle (3, 5, 10, 15 or 30 minutes each, shown on stadium-style scoreboard clocks), so it works for a quick game or a serious one.
 
@@ -56,7 +56,7 @@ Before each game every player picks the club they support from all 92 Premier Le
 
 ## Menus
 
-The game opens on a **main menu** in the Tactics Board style: Play a bot (pick Freddie, Ryan or Ollie and Easy, Medium or Hard), Pass and Play, High scores, How to play and Settings. The setup screen then takes clubs, colour, and the Trivia, Timed and Chess960 toggles. During a game the **Menu** button (or the title bar) pauses everything, including clocks, question timers and bots, with Resume, Restart, Settings and Quit to menu. High scores keep your record (played, won, drawn, lost, best winning run) against each bot at each level, plus Pass and Play wins by name, on the device.
+The game opens on a **main menu** in the Tactics Board style: Play a bot (pick Freddie, Ryan or Ollie and Easy, Medium or Hard), Pass and Play, High scores, Game history, How to play and Settings. The setup screen then takes clubs (one A to Z list of all 92 with a search box, not grouped by division, so it doesn't date when clubs go up or down), colour, and the Trivia, Timed and Chess960 toggles. During a game the **Menu** button (or the title bar) pauses everything, including clocks, question timers and bots, with Resume, Restart, Settings and Quit to menu. High scores keep your record (played, won, drawn, lost, best winning run) against each bot at each level, plus Pass and Play wins by name, on the device. **Game history** lists the last 100 finished games, newest first (no replays): date, opponent and level, result and how it ended, moves, Form earned and trivia score (right/asked, including Who am I? and shootout kicks).
 
 ## When trivia comes up
 

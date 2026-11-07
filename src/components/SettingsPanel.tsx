@@ -1,7 +1,8 @@
 import { STYLES, getStyle } from "../theme/themes";
 import { TRACKS } from "../audio/music";
 import { SFX_LABELS, type SfxName } from "../audio/sfx";
-import { DEFAULT_SETTINGS, type Settings } from "../settings/settings";
+import { DEFAULT_SETTINGS, VIEWS, type Settings } from "../settings/settings";
+import { VIEW_INFO, ViewArt } from "./ViewArt";
 
 interface Props {
   settings: Settings;
@@ -73,15 +74,17 @@ export function SettingsPanel({ settings, onChange, onClose, play }: Props) {
         </label>
 
         <h3>Pass and Play</h3>
-        <label className="select" htmlFor="pnp-view">
-          <span>How the screen faces each player</span>
-          <select id="pnp-view" value={settings.passAndPlayView} onChange={(e) => set("passAndPlayView", e.target.value as Settings["passAndPlayView"])}>
-            <option value="flip">Flip the screen: everything turns round to face whoever is up (device flat on the table)</option>
-            <option value="hand-over">Hand over: only the board flips, for passing the device across</option>
-            <option value="face-to-face">Face to face: board stays put, controls turn round (tablet on a table)</option>
-            <option value="off">Off: White always at the bottom</option>
-          </select>
-        </label>
+        <p className="sheet-note">How the screen faces each player</p>
+        <div className="view-list" role="radiogroup" aria-label="Pass and Play view">
+          {VIEWS.map((v) => (
+            <label key={v} className={`view-option${settings.passAndPlayView === v ? " on" : ""}`}>
+              <input type="radio" name="pnp-view" value={v} checked={settings.passAndPlayView === v} onChange={() => set("passAndPlayView", v)} />
+              <ViewArt view={v} />
+              <strong>{VIEW_INFO[v].name}</strong>
+              <small>{VIEW_INFO[v].blurb}</small>
+            </label>
+          ))}
+        </div>
 
         <button type="button" className="ghost reset" onClick={() => onChange({ ...DEFAULT_SETTINGS })}>Reset to defaults</button>
       </section>
