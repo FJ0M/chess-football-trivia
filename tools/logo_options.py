@@ -70,10 +70,26 @@ def ppawn(cx, base, s, kit, uid, gloves=False, shadow=True):
     out.append(f'<path d="M{hx-hr*0.62:.1f} {hy-hr*0.2:.1f}A{hr*0.66:.1f} {hr*0.66:.1f} 0 0 1 {hx-hr*0.15:.1f} {hy-hr*0.62:.1f}" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="{hr*0.12:.1f}" stroke-linecap="round"/>')
     if gloves:
         for sx in (-1, 1):
-            gx, gy = cx + sx * w(84), base - w(170)
-            out.append(f'<g transform="rotate({sx*18} {gx:.1f} {gy:.1f})"><rect x="{gx-w(20):.1f}" y="{gy-w(26):.1f}" width="{w(40):.1f}" height="{w(46):.1f}" rx="{w(14):.1f}" fill="#ff8a1f" stroke="{ink}" stroke-width="{w(7):.1f}"/>'
-                       f'<path d="M{gx-w(8):.1f} {gy-w(26):.1f}v{w(16):.1f}M{gx+w(4):.1f} {gy-w(26):.1f}v{w(16):.1f}" stroke="{ink}" stroke-width="{w(4):.1f}"/></g>')
+            out.append(glove(cx + sx * w(86), base - w(168), s, sx, ink))
     return "".join(out)
+
+
+def glove(gx, gy, s, side, ink):
+    """A keeper's glove, palm out, fingers up, thumb pointing in towards the body."""
+    u = lambda v: v * s
+    sw = u(4.5)
+    orange, palm, strap = "#ff8a1f", "#ffc070", "#1b2430"
+    parts = [f'<g transform="rotate({side*14} {gx:.1f} {gy:.1f})">']
+    for i, h in enumerate((26, 32, 30, 23)):  # fingers, left to right
+        fx = gx - u(22) + i * u(11)
+        parts.append(f'<rect x="{fx:.1f}" y="{gy-u(14)-u(h):.1f}" width="{u(11):.1f}" height="{u(h)+u(10):.1f}" rx="{u(5.5):.1f}" fill="{orange}" stroke="{ink}" stroke-width="{sw:.1f}"/>')
+    tx = gx - side * u(22)  # thumb on the side nearest the body
+    parts.append(f'<rect x="{tx-u(6):.1f}" y="{gy-u(14):.1f}" width="{u(12):.1f}" height="{u(28):.1f}" rx="{u(6):.1f}" fill="{orange}" stroke="{ink}" stroke-width="{sw:.1f}" transform="rotate({-side*45} {tx:.1f} {gy+u(12):.1f})"/>')
+    parts.append(f'<path d="M{gx-u(22):.1f} {gy-u(12):.1f}H{gx+u(22):.1f}V{gy+u(14):.1f}Q{gx+u(22):.1f} {gy+u(24):.1f} {gx+u(12):.1f} {gy+u(24):.1f}H{gx-u(12):.1f}Q{gx-u(22):.1f} {gy+u(24):.1f} {gx-u(22):.1f} {gy+u(14):.1f}z" fill="{orange}" stroke="{ink}" stroke-width="{sw:.1f}" stroke-linejoin="round"/>')
+    parts.append(f'<rect x="{gx-u(14):.1f}" y="{gy-u(7):.1f}" width="{u(28):.1f}" height="{u(22):.1f}" rx="{u(6):.1f}" fill="{palm}"/>')
+    parts.append(f'<rect x="{gx-u(20):.1f}" y="{gy+u(22):.1f}" width="{u(40):.1f}" height="{u(14):.1f}" rx="{u(4):.1f}" fill="{strap}" stroke="{ink}" stroke-width="{sw:.1f}"/>')
+    parts.append(f'<rect x="{gx-u(20):.1f}" y="{gy+u(26):.1f}" width="{u(40):.1f}" height="{u(4):.1f}" fill="{orange}"/></g>')
+    return "".join(parts)
 
 
 def matchball(cx, cy, r, uid):
@@ -171,8 +187,8 @@ def frame(inner, rounded=True, bg="#278a42"):
     return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">{clip}{g}<rect width="512" height="512" fill="{bg}"/>{inner}</g></svg>'
 
 
-def spot(cx, cy):
-    return f'<ellipse cx="{cx}" cy="{cy}" rx="11" ry="4" fill="#fff" opacity=".9"/>'
+def spot(cx, cy, rx=11):
+    return f'<ellipse cx="{cx}" cy="{cy}" rx="{rx}" ry="{rx*0.32:.1f}" fill="#fff" stroke="#1b2430" stroke-opacity=".25" stroke-width="2"/>'
 
 
 def option1():
@@ -195,7 +211,7 @@ def option2(rounded=True):
          '<path d="M0 330H512" stroke="#fff" stroke-opacity=".85" stroke-width="6"/>',
          goal(250, 560, 120, 330, 2),
          ppawn(372, 328, 0.7, DARK, "k2", gloves=True),
-         spot(196, 470), matchball(196, 446, 26, 2),
+         spot(196, 474, rx=40), matchball(196, 446, 26, 2),
          ppawn(118, 500, 0.92, LIGHT, "t2")]
     return frame("".join(s), rounded=rounded)
 
