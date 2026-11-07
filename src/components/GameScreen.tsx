@@ -11,6 +11,8 @@ import { FORM_CAP, POWER_UPS, POWER_UP_BY_ID, TRIVIA_HINTS, fergieMs, fmtSeconds
 import { destsFor, isPromotion, pieceAt, powerBlocked, powerCost, powerTargets, turnOf, WHO_AM_I_PIECES, ROLE_NAME } from "../game/rules";
 import { clubShort } from "../game/clubs";
 import { PowerIcon } from "./PowerIcons";
+import { useMatchStats } from "../game/useMatchStats";
+import type { MatchStats } from "../game/history";
 import { CLUE_MS } from "../game/whoami";
 import type { Color, GameState, Outcome, PowerUpId } from "../game/types";
 
@@ -25,12 +27,13 @@ interface Props {
   paused: boolean;
   onPause: () => void;
   onExit: () => void;
-  onFinish: (game: GameState) => void;
+  onFinish: (game: GameState, stats: MatchStats) => void;
 }
 
 export function GameScreen({ style, play, setup, view, paused, onPause, onExit, onFinish }: Props) {
   const g = useGame(setup, play, paused);
   const { game, phase } = g;
+  const stats = useMatchStats(game, phase);
   const [sel, setSel] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<"resign" | "draw" | null>(null);
 
@@ -38,11 +41,11 @@ export function GameScreen({ style, play, setup, view, paused, onPause, onExit, 
   const active: Color = "color" in phase ? phase.color : phase.kind === "shootout" ? phase.taker : turn;
   const humans = (["white", "black"] as Color[]).filter((c) => game.players[c].kind === "human");
   const local = game.options.mode === "local";
-  // "Flip the screen" turns the whole card round for Black, so the board inside is drawn from Black's side:
+  // "Flat on the table" turns the whole card round for Black, so the board inside is drawn from Black's side:
   // after the 180° turn the pieces stay where they sit on the table and only the screen faces the other way.
-  const orientation: Color = local ? (view === "hand-over" || view === "flip" ? active : "white") : humans[0] ?? "white";
-  const turned = local && view === "face-to-face" && active === "black";
-  /** "Flip the screen": the whole game turns 180 degrees for Black, so the board and every card face them. */
+  // "Pass the phone" just draws the board from the side of whoever is up.
+  const orientation: Color = local ? active : humans[0] ?? "white";
+  /** "Flat on the table": the whole game turns 180 degrees for Black, so the board and every card face them. */
   const flipAll = local && view === "flip" && active === "black";
   const humanToAct = game.players[active].kind === "human";
   // When the whole screen turns round, mirror the scroll position so the player now facing it
@@ -81,7 +84,7 @@ export function GameScreen({ style, play, setup, view, paused, onPause, onExit, 
   }
   const [selNote, setSelNote] = useState<string | null>(null);
   useEffect(() => { setSelNote(null); }, [game, phase]);
-  useEffect(() => { if (game.outcome) onFinish(game); }, [game.outcome]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (game.outcome) onFinish(game, stats.current); }, [game.outcome]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const rows = orientation === "white" ? [7, 6, 5, 4, 3, 2, 1, 0] : [0, 1, 2, 3, 4, 5, 6, 7];
   const cols = orientation === "white" ? [0, 1, 2, 3, 4, 5, 6, 7] : [7, 6, 5, 4, 3, 2, 1, 0];
@@ -91,12 +94,12 @@ export function GameScreen({ style, play, setup, view, paused, onPause, onExit, 
   const bottom: Color = orientation;
 
   return (
-    <div className={`screen style-${style.id}${turned ? " f2f-black" : ""}${local && view === "flip" ? " flip-mode" : ""}${flipAll ? " flip-all" : ""}`}>
+    <div className={`screen style-${style.id}${local && view === "flip" ? " flip-mode" : ""}${flipAll ? " flip-all" : ""}`}>
       <div className="strip">
         <span>{game.options.chess960 ? `Chess960 · No. ${game.options.position}` : game.options.trivia ? "Football trivia" : "Plain chess"}</span>
         <span>Move {Math.ceil((game.history.length + 1) / 2)}</span>
       </div>
-      <PlayerBar game={game} color={top} active={active} bubble={g.bubble} flipped={local && view === "face-to-face" && top === "black"} />
+      <PlayerBar game={game} color={top} active={active} bubble={g.bubble} />
       <div className="board" role="grid" aria-label="Chess board">
         {rows.map((r) => cols.map((c) => {
           const sq = FILES[c] + (r + 1);
@@ -126,7 +129,7 @@ export function GameScreen({ style, play, setup, view, paused, onPause, onExit, 
       </div>
       <PlayerBar game={game} color={bottom} active={active} bubble={g.bubble} />
 
-      <div className={`controls${turned ? " turned" : ""}`}>
+      <div className="controls">
         <Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} />
         {game.options.trivia && phase.kind !== "over" && phase.kind !== "shootout" && (
           <PowerBar game={game} phase={phase} color={local ? active : humans[0] ?? turn} enabled={humanToAct && phase.kind === "move"} onPick={g.choosePower} play={play} />
@@ -168,11 +171,11 @@ function boardArray(fen: string): Array<Array<{ role: string; color: Color } | n
   return out;
 }
 
-function PlayerBar({ game, color, active, bubble, flipped }: { game: GameState; color: Color; active: Color; bubble: { color: Color; text: string } | null; flipped?: boolean }): ReactNode {
+function PlayerBar({ game, color, active, bubble }: { game: GameState; color: Color; active: Color; bubble: { color: Color; text: string } | null }): ReactNode {
   const p = game.players[color];
   const status = [p.sentOff ? "Sent off" : "", p.doubleNextPower ? "Red card" : "", p.goldenBoot ? "Golden Boot" : "", p.wrongStreak >= 2 ? "Booked" : ""].filter(Boolean);
   return (
-    <div className={`player${active === color ? " up" : ""}${flipped ? " turned" : ""}`}>
+    <div className={`player${active === color ? " up" : ""}`}>
       <div className="who">
         <span className="badge">{p.name[0]?.toUpperCase()}</span>
         <span>{p.name} <span className="tag">{color === "white" ? "White" : "Black"} · {clubShort(p.club)}{p.kind === "bot" ? " · Bot" : ""}{status.length ? ` · ${status.join(", ")}` : ""}</span></span>
@@ -428,10 +431,11 @@ function StadiumClock({ ms, running }: { ms: number; running: boolean }) {
   );
 }
 
-function MarkerArrow({ from, to, orientation, color, id, outline }: { from: string; to: string; orientation: Color; color: string; id: string; outline?: boolean }) {
+/** A marker-pen arrow between two squares. `n` is the board size (8, or 4 for the Settings preview). */
+export function MarkerArrow({ from, to, orientation, color, id, outline, n = 8 }: { from: string; to: string; orientation: Color; color: string; id: string; outline?: boolean; n?: number }) {
   const xy = (sq: string) => {
     const f = FILES.indexOf(sq[0]), r = Number(sq[1]) - 1;
-    return orientation === "white" ? [f + 0.5, 7 - r + 0.5] : [7 - f + 0.5, r + 0.5];
+    return orientation === "white" ? [f + 0.5, n - 1 - r + 0.5] : [n - 1 - f + 0.5, r + 0.5];
   };
   const [x1, y1] = xy(from);
   const [x2, y2] = xy(to);
@@ -439,7 +443,7 @@ function MarkerArrow({ from, to, orientation, color, id, outline }: { from: stri
   const ex = x2 - ((x2 - x1) / len) * 0.3, ey = y2 - ((y2 - y1) / len) * 0.3;
   const mx = (x1 + ex) / 2 + ((ey - y1) / len) * 0.4, my = (y1 + ey) / 2 - ((ex - x1) / len) * 0.4;
   return (
-    <svg className="arrow" viewBox="0 0 8 8" aria-hidden="true">
+    <svg className="arrow" viewBox={`0 0 ${n} ${n}`} aria-hidden="true">
       <defs>
         <marker id={id} viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto">
           <path d="M0 0L10 5L0 10z" fill={color} stroke={outline ? "#fff" : "none"} strokeWidth="1.2" />

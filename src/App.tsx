@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { GameScreen } from "./components/GameScreen";
 import { SetupScreen } from "./components/SetupScreen";
-import { MainMenu, PauseMenu, RulesScreen, ScoresScreen } from "./components/Menus";
+import { HistoryScreen, MainMenu, PauseMenu, RulesScreen, ScoresScreen } from "./components/Menus";
 import { recordGame } from "./game/scores";
+import { entryFor, recordHistory, type MatchStats } from "./game/history";
 import type { SetupChoice } from "./game/useGame";
 import type { GameState } from "./game/types";
 import { SettingsPanel } from "./components/SettingsPanel";
@@ -15,7 +16,7 @@ import { playSfx, type SfxName } from "./audio/sfx";
 export function App() {
   const [settings, setSettings] = useState<Settings>(() => loadSettings());
   const [open, setOpen] = useState(false);
-  const [screen, setScreen] = useState<"menu" | "setup" | "game" | "scores" | "rules">("menu");
+  const [screen, setScreen] = useState<"menu" | "setup" | "game" | "scores" | "history" | "rules">("menu");
   const [mode, setMode] = useState<"bot" | "local">("bot");
   const [setup, setSetup] = useState<SetupChoice | null>(null);
   const [gameKey, setGameKey] = useState(0);
@@ -61,14 +62,20 @@ export function App() {
         </button>
       </header>
       <p className="tap-note" style={{ visibility: audioReady ? "hidden" : "visible" }}>Tap anywhere to turn on sound</p>
-      {screen === "menu" && <MainMenu onPlay={(m) => { setMode(m); setScreen("setup"); }} onSettings={() => setOpen(true)} onScores={() => setScreen("scores")} onRules={() => setScreen("rules")} />}
+      {screen === "menu" && <MainMenu onPlay={(m) => { setMode(m); setScreen("setup"); }} onSettings={() => setOpen(true)} onScores={() => setScreen("scores")} onHistory={() => setScreen("history")} onRules={() => setScreen("rules")} />}
       {screen === "setup" && <SetupScreen mode={mode} onBack={() => setScreen("menu")} onStart={(s) => { setSetup(s); setGameKey((k) => k + 1); setPaused(false); setScreen("game"); }} />}
       {screen === "scores" && <ScoresScreen onBack={() => setScreen("menu")} />}
+      {screen === "history" && <HistoryScreen onBack={() => setScreen("menu")} />}
       {screen === "rules" && <RulesScreen onBack={() => setScreen("menu")} />}
       {screen === "game" && setup && (
         <GameScreen key={gameKey} style={style} play={play} setup={setup} view={settings.passAndPlayView} paused={paused || open}
           onPause={() => setPaused(true)} onExit={() => setScreen("menu")}
-          onFinish={(g: GameState) => { const human = g.players.white.kind === "human" ? "white" : "black"; recordGame(g, setup.botLevel, g.players[human].form); }} />
+          onFinish={(g: GameState, stats: MatchStats) => {
+            const human = g.players.white.kind === "human" ? "white" : "black";
+            recordGame(g, setup.botLevel, stats.formEarned[human]);
+            const entry = entryFor(g, stats, setup.botLevel);
+            if (entry) recordHistory(entry);
+          }} />
       )}
       {screen === "game" && paused && !open && (
         <PauseMenu onResume={() => setPaused(false)} onRestart={() => { setGameKey((k) => k + 1); setPaused(false); }} onSettings={() => setOpen(true)} onQuit={() => { setPaused(false); setScreen("menu"); }} />

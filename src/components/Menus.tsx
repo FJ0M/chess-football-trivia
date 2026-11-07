@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { loadScores, resetScores } from "../game/scores";
+import { clearHistory, loadHistory, resultKind, resultText, type HistoryEntry } from "../game/history";
+import type { Color } from "../game/types";
 
 const LEVEL = { low: "Easy", medium: "Medium", hard: "Hard" } as Record<string, string>;
 const BOT = { ollie: "Ollie", ryan: "Ryan", freddie: "Freddie" } as Record<string, string>;
 
-export function MainMenu({ onPlay, onSettings, onScores, onRules }: { onPlay: (mode: "bot" | "local") => void; onSettings: () => void; onScores: () => void; onRules: () => void }) {
+export function MainMenu({ onPlay, onSettings, onScores, onHistory, onRules }: { onPlay: (mode: "bot" | "local") => void; onSettings: () => void; onScores: () => void; onHistory: () => void; onRules: () => void }) {
   return (
     <nav className="menu" aria-label="Main menu">
       <div className="menu-title">
@@ -18,6 +20,7 @@ export function MainMenu({ onPlay, onSettings, onScores, onRules }: { onPlay: (m
       <button type="button" className="menu-btn primary" onClick={() => onPlay("bot")}><b>Play a bot</b><small>Freddie, Ryan or Ollie</small></button>
       <button type="button" className="menu-btn" onClick={() => onPlay("local")}><b>Pass and Play</b><small>Two players, one device</small></button>
       <button type="button" className="menu-btn" onClick={onScores}><b>High scores</b><small>Your record against each bot</small></button>
+      <button type="button" className="menu-btn" onClick={onHistory}><b>Game history</b><small>Every game you've finished on this device</small></button>
       <button type="button" className="menu-btn" onClick={onRules}><b>How to play</b><small>Triggers, Form and power-ups</small></button>
       <button type="button" className="menu-btn" onClick={onSettings}><b>Settings</b><small>Style, sound and music</small></button>
     </nav>
@@ -48,6 +51,65 @@ export function ScoresScreen({ onBack }: { onBack: () => void }) {
       <div className="row-btns">
         <button type="button" className="ghost" onClick={onBack}>Back</button>
         <button type="button" className="ghost" onClick={() => { resetScores(); setScores(loadScores()); }}>Reset</button>
+      </div>
+    </section>
+  );
+}
+
+const BADGE = { won: "W", lost: "L", drawn: "D", decided: "FT" } as const;
+const pct = (r: number, a: number) => (a ? ` (${Math.round((100 * r) / a)}%)` : "");
+
+function when(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return `${d.toLocaleDateString(undefined, { day: "numeric", month: "short", year: d.getFullYear() === new Date().getFullYear() ? undefined : "numeric" })}, ${d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}`;
+}
+
+function HistoryRow({ e }: { e: HistoryEntry }) {
+  const kind = resultKind(e);
+  const them: Color | undefined = e.you ? (e.you === "white" ? "black" : "white") : undefined;
+  const title = e.you && them ? `vs ${e.names[them]}${e.botLevel ? ` · ${LEVEL[e.botLevel] ?? e.botLevel}` : ""}` : `${e.names.white} v ${e.names.black}`;
+  const facts = [resultText(e), `${e.moves} move${e.moves === 1 ? "" : "s"}`, e.you ? `played ${e.you === "white" ? "White" : "Black"}` : "", e.chess960 ? "Chess960" : ""].filter(Boolean);
+  const tally = (c: Color) => `${e.quiz[c].right}/${e.quiz[c].asked}`;
+  let numbers: string;
+  if (!e.trivia) numbers = "Plain chess, no trivia";
+  else if (e.you) numbers = `Form earned +${e.formEarned[e.you]} · Trivia ${tally(e.you)}${pct(e.quiz[e.you].right, e.quiz[e.you].asked)}`;
+  else numbers = `Form earned ${e.names.white} +${e.formEarned.white}, ${e.names.black} +${e.formEarned.black} · Trivia ${e.names.white} ${tally("white")}, ${e.names.black} ${tally("black")}`;
+  return (
+    <li className={`hist hist-${kind}`}>
+      <span className="hist-badge" aria-hidden="true">{BADGE[kind]}</span>
+      <div className="hist-body">
+        <div className="hist-top"><b>{title}</b><time dateTime={e.at}>{when(e.at)}</time></div>
+        <span>{facts.join(" · ")}</span>
+        <small>{numbers}</small>
+      </div>
+    </li>
+  );
+}
+
+export function HistoryScreen({ onBack }: { onBack: () => void }) {
+  const [list, setList] = useState(loadHistory);
+  const [confirm, setConfirm] = useState(false);
+  const bot = list.filter((e) => e.you);
+  const record = { won: bot.filter((e) => resultKind(e) === "won").length, drawn: bot.filter((e) => resultKind(e) === "drawn").length, lost: bot.filter((e) => resultKind(e) === "lost").length };
+  return (
+    <section className="setup history" aria-labelledby="history-title">
+      <div className="setup-head"><button type="button" className="ghost" onClick={onBack}>Back</button><h1 id="history-title">Game history</h1></div>
+      {list.length ? (
+        <>
+          <p className="muted">{list.length} game{list.length === 1 ? "" : "s"}{bot.length ? ` · vs bots: won ${record.won}, drawn ${record.drawn}, lost ${record.lost}` : ""}</p>
+          <ol className="hist-list">{list.map((e, i) => <HistoryRow key={`${e.at}-${i}`} e={e} />)}</ol>
+        </>
+      ) : <p className="muted">No finished games yet. Play one and it shows up here.</p>}
+      <div className="row-btns">
+        <button type="button" className="ghost" onClick={onBack}>Back</button>
+        {list.length > 0 && (confirm ? (
+          <>
+            <span className="muted">Clear all {list.length}?</span>
+            <button type="button" className="ghost" onClick={() => { clearHistory(); setList([]); setConfirm(false); }}>Yes, clear</button>
+            <button type="button" className="ghost" onClick={() => setConfirm(false)}>No</button>
+          </>
+        ) : <button type="button" className="ghost" onClick={() => setConfirm(true)}>Clear history</button>)}
       </div>
     </section>
   );

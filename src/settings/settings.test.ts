@@ -58,4 +58,12 @@ describe("Pass and Play view", () => {
     saveSettings({ ...DEFAULT_SETTINGS, passAndPlayView: "hand-over" }, { setItem: (_k: string, v: string) => { saved = v; } });
     expect(loadSettings({ getItem: () => saved }).passAndPlayView).toBe("hand-over");
   });
+
+  it("moves the retired face-to-face and off views to the closest of the two left", () => {
+    const load = (v: string, viewVersion = 2) => loadSettings({ getItem: () => JSON.stringify({ passAndPlayView: v, viewVersion }) }).passAndPlayView;
+    expect(load("face-to-face")).toBe("flip");
+    expect(load("off")).toBe("hand-over");
+    expect(load("face-to-face", 1)).toBe("flip");
+    expect(sanitize({ passAndPlayView: "face-to-face" }).passAndPlayView).toBe("flip");
+  });
 });
