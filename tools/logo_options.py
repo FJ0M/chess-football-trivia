@@ -12,7 +12,7 @@ from make_logo import ball
 
 INK = "#1b2430"
 LIGHT = dict(base="#f4efe2", spot="#1b2430", line="#1b2430", ink=INK)
-DARK = dict(base="#24476b", spot="#0c1826", line="#0c1826", ink="#0b1420", head="#0b1420", head_spot="#ffffff")
+DARK = dict(base="#24476b", spot="#0c1826", line="#0c1826", ink="#0b1420", head="#24476b", head_spot="#0c1826")
 CLARET, SKY = "#7a263a", "#1bb1e7"
 
 
@@ -53,7 +53,7 @@ def ppawn(cx, base, s, kit, uid, gloves=False, shadow=True):
                + f'<path d="M{cx-w(40):.1f} {base-w(120):.1f}q{-w(4):.1f} {w(60):.1f} {-w(40):.1f} {w(100):.1f}" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="{w(10):.1f}" stroke-linecap="round"/></g>')
     out.append(f'<path d="{d}" fill="none" stroke="{kit["ink"]}" stroke-width="{w(9):.1f}" stroke-linejoin="round"/>')
     out.append(f'<rect x="{collar[0]:.1f}" y="{collar[1]:.1f}" width="{collar[2]:.1f}" height="{collar[3]:.1f}" rx="{w(10):.1f}" fill="none" stroke="{kit["ink"]}" stroke-width="{w(9):.1f}"/>')
-    if "head" in kit:  # black ball with white patches
+    if "head" in kit:  # head matches the body: dark blue with black patches
         out.append(ball(cx, base - w(196), w(56), f"h{uid}", kit["head_spot"], face=kit["head"], outline=kit["ink"]))
     else:
         out.append(ball(cx, base - w(196), w(56), f"h{uid}", kit["ink"]))
