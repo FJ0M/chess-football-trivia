@@ -57,8 +57,6 @@ export interface PlayerState {
   doubleNextPower: boolean;
   /** Golden Boot: own moves left in which each capture earns bonus Form. 0 = off. */
   goldenBootMoves: number;
-  /** After claiming a Hot Spot, own moves left before Hot Spots count for this player again. 0 = ready. */
-  hotSpotRest: number;
   /** Sent off: this player's next turn is skipped and the opponent takes a Free Kick. */
   sentOff: boolean;
   clockMs: number | null;

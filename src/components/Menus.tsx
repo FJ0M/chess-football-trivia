@@ -147,7 +147,7 @@ export function RulesScreen({ onBack }: { onBack: () => void }) {
       <h1 id="rules-title">How to play</h1>
       <p>It's chess, and your moves are always free. Some moves bring up a football question for the player who made them:</p>
       <ul>
-        <li><b>Hot Spot</b> (circled square): a Club Bonus Round on your club, double Form. After you claim one, Hot Spots rest for 4 of your moves.</li>
+        <li><b>Hot Spot</b> (circled square): a Club Bonus Round: questions on your own club.</li>
         <li><b>Capture</b>: pick one of three cards.</li>
         <li><b>Kick-off</b>: every 4th move with no other question.</li>
       </ul>

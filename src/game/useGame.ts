@@ -213,7 +213,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     const bonus = t.kind === "hot-spot";
     if (bonus) { play("cheer"); react(mover, "hotSpot"); }
     else play("kickoff");
-    const label = bonus ? "Club Bonus Round: double Form" : t.kind === "capture" ? "Capture: pick a question" : "Kick-off: pick a question";
+    const label = bonus ? "Club Bonus Round: your club's questions" : t.kind === "capture" ? "Capture: pick a question" : "Kick-off: pick a question";
     setNote(`${name}: ${label}`);
     go({ kind: "cards", color: mover, cards: data[mover].bank.deal(r.state.players[mover].club, bonus), bonus, landed: r.landed, label });
   }, [data, endTurn, go, play, react, setGame]);

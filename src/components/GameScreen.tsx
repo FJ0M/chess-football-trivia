@@ -117,7 +117,6 @@ export function GameScreen({ style, play, setup, view, paused, onPause, onExit, 
             last && (last[0] === sq || last[1] === sq) ? "last" : "",
             sel === sq ? "sel" : "",
             game.hotSpots.includes(sq) ? "hot" : "",
-            game.hotSpots.includes(sq) && game.players[turn].hotSpotRest > 0 ? "resting" : "",
             game.frozen.some((f) => f.square === sq) ? "frozen" : "",
             targets.has(sq) ? "target" : "",
             phase.kind === "target" && phase.first === sq ? "sel" : "",
@@ -194,7 +193,6 @@ function PlayerBar({ game, color, active, ticking, bubble }: { game: GameState; 
     p.sentOff ? "Sent off" : "",
     p.doubleNextPower ? "Red card: next power-up costs double" : p.wrongStreak >= 2 ? "Yellow card" : "",
     p.goldenBootMoves > 0 ? `Golden Boot (${p.goldenBootMoves})` : "",
-    p.hotSpotRest > 0 ? `Hot Spots in ${p.hotSpotRest}` : "",
     handicapTag(game, color),
   ].filter(Boolean);
   return (
@@ -229,13 +227,13 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
             <button key={i} type="button" className={`qcard d-${c.difficulty}`} disabled={!humanToAct} onClick={() => g.pickCard(i, false)}>
               <b>{c.topic}</b>
               <span>{cardLabel(c).split(" · ")[1]}</span>
-              <small>+{REWARD[c.difficulty] * (phase.bonus ? 2 : 1)} Form · {({ easy: "no risk", medium: "wrong: opponent +2", hard: "wrong: piece booked" } as const)[c.difficulty]}</small>
+              <small>+{REWARD[c.difficulty]} Form · {({ easy: "no risk", medium: "wrong: opponent +2", hard: "wrong: piece booked" } as const)[c.difficulty]}</small>
             </button>
           ))}
         </div>
         {humanToAct && (
           <button type="button" className="cta" onClick={() => g.pickCard(phase.cards.findIndex((c) => c.difficulty === "hard"), true)}>
-            Go for a Puskás: turn the Screamer into the goal of the season. +{REWARD.puskas * (phase.bonus ? 2 : 1)} Form, 8 seconds, no hints. Wrong and you're sent off
+            Go for a Puskás: turn the Screamer into the goal of the season. +{REWARD.puskas} Form, 8 seconds, no hints. Wrong and you're sent off
           </button>
         )}
       </div>

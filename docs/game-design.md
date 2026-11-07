@@ -52,7 +52,7 @@ Clue sets live in `data/whoami.json`, built by `tools/build_whoami.py`: 30 Premi
 
 ## Picking your club
 
-Before each game every player picks the club they support from all 92 Premier League and EFL clubs (or none). Landing on a Hot Spot gives a **Club Bonus Round** on your own club for double Form, and about one deal in three swaps a card for a club card at the same difficulty. A club with fewer than 10 questions at a difficulty falls back to general questions. Bots have clubs too: Ryan and Ollie West Ham, Freddie Brighton.
+Before each game every player picks the club they support from all 92 Premier League and EFL clubs (or none). Landing on a Hot Spot gives a **Club Bonus Round** on your own club (normal Form, since playtest round 3), and about one deal in three swaps a card for a club card at the same difficulty. A club with fewer than 10 questions at a difficulty falls back to general questions. Bots have clubs too: Ryan and Ollie West Ham, Freddie Brighton.
 
 ## Menus
 
@@ -64,13 +64,13 @@ A question appears straight after a move that triggers one, and the player who m
 
 | Trigger | Fires when | Question type |
 | --- | --- | --- |
-| Hot Spot | You land on one of 2 marked squares (a football icon) | **Club Bonus Round**: questions on your club, double Form |
+| Hot Spot | You land on one of 2 marked squares (a football icon) | **Club Bonus Round**: questions on your club |
 | Capture | You take a piece | Normal pick of three cards |
 | Kick-off | Every 4th move you make with no other question | Normal pick of three cards |
 
 If a move hits two triggers, the higher one in the table wins. The Kick-off counter resets whenever you get a question, so captures don't stack extra questions on top.
 
-**Hot Spots.** Two squares on ranks 3 to 6 are picked at random each game, one on each half of the board. They stay put until someone lands on one. A used Hot Spot jumps to a new random empty square in the same half, preferring a square no piece can reach on the very next move, so claiming one takes a little planning. After you claim a Hot Spot, it's 4 of your moves before Hot Spots count for you again (they show faded while you wait). Hot Spots are never placed where a knight (or, in Chess960, any piece other than a pawn) can land on move one. Pawns are left out of that rule, because between them they reach every square on ranks 3 to 6.
+**Hot Spots.** Two squares on ranks 3 to 6 are picked at random each game, one on each half of the board. They stay put until someone lands on one. A used Hot Spot jumps to a new random empty square in the same half, preferring a square no piece can reach on the very next move, so claiming one takes a little planning. Hot Spots are never placed where a knight (or, in Chess960, any piece other than a pawn) can land on move one. Pawns are left out of that rule, because between them they reach every square on ranks 3 to 6.
 
 **A turn, step by step:**
 
@@ -96,7 +96,7 @@ You pick your own question, and the harder it is, the more you win and the more 
 - **Hat-trick:** three right in a row earns +2 Form and a commentary line.
 - **Catch-up:** if you're behind on material (pawn 1, knight and bishop 3, rook 5, queen 9), every right answer earns +1 Form more.
 - **Yellow card:** two wrong in a row is a yellow (banter only). Four wrong in a row is a red, and your next power-up costing 3 Form or more costs double. Cheaper ones don't pay the double price and don't clear it.
-- **Club Bonus Round** (Hot Spots): every card is a question on your club and Form rewards are doubled. Penalties stay the same.
+- **Club Bonus Round** (Hot Spots): every card is a question on your club. Rewards and penalties are the normal ones (Freddie, 2026-11-07: no double Form, so chasing Hot Spots doesn't farm Form).
 
 **Penalty safety rules,** so trivia never decides a game on its own:
 
@@ -110,10 +110,10 @@ Form is spent on one power-up per turn, before you move, plus any number of hint
 
 | Player | Before round 3 | Now | Now, chasing every Hot Spot |
 | --- | --- | --- | --- |
-| Strong (85%), always Screamer | 1.9 (7.3 chasing) | 1.3 | 1.8 |
-| Strong, always Puskás | 2.1 | 1.6 | 2.2 |
-| Average (65%), always Screamer | 1.4 | 0.9 | 1.3 |
-| Weak, always Tap-in | 0.5 | 0.4 | 0.6 |
+| Strong (85%), always Screamer | 1.9 (7.3 chasing) | 1.3 | 2.4 |
+| Strong, always Puskás | 2.1 | 1.6 | 2.4 |
+| Average (65%), always Screamer | 1.4 | 0.9 | 1.7 |
+| Weak, always Tap-in | 0.5 | 0.4 | 0.8 |
 
 Each power-up shows a **value of 1 to 5 stars**: roughly how much it swings the board (about a star per half-pawn to a pawn of advantage). The bar always shows every power-up; ones you can't afford, or that are cooling down, are faded.
 
