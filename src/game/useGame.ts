@@ -213,7 +213,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     const bonus = t.kind === "hot-spot";
     if (bonus) { play("cheer"); react(mover, "hotSpot"); }
     else play("kickoff");
-    const label = bonus ? "Club Bonus Round: double Form" : t.kind === "capture" ? "Capture: pick a question" : "Kick-off: pick a question";
+    const label = bonus ? "Club Bonus Round: your club's questions" : t.kind === "capture" ? "Capture: pick a question" : "Kick-off: pick a question";
     setNote(`${name}: ${label}`);
     go({ kind: "cards", color: mover, cards: data[mover].bank.deal(r.state.players[mover].club, bonus), bonus, landed: r.landed, label });
   }, [data, endTurn, go, play, react, setGame]);
@@ -377,7 +377,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     const p = phaseRef.current;
     if (p.kind !== "whoami" || !data) return;
     const typed = typeof input === "string" ? input.trim() : null;
-    const correct = typeof input === "number" ? input === p.set.answer : typed ? data.whoami.check(p.set, typed) : false;
+    const correct = typeof input === "number" ? input === p.set.answer : typed ? data[p.color].whoami.check(p.set, typed) : false;
     const name = p.set.name ?? p.set.options[p.set.answer];
     const choice = input === null || (typed !== null && !typed) ? null : 0;
     const res = resolvePromotion(gameRef.current, p.square, p.clues, correct);

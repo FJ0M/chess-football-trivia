@@ -176,8 +176,6 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 .sheet.pause { gap: 8px; }
 .sq .hs { position: absolute; width: 52%; height: 52%; opacity: .7; z-index: 0; pointer-events: none; }
 .sq.hot { box-shadow: inset 0 0 0 2px rgba(255,255,255,.55); }
-.sq.hot.resting { box-shadow: inset 0 0 0 2px rgba(255,255,255,.2); }
-.sq.hot.resting .hs { opacity: .25; }
 
 /* ---------------------------------------------------------------- Form meter, power-ups, confirm card */
 .screen .powerbox { display: grid; gap: 8px; }
