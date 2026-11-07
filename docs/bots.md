@@ -1,6 +1,6 @@
-# Bots: Ollie, Ryan and Freddie
+# Bots: the Elo ladder, plus Ollie, Ryan and Freddie
 
-The code is in `src/bots/`, and the game imports only `src/bots/index.ts`. Each bot has low, medium and hard levels. A level changes both its chess and its trivia, so the character stays the same: Ollie is a great quizzer and a poor chess player, Freddie is the reverse, and Ryan sits in the middle (and is close to perfect on West Ham).
+The code is in `src/bots/`, and the game imports only `src/bots/index.ts`. There are ten bots. Seven make up the **Elo ladder** (one strength each, 400 to 1600 chess Elo, profiles in the `LADDER` block of `src/bots/profiles.ts`). The original three each have low, medium and hard levels. A level changes both its chess and its trivia, so the character stays the same: Ollie is a great quizzer and a poor chess player, Freddie is the reverse, and Ryan sits in the middle (and is close to perfect on West Ham).
 
 ## How a bot plays
 
@@ -10,9 +10,34 @@ The code is in `src/bots/`, and the game imports only `src/bots/index.ts`. Each 
 - **Promotion "Who am I?".** Ollie aims for a queen (guesses on clue 1), Ryan for a rook, and Freddie for a knight.
 - **Trash talk.** The lines in `src/bots/talk.ts` are **placeholders** until the real three send their catchphrases. A bot speaks at most once every two of its own moves, and always at the start, at the end and on a Hot Spot.
 
-## Measured chess strength
+## The Elo ladder
 
-400 bot-vs-bot and bot-vs-Stockfish games (`tools/playtest/match.ts`, about 40% of them Chess960). Ratings were fitted with `tools/playtest/ratings.py`, with Stockfish at `UCI_Elo 1320` pinned to 1320.
+| Target | Bot | Measured | Engine setup (depth, lines, temperature, blunder rate) | Style |
+| --- | --- | --- | --- | --- |
+| 400 | Pawny Dribbles | 439 | 2, 6, 240 cp, 50% | chaotic |
+| 600 | Eezy Peasy | 596 | 3, 5, 200 cp, 38% | chaotic |
+| 800 | Billy Chillwall | 801 | 4, 4, 150 cp, 25% | positional |
+| 1000 | Gambit Gary | 1050 | 5, 3, 115 cp, 16% | balanced |
+| 1200 | Mo Mate | 1256 | 6, 3, 95 cp, 12% | balanced |
+| 1400 | Florence Knightingale | 1393 | 7, 3, 75 cp, 8% | positional |
+| 1600 | Ragnar Rookland | 1622 | 8, 3, 60 cp, 6.5% | balanced |
+
+Calibrated on 7 Nov 2026 with `tools/playtest/match.ts`: 410 games in the final fit (16 to 20 games per pairing, half of them Chess960), against neighbouring ladder bots, the original bots and Stockfish at `UCI_Elo 1320` (pinned to 1320 in `ratings.py`). Three rounds: Eezy, Chillwall and Rookland came out 100 to 200 too strong in the first round and were retuned. Treat every number as ±100. Stockfish's Elo setting can't go below 1320, so the bottom of the ladder hangs off the chain Pawny → Ollie low → Eezy → Ollie medium → Chillwall → Ollie hard / Ryan low → sf-1320. That's the main source of error at 400 to 800.
+
+The same fit re-measured the original bots as a check: Ollie 541 / 812 / 1059, Ryan 1026 / 1389 / 1561, Freddie low 1769. That's within about 150 of the table below everywhere, so their numbers stay as they are.
+
+Ladder bots run the same code as the originals. What differs is in the profile: `fixedLevel` (all three levels identical, level picker hidden), `thinkMs`, `promotionAim` and, optionally, `hotSpotCp`.
+
+## Playing the game around the chess (review bug 10)
+
+- **Evaluation.** `bot.choosePowerUp()` is async: the bot first analyses the position (depth up to 8). It uses that score for Park the Bus (when behind by 1.5 pawns or more), for VAR Review (when the score has dropped 2.5 pawns or more since the eval it expected after its own last move, or after its own blunder) and for picking safer cards when well ahead. The card choice reuses the eval from the bot's own move.
+- **Hot Spots.** The game passes the Hot Spots that count (none while the bot is resting). Moves onto one get a bonus of `(own-club accuracy − 0.45) × 150` centipawns, capped at 70. Hot Spot moves that aren't in the engine's top lines get a separate search so they can be considered.
+- **Hints.** `bot.chooseHint()` buys a 50:50 on a Highlight or Screamer the bot rates below 65%, if it can pay and keep any reserve it saves for. Never on a Tap-in or a Puskás.
+- **Golden Boot.** Bought only when the engine's best move is a capture (it costs 2 and pays 2 a capture). While it runs, captures get a 40 cp bonus.
+
+## Measured chess strength (the original three)
+
+400 bot-vs-bot and bot-vs-Stockfish games (`tools/playtest/match.ts`, players named `<bot>-<level>`, `<ladder bot>` or `sf-<elo>`, about 40% of them Chess960). Ratings were fitted with `tools/playtest/ratings.py`, with Stockfish at `UCI_Elo 1320` pinned to 1320.
 
 | Level | Ollie | Ryan | Freddie |
 | --- | --- | --- | --- |

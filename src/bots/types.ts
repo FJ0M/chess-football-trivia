@@ -1,7 +1,11 @@
 // Shared shapes for the bots. Everything the game passes in is plain data,
 // so the bots don't depend on the game's internal state.
 
-export type BotId = "ollie" | "ryan" | "freddie";
+/** The original three, each with low, medium and hard levels. */
+export type ClassicBotId = "ollie" | "ryan" | "freddie";
+/** The Elo ladder: one bot at each of 400 to 1600 chess Elo, one level each. */
+export type LadderBotId = "pawny" | "eezy" | "chillwall" | "gambit-gary" | "mo-mate" | "knightingale" | "rookland";
+export type BotId = ClassicBotId | LadderBotId;
 export type BotLevel = "low" | "medium" | "hard";
 export type Difficulty = "easy" | "medium" | "hard";
 export type PromotionRole = "n" | "b" | "r" | "q";
@@ -79,6 +83,17 @@ export interface BotProfile {
   favouritePowerUps: PowerUpId[];
   /** Form the bot keeps in reserve before buying anything not on its saving list. */
   saveFor?: { ids: PowerUpId[]; reserve: number };
+  /** Ladder bots have one strength: all three levels are the same and the level picker is hidden. */
+  fixedLevel?: boolean;
+  /** Pause before a move, in milliseconds. */
+  thinkMs?: [number, number];
+  /** Piece the bot aims for on a promotion "Who am I?" at each level. */
+  promotionAim?: Record<BotLevel, PromotionRole>;
+  /**
+   * How much a Hot Spot is worth to the bot, in centipawns, when choosing a move.
+   * Left out, it comes from the bot's own-club accuracy (good quizzers chase them).
+   */
+  hotSpotCp?: number;
 }
 
 // ---- Inputs from the game ----
@@ -90,6 +105,10 @@ export interface MoveRequest {
   allowedMoves?: string[];
   /** The bot bought Manager's Tip this turn: play the engine's top move. */
   managersTip?: boolean;
+  /** Hot Spot squares that count for the bot this move (leave out while it is resting). */
+  hotSpots?: string[];
+  /** Golden Boot is running: captures earn Form, so the bot likes them more. */
+  goldenBoot?: boolean;
 }
 
 export interface MoveResult {
@@ -134,6 +153,19 @@ export interface AnswerRequest {
   puskas?: boolean;
   /** Indexes already removed by a 50:50, if any. */
   removed?: number[];
+}
+
+export interface HintOffer {
+  id: string;
+  cost: number;
+}
+
+export interface HintRequest {
+  question: QuestionLike;
+  puskas?: boolean;
+  form: number;
+  /** Trivia hints the bot can pay for now. */
+  available: HintOffer[];
 }
 
 export interface AnswerResult {

@@ -17,7 +17,7 @@ This builds on the [research doc](https://claude.ai/artifact/288D72mj429RgxhCALF
 | Modes | vs bots, and two players on one device, each with an optional Chess960 start |
 | Questions | Premier League from 2000/01, plus questions on the club you pick (all 92 league clubs) |
 | Power-ups | Chess-style and football-themed |
-| Bots | Freddie, Ryan and Ollie, each with a strength, a style and trash talk |
+| Bots | An Elo ladder of 7 made-up characters (400 to 1600 chess Elo), plus Freddie, Ryan and Ollie with three levels each; every bot has a style and trash talk |
 | Tech | Installable web app (PWA), one link for phone, tablet and computer |
 
 All numbers below (Form costs, timers, bot accuracy) are first guesses to tune in playtesting.
@@ -26,7 +26,7 @@ All numbers below (Form costs, timers, bot accuracy) are first guesses to tune i
 
 There are two ways to play, and both use the same rules.
 
-- **vs Bot.** Pick Freddie, Ryan or Ollie. You answer questions yourself; the bot "answers" using its trivia profile and talks trash throughout.
+- **vs Bot.** Pick a bot from the Elo ladder (400 to 1600) or Freddie, Ryan or Ollie. You answer questions yourself; the bot "answers" using its trivia profile and talks trash throughout.
 - **Pass and Play.** Two people on one device. Whoever triggered the question answers it, and the other player hands over the device without peeking (honour system, as at the pub). The screen faces whoever is up. Settings has two views, each with a picture. **Flat on the table** (the default, on phones, tablets and computers) turns the whole game round 180 degrees on Black's turn, so the board, question card and power-ups all face them with the device flat on the table. **Pass the phone** flips only the board, for handing the device across. (The old Face to face and Off views were removed in playtest round 3; saved settings move to Flat on the table and Pass the phone.) **Handicap** (Pass and Play setup): pick who gets the help, then piece odds from the other player (the f-pawn, the queenside knight, the queenside rook with its castling right, or the queen; Chess960 back ranks too) and a Form boost on the weaker player's right answers (x1.25, x1.5 or x2, with fractions carried to the next answer). Enter both chess ratings for a suggestion: the biggest piece the rating gap covers (pawn ~150, knight ~350, rook ~550, queen ~900 Elo), then a Form boost for what's left (x1.25 ~50, x1.5 ~100, x2 ~200). These values are first guesses to tune in playtesting. Odds count as already given, so the player who gave them doesn't get the material catch-up bonus just for that.
 
 Each game also has a **Plain Chess** toggle (no trivia) and a **Timed** toggle (3, 5, 10, 15 or 30 minutes each, shown on stadium-style scoreboard clocks), so it works for a quick game or a serious one. In a timed game the clock of whoever has to act **always runs**: while choosing a move, picking a card, answering, reading the result (which moves on by itself after 2.5 seconds) and while the engine thinks for a power-up. It stops only for a "Who am I?", the Penalty Shootout and the pause menu. Every move adds **3 seconds** to the mover's clock.
@@ -56,7 +56,7 @@ Before each game every player picks the club they support from all 92 Premier Le
 
 ## Menus
 
-The game opens on a **main menu** in the Tactics Board style: Play a bot (pick Freddie, Ryan or Ollie and Easy, Medium or Hard), Pass and Play, High scores, Game history, How to play and Settings. The setup screen then takes clubs (one A to Z list of all 92 with a search box, not grouped by division, so it doesn't date when clubs go up or down), colour, and the Trivia, Timed and Chess960 toggles. During a game the **Menu** button (or the title bar) pauses everything, including clocks, question timers and bots, with Resume, Restart, Settings and Quit to menu. High scores keep your record (played, won, drawn, lost, best winning run) against each bot at each level, plus Pass and Play wins by name, on the device. **Game history** lists the last 100 finished games, newest first (no replays): date, opponent and level, result and how it ended, moves, Form earned and trivia score (right/asked, including Who am I? and shootout kicks).
+The game opens on a **main menu** in the Tactics Board style: Play a bot (pick a ladder bot, or Freddie, Ryan or Ollie and Easy, Medium or Hard), Pass and Play, High scores, Game history, How to play and Settings. The setup screen then takes clubs (one A to Z list of all 92 with a search box, not grouped by division, so it doesn't date when clubs go up or down), colour, and the Trivia, Timed and Chess960 toggles. During a game the **Menu** button (or the title bar) pauses everything, including clocks, question timers and bots, with Resume, Restart, Settings and Quit to menu. High scores keep your record (played, won, drawn, lost, best winning run) against each bot at each level, plus Pass and Play wins by name, on the device. **Game history** lists the last 100 finished games, newest first (no replays): date, opponent and level, result and how it ended, moves, Form earned and trivia score (right/asked, including Who am I? and shootout kicks).
 
 ## When trivia comes up
 
@@ -178,6 +178,27 @@ The strength numbers are rough chess ratings. Stockfish's own Elo setting doesn'
 | Captures a piece | "Is the horse allowed to do that? Too late now." | "Bowen, Prague, 2023. Same energy." | "Thanks for that. Didn't even need a hint." |
 | Hot Spot | "West Ham round? I know more about them than Ryan." | "Bubbles are flying!" | "Oh no. Not the West Ham round." |
 | Wins | "Brains over board, every time." | "Forever blowing bubbles, mate." | "Should have spent less time on the questions." |
+
+## The Elo ladder
+
+Playtest round 3 (Freddie, 7 Nov 2026) added one bot at each of 400, 600, 800, 1000, 1200, 1400 and 1600 chess Elo, so there is always a next rung to beat. Each is a made-up character with a pun name; four are loosely inspired by footballers known for loving chess (Eze, Chilwell, Salah and Haaland), with no real names. Ladder bots have one strength each, so the setup screen hides the level picker for them. Their trivia varies on purpose, so the combined rating doesn't just follow the chess.
+
+| Elo | Bot | Club | Style | Trivia | Spends Form on |
+| --- | --- | --- | --- | --- | --- |
+| 400 | Pawny Dribbles | Stockport County | Chaotic Sunday-leaguer | 52% | Golden Boot, Counter-Attack |
+| 600 | Eezy Peasy | Crystal Palace | Chaotic flair player | 78%, goes for Screamers | Counter-Attack, Golden Boot, Manager's Tip |
+| 800 | Billy Chillwall | Chelsea | Positional, parks the bus | 61% | Park the Bus, Tactical Foul, Red Card |
+| 1000 | Gambit Gary | Leicester City | Balanced pundit | 84%, goes for Screamers | Manager's Tip, Golden Boot, Red Card |
+| 1200 | Mo Mate | Liverpool | Balanced finisher | 68% | Tactical Foul, Golden Boot, Super-Sub |
+| 1400 | Florence Knightingale | Everton | Positional playmaker | 72% | Saves for Super-Sub and Extra Time |
+| 1600 | Ragnar Rookland | Manchester City | Balanced goal machine | 47% | Saves for Extra Time and Super-Sub |
+
+Every bot (ladder and originals) also plays the game around the chess (review bug 10 and "easy bots"):
+
+- **It sees the evaluation.** Before deciding on a power-up, the bot takes a quick look at the position with the engine (depth 8 at most). So Park the Bus fires when it's losing, VAR Review fires when the score has swung against it since its last move, and it picks safer cards when it's well ahead.
+- **It chases Hot Spots.** A move onto a Hot Spot gets a bonus worth up to 0.7 of a pawn, scaled by how well the bot knows its own club, so good quizzers go for them and poor ones mostly don't. Not while the bot is resting after its last Hot Spot.
+- **It uses hints.** On a Highlight or Screamer it rates below 65%, the bot buys a 50:50 if it has the Form (never on a Tap-in or a Puskás).
+- **Golden Boot only pays.** The bot buys it only when the engine's best move is a capture, and while it runs the bot likes captures a bit more, so it doesn't lose Form on it.
 
 ## Tech stack and deployment
 

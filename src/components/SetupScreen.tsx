@@ -49,6 +49,9 @@ export function SetupScreen({ mode, onStart, onBack }: { mode: "bot" | "local"; 
   useEffect(() => { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch { /* ignore */ } }, [s]);
 
   const bot = bots.find((b) => b.id === s.botId) ?? bots[0];
+  /** Ladder bots have one strength, filed under "medium". */
+  const level: BotLevel = bot?.fixedLevel ? "medium" : s.botLevel;
+  const rating = bot?.ratings?.[level];
 
   function start() {
     const side: Color = s.side === "random" ? (Math.random() < 0.5 ? "white" : "black") : s.side;
@@ -63,7 +66,7 @@ export function SetupScreen({ mode, onStart, onBack }: { mode: "bot" | "local"; 
     } else {
       players = { white: human(0), black: human(1) };
     }
-    onStart({ options, players, botLevel: s.botLevel });
+    onStart({ options, players, botLevel: level });
   }
 
   const clubSelect = (i: 0 | 1) => (
@@ -83,22 +86,34 @@ export function SetupScreen({ mode, onStart, onBack }: { mode: "bot" | "local"; 
       {s.mode === "bot" ? (
         <>
           <h3>Opponent</h3>
-          <div className="bot-list" role="radiogroup" aria-label="Opponent">
-            {bots.map((b) => (
-              <button key={b.id} type="button" role="radio" aria-checked={s.botId === b.id} className={`bot-card${s.botId === b.id ? " on" : ""}`} onClick={() => set("botId", b.id)}>
-                <span className="badge">{b.name[0]}</span>
-                <strong>{b.name}</strong>
-                <small>{b.blurb}</small>
-              </button>
-            ))}
-          </div>
-          <div className="seg small" role="radiogroup" aria-label="Bot level">
-            {(["low", "medium", "hard"] as BotLevel[]).map((l) => (
-              <button key={l} type="button" role="radio" aria-checked={s.botLevel === l} className={s.botLevel === l ? "on" : ""} onClick={() => set("botLevel", l)}>
-                {l === "low" ? "Easy" : l === "medium" ? "Medium" : "Hard"}
-              </button>
-            ))}
-          </div>
+          {([["Elo ladder", bots.filter((b) => b.fixedLevel)], ["The originals", bots.filter((b) => !b.fixedLevel)]] as const).map(([title, list]) => list.length > 0 && (
+            <div key={title} className="bot-group">
+              <h4>{title}</h4>
+              <div className="bot-list" role="radiogroup" aria-label={`Opponent: ${title}`}>
+                {list.map((b) => (
+                  <button key={b.id} type="button" role="radio" aria-checked={s.botId === b.id} className={`bot-card${s.botId === b.id ? " on" : ""}`} onClick={() => set("botId", b.id)}>
+                    <span className={`badge${b.fixedLevel ? " elo" : ""}`}>{b.fixedLevel ? b.ratings?.medium.chess ?? b.name[0] : b.name[0]}</span>
+                    <strong>{b.name}</strong>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+          {bot && (
+            <p className="bot-blurb">
+              <b>{bot.name}</b>{rating ? ` · ${rating.chess} chess · ${Math.round(rating.trivia * 100)}% trivia · ${rating.match} combined` : ""}<br />
+              {bot.blurb}
+            </p>
+          )}
+          {!bot?.fixedLevel && (
+            <div className="seg small" role="radiogroup" aria-label="Bot level">
+              {(["low", "medium", "hard"] as BotLevel[]).map((l) => (
+                <button key={l} type="button" role="radio" aria-checked={s.botLevel === l} className={s.botLevel === l ? "on" : ""} onClick={() => set("botLevel", l)}>
+                  {l === "low" ? "Easy" : l === "medium" ? "Medium" : "Hard"}
+                </button>
+              ))}
+            </div>
+          )}
           <h3>You</h3>
           <div className="field"><span>Your club</span>{clubSelect(0)}</div>
           <div className="seg small" role="radiogroup" aria-label="Your colour">

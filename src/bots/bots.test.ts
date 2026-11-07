@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { createBotWith } from "./bot";
 import { MATE_CP, parseInfoLine, type Analyser, type EngineLine } from "./engine";
-import { legalMoves, normaliseUci, pickMove, positionFromFen } from "./movePicker";
-import { BOT_IDS, BOT_LEVELS, BOT_PROFILES } from "./profiles";
+import { GOLDEN_BOOT_CAPTURE_CP, legalMoves, normaliseUci, pickMove, positionFromFen } from "./movePicker";
+import { BOT_IDS, BOT_LEVELS, BOT_PROFILES, CLASSIC_IDS, LADDER_IDS } from "./profiles";
 import { choosePowerUp } from "./powerUps";
 import { TALK, Talker } from "./talk";
-import { answerChance, answerQuestion, chooseCard } from "./trivia";
+import { answerChance, answerQuestion, chooseCard, chooseHint } from "./trivia";
 import type { CardOffer, QuestionLike } from "./types";
 
 const START = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
@@ -172,8 +172,8 @@ describe("trivia", () => {
     expect(rate("ryan", q("hard", "west-ham"))).toBeCloseTo(0.92, 1);
   });
 
-  it("is ordered low < medium < hard for every bot", () => {
-    for (const id of BOT_IDS) {
+  it("is ordered low < medium < hard for every bot with levels", () => {
+    for (const id of CLASSIC_IDS) {
       const [lo, mid, hi] = BOT_LEVELS.map((l) => answerChance(BOT_PROFILES[id], BOT_PROFILES[id].levels[l].trivia, { question: q("medium") }));
       expect(lo).toBeLessThan(mid);
       expect(mid).toBeLessThan(hi);
@@ -290,11 +290,106 @@ describe("promotion", () => {
 describe("ratings", () => {
   it("orders each bot's levels and keeps chess as the main part of the match rating", async () => {
     const { BOTS, matchRating } = await import("./profiles");
-    for (const b of BOTS) {
+    for (const b of BOTS.filter((x) => !x.fixedLevel)) {
       expect(b.ratings.low.match).toBeLessThan(b.ratings.medium.match);
       expect(b.ratings.medium.match).toBeLessThan(b.ratings.hard.match);
     }
     // 2500 chess with no football knowledge beats perfect trivia with 600 chess.
     expect(matchRating(2500, 0.25)).toBeGreaterThan(matchRating(600, 1));
+  });
+});
+
+describe("the Elo ladder", () => {
+  it("has one bot at each of 400 to 1600 chess Elo, each with a single level", () => {
+    expect(LADDER_IDS.map((id) => BOT_PROFILES[id].levels.medium.chess.rating)).toEqual([400, 600, 800, 1000, 1200, 1400, 1600]);
+    for (const id of LADDER_IDS) {
+      const p = BOT_PROFILES[id];
+      expect(p.fixedLevel).toBe(true);
+      expect(p.levels.low).toEqual(p.levels.medium);
+      expect(p.levels.hard).toEqual(p.levels.medium);
+    }
+    expect(new Set(BOT_IDS).size).toBe(10);
+  });
+
+  it("answers inside the 10-second question timer", () => {
+    for (const id of LADDER_IDS) expect(BOT_PROFILES[id].levels.medium.trivia.answerMs[1]).toBeLessThanOrEqual(8000);
+  });
+
+  it("gets more patient at chess as the Elo goes up", () => {
+    const blunders = LADDER_IDS.map((id) => BOT_PROFILES[id].levels.medium.chess.blunderRate);
+    for (let i = 1; i < blunders.length; i++) expect(blunders[i]).toBeLessThanOrEqual(blunders[i - 1]);
+  });
+});
+
+describe("the game around the chess", () => {
+  const pos = positionFromFen(START);
+  const lines = [
+    { uci: "e2e4", scoreCp: 30, depth: 8, multipv: 1 },
+    { uci: "d2d4", scoreCp: 25, depth: 8, multipv: 2 },
+  ];
+  const strength = { rating: 1200, depth: 6, multiPv: 2, temperatureCp: 30, blunderRate: 0 };
+
+  it("steers towards a Hot Spot when the bot rates them", () => {
+    let spot = 0;
+    const rng = seeded(4);
+    for (let i = 0; i < 200; i++) {
+      const pick = pickMove({ pos, lines, allowed: legalMoves(pos), strength, style: "balanced", rng, hotSpots: ["d4"], hotSpotCp: 60 });
+      if (pick.uci === "d2d4") spot++;
+    }
+    expect(spot).toBeGreaterThan(150);
+  });
+
+  it("ignores Hot Spots when it isn't chasing them", () => {
+    let spot = 0;
+    const rng = seeded(4);
+    for (let i = 0; i < 200; i++) if (pickMove({ pos, lines, allowed: legalMoves(pos), strength, style: "balanced", rng, hotSpots: ["d4"] }).uci === "d2d4") spot++;
+    expect(spot).toBeLessThan(130);
+  });
+
+  it("likes captures more while Golden Boot runs", () => {
+    expect(GOLDEN_BOOT_CAPTURE_CP).toBeGreaterThan(0);
+    const f = "rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR w KQkq d6 0 2";
+    const p = positionFromFen(f);
+    const l = [
+      { uci: "b1c3", scoreCp: 40, depth: 8, multipv: 1 },
+      { uci: "e4d5", scoreCp: 30, depth: 8, multipv: 2 },
+    ];
+    const count = (goldenBoot: boolean) => {
+      const rng = seeded(9);
+      let n = 0;
+      for (let i = 0; i < 200; i++) if (pickMove({ pos: p, lines: l, allowed: legalMoves(p), strength, style: "positional", rng, goldenBoot }).uci === "e4d5") n++;
+      return n;
+    };
+    expect(count(true)).toBeGreaterThan(count(false) + 50);
+  });
+
+  it("only buys Golden Boot with a capture on (it costs 2 and pays 2 a capture)", () => {
+    const fen = "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3";
+    const req = { fen, form: 6, available: [{ id: "golden-boot", cost: 2 }] };
+    expect(choosePowerUp(BOT_PROFILES.ollie, req, () => 0, 0)).toBeNull();
+    expect(choosePowerUp(BOT_PROFILES.ollie, req, () => 0, 0, { bestIsCapture: true })).toEqual({ id: "golden-boot" });
+  });
+
+  it("buys a 50:50 on a question it is unsure of, never on a Puskás or a Tap-in", () => {
+    const p = BOT_PROFILES.rookland;
+    const t = p.levels.medium.trivia;
+    const question = { options: ["a", "b", "c", "d"], answer: 0, difficulty: "hard" as const, club: null };
+    const available = [{ id: "fifty-fifty", cost: 1 }];
+    expect(chooseHint(p, t, { question, form: 10, available })).toBe("fifty-fifty");
+    expect(chooseHint(p, t, { question, form: 10, available, puskas: true })).toBeNull();
+    expect(chooseHint(p, t, { question: { ...question, difficulty: "easy" }, form: 10, available })).toBeNull();
+    expect(chooseHint(p, t, { question, form: 0, available })).toBeNull();
+    // Gambit Gary knows his stuff and keeps his Form.
+    const g = BOT_PROFILES["gambit-gary"];
+    expect(chooseHint(g, g.levels.medium.trivia, { question: { ...question, difficulty: "medium" }, form: 10, available })).toBeNull();
+  });
+
+  it("looks at the position before a power-up, so Park the Bus fires when it's losing (bug 10)", async () => {
+    const fen = "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3";
+    const losing = fakeEngine([{ uci: "b1c3", scoreCp: -400, depth: 8, multipv: 1 }]);
+    const level = fakeEngine([{ uci: "b1c3", scoreCp: 20, depth: 8, multipv: 1 }]);
+    const req = { fen, form: 6, available: [{ id: "park-the-bus", cost: 2 }] };
+    expect(await createBotWith("chillwall", "medium", losing, () => 0).choosePowerUp(req)).toEqual({ id: "park-the-bus" });
+    expect(await createBotWith("chillwall", "medium", level, () => 0).choosePowerUp(req)).toBeNull();
   });
 });
