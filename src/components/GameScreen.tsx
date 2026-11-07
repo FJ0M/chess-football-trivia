@@ -13,6 +13,7 @@ import {
 } from "../game/rules";
 import { clubShort } from "../game/clubs";
 import { PowerIcon } from "./PowerIcons";
+import { ODDS_NAME } from "../game/handicap";
 import { useMatchStats } from "../game/useMatchStats";
 import type { MatchStats } from "../game/history";
 import { CLUE_MS } from "../game/whoami";
@@ -176,6 +177,14 @@ function boardArray(fen: string): Array<Array<{ role: string; color: Color } | n
   return out;
 }
 
+/** Pass and Play handicap, shown on each player's bar: "Gave a knight" / "x1.5 Form". */
+function handicapTag(game: GameState, color: Color): string {
+  const h = game.options.mode === "local" ? game.options.handicap : null;
+  if (!h) return "";
+  if (h.weaker === color) return h.formBoost !== 1 && game.options.trivia ? `x${h.formBoost} Form` : "";
+  return h.odds !== "none" ? `Gave ${h.odds === "p" ? "a pawn" : `a ${ODDS_NAME[h.odds].toLowerCase()}`}` : "";
+}
+
 function PlayerBar({ game, color, active, bubble }: { game: GameState; color: Color; active: Color; bubble: { color: Color; text: string } | null }): ReactNode {
   const p = game.players[color];
   const status = [
@@ -183,6 +192,7 @@ function PlayerBar({ game, color, active, bubble }: { game: GameState; color: Co
     p.doubleNextPower ? "Red card: next power-up costs double" : p.wrongStreak >= 2 ? "Yellow card" : "",
     p.goldenBootMoves > 0 ? `Golden Boot (${p.goldenBootMoves})` : "",
     p.hotSpotRest > 0 ? `Hot Spots in ${p.hotSpotRest}` : "",
+    handicapTag(game, color),
   ].filter(Boolean);
   return (
     <div className={`player${active === color ? " up" : ""}`}>
