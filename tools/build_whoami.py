@@ -2,9 +2,11 @@
 
     python3 tools/build_whoami.py data/whoami.json
 
-Each set: five clues from hardest to easiest, the player, and three decoys.
-Guessing right after clue 1 earns a queen, clue 2 a rook, clue 3 a bishop and
-clue 4 or 5 a knight. Every clue was checked against the player's English
+Each set: five clues from hardest to easiest, the player, three decoys (bots
+still guess from four names) and extra accepted spellings (`aliases`). Players
+type their answer: the game ignores capitals and accents, accepts the full name,
+the surname alone or an alias, and allows a typo or two. Guessing right after
+clue 1 or 2 earns a queen, clue 3 a rook, clue 4 a bishop and clue 5 a knight. Every clue was checked against the player's English
 Wikipedia page (the `source`) on 2026-11-04.
 """
 
@@ -358,10 +360,35 @@ SETS = [
     ]),
 ]
 
+# Extra accepted answers, on top of the full name and the surname (everything
+# after the first name). Accents and capitals are ignored when matching.
+ALIASES = {
+    "who-henry": ["Titi"],
+    "who-ronaldo": ["Ronaldo", "CR7", "Cristiano"],
+    "who-aguero": ["Kun Aguero", "Kun"],
+    "who-salah": ["Mo Salah", "Mo"],
+    "who-kane": ["Harry Kane"],
+    "who-kante": ["Kante"],
+    "who-debruyne": ["KDB"],
+    "who-cech": ["Cech"],
+    "who-vanpersie": ["RVP", "Persie"],
+    "who-son": ["Son", "Sonny", "Heung-min Son", "Son Heungmin"],
+    "who-yaya": ["Yaya", "Toure"],
+    "who-vandijk": ["VVD", "Dijk"],
+    "who-whu-dicanio": ["Canio"],
+    "who-whu-soucek": ["Soucek"],
+    "who-bha-gross": ["Gross", "Pascal Gross"],
+    "who-bha-macallister": ["MacAllister", "Macca"],
+    "who-bha-caicedo": ["Moises Caicedo"],
+    "who-bha-welbeck": ["Welbz"],
+}
+
 
 def build(path):
     rng = random.Random(42)
     out, ids = [], set()
+    known = {sid for sid, *_ in SETS}
+    assert set(ALIASES) <= known, set(ALIASES) - known
     for sid, answer, decoys, club, page, clues in SETS:
         assert sid not in ids, sid
         ids.add(sid)
@@ -371,7 +398,7 @@ def build(path):
         rng.shuffle(options)
         out.append({
             "id": sid, "clues": clues, "options": options, "answer": options.index(answer),
-            "club": club, "verified": True, "source": W + page,
+            "name": answer, "aliases": ALIASES.get(sid, []), "club": club, "verified": True, "source": W + page,
         })
     with open(path, "w", encoding="utf-8") as f:
         json.dump({"version": 1, "sets": out}, f, ensure_ascii=False, indent=1)

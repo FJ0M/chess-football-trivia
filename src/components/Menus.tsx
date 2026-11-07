@@ -134,7 +134,8 @@ export function RulesScreen({ onBack }: { onBack: () => void }) {
       </ul>
       <p>Answer a Screamer or Puskás within 5 seconds for +1, and get three in a row for a hat-trick (+2). If you're behind on material, every right answer earns +1 more. Form is capped at 12.</p>
       <p><b>Power-ups</b> cost Form, one per turn before you move. Each has a cooldown and starts the game locked, and its stars show roughly how much it can swing the board. <b>Hints</b> during a question: 50:50, Ask the Crowd, Phone a friend.</p>
-      <p><b>Promotion</b> is a "Who am I?": five clues about a footballer, one guess. Right on clue 1 earns a queen, clue 2 a rook, clue 3 a bishop, later a knight. Wrong: a knight, and your opponent gets +2 Form.</p>
+      <p><b>Promotion</b> is a "Who am I?": the board hides, the clocks stop, and five clues about a footballer appear. Type one guess (the surname is enough). Right on clue 1 or 2 earns a queen, clue 3 a rook, clue 4 a bishop, clue 5 a knight. Wrong: a knight, and your opponent gets +2 Form.</p>
+      <p><b>Timed games:</b> your clock keeps running during questions too, so answer fast. Questions have 10 seconds, and every move adds 3 seconds to your clock.</p>
       <p>Checkmate wins. Any draw goes to a Penalty Shootout of five questions each.</p>
       <button type="button" className="ghost" onClick={onBack}>Back</button>
     </section>

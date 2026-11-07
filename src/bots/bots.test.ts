@@ -184,7 +184,7 @@ describe("trivia", () => {
     const p = BOT_PROFILES.freddie;
     const rng = seeded(2);
     for (let i = 0; i < 200; i++) {
-      expect(answerQuestion(p, p.levels.medium.trivia, { question: q("hard") }, rng).delayMs).toBeLessThan(15000);
+      expect(answerQuestion(p, p.levels.medium.trivia, { question: q("hard") }, rng).delayMs).toBeLessThan(10000);
       expect(answerQuestion(p, p.levels.medium.trivia, { question: q("hard"), puskas: true }, rng).delayMs).toBeLessThan(8000);
     }
   });

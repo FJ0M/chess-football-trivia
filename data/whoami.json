@@ -17,6 +17,10 @@
     "Robert Pirès"
    ],
    "answer": 2,
+   "name": "Thierry Henry",
+   "aliases": [
+    "Titi"
+   ],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Thierry_Henry"
@@ -37,6 +41,8 @@
     "Andy Cole"
    ],
    "answer": 0,
+   "name": "Alan Shearer",
+   "aliases": [],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Alan_Shearer"
@@ -57,6 +63,8 @@
     "Steven Gerrard"
    ],
    "answer": 1,
+   "name": "Frank Lampard",
+   "aliases": [],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Frank_Lampard"
@@ -77,6 +85,8 @@
     "Steven Gerrard"
    ],
    "answer": 3,
+   "name": "Steven Gerrard",
+   "aliases": [],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Steven_Gerrard"
@@ -97,6 +107,8 @@
     "Michael Owen"
    ],
    "answer": 2,
+   "name": "Wayne Rooney",
+   "aliases": [],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Wayne_Rooney"
@@ -117,6 +129,8 @@
     "Nicolas Anelka"
    ],
    "answer": 1,
+   "name": "Didier Drogba",
+   "aliases": [],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Didier_Drogba"
@@ -137,6 +151,12 @@
     "Cristiano Ronaldo"
    ],
    "answer": 3,
+   "name": "Cristiano Ronaldo",
+   "aliases": [
+    "Ronaldo",
+    "CR7",
+    "Cristiano"
+   ],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Cristiano_Ronaldo"
@@ -157,6 +177,11 @@
     "Gonzalo Higuaín"
    ],
    "answer": 1,
+   "name": "Sergio Agüero",
+   "aliases": [
+    "Kun Aguero",
+    "Kun"
+   ],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Sergio_Agüero"
@@ -177,6 +202,11 @@
     "Mohamed Salah"
    ],
    "answer": 3,
+   "name": "Mohamed Salah",
+   "aliases": [
+    "Mo Salah",
+    "Mo"
+   ],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Mohamed_Salah"
@@ -197,6 +227,10 @@
     "Dele Alli"
    ],
    "answer": 1,
+   "name": "Harry Kane",
+   "aliases": [
+    "Harry Kane"
+   ],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Harry_Kane"
@@ -217,6 +251,8 @@
     "Riyad Mahrez"
    ],
    "answer": 2,
+   "name": "Jamie Vardy",
+   "aliases": [],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Jamie_Vardy"
@@ -237,6 +273,10 @@
     "Claude Makélélé"
    ],
    "answer": 0,
+   "name": "N'Golo Kanté",
+   "aliases": [
+    "Kante"
+   ],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/N%27Golo_Kant%C3%A9"
@@ -257,6 +297,10 @@
     "Bernardo Silva"
    ],
    "answer": 0,
+   "name": "Kevin De Bruyne",
+   "aliases": [
+    "KDB"
+   ],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Kevin_De_Bruyne"
@@ -277,6 +321,8 @@
     "Kevin De Bruyne"
    ],
    "answer": 1,
+   "name": "Eden Hazard",
+   "aliases": [],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Eden_Hazard"
@@ -297,6 +343,8 @@
     "Viktor Gyökeres"
    ],
    "answer": 2,
+   "name": "Erling Haaland",
+   "aliases": [],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Erling_Haaland"
@@ -317,6 +365,10 @@
     "David de Gea"
    ],
    "answer": 0,
+   "name": "Petr Čech",
+   "aliases": [
+    "Cech"
+   ],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Petr_Čech"
@@ -337,6 +389,8 @@
     "Ricardo Carvalho"
    ],
    "answer": 1,
+   "name": "John Terry",
+   "aliases": [],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/John_Terry"
@@ -357,6 +411,8 @@
     "Jonathan Woodgate"
    ],
    "answer": 1,
+   "name": "Rio Ferdinand",
+   "aliases": [],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Rio_Ferdinand"
@@ -377,6 +433,8 @@
     "Nicky Butt"
    ],
    "answer": 0,
+   "name": "Paul Scholes",
+   "aliases": [],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Paul_Scholes"
@@ -397,6 +455,8 @@
     "Ryan Giggs"
    ],
    "answer": 3,
+   "name": "Ryan Giggs",
+   "aliases": [],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Ryan_Giggs"
@@ -417,6 +477,8 @@
     "Robin van Persie"
    ],
    "answer": 2,
+   "name": "Dennis Bergkamp",
+   "aliases": [],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Dennis_Bergkamp"
@@ -437,6 +499,11 @@
     "Arjen Robben"
    ],
    "answer": 1,
+   "name": "Robin van Persie",
+   "aliases": [
+    "RVP",
+    "Persie"
+   ],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Robin_van_Persie"
@@ -457,6 +524,8 @@
     "Edinson Cavani"
    ],
    "answer": 1,
+   "name": "Luis Suárez",
+   "aliases": [],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Luis_Suárez"
@@ -477,6 +546,8 @@
     "Craig Bellamy"
    ],
    "answer": 1,
+   "name": "Gareth Bale",
+   "aliases": [],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Gareth_Bale"
@@ -497,6 +568,13 @@
     "Son Heung-min"
    ],
    "answer": 3,
+   "name": "Son Heung-min",
+   "aliases": [
+    "Son",
+    "Sonny",
+    "Heung-min Son",
+    "Son Heungmin"
+   ],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Son_Heung-min"
@@ -517,6 +595,11 @@
     "Seydou Keita"
    ],
    "answer": 1,
+   "name": "Yaya Touré",
+   "aliases": [
+    "Yaya",
+    "Toure"
+   ],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Yaya_Touré"
@@ -537,6 +620,8 @@
     "Thomas Vermaelen"
    ],
    "answer": 0,
+   "name": "Vincent Kompany",
+   "aliases": [],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Vincent_Kompany"
@@ -557,6 +642,11 @@
     "Stefan de Vrij"
    ],
    "answer": 1,
+   "name": "Virgil van Dijk",
+   "aliases": [
+    "VVD",
+    "Dijk"
+   ],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Virgil_van_Dijk"
@@ -577,6 +667,8 @@
     "Wayne Rooney"
    ],
    "answer": 0,
+   "name": "Michael Owen",
+   "aliases": [],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Michael_Owen"
@@ -597,6 +689,8 @@
     "Peter Crouch"
    ],
    "answer": 3,
+   "name": "Peter Crouch",
+   "aliases": [],
    "club": null,
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Peter_Crouch"
@@ -617,6 +711,8 @@
     "Kevin Nolan"
    ],
    "answer": 2,
+   "name": "Mark Noble",
+   "aliases": [],
    "club": "west-ham",
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Mark_Noble"
@@ -637,6 +733,8 @@
     "Saïd Benrahma"
    ],
    "answer": 1,
+   "name": "Jarrod Bowen",
+   "aliases": [],
    "club": "west-ham",
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Jarrod_Bowen"
@@ -657,6 +755,8 @@
     "Declan Rice"
    ],
    "answer": 3,
+   "name": "Declan Rice",
+   "aliases": [],
    "club": "west-ham",
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Declan_Rice"
@@ -677,6 +777,8 @@
     "Andy Carroll"
    ],
    "answer": 1,
+   "name": "Dimitri Payet",
+   "aliases": [],
    "club": "west-ham",
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Dimitri_Payet"
@@ -697,6 +799,8 @@
     "Carlos Tevez"
    ],
    "answer": 3,
+   "name": "Carlos Tevez",
+   "aliases": [],
    "club": "west-ham",
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Carlos_Tevez"
@@ -717,6 +821,10 @@
     "Frédéric Kanouté"
    ],
    "answer": 2,
+   "name": "Paolo Di Canio",
+   "aliases": [
+    "Canio"
+   ],
    "club": "west-ham",
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Paolo_Di_Canio"
@@ -737,6 +845,8 @@
     "Michail Antonio"
    ],
    "answer": 3,
+   "name": "Michail Antonio",
+   "aliases": [],
    "club": "west-ham",
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Michail_Antonio"
@@ -757,6 +867,8 @@
     "Scott Parker"
    ],
    "answer": 3,
+   "name": "Scott Parker",
+   "aliases": [],
    "club": "west-ham",
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Scott_Parker"
@@ -777,6 +889,8 @@
     "Teddy Sheringham"
    ],
    "answer": 2,
+   "name": "Dean Ashton",
+   "aliases": [],
    "club": "west-ham",
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Dean_Ashton"
@@ -797,6 +911,10 @@
     "Vladimír Coufal"
    ],
    "answer": 0,
+   "name": "Tomáš Souček",
+   "aliases": [
+    "Soucek"
+   ],
    "club": "west-ham",
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Tomáš_Souček"
@@ -817,6 +935,11 @@
     "Dale Stephens"
    ],
    "answer": 0,
+   "name": "Pascal Groß",
+   "aliases": [
+    "Gross",
+    "Pascal Gross"
+   ],
    "club": "brighton",
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Pascal_Groß"
@@ -837,6 +960,8 @@
     "Lewis Dunk"
    ],
    "answer": 3,
+   "name": "Lewis Dunk",
+   "aliases": [],
    "club": "brighton",
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Lewis_Dunk"
@@ -857,6 +982,8 @@
     "Takumi Minamino"
    ],
    "answer": 0,
+   "name": "Kaoru Mitoma",
+   "aliases": [],
    "club": "brighton",
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Kaoru_Mitoma"
@@ -877,6 +1004,11 @@
     "Enzo Fernández"
    ],
    "answer": 0,
+   "name": "Alexis Mac Allister",
+   "aliases": [
+    "MacAllister",
+    "Macca"
+   ],
    "club": "brighton",
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Alexis_Mac_Allister"
@@ -897,6 +1029,10 @@
     "Enzo Fernández"
    ],
    "answer": 2,
+   "name": "Moisés Caicedo",
+   "aliases": [
+    "Moises Caicedo"
+   ],
    "club": "brighton",
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Moisés_Caicedo"
@@ -917,6 +1053,8 @@
     "Glenn Murray"
    ],
    "answer": 2,
+   "name": "Bobby Zamora",
+   "aliases": [],
    "club": "brighton",
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Bobby_Zamora"
@@ -937,6 +1075,10 @@
     "Glenn Murray"
    ],
    "answer": 0,
+   "name": "Danny Welbeck",
+   "aliases": [
+    "Welbz"
+   ],
    "club": "brighton",
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Danny_Welbeck"
@@ -957,6 +1099,8 @@
     "Leandro Trossard"
    ],
    "answer": 3,
+   "name": "Leandro Trossard",
+   "aliases": [],
    "club": "brighton",
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Leandro_Trossard"
