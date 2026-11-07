@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "scope": "Premier League, 2000-01 season onwards (some all-time records included), plus club rounds for all 92 clubs in the top four divisions (2026-27)",
+  "scope": "Premier League, 2000-01 season onwards (some all-time records included), major international tournaments, plus club rounds for all 92 clubs in the top four divisions (2026-27)",
   "questions": [
     {
       "id": "tit-0001",
@@ -16,7 +16,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "Arsenal's 'Invincibles' won 26 and drew 12."
+      "explanation": "Arsenal's 'Invincibles' won 26 and drew 12.",
+      "source": "https://en.wikipedia.org/wiki/2003%E2%80%9304_Premier_League"
     },
     {
       "id": "tit-0002",
@@ -32,7 +33,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "Leicester won it by 10 points under Claudio Ranieri."
+      "explanation": "Leicester won it by 10 points under Claudio Ranieri.",
+      "source": "https://en.wikipedia.org/wiki/2015%E2%80%9316_Premier_League"
     },
     {
       "id": "tit-0003",
@@ -48,7 +50,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "City beat QPR 3-2 with Agüero's goal at 93:20."
+      "explanation": "City beat QPR 3-2 with Agüero's goal at 93:20.",
+      "source": "https://en.wikipedia.org/wiki/2011%E2%80%9312_Premier_League"
     },
     {
       "id": "tit-0004",
@@ -64,7 +67,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "Liverpool won it by 18 points under Jürgen Klopp."
+      "explanation": "Liverpool won it by 18 points under Jürgen Klopp.",
+      "source": "https://en.wikipedia.org/wiki/2019%E2%80%9320_Premier_League"
     },
     {
       "id": "tit-0005",
@@ -80,7 +84,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "It was Ferguson's 13th and final league title before retiring."
+      "explanation": "It was Ferguson's 13th and final league title before retiring.",
+      "source": "https://en.wikipedia.org/wiki/2012%E2%80%9313_Premier_League"
     },
     {
       "id": "tit-0006",
@@ -96,7 +101,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "Pep Guardiola's 'Centurions' got exactly 100 points in 2017-18."
+      "explanation": "Pep Guardiola's 'Centurions' got exactly 100 points in 2017-18.",
+      "source": "https://en.wikipedia.org/wiki/2017%E2%80%9318_Premier_League"
     },
     {
       "id": "tit-0007",
@@ -112,7 +118,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "Mourinho's first Chelsea side set a record of 95 points (since beaten by City)."
+      "explanation": "Mourinho's first Chelsea side set a record of 95 points (since beaten by City).",
+      "source": "https://en.wikipedia.org/wiki/2004%E2%80%9305_Premier_League"
     },
     {
       "id": "tit-0008",
@@ -128,7 +135,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "Conte won it in his first season using a back three."
+      "explanation": "Conte won it in his first season using a back three.",
+      "source": "https://en.wikipedia.org/wiki/2016%E2%80%9317_Premier_League"
     },
     {
       "id": "tit-0009",
@@ -144,7 +152,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "No team had ever won four consecutive top-flight titles before."
+      "explanation": "No team had ever won four consecutive top-flight titles before.",
+      "source": "https://en.wikipedia.org/wiki/2023%E2%80%9324_Premier_League"
     },
     {
       "id": "tit-0010",
@@ -160,7 +169,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "Slot took over from Klopp in summer 2024."
+      "explanation": "Slot took over from Klopp in summer 2024.",
+      "source": "https://en.wikipedia.org/wiki/2024%E2%80%9325_Premier_League"
     },
     {
       "id": "tit-0011",
@@ -176,7 +186,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "It was City's first top-flight title for 44 years."
+      "explanation": "It was City's first top-flight title for 44 years.",
+      "source": "https://en.wikipedia.org/wiki/2011%E2%80%9312_Premier_League"
     },
     {
       "id": "tit-0012",
@@ -192,7 +203,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "Pellegrini won the title and League Cup in his first season."
+      "explanation": "Pellegrini won the title and League Cup in his first season.",
+      "source": "https://en.wikipedia.org/wiki/2013%E2%80%9314_Premier_League"
     },
     {
       "id": "tit-0013",
@@ -208,7 +220,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "Chelsea scored 103 league goals that season."
+      "explanation": "Chelsea scored 103 league goals that season.",
+      "source": "https://en.wikipedia.org/wiki/2009%E2%80%9310_Premier_League"
     },
     {
       "id": "tit-0014",
@@ -224,7 +237,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "Vieira was captain from 2002 to 2005."
+      "explanation": "Vieira was captain from 2002 to 2005.",
+      "source": "https://en.wikipedia.org/wiki/Patrick_Vieira"
     },
     {
       "id": "tit-0015",
@@ -240,7 +254,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "Giggs holds the record for most Premier League titles."
+      "explanation": "Giggs holds the record for most Premier League titles.",
+      "source": "https://en.wikipedia.org/wiki/Ryan_Giggs"
     },
     {
       "id": "tit-0016",
@@ -256,7 +271,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "Spurs' last league title was in 1960-61."
+      "explanation": "Spurs' last league title was in 1960-61.",
+      "source": "https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C."
     },
     {
       "id": "tit-0017",
@@ -272,7 +288,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "Derby won just one league game all season."
+      "explanation": "Derby won just one league game all season.",
+      "source": "https://en.wikipedia.org/wiki/2007%E2%80%9308_Derby_County_F.C._season"
     },
     {
       "id": "goa-0001",
@@ -288,7 +305,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "Shearer scored 260 Premier League goals."
+      "explanation": "Shearer scored 260 Premier League goals.",
+      "source": "https://en.wikipedia.org/wiki/Alan_Shearer"
     },
     {
       "id": "goa-0002",
@@ -304,7 +322,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "Kane scored 213 for Spurs before joining Bayern Munich."
+      "explanation": "Kane scored 213 for Spurs before joining Bayern Munich.",
+      "source": "https://en.wikipedia.org/wiki/Harry_Kane"
     },
     {
       "id": "goa-0003",
@@ -320,7 +339,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "Haaland did it in his first Premier League season."
+      "explanation": "Haaland did it in his first Premier League season.",
+      "source": "https://en.wikipedia.org/wiki/2022%E2%80%9323_Premier_League"
     },
     {
       "id": "goa-0004",
@@ -336,7 +356,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "Salah broke the 31-goal record shared by Shearer, Ronaldo and Suárez."
+      "explanation": "Salah broke the 31-goal record shared by Shearer, Ronaldo and Suárez.",
+      "source": "https://en.wikipedia.org/wiki/2017%E2%80%9318_Premier_League"
     },
     {
       "id": "goa-0005",
@@ -352,7 +373,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "Henry won it in 2001-02, 2003-04, 2004-05 and 2005-06."
+      "explanation": "Henry won it in 2001-02, 2003-04, 2004-05 and 2005-06.",
+      "source": "https://en.wikipedia.org/wiki/Thierry_Henry"
     },
     {
       "id": "goa-0006",
@@ -368,7 +390,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "Long scored it against Watford in April 2019."
+      "explanation": "Long scored it against Watford in April 2019.",
+      "source": "https://en.wikipedia.org/wiki/Shane_Long"
     },
     {
       "id": "goa-0007",
@@ -384,7 +407,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "Mané did it for Southampton against Aston Villa in May 2015."
+      "explanation": "Mané did it for Southampton against Aston Villa in May 2015.",
+      "source": "https://en.wikipedia.org/wiki/Sadio_Man%C3%A9"
     },
     {
       "id": "goa-0008",
@@ -400,7 +424,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "It is Tottenham's biggest Premier League win."
+      "explanation": "It is Tottenham's biggest Premier League win.",
+      "source": "https://en.wikipedia.org/wiki/Jermain_Defoe"
     },
     {
       "id": "goa-0009",
@@ -416,7 +441,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "He broke Ruud van Nistelrooy's record of 10."
+      "explanation": "He broke Ruud van Nistelrooy's record of 10.",
+      "source": "https://en.wikipedia.org/wiki/Jamie_Vardy"
     },
     {
       "id": "goa-0010",
@@ -432,7 +458,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "It equalled the record Premier League winning margin."
+      "explanation": "It equalled the record Premier League winning margin.",
+      "source": "https://en.wikipedia.org/wiki/2019%E2%80%9320_Leicester_City_F.C._season"
     },
     {
       "id": "goa-0011",
@@ -448,7 +475,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "It was played in September 2007."
+      "explanation": "It was played in September 2007.",
+      "source": "https://en.wikipedia.org/wiki/2007%E2%80%9308_Premier_League"
     },
     {
       "id": "goa-0012",
@@ -464,7 +492,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "Wayne Rooney scored a hat-trick."
+      "explanation": "Wayne Rooney scored a hat-trick.",
+      "source": "https://en.wikipedia.org/wiki/2011%E2%80%9312_Manchester_United_F.C._season"
     },
     {
       "id": "goa-0013",
@@ -480,7 +509,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "Didier Drogba's hat-trick won him the Golden Boot."
+      "explanation": "Didier Drogba's hat-trick won him the Golden Boot.",
+      "source": "https://en.wikipedia.org/wiki/2009%E2%80%9310_Premier_League"
     },
     {
       "id": "goa-0014",
@@ -496,7 +526,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "Ollie Watkins scored a hat-trick."
+      "explanation": "Ollie Watkins scored a hat-trick.",
+      "source": "https://en.wikipedia.org/wiki/Ollie_Watkins"
     },
     {
       "id": "goa-0015",
@@ -512,7 +543,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "Balotelli celebrated his goal with the 'Why always me?' T-shirt."
+      "explanation": "Balotelli celebrated his goal with the 'Why always me?' T-shirt.",
+      "source": "https://en.wikipedia.org/wiki/2011%E2%80%9312_Manchester_City_F.C._season"
     },
     {
       "id": "goa-0016",
@@ -528,7 +560,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "Son scored all 23 without a single penalty."
+      "explanation": "Son scored all 23 without a single penalty.",
+      "source": "https://en.wikipedia.org/wiki/2021%E2%80%9322_Premier_League"
     },
     {
       "id": "goa-0017",
@@ -544,7 +577,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "Crouch scored 53 headers."
+      "explanation": "Crouch scored 53 headers.",
+      "source": "https://en.wikipedia.org/wiki/Peter_Crouch"
     },
     {
       "id": "goa-0018",
@@ -560,7 +594,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "The wind carried his clearance into the net."
+      "explanation": "The wind carried his clearance into the net.",
+      "source": "https://en.wikipedia.org/wiki/Asmir_Begovi%C4%87"
     },
     {
       "id": "goa-0019",
@@ -576,7 +611,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "He scored 147 of them for Chelsea."
+      "explanation": "He scored 147 of them for Chelsea.",
+      "source": "https://en.wikipedia.org/wiki/Frank_Lampard"
     },
     {
       "id": "goa-0020",
@@ -592,7 +628,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "Henry did it in 2002-03, De Bruyne in 2019-20."
+      "explanation": "Henry did it in 2002-03, De Bruyne in 2019-20.",
+      "source": "https://en.wikipedia.org/wiki/Premier_League_records_and_statistics"
     },
     {
       "id": "goa-0021",
@@ -608,7 +645,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "Giggs made 162 assists."
+      "explanation": "Giggs made 162 assists.",
+      "source": "https://en.wikipedia.org/wiki/Ryan_Giggs"
     },
     {
       "id": "goa-0022",
@@ -624,7 +662,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "Salah also made 18 assists that season."
+      "explanation": "Salah also made 18 assists that season.",
+      "source": "https://en.wikipedia.org/wiki/2024%E2%80%9325_Premier_League"
     },
     {
       "id": "pla-0001",
@@ -640,7 +679,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "Rooney scored 253 goals, passing Bobby Charlton in 2017."
+      "explanation": "Rooney scored 253 goals, passing Bobby Charlton in 2017.",
+      "source": "https://en.wikipedia.org/wiki/Wayne_Rooney"
     },
     {
       "id": "pla-0002",
@@ -656,7 +696,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "Henry scored 228 goals for Arsenal."
+      "explanation": "Henry scored 228 goals for Arsenal.",
+      "source": "https://en.wikipedia.org/wiki/Thierry_Henry"
     },
     {
       "id": "pla-0003",
@@ -672,7 +713,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "Agüero scored 260 goals for City."
+      "explanation": "Agüero scored 260 goals for City.",
+      "source": "https://en.wikipedia.org/wiki/Sergio_Ag%C3%BCero"
     },
     {
       "id": "pla-0004",
@@ -688,7 +730,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "Lampard scored 211 goals for Chelsea."
+      "explanation": "Lampard scored 211 goals for Chelsea.",
+      "source": "https://en.wikipedia.org/wiki/Frank_Lampard"
     },
     {
       "id": "pla-0005",
@@ -704,7 +747,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "Greaves had held the record with 266 goals."
+      "explanation": "Greaves had held the record with 266 goals.",
+      "source": "https://en.wikipedia.org/wiki/Harry_Kane"
     },
     {
       "id": "pla-0006",
@@ -720,7 +764,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "Bergkamp often travelled to away games in Europe by car or train."
+      "explanation": "Bergkamp often travelled to away games in Europe by car or train.",
+      "source": "https://en.wikipedia.org/wiki/Dennis_Bergkamp"
     },
     {
       "id": "pla-0007",
@@ -736,7 +781,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "Čech kept 202 clean sheets for Chelsea and Arsenal."
+      "explanation": "Čech kept 202 clean sheets for Chelsea and Arsenal.",
+      "source": "https://en.wikipedia.org/wiki/Petr_%C4%8Cech"
     },
     {
       "id": "pla-0008",
@@ -752,7 +798,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "He came through non-league football."
+      "explanation": "He came through non-league football.",
+      "source": "https://en.wikipedia.org/wiki/Jamie_Vardy"
     },
     {
       "id": "pla-0009",
@@ -768,7 +815,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "Mahrez scored 17 league goals in the title season."
+      "explanation": "Mahrez scored 17 league goals in the title season.",
+      "source": "https://en.wikipedia.org/wiki/Riyad_Mahrez"
     },
     {
       "id": "pla-0010",
@@ -784,7 +832,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "He scored 31 league goals in 2007-08."
+      "explanation": "He scored 31 league goals in 2007-08.",
+      "source": "https://en.wikipedia.org/wiki/Cristiano_Ronaldo"
     },
     {
       "id": "pla-0011",
@@ -800,7 +849,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "He scored in every season from 1992-93 to 2012-13."
+      "explanation": "He scored in every season from 1992-93 to 2012-13.",
+      "source": "https://en.wikipedia.org/wiki/Ryan_Giggs"
     },
     {
       "id": "pla-0012",
@@ -816,7 +866,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "His throws were treated like corners under Tony Pulis."
+      "explanation": "His throws were treated like corners under Tony Pulis.",
+      "source": "https://en.wikipedia.org/wiki/Rory_Delap"
     },
     {
       "id": "pla-0013",
@@ -832,7 +883,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "Gerrard came closest in 2008-09 and 2013-14."
+      "explanation": "Gerrard came closest in 2008-09 and 2013-14.",
+      "source": "https://en.wikipedia.org/wiki/Steven_Gerrard"
     },
     {
       "id": "pla-0014",
@@ -848,7 +900,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "It ended Arsenal's 30-game unbeaten run in October 2002."
+      "explanation": "It ended Arsenal's 30-game unbeaten run in October 2002.",
+      "source": "https://en.wikipedia.org/wiki/Wayne_Rooney"
     },
     {
       "id": "pla-0015",
@@ -864,7 +917,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "It was voted the Premier League's goal of its first 20 seasons."
+      "explanation": "It was voted the Premier League's goal of its first 20 seasons.",
+      "source": "https://en.wikipedia.org/wiki/Wayne_Rooney"
     },
     {
       "id": "pla-0016",
@@ -880,7 +934,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "He scored in 2007, 2009, 2010 and 2012."
+      "explanation": "He scored in 2007, 2009, 2010 and 2012.",
+      "source": "https://en.wikipedia.org/wiki/Didier_Drogba"
     },
     {
       "id": "tra-0001",
@@ -896,7 +951,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He cost about £75m, a world record for a defender at the time."
+      "explanation": "He cost about £75m, a world record for a defender at the time.",
+      "source": "https://en.wikipedia.org/wiki/Virgil_van_Dijk"
     },
     {
       "id": "tra-0002",
@@ -912,7 +968,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "The fee was a British record of £50m."
+      "explanation": "The fee was a British record of £50m.",
+      "source": "https://en.wikipedia.org/wiki/Fernando_Torres"
     },
     {
       "id": "tra-0003",
@@ -928,7 +985,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "The fee was a world record at the time."
+      "explanation": "The fee was a world record at the time.",
+      "source": "https://en.wikipedia.org/wiki/Gareth_Bale"
     },
     {
       "id": "tra-0004",
@@ -944,7 +1002,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He won the Golden Boot with 26 goals that season."
+      "explanation": "He won the Golden Boot with 26 goals that season.",
+      "source": "https://en.wikipedia.org/wiki/Robin_van_Persie"
     },
     {
       "id": "tra-0005",
@@ -960,7 +1019,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "Kane had spent his whole senior career at Spurs."
+      "explanation": "Kane had spent his whole senior career at Spurs.",
+      "source": "https://en.wikipedia.org/wiki/Harry_Kane"
     },
     {
       "id": "tra-0006",
@@ -976,7 +1036,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He was 18 at the time."
+      "explanation": "He was 18 at the time.",
+      "source": "https://en.wikipedia.org/wiki/Wayne_Rooney"
     },
     {
       "id": "tra-0007",
@@ -992,7 +1053,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "The money helped Liverpool fund Virgil van Dijk and Alisson."
+      "explanation": "The money helped Liverpool fund Virgil van Dijk and Alisson.",
+      "source": "https://en.wikipedia.org/wiki/Philippe_Coutinho"
     },
     {
       "id": "tra-0008",
@@ -1008,7 +1070,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "It was the first £100m transfer by a British club."
+      "explanation": "It was the first £100m transfer by a British club.",
+      "source": "https://en.wikipedia.org/wiki/Jack_Grealish"
     },
     {
       "id": "tra-0009",
@@ -1024,7 +1087,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He impressed United's players in a friendly against Sporting."
+      "explanation": "He impressed United's players in a friendly against Sporting.",
+      "source": "https://en.wikipedia.org/wiki/Cristiano_Ronaldo"
     },
     {
       "id": "tra-0010",
@@ -1040,7 +1104,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He cost about £24m."
+      "explanation": "He cost about £24m.",
+      "source": "https://en.wikipedia.org/wiki/Didier_Drogba"
     },
     {
       "id": "tra-0011",
@@ -1056,7 +1121,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He won the French league with Lille in 2011."
+      "explanation": "He won the French league with Lille in 2011.",
+      "source": "https://en.wikipedia.org/wiki/Eden_Hazard"
     },
     {
       "id": "tra-0012",
@@ -1072,7 +1138,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He won back-to-back titles with Leicester and Chelsea."
+      "explanation": "He won back-to-back titles with Leicester and Chelsea.",
+      "source": "https://en.wikipedia.org/wiki/N%27Golo_Kant%C3%A9"
     },
     {
       "id": "tra-0013",
@@ -1088,7 +1155,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He had previously been at Chelsea but played little."
+      "explanation": "He had previously been at Chelsea but played little.",
+      "source": "https://en.wikipedia.org/wiki/Kevin_De_Bruyne"
     },
     {
       "id": "tra-0014",
@@ -1104,7 +1172,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "Spurs fans never forgave him."
+      "explanation": "Spurs fans never forgave him.",
+      "source": "https://en.wikipedia.org/wiki/Sol_Campbell"
     },
     {
       "id": "tra-0015",
@@ -1120,7 +1189,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "Fans called him 'Cashley' over the move."
+      "explanation": "Fans called him 'Cashley' over the move.",
+      "source": "https://en.wikipedia.org/wiki/Ashley_Cole"
     },
     {
       "id": "tra-0016",
@@ -1136,7 +1206,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "The fee was about £49m."
+      "explanation": "The fee was about £49m.",
+      "source": "https://en.wikipedia.org/wiki/Raheem_Sterling"
     },
     {
       "id": "tra-0017",
@@ -1152,7 +1223,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "The fee of about £89m was a world record at the time."
+      "explanation": "The fee of about £89m was a world record at the time.",
+      "source": "https://en.wikipedia.org/wiki/Paul_Pogba"
     },
     {
       "id": "tra-0018",
@@ -1168,7 +1240,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He later rejoined Chelsea from Inter in 2021."
+      "explanation": "He later rejoined Chelsea from Inter in 2021.",
+      "source": "https://en.wikipedia.org/wiki/Romelu_Lukaku"
     },
     {
       "id": "tra-0019",
@@ -1184,7 +1257,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "The fee was about £115m."
+      "explanation": "The fee was about £115m.",
+      "source": "https://en.wikipedia.org/wiki/Mois%C3%A9s_Caicedo"
     },
     {
       "id": "tra-0020",
@@ -1200,7 +1274,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "Wenger had coached him at Monaco."
+      "explanation": "Wenger had coached him at Monaco.",
+      "source": "https://en.wikipedia.org/wiki/Thierry_Henry"
     },
     {
       "id": "man-0001",
@@ -1216,7 +1291,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "Moyes moved from Everton but lasted less than a season."
+      "explanation": "Moyes moved from Everton but lasted less than a season.",
+      "source": "https://en.wikipedia.org/wiki/David_Moyes"
     },
     {
       "id": "man-0002",
@@ -1232,7 +1308,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "He had just won the Champions League with Porto."
+      "explanation": "He had just won the Champions League with Porto.",
+      "source": "https://en.wikipedia.org/wiki/Jos%C3%A9_Mourinho"
     },
     {
       "id": "man-0003",
@@ -1248,7 +1325,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "He won the Bundesliga twice with Dortmund."
+      "explanation": "He won the Bundesliga twice with Dortmund.",
+      "source": "https://en.wikipedia.org/wiki/J%C3%BCrgen_Klopp"
     },
     {
       "id": "man-0004",
@@ -1264,7 +1342,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "Arteta captained Arsenal as a player."
+      "explanation": "Arteta captained Arsenal as a player.",
+      "source": "https://en.wikipedia.org/wiki/Mikel_Arteta"
     },
     {
       "id": "man-0005",
@@ -1280,7 +1359,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "Wenger had been in charge for nearly 22 years."
+      "explanation": "Wenger had been in charge for nearly 22 years.",
+      "source": "https://en.wikipedia.org/wiki/Unai_Emery"
     },
     {
       "id": "man-0006",
@@ -1296,7 +1376,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "He won three Bundesliga titles at Bayern."
+      "explanation": "He won three Bundesliga titles at Bayern.",
+      "source": "https://en.wikipedia.org/wiki/Pep_Guardiola"
     },
     {
       "id": "man-0007",
@@ -1312,7 +1393,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "He won in 1997-98, 2001-02 and 2003-04."
+      "explanation": "He won in 1997-98, 2001-02 and 2003-04.",
+      "source": "https://en.wikipedia.org/wiki/Ars%C3%A8ne_Wenger"
     },
     {
       "id": "man-0008",
@@ -1328,7 +1410,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "Ranieri was sacked less than a year later."
+      "explanation": "Ranieri was sacked less than a year later.",
+      "source": "https://en.wikipedia.org/wiki/Claudio_Ranieri"
     },
     {
       "id": "man-0009",
@@ -1344,7 +1427,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "He won three Dutch titles with Ajax."
+      "explanation": "He won three Dutch titles with Ajax.",
+      "source": "https://en.wikipedia.org/wiki/Erik_ten_Hag"
     },
     {
       "id": "man-0010",
@@ -1360,7 +1444,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "He replaced Erik ten Hag."
+      "explanation": "He replaced Erik ten Hag.",
+      "source": "https://en.wikipedia.org/wiki/Ruben_Amorim"
     },
     {
       "id": "man-0011",
@@ -1376,7 +1461,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "He lasted about seven months at Chelsea."
+      "explanation": "He lasted about seven months at Chelsea.",
+      "source": "https://en.wikipedia.org/wiki/Graham_Potter"
     },
     {
       "id": "man-0012",
@@ -1392,7 +1478,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "Dalglish won the League Cup in 2012."
+      "explanation": "Dalglish won the League Cup in 2012.",
+      "source": "https://en.wikipedia.org/wiki/Kenny_Dalglish"
     },
     {
       "id": "man-0013",
@@ -1408,7 +1495,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "Spurs lost 2-0 to Liverpool in Madrid."
+      "explanation": "Spurs lost 2-0 to Liverpool in Madrid.",
+      "source": "https://en.wikipedia.org/wiki/Mauricio_Pochettino"
     },
     {
       "id": "man-0014",
@@ -1424,7 +1512,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "He was only interim manager at the time."
+      "explanation": "He was only interim manager at the time.",
+      "source": "https://en.wikipedia.org/wiki/Roberto_Di_Matteo"
     },
     {
       "id": "man-0015",
@@ -1440,7 +1529,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "Wigan were relegated from the Premier League days later."
+      "explanation": "Wigan were relegated from the Premier League days later.",
+      "source": "https://en.wikipedia.org/wiki/Roberto_Mart%C3%ADnez"
     },
     {
       "id": "man-0016",
@@ -1456,7 +1546,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "He became England manager that summer."
+      "explanation": "He became England manager that summer.",
+      "source": "https://en.wikipedia.org/wiki/Steve_McClaren"
     },
     {
       "id": "mom-0001",
@@ -1472,7 +1563,8 @@
       "topic": "Big moments",
       "club": null,
       "verified": true,
-      "explanation": "Suárez was banned for 10 games."
+      "explanation": "Suárez was banned for 10 games.",
+      "source": "https://en.wikipedia.org/wiki/Luis_Su%C3%A1rez"
     },
     {
       "id": "mom-0002",
@@ -1488,7 +1580,8 @@
       "topic": "Big moments",
       "club": null,
       "verified": true,
-      "explanation": "Chelsea won 2-0 and the title slipped away from Liverpool."
+      "explanation": "Chelsea won 2-0 and the title slipped away from Liverpool.",
+      "source": "https://en.wikipedia.org/wiki/Steven_Gerrard"
     },
     {
       "id": "mom-0003",
@@ -1504,7 +1597,8 @@
       "topic": "Big moments",
       "club": null,
       "verified": true,
-      "explanation": "Balotelli slid the ball through from the edge of the box."
+      "explanation": "Balotelli slid the ball through from the edge of the box.",
+      "source": "https://en.wikipedia.org/wiki/2011%E2%80%9312_Manchester_City_F.C._season"
     },
     {
       "id": "mom-0004",
@@ -1520,7 +1614,8 @@
       "topic": "Big moments",
       "club": null,
       "verified": true,
-      "explanation": "The match became known as 'Pizzagate' or the 'Battle of the Buffet'."
+      "explanation": "The match became known as 'Pizzagate' or the 'Battle of the Buffet'.",
+      "source": "https://en.wikipedia.org/wiki/Battle_of_the_Buffet"
     },
     {
       "id": "mom-0005",
@@ -1536,7 +1631,8 @@
       "topic": "Big moments",
       "club": null,
       "verified": true,
-      "explanation": "United won the match 4-2."
+      "explanation": "United won the match 4-2.",
+      "source": "https://en.wikipedia.org/wiki/Arsenal_F.C.%E2%80%93Manchester_United_F.C._rivalry"
     },
     {
       "id": "mom-0006",
@@ -1552,7 +1648,8 @@
       "topic": "Big moments",
       "club": null,
       "verified": true,
-      "explanation": "City won the derby 6-1."
+      "explanation": "City won the derby 6-1.",
+      "source": "https://en.wikipedia.org/wiki/Mario_Balotelli"
     },
     {
       "id": "mom-0007",
@@ -1568,7 +1665,8 @@
       "topic": "Big moments",
       "club": null,
       "verified": true,
-      "explanation": "Vardy scored 24 league goals in the title season."
+      "explanation": "Vardy scored 24 league goals in the title season.",
+      "source": "https://en.wikipedia.org/wiki/Jamie_Vardy"
     },
     {
       "id": "mom-0008",
@@ -1584,7 +1682,8 @@
       "topic": "Big moments",
       "club": null,
       "verified": true,
-      "explanation": "Goal-line technology had arrived in 2013-14."
+      "explanation": "Goal-line technology had arrived in 2013-14.",
+      "source": "https://en.wikipedia.org/wiki/Video_assistant_referee"
     },
     {
       "id": "mom-0009",
@@ -1600,7 +1699,8 @@
       "topic": "Big moments",
       "club": null,
       "verified": true,
-      "explanation": "A year later, Leicester were champions."
+      "explanation": "A year later, Leicester were champions.",
+      "source": "https://en.wikipedia.org/wiki/2014%E2%80%9315_Leicester_City_F.C._season"
     },
     {
       "id": "clu-0001",
@@ -1616,7 +1716,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "Highbury was converted into flats."
+      "explanation": "Highbury was converted into flats.",
+      "source": "https://en.wikipedia.org/wiki/Highbury"
     },
     {
       "id": "clu-0002",
@@ -1632,7 +1733,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "It sits on the banks of the Thames."
+      "explanation": "It sits on the banks of the Thames.",
+      "source": "https://en.wikipedia.org/wiki/Craven_Cottage"
     },
     {
       "id": "clu-0003",
@@ -1648,7 +1750,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "Burnley have played there since 1883."
+      "explanation": "Burnley have played there since 1883.",
+      "source": "https://en.wikipedia.org/wiki/Turf_Moor"
     },
     {
       "id": "clu-0004",
@@ -1664,7 +1767,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "Swansea spent 2011 to 2018 in the Premier League."
+      "explanation": "Swansea spent 2011 to 2018 in the Premier League.",
+      "source": "https://en.wikipedia.org/wiki/Swansea.com_Stadium"
     },
     {
       "id": "clu-0005",
@@ -1680,7 +1784,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "Brighton moved there in 2011."
+      "explanation": "Brighton moved there in 2011.",
+      "source": "https://en.wikipedia.org/wiki/Falmer_Stadium"
     },
     {
       "id": "clu-0006",
@@ -1696,7 +1801,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "The new stadium was built for the 2002 Commonwealth Games."
+      "explanation": "The new stadium was built for the 2002 Commonwealth Games.",
+      "source": "https://en.wikipedia.org/wiki/City_of_Manchester_Stadium"
     },
     {
       "id": "clu-0007",
@@ -1712,7 +1818,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "The Tottenham Hotspur Stadium opened in April 2019."
+      "explanation": "The Tottenham Hotspur Stadium opened in April 2019.",
+      "source": "https://en.wikipedia.org/wiki/Tottenham_Hotspur_Stadium"
     },
     {
       "id": "clu-0008",
@@ -1728,7 +1835,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "The name is linked to a local toffee shop."
+      "explanation": "The name is linked to a local toffee shop.",
+      "source": "https://en.wikipedia.org/wiki/Everton_F.C."
     },
     {
       "id": "clu-0009",
@@ -1744,7 +1852,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "Their stadium is the Stadium of Light."
+      "explanation": "Their stadium is the Stadium of Light.",
+      "source": "https://en.wikipedia.org/wiki/Sunderland_A.F.C."
     },
     {
       "id": "clu-0010",
@@ -1760,7 +1869,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "They first reached the Premier League in 2015."
+      "explanation": "They first reached the Premier League in 2015.",
+      "source": "https://en.wikipedia.org/wiki/AFC_Bournemouth"
     },
     {
       "id": "clu-0011",
@@ -1776,7 +1886,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "It refers to the area's pottery industry."
+      "explanation": "It refers to the area's pottery industry.",
+      "source": "https://en.wikipedia.org/wiki/Stoke_City_F.C."
     },
     {
       "id": "clu-0012",
@@ -1792,7 +1903,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "West Brom play at The Hawthorns."
+      "explanation": "West Brom play at The Hawthorns.",
+      "source": "https://en.wikipedia.org/wiki/West_Bromwich_Albion_F.C."
     },
     {
       "id": "clu-0013",
@@ -1808,7 +1920,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "Elton John was once Watford's owner."
+      "explanation": "Elton John was once Watford's owner.",
+      "source": "https://en.wikipedia.org/wiki/Watford_F.C."
     },
     {
       "id": "clu-0014",
@@ -1824,7 +1937,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "George Burley was named Manager of the Year."
+      "explanation": "George Burley was named Manager of the Year.",
+      "source": "https://en.wikipedia.org/wiki/2000%E2%80%9301_Ipswich_Town_F.C._season"
     },
     {
       "id": "cup-0001",
@@ -1840,7 +1954,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "Liverpool came back from 3-0 down to win on penalties."
+      "explanation": "Liverpool came back from 3-0 down to win on penalties.",
+      "source": "https://en.wikipedia.org/wiki/2005_UEFA_Champions_League_final"
     },
     {
       "id": "cup-0002",
@@ -1856,7 +1971,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "They won the Premier League, FA Cup and Champions League."
+      "explanation": "They won the Premier League, FA Cup and Champions League.",
+      "source": "https://en.wikipedia.org/wiki/2022%E2%80%9323_Manchester_City_F.C._season"
     },
     {
       "id": "cup-0003",
@@ -1872,7 +1988,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "City won 1-0 in Istanbul."
+      "explanation": "City won 1-0 in Istanbul.",
+      "source": "https://en.wikipedia.org/wiki/2023_UEFA_Champions_League_final"
     },
     {
       "id": "cup-0004",
@@ -1888,7 +2005,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "Chelsea won 1-0 in Porto."
+      "explanation": "Chelsea won 1-0 in Porto.",
+      "source": "https://en.wikipedia.org/wiki/2021_UEFA_Champions_League_final"
     },
     {
       "id": "cup-0005",
@@ -1904,7 +2022,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "John Terry slipped taking what would have been the winning penalty."
+      "explanation": "John Terry slipped taking what would have been the winning penalty.",
+      "source": "https://en.wikipedia.org/wiki/2008_UEFA_Champions_League_final"
     },
     {
       "id": "cup-0006",
@@ -1920,7 +2039,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "Barcelona won 2-1 in Paris."
+      "explanation": "Barcelona won 2-1 in Paris.",
+      "source": "https://en.wikipedia.org/wiki/2006_UEFA_Champions_League_final"
     },
     {
       "id": "cup-0007",
@@ -1936,7 +2056,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "Kanu scored the only goal."
+      "explanation": "Kanu scored the only goal.",
+      "source": "https://en.wikipedia.org/wiki/2008_FA_Cup_final"
     },
     {
       "id": "cup-0008",
@@ -1952,7 +2073,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "Ben Watson headed a late winner."
+      "explanation": "Ben Watson headed a late winner.",
+      "source": "https://en.wikipedia.org/wiki/2013_FA_Cup_final"
     },
     {
       "id": "cup-0009",
@@ -1968,7 +2090,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "Obafemi Martins scored the late winner."
+      "explanation": "Obafemi Martins scored the late winner.",
+      "source": "https://en.wikipedia.org/wiki/2011_Football_League_Cup_final"
     },
     {
       "id": "cup-0010",
@@ -1984,7 +2107,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "Bradford were in League Two at the time."
+      "explanation": "Bradford were in League Two at the time.",
+      "source": "https://en.wikipedia.org/wiki/2013_Football_League_Cup_final"
     },
     {
       "id": "cup-0011",
@@ -2000,7 +2124,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "They lost to Atlético Madrid after extra time."
+      "explanation": "They lost to Atlético Madrid after extra time.",
+      "source": "https://en.wikipedia.org/wiki/2010_UEFA_Europa_League_final"
     },
     {
       "id": "cup-0012",
@@ -2016,7 +2141,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "Brennan Johnson scored the only goal in Bilbao."
+      "explanation": "Brennan Johnson scored the only goal in Bilbao.",
+      "source": "https://en.wikipedia.org/wiki/2025_UEFA_Europa_League_final"
     },
     {
       "id": "cup-0013",
@@ -2032,7 +2158,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "Eberechi Eze scored the only goal."
+      "explanation": "Eberechi Eze scored the only goal.",
+      "source": "https://en.wikipedia.org/wiki/2025_FA_Cup_final"
     },
     {
       "id": "cup-0014",
@@ -2048,7 +2175,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "It was Newcastle's first major domestic trophy in 70 years."
+      "explanation": "It was Newcastle's first major domestic trophy in 70 years.",
+      "source": "https://en.wikipedia.org/wiki/2025_EFL_Cup_final"
     },
     {
       "id": "cup-0015",
@@ -2064,7 +2192,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "Salah scored a penalty in the second minute."
+      "explanation": "Salah scored a penalty in the second minute.",
+      "source": "https://en.wikipedia.org/wiki/2019_UEFA_Champions_League_final"
     },
     {
       "id": "cup-0016",
@@ -2080,7 +2209,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "Leeds lost 3-0 on aggregate."
+      "explanation": "Leeds lost 3-0 on aggregate.",
+      "source": "https://en.wikipedia.org/wiki/2000%E2%80%9301_UEFA_Champions_League"
     },
     {
       "id": "cup-0017",
@@ -2096,7 +2226,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "The final was in Eindhoven."
+      "explanation": "The final was in Eindhoven.",
+      "source": "https://en.wikipedia.org/wiki/2006_UEFA_Cup_final"
     },
     {
       "id": "whu-0001",
@@ -2112,7 +2243,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "It was built for the 2012 Olympics."
+      "explanation": "It was built for the 2012 Olympics.",
+      "source": "https://en.wikipedia.org/wiki/London_Stadium"
     },
     {
       "id": "whu-0002",
@@ -2128,7 +2260,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Its official name was the Boleyn Ground."
+      "explanation": "Its official name was the Boleyn Ground.",
+      "source": "https://en.wikipedia.org/wiki/Boleyn_Ground"
     },
     {
       "id": "whu-0003",
@@ -2144,7 +2277,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Bubbles fill the stadium before kick-off."
+      "explanation": "Bubbles fill the stadium before kick-off.",
+      "source": "https://en.wikipedia.org/wiki/I%27m_Forever_Blowing_Bubbles"
     },
     {
       "id": "whu-0004",
@@ -2160,7 +2294,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "It was their first major trophy since 1980."
+      "explanation": "It was their first major trophy since 1980.",
+      "source": "https://en.wikipedia.org/wiki/2023_UEFA_Europa_Conference_League_final"
     },
     {
       "id": "whu-0005",
@@ -2176,7 +2311,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "West Ham beat Fiorentina 2-1 in Prague."
+      "explanation": "West Ham beat Fiorentina 2-1 in Prague.",
+      "source": "https://en.wikipedia.org/wiki/2023_UEFA_Europa_Conference_League_final"
     },
     {
       "id": "whu-0006",
@@ -2192,7 +2328,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Benrahma scored the first goal from the penalty spot."
+      "explanation": "Benrahma scored the first goal from the penalty spot.",
+      "source": "https://en.wikipedia.org/wiki/2023_UEFA_Europa_Conference_League_final"
     },
     {
       "id": "whu-0007",
@@ -2208,7 +2345,8 @@
       "topic": "West Ham bosses",
       "club": "west-ham",
       "verified": true,
-      "explanation": "It was Moyes's first major trophy as a manager."
+      "explanation": "It was Moyes's first major trophy as a manager.",
+      "source": "https://en.wikipedia.org/wiki/2023_UEFA_Europa_Conference_League_final"
     },
     {
       "id": "whu-0008",
@@ -2224,7 +2362,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "The fee of around £105m was a British record at the time."
+      "explanation": "The fee of around £105m was a British record at the time.",
+      "source": "https://en.wikipedia.org/wiki/Declan_Rice"
     },
     {
       "id": "whu-0009",
@@ -2240,7 +2379,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Noble spent his whole career at West Ham, apart from two short loans."
+      "explanation": "Noble spent his whole career at West Ham, apart from two short loans.",
+      "source": "https://en.wikipedia.org/wiki/Mark_Noble"
     },
     {
       "id": "whu-0010",
@@ -2256,7 +2396,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Steven Gerrard's late screamer made it 3-3."
+      "explanation": "Steven Gerrard's late screamer made it 3-3.",
+      "source": "https://en.wikipedia.org/wiki/2006_FA_Cup_final"
     },
     {
       "id": "whu-0011",
@@ -2272,7 +2413,8 @@
       "topic": "West Ham bosses",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Pardew also won promotion with West Ham in 2005."
+      "explanation": "Pardew also won promotion with West Ham in 2005.",
+      "source": "https://en.wikipedia.org/wiki/2006_FA_Cup_final"
     },
     {
       "id": "whu-0012",
@@ -2288,7 +2430,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "The deal led to a Premier League inquiry."
+      "explanation": "The deal led to a Premier League inquiry.",
+      "source": "https://en.wikipedia.org/wiki/Carlos_Tevez"
     },
     {
       "id": "whu-0013",
@@ -2304,7 +2447,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "West Ham beat champions Manchester United 1-0."
+      "explanation": "West Ham beat champions Manchester United 1-0.",
+      "source": "https://en.wikipedia.org/wiki/Carlos_Tevez"
     },
     {
       "id": "whu-0014",
@@ -2320,7 +2464,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "They were relegated despite a strong finish under Trevor Brooking."
+      "explanation": "They were relegated despite a strong finish under Trevor Brooking.",
+      "source": "https://en.wikipedia.org/wiki/2002%E2%80%9303_West_Ham_United_F.C._season"
     },
     {
       "id": "whu-0015",
@@ -2336,7 +2481,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "It won Goal of the Season."
+      "explanation": "It won Goal of the Season.",
+      "source": "https://en.wikipedia.org/wiki/Paolo_Di_Canio"
     },
     {
       "id": "whu-0016",
@@ -2352,7 +2498,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Everton's keeper Paul Gerrard was lying injured, and Di Canio won a FIFA Fair Play award."
+      "explanation": "Everton's keeper Paul Gerrard was lying injured, and Di Canio won a FIFA Fair Play award.",
+      "source": "https://en.wikipedia.org/wiki/Paolo_Di_Canio"
     },
     {
       "id": "whu-0017",
@@ -2368,7 +2515,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He moved on to Manchester United in 2002."
+      "explanation": "He moved on to Manchester United in 2002.",
+      "source": "https://en.wikipedia.org/wiki/Rio_Ferdinand"
     },
     {
       "id": "whu-0018",
@@ -2384,7 +2532,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Gerrard came through Liverpool's academy."
+      "explanation": "Gerrard came through Liverpool's academy.",
+      "source": "https://en.wikipedia.org/wiki/Steven_Gerrard"
     },
     {
       "id": "whu-0019",
@@ -2400,7 +2549,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "West Ham beat Blackpool 2-1 at Wembley."
+      "explanation": "West Ham beat Blackpool 2-1 at Wembley.",
+      "source": "https://en.wikipedia.org/wiki/2012_Football_League_Championship_play-off_final"
     },
     {
       "id": "whu-0020",
@@ -2416,7 +2566,8 @@
       "topic": "West Ham bosses",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Steve Clarke was his assistant."
+      "explanation": "Steve Clarke was his assistant.",
+      "source": "https://en.wikipedia.org/wiki/Gianfranco_Zola"
     },
     {
       "id": "whu-0021",
@@ -2432,7 +2583,8 @@
       "topic": "West Ham bosses",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Grant was sacked on the day relegation was confirmed."
+      "explanation": "Grant was sacked on the day relegation was confirmed.",
+      "source": "https://en.wikipedia.org/wiki/Avram_Grant"
     },
     {
       "id": "whu-0022",
@@ -2448,7 +2600,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He went back to Marseille in January 2017."
+      "explanation": "He went back to Marseille in January 2017.",
+      "source": "https://en.wikipedia.org/wiki/Dimitri_Payet"
     },
     {
       "id": "whu-0023",
@@ -2464,7 +2617,8 @@
       "topic": "West Ham bosses",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Bilić played for West Ham in the 1990s."
+      "explanation": "Bilić played for West Ham in the 1990s.",
+      "source": "https://en.wikipedia.org/wiki/Slaven_Bili%C4%87"
     },
     {
       "id": "whu-0024",
@@ -2480,7 +2634,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Winston Reid headed the winner."
+      "explanation": "Winston Reid headed the winner.",
+      "source": "https://en.wikipedia.org/wiki/Boleyn_Ground"
     },
     {
       "id": "whu-0025",
@@ -2496,7 +2651,8 @@
       "topic": "West Ham bosses",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He was replaced by David Moyes in December 2019."
+      "explanation": "He was replaced by David Moyes in December 2019.",
+      "source": "https://en.wikipedia.org/wiki/Manuel_Pellegrini"
     },
     {
       "id": "whu-0026",
@@ -2512,7 +2668,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Frankfurt went on to win the tournament."
+      "explanation": "Frankfurt went on to win the tournament.",
+      "source": "https://en.wikipedia.org/wiki/2021%E2%80%9322_UEFA_Europa_League"
     },
     {
       "id": "whu-0027",
@@ -2528,7 +2685,8 @@
       "topic": "West Ham bosses",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Lopetegui lasted about half a season."
+      "explanation": "Lopetegui lasted about half a season.",
+      "source": "https://en.wikipedia.org/wiki/Graham_Potter"
     },
     {
       "id": "whu-0028",
@@ -2544,7 +2702,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Antonio joined from Nottingham Forest in 2015."
+      "explanation": "Antonio joined from Nottingham Forest in 2015.",
+      "source": "https://en.wikipedia.org/wiki/Michail_Antonio"
     },
     {
       "id": "whu-0029",
@@ -2560,7 +2719,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "That's why the club is nicknamed 'The Irons'."
+      "explanation": "That's why the club is nicknamed 'The Irons'.",
+      "source": "https://en.wikipedia.org/wiki/West_Ham_United_F.C."
     },
     {
       "id": "whu-0030",
@@ -2576,7 +2736,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "The rivalry goes back to the docks."
+      "explanation": "The rivalry goes back to the docks.",
+      "source": "https://en.wikipedia.org/wiki/Dockers_derby"
     },
     {
       "id": "whu-0031",
@@ -2592,7 +2753,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He joined Tottenham shortly afterwards."
+      "explanation": "He joined Tottenham shortly afterwards.",
+      "source": "https://en.wikipedia.org/wiki/Scott_Parker"
     },
     {
       "id": "whu-0032",
@@ -2608,7 +2770,8 @@
       "topic": "West Ham bosses",
       "club": "west-ham",
       "verified": true,
-      "explanation": "They had previously owned Birmingham City."
+      "explanation": "They had previously owned Birmingham City.",
+      "source": "https://en.wikipedia.org/wiki/David_Sullivan_(businessman)"
     },
     {
       "id": "whu-0033",
@@ -2624,7 +2787,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He became the club's record signing at the time."
+      "explanation": "He became the club's record signing at the time.",
+      "source": "https://en.wikipedia.org/wiki/Lucas_Paquet%C3%A1"
     },
     {
       "id": "whu-0034",
@@ -2640,7 +2804,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Hull were in the Championship at the time."
+      "explanation": "Hull were in the Championship at the time.",
+      "source": "https://en.wikipedia.org/wiki/Jarrod_Bowen"
     },
     {
       "id": "whu-0035",
@@ -2656,7 +2821,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He joined on loan first, then permanently."
+      "explanation": "He joined on loan first, then permanently.",
+      "source": "https://en.wikipedia.org/wiki/Tom%C3%A1%C5%A1_Sou%C4%8Dek"
     },
     {
       "id": "whu-0036",
@@ -2672,7 +2838,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He had earlier spent seven years at Arsenal."
+      "explanation": "He had earlier spent seven years at Arsenal.",
+      "source": "https://en.wikipedia.org/wiki/%C5%81ukasz_Fabia%C5%84ski"
     },
     {
       "id": "whu-0037",
@@ -2688,7 +2855,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "West Ham had just been relegated."
+      "explanation": "West Ham had just been relegated.",
+      "source": "https://en.wikipedia.org/wiki/Glen_Johnson"
     },
     {
       "id": "whu-0038",
@@ -2704,7 +2872,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He moved on to Manchester United two years later."
+      "explanation": "He moved on to Manchester United two years later.",
+      "source": "https://en.wikipedia.org/wiki/Michael_Carrick"
     },
     {
       "id": "whu-0039",
@@ -2720,7 +2889,8 @@
       "topic": "West Ham bosses",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Frank Lampard Sr was Redknapp's assistant."
+      "explanation": "Frank Lampard Sr was Redknapp's assistant.",
+      "source": "https://en.wikipedia.org/wiki/Harry_Redknapp"
     },
     {
       "id": "whu-0040",
@@ -2736,7 +2906,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "West Ham beat Preston 1-0 in Cardiff."
+      "explanation": "West Ham beat Preston 1-0 in Cardiff.",
+      "source": "https://en.wikipedia.org/wiki/2005_Football_League_Championship_play-off_final"
     },
     {
       "id": "whu-0041",
@@ -2752,7 +2923,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "They had knocked out Sevilla in the last 16."
+      "explanation": "They had knocked out Sevilla in the last 16.",
+      "source": "https://en.wikipedia.org/wiki/2021%E2%80%9322_UEFA_Europa_League"
     },
     {
       "id": "whu-0042",
@@ -2768,7 +2940,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Clint Dempsey's shot squirmed under him against the USA."
+      "explanation": "Clint Dempsey's shot squirmed under him against the USA.",
+      "source": "https://en.wikipedia.org/wiki/Robert_Green"
     },
     {
       "id": "whu-0043",
@@ -2784,7 +2957,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "The fee was around £45m."
+      "explanation": "The fee was around £45m.",
+      "source": "https://en.wikipedia.org/wiki/S%C3%A9bastien_Haller"
     },
     {
       "id": "whu-0044",
@@ -2800,7 +2974,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Nolan had played for Allardyce at Bolton too."
+      "explanation": "Nolan had played for Allardyce at Bolton too.",
+      "source": "https://en.wikipedia.org/wiki/Kevin_Nolan"
     },
     {
       "id": "whu-0045",
@@ -2816,7 +2991,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "The hammers come from the Thames Ironworks roots."
+      "explanation": "The hammers come from the Thames Ironworks roots.",
+      "source": "https://en.wikipedia.org/wiki/West_Ham_United_F.C."
     },
     {
       "id": "whu-0046",
@@ -2832,7 +3008,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "It was his last game for West Ham before joining Arsenal."
+      "explanation": "It was his last game for West Ham before joining Arsenal.",
+      "source": "https://en.wikipedia.org/wiki/Declan_Rice"
     },
     {
       "id": "whu-0047",
@@ -2848,7 +3025,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Aston Villa and Burnley wear claret and blue too."
+      "explanation": "Aston Villa and Burnley wear claret and blue too.",
+      "source": "https://en.wikipedia.org/wiki/West_Ham_United_F.C."
     },
     {
       "id": "whu-0048",
@@ -2864,7 +3042,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "A statue of him stands outside the London Stadium."
+      "explanation": "A statue of him stands outside the London Stadium.",
+      "source": "https://en.wikipedia.org/wiki/Bobby_Moore"
     },
     {
       "id": "whu-0049",
@@ -2880,7 +3059,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "They are also called 'The Irons'."
+      "explanation": "They are also called 'The Irons'.",
+      "source": "https://en.wikipedia.org/wiki/West_Ham_United_F.C."
     },
     {
       "id": "whu-0050",
@@ -2896,7 +3076,8 @@
       "topic": "West Ham bosses",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Trevor Brooking took over after Roeder fell ill in April 2003."
+      "explanation": "Trevor Brooking took over after Roeder fell ill in April 2003.",
+      "source": "https://en.wikipedia.org/wiki/Glenn_Roeder"
     },
     {
       "id": "whu-0051",
@@ -2912,7 +3093,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He was West Ham's player of the year in 2017-18."
+      "explanation": "He was West Ham's player of the year in 2017-18.",
+      "source": "https://en.wikipedia.org/wiki/Marko_Arnautovi%C4%87"
     },
     {
       "id": "whu-0052",
@@ -2928,7 +3110,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He returned to Europe with Bologna in 2021."
+      "explanation": "He returned to Europe with Bologna in 2021.",
+      "source": "https://en.wikipedia.org/wiki/Marko_Arnautovi%C4%87"
     },
     {
       "id": "whu-0053",
@@ -2944,7 +3127,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He had previously played for Manchester United."
+      "explanation": "He had previously played for Manchester United.",
+      "source": "https://en.wikipedia.org/wiki/Javier_Hern%C3%A1ndez"
     },
     {
       "id": "whu-0054",
@@ -2960,7 +3144,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Astra won 1-0 in London after a 1-1 draw in Romania."
+      "explanation": "Astra won 1-0 in London after a 1-1 draw in Romania.",
+      "source": "https://en.wikipedia.org/wiki/2016%E2%80%9317_West_Ham_United_F.C._season"
     },
     {
       "id": "whu-0055",
@@ -2976,7 +3161,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "It was their highest Premier League points total (65)."
+      "explanation": "It was their highest Premier League points total (65).",
+      "source": "https://en.wikipedia.org/wiki/2020%E2%80%9321_West_Ham_United_F.C._season"
     },
     {
       "id": "whu-0056",
@@ -2992,7 +3178,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Marlon Harewood scored the only goal at Villa Park."
+      "explanation": "Marlon Harewood scored the only goal at Villa Park.",
+      "source": "https://en.wikipedia.org/wiki/2005%E2%80%9306_FA_Cup"
     },
     {
       "id": "whu-0057",
@@ -3008,7 +3195,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He had won the treble with Manchester United in 1999."
+      "explanation": "He had won the treble with Manchester United in 1999.",
+      "source": "https://en.wikipedia.org/wiki/Teddy_Sheringham"
     },
     {
       "id": "tit-0018",
@@ -3024,7 +3212,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "José Mourinho won it in his first season."
+      "explanation": "José Mourinho won it in his first season.",
+      "source": "https://en.wikipedia.org/wiki/2004%E2%80%9305_Premier_League"
     },
     {
       "id": "tit-0019",
@@ -3040,7 +3229,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "It was the first of three titles in a row for United."
+      "explanation": "It was the first of three titles in a row for United.",
+      "source": "https://en.wikipedia.org/wiki/2006%E2%80%9307_Premier_League"
     },
     {
       "id": "tit-0020",
@@ -3056,7 +3246,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "Arsenal led for most of 2022-23 but City overtook them in the spring."
+      "explanation": "Arsenal led for most of 2022-23 but City overtook them in the spring.",
+      "source": "https://en.wikipedia.org/wiki/2022%E2%80%9323_Premier_League"
     },
     {
       "id": "tit-0021",
@@ -3072,7 +3263,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "Both clubs finished on 89 points."
+      "explanation": "Both clubs finished on 89 points.",
+      "source": "https://en.wikipedia.org/wiki/2011%E2%80%9312_Premier_League"
     },
     {
       "id": "tit-0022",
@@ -3088,7 +3280,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "Arsenal pipped Spurs to second on the final day."
+      "explanation": "Arsenal pipped Spurs to second on the final day.",
+      "source": "https://en.wikipedia.org/wiki/2015%E2%80%9316_Premier_League"
     },
     {
       "id": "tit-0023",
@@ -3104,7 +3297,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "City won four: 2012, 2014, 2018 and 2019."
+      "explanation": "City won four: 2012, 2014, 2018 and 2019.",
+      "source": "https://en.wikipedia.org/wiki/List_of_English_football_champions"
     },
     {
       "id": "tit-0024",
@@ -3120,7 +3314,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "City won their last 14 league games to finish on 98."
+      "explanation": "City won their last 14 league games to finish on 98.",
+      "source": "https://en.wikipedia.org/wiki/2018%E2%80%9319_Premier_League"
     },
     {
       "id": "tit-0025",
@@ -3136,7 +3331,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "His last came in 2012-13, his final season."
+      "explanation": "His last came in 2012-13, his final season.",
+      "source": "https://en.wikipedia.org/wiki/Alex_Ferguson"
     },
     {
       "id": "tit-0026",
@@ -3152,7 +3348,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "It was Mourinho's third Premier League title with Chelsea."
+      "explanation": "It was Mourinho's third Premier League title with Chelsea.",
+      "source": "https://en.wikipedia.org/wiki/2014%E2%80%9315_Premier_League"
     },
     {
       "id": "tit-0027",
@@ -3168,7 +3365,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "Liverpool led with three games left but finished two points behind."
+      "explanation": "Liverpool led with three games left but finished two points behind.",
+      "source": "https://en.wikipedia.org/wiki/2013%E2%80%9314_Premier_League"
     },
     {
       "id": "tit-0028",
@@ -3184,7 +3382,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "They won 26 and drew 12 of their 38 games."
+      "explanation": "They won 26 and drew 12 of their 38 games.",
+      "source": "https://en.wikipedia.org/wiki/2003%E2%80%9304_Premier_League"
     },
     {
       "id": "tit-0029",
@@ -3200,7 +3399,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "City got 100 points; United were second with 81."
+      "explanation": "City got 100 points; United were second with 81.",
+      "source": "https://en.wikipedia.org/wiki/2017%E2%80%9318_Premier_League"
     },
     {
       "id": "tit-0030",
@@ -3216,7 +3416,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "Spurs got 86 points, their best Premier League total at the time."
+      "explanation": "Spurs got 86 points, their best Premier League total at the time.",
+      "source": "https://en.wikipedia.org/wiki/2016%E2%80%9317_Premier_League"
     },
     {
       "id": "tit-0031",
@@ -3232,7 +3433,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "They clinched it with seven games still to play."
+      "explanation": "They clinched it with seven games still to play.",
+      "source": "https://en.wikipedia.org/wiki/2019%E2%80%9320_Premier_League"
     },
     {
       "id": "tit-0032",
@@ -3248,7 +3450,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "Petr Čech kept 24 clean sheets that season."
+      "explanation": "Petr Čech kept 24 clean sheets that season.",
+      "source": "https://en.wikipedia.org/wiki/2004%E2%80%9305_Premier_League"
     },
     {
       "id": "tit-0033",
@@ -3264,7 +3467,8 @@
       "topic": "Title races",
       "club": null,
       "verified": true,
-      "explanation": "It was Chelsea's first season under Roman Abramovich."
+      "explanation": "It was Chelsea's first season under Roman Abramovich.",
+      "source": "https://en.wikipedia.org/wiki/2003%E2%80%9304_Premier_League"
     },
     {
       "id": "goa-0023",
@@ -3280,7 +3484,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "He broke Ruud van Nistelrooy's record of 10."
+      "explanation": "He broke Ruud van Nistelrooy's record of 10.",
+      "source": "https://en.wikipedia.org/wiki/Jamie_Vardy"
     },
     {
       "id": "goa-0024",
@@ -3296,7 +3501,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "He scored 112 for Blackburn and 148 for Newcastle."
+      "explanation": "He scored 112 for Blackburn and 148 for Newcastle.",
+      "source": "https://en.wikipedia.org/wiki/Alan_Shearer"
     },
     {
       "id": "goa-0025",
@@ -3312,7 +3518,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "Kane won a third Golden Boot in 2020-21."
+      "explanation": "Kane won a third Golden Boot in 2020-21.",
+      "source": "https://en.wikipedia.org/wiki/Harry_Kane"
     },
     {
       "id": "goa-0026",
@@ -3328,7 +3535,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "He passed Wayne Rooney's record of 53 in 2023."
+      "explanation": "He passed Wayne Rooney's record of 53 in 2023.",
+      "source": "https://en.wikipedia.org/wiki/Harry_Kane"
     },
     {
       "id": "goa-0027",
@@ -3344,7 +3552,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "He was named PFA Player of the Year."
+      "explanation": "He was named PFA Player of the Year.",
+      "source": "https://en.wikipedia.org/wiki/Luis_Su%C3%A1rez"
     },
     {
       "id": "goa-0028",
@@ -3360,7 +3569,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "United won the title that season."
+      "explanation": "United won the title that season.",
+      "source": "https://en.wikipedia.org/wiki/Ruud_van_Nistelrooy"
     },
     {
       "id": "goa-0029",
@@ -3376,7 +3586,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "He joined Manchester United that summer."
+      "explanation": "He joined Manchester United that summer.",
+      "source": "https://en.wikipedia.org/wiki/Robin_van_Persie"
     },
     {
       "id": "goa-0030",
@@ -3392,7 +3603,8 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "He scored 26 league goals."
+      "explanation": "He scored 26 league goals.",
+      "source": "https://en.wikipedia.org/wiki/Sergio_Ag%C3%BCero"
     },
     {
       "id": "pla-0017",
@@ -3408,7 +3620,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "He won the 1998 World Cup and Euro 2000."
+      "explanation": "He won the 1998 World Cup and Euro 2000.",
+      "source": "https://en.wikipedia.org/wiki/Thierry_Henry"
     },
     {
       "id": "pla-0018",
@@ -3424,7 +3637,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "His father Alf-Inge also played in the Premier League."
+      "explanation": "His father Alf-Inge also played in the Premier League.",
+      "source": "https://en.wikipedia.org/wiki/Erling_Haaland"
     },
     {
       "id": "pla-0019",
@@ -3440,7 +3654,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "He joined Liverpool from Roma in 2017."
+      "explanation": "He joined Liverpool from Roma in 2017.",
+      "source": "https://en.wikipedia.org/wiki/Mohamed_Salah"
     },
     {
       "id": "pla-0020",
@@ -3456,7 +3671,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "He made 737 appearances for Liverpool."
+      "explanation": "He made 737 appearances for Liverpool.",
+      "source": "https://en.wikipedia.org/wiki/Jamie_Carragher"
     },
     {
       "id": "pla-0021",
@@ -3472,7 +3688,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "It was his last home game for City."
+      "explanation": "It was his last home game for City.",
+      "source": "https://en.wikipedia.org/wiki/Vincent_Kompany"
     },
     {
       "id": "pla-0022",
@@ -3488,7 +3705,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "He wore a protective headguard for the rest of his career."
+      "explanation": "He wore a protective headguard for the rest of his career.",
+      "source": "https://en.wikipedia.org/wiki/Petr_%C4%8Cech"
     },
     {
       "id": "pla-0023",
@@ -3504,7 +3722,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "He captained Bolton in the 2004 League Cup final."
+      "explanation": "He captained Bolton in the 2004 League Cup final.",
+      "source": "https://en.wikipedia.org/wiki/Jay-Jay_Okocha"
     },
     {
       "id": "pla-0024",
@@ -3520,7 +3739,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "The run covered spells at Blackburn, Aston Villa and Tottenham."
+      "explanation": "The run covered spells at Blackburn, Aston Villa and Tottenham.",
+      "source": "https://en.wikipedia.org/wiki/Brad_Friedel"
     },
     {
       "id": "pla-0025",
@@ -3536,7 +3756,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "He won it in back-to-back seasons."
+      "explanation": "He won it in back-to-back seasons.",
+      "source": "https://en.wikipedia.org/wiki/Kevin_De_Bruyne"
     },
     {
       "id": "pla-0026",
@@ -3552,7 +3773,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "Foden scored 19 league goals as City won a fourth title in a row."
+      "explanation": "Foden scored 19 league goals as City won a fourth title in a row.",
+      "source": "https://en.wikipedia.org/wiki/Phil_Foden"
     },
     {
       "id": "pla-0027",
@@ -3568,7 +3790,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "He also scored twice in that year's FA Cup final."
+      "explanation": "He also scored twice in that year's FA Cup final.",
+      "source": "https://en.wikipedia.org/wiki/Steven_Gerrard"
     },
     {
       "id": "pla-0028",
@@ -3584,7 +3807,8 @@
       "topic": "Legends",
       "club": null,
       "verified": true,
-      "explanation": "He scored 20 league goals in 2013-14."
+      "explanation": "He scored 20 league goals in 2013-14.",
+      "source": "https://en.wikipedia.org/wiki/Yaya_Tour%C3%A9"
     },
     {
       "id": "tra-0021",
@@ -3600,7 +3824,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He was named PFA Young Player of the Year in his first season."
+      "explanation": "He was named PFA Young Player of the Year in his first season.",
+      "source": "https://en.wikipedia.org/wiki/Cole_Palmer"
     },
     {
       "id": "tra-0022",
@@ -3616,7 +3841,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He scored 52 goals in all competitions in his first City season."
+      "explanation": "He scored 52 goals in all competitions in his first City season.",
+      "source": "https://en.wikipedia.org/wiki/Erling_Haaland"
     },
     {
       "id": "tra-0023",
@@ -3632,7 +3858,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He won the treble with City in 2023."
+      "explanation": "He won the treble with City in 2023.",
+      "source": "https://en.wikipedia.org/wiki/Riyad_Mahrez"
     },
     {
       "id": "tra-0024",
@@ -3648,7 +3875,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He had played little at Chelsea a few years earlier."
+      "explanation": "He had played little at Chelsea a few years earlier.",
+      "source": "https://en.wikipedia.org/wiki/Mohamed_Salah"
     },
     {
       "id": "tra-0025",
@@ -3664,7 +3892,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "A year later his goal won City the title."
+      "explanation": "A year later his goal won City the title.",
+      "source": "https://en.wikipedia.org/wiki/Sergio_Ag%C3%BCero"
     },
     {
       "id": "tra-0026",
@@ -3680,7 +3909,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He arrived on the same day Fernando Torres left for Chelsea."
+      "explanation": "He arrived on the same day Fernando Torres left for Chelsea.",
+      "source": "https://en.wikipedia.org/wiki/Luis_Su%C3%A1rez"
     },
     {
       "id": "tra-0027",
@@ -3696,7 +3926,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He was Arsenal's record signing at the time."
+      "explanation": "He was Arsenal's record signing at the time.",
+      "source": "https://en.wikipedia.org/wiki/Mesut_%C3%96zil"
     },
     {
       "id": "tra-0028",
@@ -3712,7 +3943,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He joined on loan in 2021, then permanently."
+      "explanation": "He joined on loan in 2021, then permanently.",
+      "source": "https://en.wikipedia.org/wiki/Martin_%C3%98degaard"
     },
     {
       "id": "tra-0029",
@@ -3728,7 +3960,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He had played in Italy before moving to Portugal."
+      "explanation": "He had played in Italy before moving to Portugal.",
+      "source": "https://en.wikipedia.org/wiki/Bruno_Fernandes"
     },
     {
       "id": "tra-0030",
@@ -3744,7 +3977,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He was Newcastle's record signing at the time."
+      "explanation": "He was Newcastle's record signing at the time.",
+      "source": "https://en.wikipedia.org/wiki/Alexander_Isak"
     },
     {
       "id": "tra-0031",
@@ -3760,7 +3994,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He had just won the World Cup with Argentina."
+      "explanation": "He had just won the World Cup with Argentina.",
+      "source": "https://en.wikipedia.org/wiki/Enzo_Fern%C3%A1ndez"
     },
     {
       "id": "tra-0032",
@@ -3776,7 +4011,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He later returned to Barcelona in 2011."
+      "explanation": "He later returned to Barcelona in 2011.",
+      "source": "https://en.wikipedia.org/wiki/Cesc_F%C3%A0bregas"
     },
     {
       "id": "tra-0033",
@@ -3792,7 +4028,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He won four Premier League titles with Chelsea."
+      "explanation": "He won four Premier League titles with Chelsea.",
+      "source": "https://en.wikipedia.org/wiki/Petr_%C4%8Cech"
     },
     {
       "id": "tra-0034",
@@ -3808,7 +4045,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He was briefly the world's most expensive goalkeeper."
+      "explanation": "He was briefly the world's most expensive goalkeeper.",
+      "source": "https://en.wikipedia.org/wiki/Alisson_Becker"
     },
     {
       "id": "tra-0035",
@@ -3824,7 +4062,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He won the Ballon d'Or in 2024."
+      "explanation": "He won the Ballon d'Or in 2024.",
+      "source": "https://en.wikipedia.org/wiki/Rodri_(footballer,_born_1996)"
     },
     {
       "id": "tra-0036",
@@ -3840,7 +4079,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He became Spurs captain in 2023."
+      "explanation": "He became Spurs captain in 2023.",
+      "source": "https://en.wikipedia.org/wiki/Son_Heung-min"
     },
     {
       "id": "tra-0037",
@@ -3856,7 +4096,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He scored 24 league goals in his first season."
+      "explanation": "He scored 24 league goals in his first season.",
+      "source": "https://en.wikipedia.org/wiki/Fernando_Torres"
     },
     {
       "id": "tra-0038",
@@ -3872,7 +4113,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He shared the 2010-11 Golden Boot with 20 goals."
+      "explanation": "He shared the 2010-11 Golden Boot with 20 goals.",
+      "source": "https://en.wikipedia.org/wiki/Dimitar_Berbatov"
     },
     {
       "id": "tra-0039",
@@ -3888,7 +4130,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He won two Premier League titles at Chelsea."
+      "explanation": "He won two Premier League titles at Chelsea.",
+      "source": "https://en.wikipedia.org/wiki/Michael_Essien"
     },
     {
       "id": "tra-0040",
@@ -3904,7 +4147,8 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "He went on to lift the Premier League and Champions League as captain."
+      "explanation": "He went on to lift the Premier League and Champions League as captain.",
+      "source": "https://en.wikipedia.org/wiki/Jordan_Henderson"
     },
     {
       "id": "man-0017",
@@ -3920,7 +4164,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "City won the league, FA Cup and Champions League."
+      "explanation": "City won the league, FA Cup and Champions League.",
+      "source": "https://en.wikipedia.org/wiki/Pep_Guardiola"
     },
     {
       "id": "man-0018",
@@ -3936,7 +4181,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "He arrived from Nagoya Grampus in 1996."
+      "explanation": "He arrived from Nagoya Grampus in 1996.",
+      "source": "https://en.wikipedia.org/wiki/Ars%C3%A8ne_Wenger"
     },
     {
       "id": "man-0019",
@@ -3952,7 +4198,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "Howe had earlier taken Bournemouth from League Two to the Premier League."
+      "explanation": "Howe had earlier taken Bournemouth from League Two to the Premier League.",
+      "source": "https://en.wikipedia.org/wiki/Eddie_Howe"
     },
     {
       "id": "man-0020",
@@ -3968,7 +4215,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "It was his first job in English football."
+      "explanation": "It was his first job in English football.",
+      "source": "https://en.wikipedia.org/wiki/Mauricio_Pochettino"
     },
     {
       "id": "man-0021",
@@ -3984,7 +4232,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "Liverpool won all three in a few months."
+      "explanation": "Liverpool won all three in a few months.",
+      "source": "https://en.wikipedia.org/wiki/G%C3%A9rard_Houllier"
     },
     {
       "id": "man-0022",
@@ -4000,7 +4249,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "He replaced Ole Gunnar Solskjær."
+      "explanation": "He replaced Ole Gunnar Solskjær.",
+      "source": "https://en.wikipedia.org/wiki/Ralf_Rangnick"
     },
     {
       "id": "man-0023",
@@ -4016,7 +4266,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "He had just won the Europa League with Porto."
+      "explanation": "He had just won the Europa League with Porto.",
+      "source": "https://en.wikipedia.org/wiki/Andr%C3%A9_Villas-Boas"
     },
     {
       "id": "man-0024",
@@ -4032,7 +4283,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "Blackpool were relegated on the final day."
+      "explanation": "Blackpool were relegated on the final day.",
+      "source": "https://en.wikipedia.org/wiki/Ian_Holloway"
     },
     {
       "id": "man-0025",
@@ -4048,7 +4300,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "Bolton qualified for the UEFA Cup."
+      "explanation": "Bolton qualified for the UEFA Cup.",
+      "source": "https://en.wikipedia.org/wiki/Sam_Allardyce"
     },
     {
       "id": "man-0026",
@@ -4064,7 +4317,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "He was replaced by Ranieri that summer."
+      "explanation": "He was replaced by Ranieri that summer.",
+      "source": "https://en.wikipedia.org/wiki/Nigel_Pearson"
     },
     {
       "id": "man-0027",
@@ -4080,7 +4334,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "Grant took Chelsea to the Champions League final that season."
+      "explanation": "Grant took Chelsea to the Champions League final that season.",
+      "source": "https://en.wikipedia.org/wiki/Avram_Grant"
     },
     {
       "id": "man-0028",
@@ -4096,7 +4351,8 @@
       "topic": "Managers",
       "club": null,
       "verified": true,
-      "explanation": "Chelsea beat Benfica 2-1 in Amsterdam."
+      "explanation": "Chelsea beat Benfica 2-1 in Amsterdam.",
+      "source": "https://en.wikipedia.org/wiki/Rafael_Ben%C3%ADtez"
     },
     {
       "id": "mom-0010",
@@ -4112,7 +4368,8 @@
       "topic": "Big moments",
       "club": null,
       "verified": true,
-      "explanation": "It came 93 minutes and 20 seconds into the game."
+      "explanation": "It came 93 minutes and 20 seconds into the game.",
+      "source": "https://en.wikipedia.org/wiki/Sergio_Ag%C3%BCero"
     },
     {
       "id": "mom-0011",
@@ -4128,7 +4385,8 @@
       "topic": "Big moments",
       "club": null,
       "verified": true,
-      "explanation": "Demba Ba ran clear to score."
+      "explanation": "Demba Ba ran clear to score.",
+      "source": "https://en.wikipedia.org/wiki/Steven_Gerrard"
     },
     {
       "id": "mom-0012",
@@ -4144,7 +4402,8 @@
       "topic": "Big moments",
       "club": null,
       "verified": true,
-      "explanation": "Suárez joined Barcelona the following year."
+      "explanation": "Suárez joined Barcelona the following year.",
+      "source": "https://en.wikipedia.org/wiki/Luis_Su%C3%A1rez"
     },
     {
       "id": "mom-0013",
@@ -4160,7 +4419,8 @@
       "topic": "Big moments",
       "club": null,
       "verified": true,
-      "explanation": "Games restarted in June 2020 behind closed doors."
+      "explanation": "Games restarted in June 2020 behind closed doors.",
+      "source": "https://en.wikipedia.org/wiki/2019%E2%80%9320_Premier_League"
     },
     {
       "id": "mom-0014",
@@ -4176,7 +4436,8 @@
       "topic": "Big moments",
       "club": null,
       "verified": true,
-      "explanation": "The goal helped Liverpool qualify for the Champions League."
+      "explanation": "The goal helped Liverpool qualify for the Champions League.",
+      "source": "https://en.wikipedia.org/wiki/Alisson_Becker"
     },
     {
       "id": "mom-0015",
@@ -4192,7 +4453,8 @@
       "topic": "Big moments",
       "club": null,
       "verified": true,
-      "explanation": "Forest were also docked points once that season."
+      "explanation": "Forest were also docked points once that season.",
+      "source": "https://en.wikipedia.org/wiki/2023%E2%80%9324_Premier_League"
     },
     {
       "id": "mom-0016",
@@ -4208,7 +4470,8 @@
       "topic": "Big moments",
       "club": null,
       "verified": true,
-      "explanation": "Arsenal won 4-2 and Thierry Henry scored a hat-trick."
+      "explanation": "Arsenal won 4-2 and Thierry Henry scored a hat-trick.",
+      "source": "https://en.wikipedia.org/wiki/Highbury"
     },
     {
       "id": "mom-0017",
@@ -4224,7 +4487,8 @@
       "topic": "Big moments",
       "club": null,
       "verified": true,
-      "explanation": "Van Nistelrooy and Rooney scored in October 2004."
+      "explanation": "Van Nistelrooy and Rooney scored in October 2004.",
+      "source": "https://en.wikipedia.org/wiki/Battle_of_the_Buffet"
     },
     {
       "id": "mom-0018",
@@ -4240,7 +4504,8 @@
       "topic": "Big moments",
       "club": null,
       "verified": true,
-      "explanation": "United scored five times in the second half."
+      "explanation": "United scored five times in the second half.",
+      "source": "https://en.wikipedia.org/wiki/2001%E2%80%9302_Manchester_United_F.C._season"
     },
     {
       "id": "mom-0019",
@@ -4256,7 +4521,8 @@
       "topic": "Big moments",
       "club": null,
       "verified": true,
-      "explanation": "It was Tioté's only goal for Newcastle."
+      "explanation": "It was Tioté's only goal for Newcastle.",
+      "source": "https://en.wikipedia.org/wiki/Cheick_Tiot%C3%A9"
     },
     {
       "id": "clu-0015",
@@ -4272,7 +4538,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "Exeter's ground has the same name."
+      "explanation": "Exeter's ground has the same name.",
+      "source": "https://en.wikipedia.org/wiki/St_James%27_Park"
     },
     {
       "id": "clu-0016",
@@ -4288,7 +4555,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "Wolves have played there since 1889."
+      "explanation": "Wolves have played there since 1889.",
+      "source": "https://en.wikipedia.org/wiki/Molineux_Stadium"
     },
     {
       "id": "clu-0017",
@@ -4304,7 +4572,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "It has hosted many FA Cup semi-finals."
+      "explanation": "It has hosted many FA Cup semi-finals.",
+      "source": "https://en.wikipedia.org/wiki/Villa_Park"
     },
     {
       "id": "clu-0018",
@@ -4320,7 +4589,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "It was later renamed several times."
+      "explanation": "It was later renamed several times.",
+      "source": "https://en.wikipedia.org/wiki/Bolton_Wanderers_F.C."
     },
     {
       "id": "clu-0019",
@@ -4336,7 +4606,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "Brentford left Griffin Park for it in 2020."
+      "explanation": "Brentford left Griffin Park for it in 2020.",
+      "source": "https://en.wikipedia.org/wiki/Brentford_Community_Stadium"
     },
     {
       "id": "clu-0020",
@@ -4352,7 +4623,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "It is one of the oldest football grounds in the world."
+      "explanation": "It is one of the oldest football grounds in the world.",
+      "source": "https://en.wikipedia.org/wiki/Bramall_Lane"
     },
     {
       "id": "clu-0021",
@@ -4368,7 +4640,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "Luton spent 2023-24 in the Premier League."
+      "explanation": "Luton spent 2023-24 in the Premier League.",
+      "source": "https://en.wikipedia.org/wiki/Kenilworth_Road"
     },
     {
       "id": "clu-0022",
@@ -4384,7 +4657,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "They left Goodison Park after 133 years."
+      "explanation": "They left Goodison Park after 133 years.",
+      "source": "https://en.wikipedia.org/wiki/Everton_F.C."
     },
     {
       "id": "clu-0023",
@@ -4400,7 +4674,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "It sits on the banks of the River Trent."
+      "explanation": "It sits on the banks of the River Trent.",
+      "source": "https://en.wikipedia.org/wiki/City_Ground"
     },
     {
       "id": "clu-0024",
@@ -4416,7 +4691,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "They moved to St Mary's Stadium."
+      "explanation": "They moved to St Mary's Stadium.",
+      "source": "https://en.wikipedia.org/wiki/The_Dell,_Southampton"
     },
     {
       "id": "clu-0025",
@@ -4432,7 +4708,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "It was an athletics stadium."
+      "explanation": "It was an athletics stadium.",
+      "source": "https://en.wikipedia.org/wiki/Withdean_Stadium"
     },
     {
       "id": "clu-0026",
@@ -4448,7 +4725,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "Swansea had played at the Vetch since 1912."
+      "explanation": "Swansea had played at the Vetch since 1912.",
+      "source": "https://en.wikipedia.org/wiki/Vetch_Field"
     },
     {
       "id": "clu-0027",
@@ -4464,7 +4742,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "Swansea were promoted in 2011; Cardiff followed in 2013."
+      "explanation": "Swansea were promoted in 2011; Cardiff followed in 2013.",
+      "source": "https://en.wikipedia.org/wiki/Swansea_City_A.F.C."
     },
     {
       "id": "clu-0028",
@@ -4480,7 +4759,8 @@
       "topic": "Clubs & grounds",
       "club": null,
       "verified": true,
-      "explanation": "Wimbledon fans set up AFC Wimbledon in 2002."
+      "explanation": "Wimbledon fans set up AFC Wimbledon in 2002.",
+      "source": "https://en.wikipedia.org/wiki/Milton_Keynes_Dons_F.C."
     },
     {
       "id": "cup-0018",
@@ -4496,7 +4776,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "Chelsea beat Bayern Munich in Munich."
+      "explanation": "Chelsea beat Bayern Munich in Munich.",
+      "source": "https://en.wikipedia.org/wiki/2012_UEFA_Champions_League_final"
     },
     {
       "id": "cup-0019",
@@ -4512,7 +4793,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "They beat Tottenham 2-0 in Madrid."
+      "explanation": "They beat Tottenham 2-0 in Madrid.",
+      "source": "https://en.wikipedia.org/wiki/2019_UEFA_Champions_League_final"
     },
     {
       "id": "cup-0020",
@@ -4528,7 +4810,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "Alejandro Garnacho and Kobbie Mainoo scored."
+      "explanation": "Alejandro Garnacho and Kobbie Mainoo scored.",
+      "source": "https://en.wikipedia.org/wiki/2024_FA_Cup_final"
     },
     {
       "id": "cup-0021",
@@ -4544,7 +4827,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "Lionel Messi scored in both finals."
+      "explanation": "Lionel Messi scored in both finals.",
+      "source": "https://en.wikipedia.org/wiki/2011_UEFA_Champions_League_final"
     },
     {
       "id": "cup-0022",
@@ -4560,7 +4844,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "They beat Chelsea on penalties in Moscow."
+      "explanation": "They beat Chelsea on penalties in Moscow.",
+      "source": "https://en.wikipedia.org/wiki/2008_UEFA_Champions_League_final"
     },
     {
       "id": "cup-0023",
@@ -4576,7 +4861,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "The final was played in Baku."
+      "explanation": "The final was played in Baku.",
+      "source": "https://en.wikipedia.org/wiki/2019_UEFA_Europa_League_final"
     },
     {
       "id": "cup-0024",
@@ -4592,7 +4878,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "It was the first FA Cup final decided by a shootout."
+      "explanation": "It was the first FA Cup final decided by a shootout.",
+      "source": "https://en.wikipedia.org/wiki/2005_FA_Cup_final"
     },
     {
       "id": "cup-0025",
@@ -4608,7 +4895,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "City beat Stoke 1-0 for their first trophy in 35 years."
+      "explanation": "City beat Stoke 1-0 for their first trophy in 35 years.",
+      "source": "https://en.wikipedia.org/wiki/2011_FA_Cup_final"
     },
     {
       "id": "cup-0026",
@@ -4624,7 +4912,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "Youri Tielemans scored a long-range winner."
+      "explanation": "Youri Tielemans scored a long-range winner.",
+      "source": "https://en.wikipedia.org/wiki/2021_FA_Cup_final"
     },
     {
       "id": "cup-0027",
@@ -4640,7 +4929,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "Paul Pogba and Henrikh Mkhitaryan scored."
+      "explanation": "Paul Pogba and Henrikh Mkhitaryan scored.",
+      "source": "https://en.wikipedia.org/wiki/2017_UEFA_Europa_League_final"
     },
     {
       "id": "cup-0028",
@@ -4656,7 +4946,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "Declan Rice scored two free kicks in the first leg."
+      "explanation": "Declan Rice scored two free kicks in the first leg.",
+      "source": "https://en.wikipedia.org/wiki/2024%E2%80%9325_UEFA_Champions_League_knockout_phase"
     },
     {
       "id": "cup-0029",
@@ -4672,7 +4963,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "It was won by a golden goal own goal in extra time."
+      "explanation": "It was won by a golden goal own goal in extra time.",
+      "source": "https://en.wikipedia.org/wiki/2001_UEFA_Cup_final"
     },
     {
       "id": "cup-0030",
@@ -4688,7 +4980,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "Chelsea beat Benfica 2-1."
+      "explanation": "Chelsea beat Benfica 2-1.",
+      "source": "https://en.wikipedia.org/wiki/2013_UEFA_Europa_League_final"
     },
     {
       "id": "cup-0031",
@@ -4704,7 +4997,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "The final was played in Copenhagen."
+      "explanation": "The final was played in Copenhagen.",
+      "source": "https://en.wikipedia.org/wiki/2000_UEFA_Cup_final"
     },
     {
       "id": "cup-0032",
@@ -4720,7 +5014,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "Boro won 2-1 in Cardiff."
+      "explanation": "Boro won 2-1 in Cardiff.",
+      "source": "https://en.wikipedia.org/wiki/2004_Football_League_Cup_final"
     },
     {
       "id": "cup-0033",
@@ -4736,7 +5031,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "The winner came in the sixth minute of stoppage time."
+      "explanation": "The winner came in the sixth minute of stoppage time.",
+      "source": "https://en.wikipedia.org/wiki/Lucas_Moura"
     },
     {
       "id": "cup-0034",
@@ -4752,7 +5048,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "Sevilla won it for the third year in a row."
+      "explanation": "Sevilla won it for the third year in a row.",
+      "source": "https://en.wikipedia.org/wiki/2016_UEFA_Europa_League_final"
     },
     {
       "id": "cup-0035",
@@ -4768,7 +5065,8 @@
       "topic": "Cups & Europe",
       "club": null,
       "verified": true,
-      "explanation": "Leicester beat Chelsea 1-0."
+      "explanation": "Leicester beat Chelsea 1-0.",
+      "source": "https://en.wikipedia.org/wiki/2021_FA_Cup_final"
     },
     {
       "id": "whu-0058",
@@ -4784,7 +5082,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He became Chelsea's all-time top scorer."
+      "explanation": "He became Chelsea's all-time top scorer.",
+      "source": "https://en.wikipedia.org/wiki/Frank_Lampard"
     },
     {
       "id": "whu-0059",
@@ -4800,7 +5099,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He remains the only man to score a World Cup final hat-trick for England."
+      "explanation": "He remains the only man to score a World Cup final hat-trick for England.",
+      "source": "https://en.wikipedia.org/wiki/1966_FIFA_World_Cup_final"
     },
     {
       "id": "whu-0060",
@@ -4816,7 +5116,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "It sits in the Queen Elizabeth Olympic Park."
+      "explanation": "It sits in the Queen Elizabeth Olympic Park.",
+      "source": "https://en.wikipedia.org/wiki/London_Stadium"
     },
     {
       "id": "whu-0061",
@@ -4832,7 +5133,8 @@
       "topic": "West Ham bosses",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Lopetegui had managed Wolves before."
+      "explanation": "Lopetegui had managed Wolves before.",
+      "source": "https://en.wikipedia.org/wiki/Julen_Lopetegui"
     },
     {
       "id": "whu-0062",
@@ -4848,7 +5150,8 @@
       "topic": "West Ham bosses",
       "club": "west-ham",
       "verified": true,
-      "explanation": "His first spell was in 2017-18; he returned in December 2019."
+      "explanation": "His first spell was in 2017-18; he returned in December 2019.",
+      "source": "https://en.wikipedia.org/wiki/David_Moyes"
     },
     {
       "id": "whu-0063",
@@ -4864,7 +5167,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He made his Jamaica debut in 2021."
+      "explanation": "He made his Jamaica debut in 2021.",
+      "source": "https://en.wikipedia.org/wiki/Michail_Antonio"
     },
     {
       "id": "whu-0064",
@@ -4880,7 +5184,8 @@
       "topic": "West Ham bosses",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Curbishley kept West Ham up that season."
+      "explanation": "Curbishley kept West Ham up that season.",
+      "source": "https://en.wikipedia.org/wiki/Alan_Curbishley"
     },
     {
       "id": "whu-0065",
@@ -4896,7 +5201,8 @@
       "topic": "West Ham bosses",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He won promotion at the first attempt."
+      "explanation": "He won promotion at the first attempt.",
+      "source": "https://en.wikipedia.org/wiki/Sam_Allardyce"
     },
     {
       "id": "whu-0066",
@@ -4912,7 +5218,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "The final was at Wembley."
+      "explanation": "The final was at Wembley.",
+      "source": "https://en.wikipedia.org/wiki/2012_Football_League_Championship_play-off_final"
     },
     {
       "id": "whu-0067",
@@ -4928,7 +5235,8 @@
       "topic": "West Ham bosses",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Moyes kept the club up that season."
+      "explanation": "Moyes kept the club up that season.",
+      "source": "https://en.wikipedia.org/wiki/David_Moyes"
     },
     {
       "id": "whu-0068",
@@ -4944,7 +5252,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He was named Hammer of the Year in his first season."
+      "explanation": "He was named Hammer of the Year in his first season.",
+      "source": "https://en.wikipedia.org/wiki/Mohammed_Kudus"
     },
     {
       "id": "whu-0069",
@@ -4960,7 +5269,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "The fee was about £55m."
+      "explanation": "The fee was about £55m.",
+      "source": "https://en.wikipedia.org/wiki/Mohammed_Kudus"
     },
     {
       "id": "whu-0070",
@@ -4976,7 +5286,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He scored the first goal of the 2023 Conference League final."
+      "explanation": "He scored the first goal of the 2023 Conference League final.",
+      "source": "https://en.wikipedia.org/wiki/Sa%C3%AFd_Benrahma"
     },
     {
       "id": "whu-0071",
@@ -4992,7 +5303,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He had won two Premier League titles at Chelsea."
+      "explanation": "He had won two Premier League titles at Chelsea.",
+      "source": "https://en.wikipedia.org/wiki/Kurt_Zouma"
     },
     {
       "id": "whu-0072",
@@ -5008,7 +5320,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He joined from Mexican club Pachuca."
+      "explanation": "He joined from Mexican club Pachuca.",
+      "source": "https://en.wikipedia.org/wiki/Enner_Valencia"
     },
     {
       "id": "whu-0073",
@@ -5024,7 +5337,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He was one of Roman Abramovich's first signings."
+      "explanation": "He was one of Roman Abramovich's first signings.",
+      "source": "https://en.wikipedia.org/wiki/Joe_Cole"
     },
     {
       "id": "whu-0074",
@@ -5040,7 +5354,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "West Ham were in the second tier at the time."
+      "explanation": "West Ham were in the second tier at the time.",
+      "source": "https://en.wikipedia.org/wiki/Jermain_Defoe"
     },
     {
       "id": "whu-0075",
@@ -5056,7 +5371,8 @@
       "topic": "West Ham bosses",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Pardew joined from Reading."
+      "explanation": "Pardew joined from Reading.",
+      "source": "https://en.wikipedia.org/wiki/Alan_Pardew"
     },
     {
       "id": "whu-0076",
@@ -5072,7 +5388,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Pablo Fornals scored a late winner in the second leg in the Netherlands."
+      "explanation": "Pablo Fornals scored a late winner in the second leg in the Netherlands.",
+      "source": "https://en.wikipedia.org/wiki/2022%E2%80%9323_UEFA_Europa_Conference_League"
     },
     {
       "id": "whu-0077",
@@ -5088,7 +5405,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "They got 62 points."
+      "explanation": "They got 62 points.",
+      "source": "https://en.wikipedia.org/wiki/2015%E2%80%9316_West_Ham_United_F.C._season"
     },
     {
       "id": "whu-0078",
@@ -5104,7 +5422,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He is a Morocco international."
+      "explanation": "He is a Morocco international.",
+      "source": "https://en.wikipedia.org/wiki/Nayef_Aguerd"
     },
     {
       "id": "whu-0079",
@@ -5120,7 +5439,8 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He moved to Atalanta a year later."
+      "explanation": "He moved to Atalanta a year later.",
+      "source": "https://en.wikipedia.org/wiki/Gianluca_Scamacca"
     },
     {
       "id": "whu-0080",
@@ -5136,7 +5456,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He retired in 2009, aged 26."
+      "explanation": "He retired in 2009, aged 26.",
+      "source": "https://en.wikipedia.org/wiki/Dean_Ashton"
     },
     {
       "id": "whu-0081",
@@ -5152,7 +5473,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Steven Gerrard equalised in stoppage time."
+      "explanation": "Steven Gerrard equalised in stoppage time.",
+      "source": "https://en.wikipedia.org/wiki/2006_FA_Cup_final"
     },
     {
       "id": "whu-0082",
@@ -5168,7 +5490,8 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Liverpool's Pepe Reina saved three penalties in the shootout."
+      "explanation": "Liverpool's Pepe Reina saved three penalties in the shootout.",
+      "source": "https://en.wikipedia.org/wiki/2006_FA_Cup_final"
     },
     {
       "id": "whu-0083",
@@ -5184,7 +5507,2473 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Nuno had been sacked by Nottingham Forest earlier that month."
+      "explanation": "Nuno had been sacked by Nottingham Forest earlier that month.",
+      "source": "https://en.wikipedia.org/wiki/Nuno_Esp%C3%ADrito_Santo"
+    },
+    {
+      "id": "wor-0001",
+      "question": "Which country won the 2022 World Cup in Qatar?",
+      "options": [
+        "Croatia",
+        "Brazil",
+        "Argentina",
+        "France"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "They beat France on penalties after a 3-3 draw in the final.",
+      "source": "https://en.wikipedia.org/wiki/2022_FIFA_World_Cup_final"
+    },
+    {
+      "id": "wor-0002",
+      "question": "Which three countries are hosting the 2026 World Cup?",
+      "options": [
+        "USA, Mexico and Costa Rica",
+        "Canada, USA and Jamaica",
+        "Mexico, USA and Colombia",
+        "USA, Canada and Mexico"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "It is the first World Cup with 48 teams.",
+      "source": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup"
+    },
+    {
+      "id": "wor-0003",
+      "question": "Who won the Golden Boot at the 2018 World Cup with six goals?",
+      "options": [
+        "Harry Kane",
+        "Romelu Lukaku",
+        "Cristiano Ronaldo",
+        "Antoine Griezmann"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "Kane's six goals were the most at the tournament.",
+      "source": "https://en.wikipedia.org/wiki/2018_FIFA_World_Cup"
+    },
+    {
+      "id": "wor-0004",
+      "question": "Which country won the 2010 World Cup in South Africa?",
+      "options": [
+        "Brazil",
+        "Spain",
+        "Netherlands",
+        "Germany"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "Andrés Iniesta scored the winner in extra time of the final.",
+      "source": "https://en.wikipedia.org/wiki/2010_FIFA_World_Cup_final"
+    },
+    {
+      "id": "wor-0005",
+      "question": "Which country beat hosts Brazil 7-1 in the 2014 World Cup semi-final?",
+      "options": [
+        "Argentina",
+        "France",
+        "Germany",
+        "Netherlands"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "Germany were 5-0 up within 29 minutes.",
+      "source": "https://en.wikipedia.org/wiki/Brazil_v_Germany_(2014_FIFA_World_Cup)"
+    },
+    {
+      "id": "wor-0006",
+      "question": "Who scored a hat-trick in the 2022 World Cup final but still finished on the losing side?",
+      "options": [
+        "Kylian Mbappé",
+        "Olivier Giroud",
+        "Antoine Griezmann",
+        "Ousmane Dembélé"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "It was only the second hat-trick in a World Cup final, after Geoff Hurst's in 1966.",
+      "source": "https://en.wikipedia.org/wiki/2022_FIFA_World_Cup_final"
+    },
+    {
+      "id": "wor-0007",
+      "question": "Which France star was sent off for a headbutt in the 2006 World Cup final?",
+      "options": [
+        "Zinedine Zidane",
+        "Thierry Henry",
+        "Lilian Thuram",
+        "Patrick Vieira"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "He headbutted Italy's Marco Materazzi in extra time.",
+      "source": "https://en.wikipedia.org/wiki/2006_FIFA_World_Cup_final"
+    },
+    {
+      "id": "wor-0008",
+      "question": "Which team knocked England out in the semi-finals of the 2018 World Cup?",
+      "options": [
+        "Belgium",
+        "Croatia",
+        "France",
+        "Sweden"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "The semi-final was played at the Luzhniki Stadium in Moscow.",
+      "source": "https://en.wikipedia.org/wiki/2018_FIFA_World_Cup"
+    },
+    {
+      "id": "wor-0009",
+      "question": "Which country won the 2002 World Cup in South Korea and Japan?",
+      "options": [
+        "Germany",
+        "Brazil",
+        "Turkey",
+        "South Korea"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "Ronaldo scored both goals in a 2-0 win over Germany in the final.",
+      "source": "https://en.wikipedia.org/wiki/2002_FIFA_World_Cup_final"
+    },
+    {
+      "id": "wor-0010",
+      "question": "Which country won the 2014 World Cup in Brazil?",
+      "options": [
+        "Argentina",
+        "Germany",
+        "Netherlands",
+        "Brazil"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "It was Germany's fourth World Cup.",
+      "source": "https://en.wikipedia.org/wiki/2014_FIFA_World_Cup_final"
+    },
+    {
+      "id": "wor-0011",
+      "question": "Who scored the extra-time winner in the 2014 World Cup final?",
+      "options": [
+        "Miroslav Klose",
+        "Thomas Müller",
+        "André Schürrle",
+        "Mario Götze"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "Götze came on as a substitute and volleyed in Schürrle's cross.",
+      "source": "https://en.wikipedia.org/wiki/2014_FIFA_World_Cup_final"
+    },
+    {
+      "id": "wor-0012",
+      "question": "Which country became the first African side to reach a World Cup semi-final, in 2022?",
+      "options": [
+        "Ghana",
+        "Senegal",
+        "Morocco",
+        "Cameroon"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "They knocked out Spain and Portugal on the way.",
+      "source": "https://en.wikipedia.org/wiki/2022_FIFA_World_Cup"
+    },
+    {
+      "id": "wor-0013",
+      "question": "Which team stunned Argentina 2-1 in their first game of the 2022 World Cup?",
+      "options": [
+        "Saudi Arabia",
+        "Poland",
+        "Mexico",
+        "Japan"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "Argentina lost that game but went on to win the tournament.",
+      "source": "https://en.wikipedia.org/wiki/2022_FIFA_World_Cup_Group_C"
+    },
+    {
+      "id": "wor-0014",
+      "question": "England won a World Cup penalty shootout for the first time in 2018. Who did they beat?",
+      "options": [
+        "Sweden",
+        "Tunisia",
+        "Colombia",
+        "Panama"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "Eric Dier scored the winning penalty.",
+      "source": "https://en.wikipedia.org/wiki/2018_FIFA_World_Cup_knockout_stage"
+    },
+    {
+      "id": "wor-0015",
+      "question": "Frank Lampard's 'ghost goal' was wrongly ruled out in England's 2010 World Cup defeat to which team?",
+      "options": [
+        "USA",
+        "Germany",
+        "Algeria",
+        "Argentina"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "The shot bounced well over the line, and Germany won 4-1.",
+      "source": "https://en.wikipedia.org/wiki/2010_FIFA_World_Cup_knockout_stage"
+    },
+    {
+      "id": "wor-0016",
+      "question": "Which Liverpool striker bit Italy's Giorgio Chiellini at the 2014 World Cup?",
+      "options": [
+        "Luis Suárez",
+        "Edinson Cavani",
+        "Diego Forlán",
+        "Daniel Sturridge"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "FIFA banned him from all football-related activity for four months.",
+      "source": "https://en.wikipedia.org/wiki/Luis_Su%C3%A1rez"
+    },
+    {
+      "id": "wor-0017",
+      "question": "Who won the Golden Ball as the best player at the 2022 World Cup?",
+      "options": [
+        "Kylian Mbappé",
+        "Luka Modrić",
+        "Emiliano Martínez",
+        "Lionel Messi"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "It was his second Golden Ball.",
+      "source": "https://en.wikipedia.org/wiki/2022_FIFA_World_Cup"
+    },
+    {
+      "id": "wor-0018",
+      "question": "Whose long free kick beat David Seaman in England's 2002 World Cup quarter-final against Brazil?",
+      "options": [
+        "Ronaldinho",
+        "Roberto Carlos",
+        "Ronaldo",
+        "Rivaldo"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "He was sent off seven minutes later.",
+      "source": "https://en.wikipedia.org/wiki/Ronaldinho"
+    },
+    {
+      "id": "wor-0019",
+      "question": "Which England striker was sent off against Portugal in the 2006 World Cup quarter-final?",
+      "options": [
+        "Jermain Defoe",
+        "Wayne Rooney",
+        "Peter Crouch",
+        "Michael Owen"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "England went out on penalties.",
+      "source": "https://en.wikipedia.org/wiki/Wayne_Rooney"
+    },
+    {
+      "id": "wor-0020",
+      "question": "How many teams are playing at the 2026 World Cup?",
+      "options": [
+        "64",
+        "48",
+        "32",
+        "40"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "It went up from 32 teams, the number used from 1998 to 2022.",
+      "source": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup"
+    },
+    {
+      "id": "wor-0021",
+      "question": "How many World Cup goals had Miroslav Klose scored, a record, by the end of the 2022 tournament?",
+      "options": [
+        "16",
+        "14",
+        "15",
+        "13"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored his 16th in the 7-1 win against Brazil in 2014.",
+      "source": "https://en.wikipedia.org/wiki/Miroslav_Klose"
+    },
+    {
+      "id": "wor-0022",
+      "question": "Which Turkey striker scored the fastest goal in World Cup history, inside 11 seconds in 2002?",
+      "options": [
+        "Nihat Kahveci",
+        "Hasan Şaş",
+        "Hakan Şükür",
+        "İlhan Mansız"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored after 10.8 seconds against South Korea in the third-place match.",
+      "source": "https://en.wikipedia.org/wiki/Hakan_%C5%9E%C3%BCk%C3%BCr"
+    },
+    {
+      "id": "wor-0023",
+      "question": "Who won the Golden Boot at the 2014 World Cup?",
+      "options": [
+        "James Rodríguez",
+        "Neymar",
+        "Thomas Müller",
+        "Lionel Messi"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "The Colombian scored six goals.",
+      "source": "https://en.wikipedia.org/wiki/2014_FIFA_World_Cup"
+    },
+    {
+      "id": "wor-0024",
+      "question": "Which stadium hosted the 2022 World Cup final?",
+      "options": [
+        "Lusail Stadium",
+        "Al Bayt Stadium",
+        "Khalifa International Stadium",
+        "Education City Stadium"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "Argentina beat France there on penalties.",
+      "source": "https://en.wikipedia.org/wiki/2022_FIFA_World_Cup_final"
+    },
+    {
+      "id": "wor-0025",
+      "question": "Who scored Senegal's winner against holders France in the opening game of the 2002 World Cup?",
+      "options": [
+        "Khalilou Fadiga",
+        "Papa Bouba Diop",
+        "El Hadji Diouf",
+        "Henri Camara"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "Senegal won 1-0 and went on to the knockout rounds.",
+      "source": "https://en.wikipedia.org/wiki/2002_FIFA_World_Cup_Group_A"
+    },
+    {
+      "id": "wor-0026",
+      "question": "Which Uruguay forward won the Golden Ball at the 2010 World Cup?",
+      "options": [
+        "Diego Lugano",
+        "Edinson Cavani",
+        "Luis Suárez",
+        "Diego Forlán"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "Uruguay finished fourth.",
+      "source": "https://en.wikipedia.org/wiki/2010_FIFA_World_Cup"
+    },
+    {
+      "id": "wor-0027",
+      "question": "Which Republic of Ireland captain left the squad before the 2002 World Cup after a row in Saipan?",
+      "options": [
+        "Steve Staunton",
+        "Shay Given",
+        "Niall Quinn",
+        "Roy Keane"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "He fell out with manager Mick McCarthy.",
+      "source": "https://en.wikipedia.org/wiki/Saipan_incident"
+    },
+    {
+      "id": "wor-0028",
+      "question": "Which goalkeeper won the Golden Glove at the 2022 World Cup?",
+      "options": [
+        "Hugo Lloris",
+        "Emiliano Martínez",
+        "Dominik Livaković",
+        "Yassine Bounou"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "His teammate Enzo Fernández was named best young player.",
+      "source": "https://en.wikipedia.org/wiki/2022_FIFA_World_Cup"
+    },
+    {
+      "id": "wor-0029",
+      "question": "Who won the Golden Ball at the 2018 World Cup?",
+      "options": [
+        "Kylian Mbappé",
+        "Antoine Griezmann",
+        "Eden Hazard",
+        "Luka Modrić"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "Kylian Mbappé was named best young player.",
+      "source": "https://en.wikipedia.org/wiki/2018_FIFA_World_Cup"
+    },
+    {
+      "id": "wor-0030",
+      "question": "In which city did Italy beat France on penalties in the 2006 World Cup final?",
+      "options": [
+        "Munich",
+        "Frankfurt",
+        "Berlin",
+        "Dortmund"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "The final was played at the Olympiastadion.",
+      "source": "https://en.wikipedia.org/wiki/2006_FIFA_World_Cup_final"
+    },
+    {
+      "id": "eur-0001",
+      "question": "Which country won Euro 2024 in Germany?",
+      "options": [
+        "Spain",
+        "France",
+        "England",
+        "Netherlands"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "They beat England 2-1 in the final in Berlin.",
+      "source": "https://en.wikipedia.org/wiki/UEFA_Euro_2024_final"
+    },
+    {
+      "id": "eur-0002",
+      "question": "Which country beat England on penalties in the Euro 2020 final at Wembley?",
+      "options": [
+        "Denmark",
+        "Spain",
+        "Italy",
+        "Portugal"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "The tournament was played in 2021 because of the pandemic.",
+      "source": "https://en.wikipedia.org/wiki/UEFA_Euro_2020_final"
+    },
+    {
+      "id": "eur-0003",
+      "question": "Which country won Euro 2016, beating hosts France in the final?",
+      "options": [
+        "Iceland",
+        "Germany",
+        "Portugal",
+        "Wales"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "Cristiano Ronaldo went off injured early in the final.",
+      "source": "https://en.wikipedia.org/wiki/UEFA_Euro_2016_final"
+    },
+    {
+      "id": "eur-0004",
+      "question": "Which country shocked everyone by winning Euro 2004?",
+      "options": [
+        "Greece",
+        "Denmark",
+        "Portugal",
+        "Czech Republic"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "They beat the hosts Portugal in both the opening game and the final.",
+      "source": "https://en.wikipedia.org/wiki/UEFA_Euro_2004_final"
+    },
+    {
+      "id": "eur-0005",
+      "question": "Which small nation knocked England out of Euro 2016?",
+      "options": [
+        "Wales",
+        "Slovakia",
+        "Iceland",
+        "Austria"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "Iceland won 2-1 and Roy Hodgson resigned after the match.",
+      "source": "https://en.wikipedia.org/wiki/UEFA_Euro_2016_knockout_stage"
+    },
+    {
+      "id": "eur-0006",
+      "question": "Who scored England's equaliser in the Euro 2024 final?",
+      "options": [
+        "Harry Kane",
+        "Cole Palmer",
+        "Jude Bellingham",
+        "Bukayo Saka"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "He came off the bench and scored from outside the box.",
+      "source": "https://en.wikipedia.org/wiki/UEFA_Euro_2024_final"
+    },
+    {
+      "id": "eur-0007",
+      "question": "Which England midfielder scored a 95th-minute overhead kick against Slovakia at Euro 2024?",
+      "options": [
+        "Declan Rice",
+        "Jude Bellingham",
+        "Phil Foden",
+        "Kobbie Mainoo"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "England went on to win 2-1 after extra time.",
+      "source": "https://en.wikipedia.org/wiki/Jude_Bellingham"
+    },
+    {
+      "id": "eur-0008",
+      "question": "Which country won Euro 2012, beating Italy 4-0 in the final?",
+      "options": [
+        "Spain",
+        "Portugal",
+        "Germany",
+        "France"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "They became the first team to retain the Euros.",
+      "source": "https://en.wikipedia.org/wiki/UEFA_Euro_2012_final"
+    },
+    {
+      "id": "eur-0009",
+      "question": "Which England defender scored after two minutes of the Euro 2020 final?",
+      "options": [
+        "John Stones",
+        "Kieran Trippier",
+        "Luke Shaw",
+        "Harry Maguire"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "It was the fastest goal ever scored in a Euros final.",
+      "source": "https://en.wikipedia.org/wiki/UEFA_Euro_2020_final"
+    },
+    {
+      "id": "eur-0010",
+      "question": "Which Denmark midfielder collapsed on the pitch at Euro 2020, then recovered and later joined Brentford?",
+      "options": [
+        "Thomas Delaney",
+        "Christian Eriksen",
+        "Pierre-Emile Højbjerg",
+        "Mikkel Damsgaard"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "He had a cardiac arrest against Finland and was fitted with a heart device.",
+      "source": "https://en.wikipedia.org/wiki/Christian_Eriksen"
+    },
+    {
+      "id": "eur-0011",
+      "question": "Who scored Spain's late winner in the Euro 2024 final?",
+      "options": [
+        "Álvaro Morata",
+        "Dani Olmo",
+        "Nico Williams",
+        "Mikel Oyarzabal"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored in the 86th minute.",
+      "source": "https://en.wikipedia.org/wiki/UEFA_Euro_2024_final"
+    },
+    {
+      "id": "eur-0012",
+      "question": "Who scored the only goal of the Euro 2016 final, in extra time?",
+      "options": [
+        "Cristiano Ronaldo",
+        "Renato Sanches",
+        "Éder",
+        "Nani"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "He came off the bench and scored from 25 yards.",
+      "source": "https://en.wikipedia.org/wiki/UEFA_Euro_2016_final"
+    },
+    {
+      "id": "eur-0013",
+      "question": "Which Greece striker headed the winner in the Euro 2004 final?",
+      "options": [
+        "Theodoros Zagorakis",
+        "Giorgos Karagounis",
+        "Angelos Charisteas",
+        "Zisis Vryzas"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "Greece won 1-0 in Lisbon.",
+      "source": "https://en.wikipedia.org/wiki/UEFA_Euro_2004_final"
+    },
+    {
+      "id": "eur-0014",
+      "question": "Which German manager led Greece to the Euro 2004 title?",
+      "options": [
+        "Otto Rehhagel",
+        "Berti Vogts",
+        "Joachim Löw",
+        "Jupp Heynckes"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "He was nicknamed 'King Otto' in Greece.",
+      "source": "https://en.wikipedia.org/wiki/Otto_Rehhagel"
+    },
+    {
+      "id": "eur-0015",
+      "question": "Which Spain winger became the youngest goalscorer in Euros history at Euro 2024?",
+      "options": [
+        "Lamine Yamal",
+        "Pedri",
+        "Nico Williams",
+        "Fermín López"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored against France in the semi-final, aged 16.",
+      "source": "https://en.wikipedia.org/wiki/Lamine_Yamal"
+    },
+    {
+      "id": "eur-0016",
+      "question": "Who scored England's 90th-minute winner against the Netherlands in the Euro 2024 semi-final?",
+      "options": [
+        "Ivan Toney",
+        "Ollie Watkins",
+        "Harry Kane",
+        "Cole Palmer"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "Cole Palmer set it up; both had come off the bench.",
+      "source": "https://en.wikipedia.org/wiki/Ollie_Watkins"
+    },
+    {
+      "id": "eur-0017",
+      "question": "Which Italy midfielder chipped a 'Panenka' penalty in the Euro 2012 shootout against England?",
+      "options": [
+        "Antonio Nocerino",
+        "Riccardo Montolivo",
+        "Andrea Pirlo",
+        "Daniele De Rossi"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "Italy won the quarter-final shootout 4-2.",
+      "source": "https://en.wikipedia.org/wiki/Andrea_Pirlo"
+    },
+    {
+      "id": "eur-0018",
+      "question": "Who scored the golden goal that won Euro 2000 for France?",
+      "options": [
+        "Sylvain Wiltord",
+        "Robert Pirès",
+        "Thierry Henry",
+        "David Trezeguet"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "France beat Italy 2-1 in Rotterdam.",
+      "source": "https://en.wikipedia.org/wiki/UEFA_Euro_2000_final"
+    },
+    {
+      "id": "eur-0019",
+      "question": "Which country did Wales beat 3-1 to reach the Euro 2016 semi-finals?",
+      "options": [
+        "Russia",
+        "Northern Ireland",
+        "Portugal",
+        "Belgium"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "Wales won the quarter-final 3-1.",
+      "source": "https://en.wikipedia.org/wiki/UEFA_Euro_2016_knockout_stage"
+    },
+    {
+      "id": "eur-0020",
+      "question": "Who was named player of the tournament at Euro 2024?",
+      "options": [
+        "Dani Olmo",
+        "Lamine Yamal",
+        "Jude Bellingham",
+        "Rodri"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "He played in midfield for the champions, Spain.",
+      "source": "https://en.wikipedia.org/wiki/UEFA_Euro_2024"
+    },
+    {
+      "id": "eur-0021",
+      "question": "Who scored Spain's winner in the Euro 2008 final against Germany?",
+      "options": [
+        "Xavi",
+        "Fernando Torres",
+        "David Villa",
+        "Cesc Fàbregas"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "It was Spain's first major trophy since 1964.",
+      "source": "https://en.wikipedia.org/wiki/UEFA_Euro_2008_final"
+    },
+    {
+      "id": "eur-0022",
+      "question": "Who was named player of the tournament at Euro 2020?",
+      "options": [
+        "Gianluigi Donnarumma",
+        "Pedri",
+        "Jorginho",
+        "Leonardo Bonucci"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "Italy won the final on penalties after a 1-1 draw.",
+      "source": "https://en.wikipedia.org/wiki/UEFA_Euro_2020"
+    },
+    {
+      "id": "eur-0023",
+      "question": "Which three England players missed in the Euro 2020 final shootout?",
+      "options": [
+        "Rashford, Kane and Saka",
+        "Sancho, Sterling and Saka",
+        "Rashford, Sancho and Henderson",
+        "Rashford, Sancho and Saka"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "Sancho and Rashford had come on just before the shootout.",
+      "source": "https://en.wikipedia.org/wiki/UEFA_Euro_2020_final"
+    },
+    {
+      "id": "eur-0024",
+      "question": "Which Welsh striker's 'Cruyff turn' goal helped beat Belgium at Euro 2016?",
+      "options": [
+        "Gareth Bale",
+        "Aaron Ramsey",
+        "Hal Robson-Kanu",
+        "Sam Vokes"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "Wales won the quarter-final 3-1.",
+      "source": "https://en.wikipedia.org/wiki/Hal_Robson-Kanu"
+    },
+    {
+      "id": "eur-0025",
+      "question": "Which team won 3-2 at Wembley in November 2007 to stop England reaching Euro 2008?",
+      "options": [
+        "Croatia",
+        "Israel",
+        "Russia",
+        "Estonia"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "Steve McClaren was sacked the next day.",
+      "source": "https://en.wikipedia.org/wiki/Steve_McClaren"
+    },
+    {
+      "id": "eur-0026",
+      "question": "In which city was the Euro 2004 final played?",
+      "options": [
+        "Athens",
+        "Porto",
+        "Madrid",
+        "Lisbon"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "It was played at the Estádio da Luz.",
+      "source": "https://en.wikipedia.org/wiki/UEFA_Euro_2004_final"
+    },
+    {
+      "id": "eur-0027",
+      "question": "In which city was the Euro 2008 final played?",
+      "options": [
+        "Zürich",
+        "Vienna",
+        "Geneva",
+        "Basel"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "Austria and Switzerland co-hosted the tournament.",
+      "source": "https://en.wikipedia.org/wiki/UEFA_Euro_2008_final"
+    },
+    {
+      "id": "eur-0028",
+      "question": "How many players shared the top scorer spot at Euro 2024, with three goals each?",
+      "options": [
+        "2",
+        "4",
+        "6",
+        "5"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "Harry Kane was one of them.",
+      "source": "https://en.wikipedia.org/wiki/UEFA_Euro_2024"
+    },
+    {
+      "id": "eur-0029",
+      "question": "Who did Italy knock out in the Euro 2020 semi-final?",
+      "options": [
+        "Denmark",
+        "Spain",
+        "Belgium",
+        "Austria"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "Federico Chiesa and Álvaro Morata scored in a 1-1 draw.",
+      "source": "https://en.wikipedia.org/wiki/UEFA_Euro_2020_knockout_stage"
+    },
+    {
+      "id": "eur-0030",
+      "question": "Which Czech striker scored from near the halfway line against Scotland at Euro 2020?",
+      "options": [
+        "Vladimír Coufal",
+        "Tomáš Souček",
+        "Adam Hložek",
+        "Patrik Schick"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "Euros",
+      "club": null,
+      "verified": true,
+      "explanation": "At about 45 metres, it was the longest goal at a Euros since 1980.",
+      "source": "https://en.wikipedia.org/wiki/Patrik_Schick"
+    },
+    {
+      "id": "int-0001",
+      "question": "Which country won the 2024 Copa América in the USA?",
+      "options": [
+        "Colombia",
+        "Brazil",
+        "Argentina",
+        "Uruguay"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "It was their record 16th Copa América title.",
+      "source": "https://en.wikipedia.org/wiki/2024_Copa_Am%C3%A9rica_final"
+    },
+    {
+      "id": "int-0002",
+      "question": "Which country won the first UEFA Nations League, in 2019?",
+      "options": [
+        "Switzerland",
+        "Netherlands",
+        "England",
+        "Portugal"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "They beat the Netherlands 1-0 in Porto.",
+      "source": "https://en.wikipedia.org/wiki/2019_UEFA_Nations_League_final"
+    },
+    {
+      "id": "int-0003",
+      "question": "Which country beat Spain on penalties to win the 2025 Nations League final?",
+      "options": [
+        "Germany",
+        "Portugal",
+        "Italy",
+        "France"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "It was Portugal's second Nations League title.",
+      "source": "https://en.wikipedia.org/wiki/2025_UEFA_Nations_League_final"
+    },
+    {
+      "id": "int-0004",
+      "question": "Which host nation won the Africa Cup of Nations played in early 2024?",
+      "options": [
+        "Nigeria",
+        "Senegal",
+        "Ivory Coast",
+        "Morocco"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "The tournament was called the 2023 Africa Cup of Nations.",
+      "source": "https://en.wikipedia.org/wiki/2023_Africa_Cup_of_Nations"
+    },
+    {
+      "id": "int-0005",
+      "question": "Which country did Argentina beat in the 2021 Copa América final at the Maracanã?",
+      "options": [
+        "Chile",
+        "Uruguay",
+        "Brazil",
+        "Colombia"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "Argentina won 1-0 in Rio de Janeiro.",
+      "source": "https://en.wikipedia.org/wiki/2021_Copa_Am%C3%A9rica_final"
+    },
+    {
+      "id": "int-0006",
+      "question": "Which forward scored the winning penalty as Senegal won the 2021 Africa Cup of Nations?",
+      "options": [
+        "Sadio Mané",
+        "Kalidou Koulibaly",
+        "Idrissa Gueye",
+        "Ismaïla Sarr"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "It was Senegal's first title.",
+      "source": "https://en.wikipedia.org/wiki/2021_Africa_Cup_of_Nations_final"
+    },
+    {
+      "id": "int-0007",
+      "question": "Which country won the 2023 Nations League, beating Croatia on penalties?",
+      "options": [
+        "Spain",
+        "Portugal",
+        "Italy",
+        "Netherlands"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "The final was played in Rotterdam.",
+      "source": "https://en.wikipedia.org/wiki/2023_UEFA_Nations_League_final"
+    },
+    {
+      "id": "int-0008",
+      "question": "Who captained Argentina to the 2021 Copa América, his first major trophy with his country?",
+      "options": [
+        "Sergio Agüero",
+        "Ángel Di María",
+        "Lionel Messi",
+        "Nicolás Otamendi"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "He had lost four major finals before that.",
+      "source": "https://en.wikipedia.org/wiki/2021_Copa_Am%C3%A9rica_final"
+    },
+    {
+      "id": "int-0009",
+      "question": "Who scored the only goal of the 2021 Copa América final?",
+      "options": [
+        "Ángel Di María",
+        "Lionel Messi",
+        "Lautaro Martínez",
+        "Rodrigo De Paul"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "He lobbed Ederson in the first half.",
+      "source": "https://en.wikipedia.org/wiki/2021_Copa_Am%C3%A9rica_final"
+    },
+    {
+      "id": "int-0010",
+      "question": "Who scored Argentina's extra-time winner in the 2024 Copa América final?",
+      "options": [
+        "Nicolás González",
+        "Lionel Messi",
+        "Lautaro Martínez",
+        "Julián Álvarez"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored in the 112th minute.",
+      "source": "https://en.wikipedia.org/wiki/2024_Copa_Am%C3%A9rica_final"
+    },
+    {
+      "id": "int-0011",
+      "question": "Which country did Argentina beat in the 2024 Copa América final?",
+      "options": [
+        "Canada",
+        "Colombia",
+        "Uruguay",
+        "Brazil"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "Argentina won 1-0 after extra time.",
+      "source": "https://en.wikipedia.org/wiki/2024_Copa_Am%C3%A9rica_final"
+    },
+    {
+      "id": "int-0012",
+      "question": "Who did Portugal beat 1-0 in the first Nations League final in 2019?",
+      "options": [
+        "Belgium",
+        "England",
+        "Switzerland",
+        "Netherlands"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "The final was played in Porto.",
+      "source": "https://en.wikipedia.org/wiki/2019_UEFA_Nations_League_final"
+    },
+    {
+      "id": "int-0013",
+      "question": "Which country beat Spain 2-1 in the 2021 Nations League final in Milan?",
+      "options": [
+        "France",
+        "Portugal",
+        "Italy",
+        "Belgium"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "Kylian Mbappé scored the winner.",
+      "source": "https://en.wikipedia.org/wiki/2021_UEFA_Nations_League_final"
+    },
+    {
+      "id": "int-0014",
+      "question": "Which country did Ivory Coast beat in the final of the 2023 Africa Cup of Nations?",
+      "options": [
+        "DR Congo",
+        "Nigeria",
+        "Senegal",
+        "South Africa"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "Ivory Coast came from behind to win 2-1.",
+      "source": "https://en.wikipedia.org/wiki/2023_Africa_Cup_of_Nations_final"
+    },
+    {
+      "id": "int-0015",
+      "question": "Which country did Senegal beat on penalties in the 2021 Africa Cup of Nations final?",
+      "options": [
+        "Morocco",
+        "Egypt",
+        "Burkina Faso",
+        "Cameroon"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "Senegal won 4-2 on penalties after a 0-0 draw.",
+      "source": "https://en.wikipedia.org/wiki/2021_Africa_Cup_of_Nations_final"
+    },
+    {
+      "id": "int-0016",
+      "question": "Chile beat which country on penalties in both the 2015 and 2016 Copa América finals?",
+      "options": [
+        "Peru",
+        "Brazil",
+        "Uruguay",
+        "Argentina"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "Two Argentina players missed in the 2016 shootout.",
+      "source": "https://en.wikipedia.org/wiki/Copa_Am%C3%A9rica_Centenario_final"
+    },
+    {
+      "id": "int-0017",
+      "question": "Which Ivory Coast striker scored the winner in the 2023 Africa Cup of Nations final?",
+      "options": [
+        "Sébastien Haller",
+        "Simon Adingra",
+        "Nicolas Pépé",
+        "Franck Kessié"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "He had come back from treatment for testicular cancer.",
+      "source": "https://en.wikipedia.org/wiki/2023_Africa_Cup_of_Nations_final"
+    },
+    {
+      "id": "int-0018",
+      "question": "Which country had won the Copa América the most times by the end of 2024, with 16 titles?",
+      "options": [
+        "Argentina",
+        "Chile",
+        "Brazil",
+        "Uruguay"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "Uruguay have won it 15 times.",
+      "source": "https://en.wikipedia.org/wiki/Copa_Am%C3%A9rica"
+    },
+    {
+      "id": "int-0019",
+      "question": "Who scored the only goal of the 2019 Nations League final?",
+      "options": [
+        "Bernardo Silva",
+        "Bruno Fernandes",
+        "Gonçalo Guedes",
+        "Cristiano Ronaldo"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "Portugal beat the Netherlands 1-0.",
+      "source": "https://en.wikipedia.org/wiki/2019_UEFA_Nations_League_final"
+    },
+    {
+      "id": "int-0020",
+      "question": "In which city was the 2025 Nations League final played?",
+      "options": [
+        "Stuttgart",
+        "Berlin",
+        "Munich",
+        "Lisbon"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "Portugal beat Spain on penalties.",
+      "source": "https://en.wikipedia.org/wiki/2025_UEFA_Nations_League_final"
+    },
+    {
+      "id": "int-0021",
+      "question": "Who scored the winning penalty as Portugal won the 2025 Nations League final?",
+      "options": [
+        "Nuno Mendes",
+        "Rúben Neves",
+        "Cristiano Ronaldo",
+        "Bruno Fernandes"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "The game finished 2-2 after extra time.",
+      "source": "https://en.wikipedia.org/wiki/2025_UEFA_Nations_League_final"
+    },
+    {
+      "id": "int-0022",
+      "question": "Which Spain defender scored the winning penalty in the 2023 Nations League final shootout?",
+      "options": [
+        "Rodri",
+        "Dani Carvajal",
+        "Aymeric Laporte",
+        "Jordi Alba"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "Spain won the shootout 5-4.",
+      "source": "https://en.wikipedia.org/wiki/2023_UEFA_Nations_League_final"
+    },
+    {
+      "id": "int-0023",
+      "question": "Which stadium hosted the 2024 Copa América final, which was delayed by crowd trouble?",
+      "options": [
+        "SoFi Stadium",
+        "MetLife Stadium",
+        "AT&T Stadium",
+        "Hard Rock Stadium"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "Kick-off in Miami Gardens was delayed by over an hour.",
+      "source": "https://en.wikipedia.org/wiki/2024_Copa_Am%C3%A9rica_final"
+    },
+    {
+      "id": "int-0024",
+      "question": "Which country won the 2011 Copa América, with Luis Suárez named best player?",
+      "options": [
+        "Paraguay",
+        "Peru",
+        "Uruguay",
+        "Argentina"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "International cups",
+      "club": null,
+      "verified": true,
+      "explanation": "They beat Paraguay 3-0 in the final.",
+      "source": "https://en.wikipedia.org/wiki/2011_Copa_Am%C3%A9rica"
+    },
+    {
+      "id": "str-0001",
+      "question": "Which Manchester United forward scored 9 goals in 16 games on loan at West Ham in 2021?",
+      "options": [
+        "Jesse Lingard",
+        "Daniel James",
+        "Mason Greenwood",
+        "Anthony Martial"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "Lingard had joined Manchester United's academy aged seven.",
+      "source": "https://en.wikipedia.org/wiki/Jesse_Lingard"
+    },
+    {
+      "id": "str-0002",
+      "question": "Which Spaniard, signed by Swansea for about £2m, scored 18 Premier League goals in his first season?",
+      "options": [
+        "Danny Graham",
+        "Bafétimbi Gomis",
+        "Michu",
+        "Wilfried Bony"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "Injuries meant he scored only a handful more for the club.",
+      "source": "https://en.wikipedia.org/wiki/Michu"
+    },
+    {
+      "id": "str-0003",
+      "question": "Which Japanese playmaker scored the first Premier League hat-trick by an Asian player, for Man Utd in 2013?",
+      "options": [
+        "Keisuke Honda",
+        "Park Ji-sung",
+        "Son Heung-min",
+        "Shinji Kagawa"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "He went back to Borussia Dortmund in 2014.",
+      "source": "https://en.wikipedia.org/wiki/Shinji_Kagawa"
+    },
+    {
+      "id": "str-0004",
+      "question": "Which Moroccan playmaker was QPR's star man in the Championship in 2010-11?",
+      "options": [
+        "Marouane Chamakh",
+        "Adel Taarabt",
+        "Hakim Ziyech",
+        "Noureddine Amrabat"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "He was named the Championship's player of the year.",
+      "source": "https://en.wikipedia.org/wiki/Adel_Taarabt"
+    },
+    {
+      "id": "str-0005",
+      "question": "Which West Ham midfielder scored a famous goal in a 3-0 win at Tottenham in October 2013?",
+      "options": [
+        "Ricardo Vaz Tê",
+        "Mohamed Diamé",
+        "Kevin Nolan",
+        "Ravel Morrison"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored West Ham's third goal at White Hart Lane.",
+      "source": "https://en.wikipedia.org/wiki/Ravel_Morrison"
+    },
+    {
+      "id": "str-0006",
+      "question": "Which Italian teenager scored a stunning late winner on his Man Utd debut against Aston Villa in April 2009?",
+      "options": [
+        "Giuseppe Rossi",
+        "Mario Balotelli",
+        "Federico Macheda",
+        "Davide Petrucci"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "He came off the bench to make it 3-2.",
+      "source": "https://en.wikipedia.org/wiki/Federico_Macheda"
+    },
+    {
+      "id": "str-0007",
+      "question": "Which Newcastle striker curled in a famous 37-yard shot with the outside of his foot at Chelsea in May 2012?",
+      "options": [
+        "Hatem Ben Arfa",
+        "Papiss Cissé",
+        "Shola Ameobi",
+        "Demba Ba"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored 13 goals in 14 games after joining that January.",
+      "source": "https://en.wikipedia.org/wiki/Papiss_Ciss%C3%A9"
+    },
+    {
+      "id": "str-0008",
+      "question": "Which Man Utd player scored the extra-time winner in the 2016 FA Cup final?",
+      "options": [
+        "Jesse Lingard",
+        "Marcus Rashford",
+        "Anthony Martial",
+        "Juan Mata"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "United beat Crystal Palace 2-1.",
+      "source": "https://en.wikipedia.org/wiki/2016_FA_Cup_final"
+    },
+    {
+      "id": "str-0009",
+      "question": "Which Danish striker at Arsenal became known to fans as 'Lord Bendtner'?",
+      "options": [
+        "Dennis Rommedahl",
+        "Martin Jørgensen",
+        "Nicklas Bendtner",
+        "Jon Dahl Tomasson"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "He was famous for his huge self-belief.",
+      "source": "https://en.wikipedia.org/wiki/Nicklas_Bendtner"
+    },
+    {
+      "id": "str-0010",
+      "question": "Which Man City striker revealed a 'Why always me?' T-shirt after scoring at Old Trafford?",
+      "options": [
+        "Mario Balotelli",
+        "Edin Džeko",
+        "Sergio Agüero",
+        "Carlos Tevez"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "City won 6-1 that day in October 2011.",
+      "source": "https://en.wikipedia.org/wiki/Mario_Balotelli"
+    },
+    {
+      "id": "str-0011",
+      "question": "Which Stoke midfielder scored from 65 yards against Chelsea in April 2015?",
+      "options": [
+        "Glenn Whelan",
+        "Steven Nzonzi",
+        "Marko Arnautović",
+        "Charlie Adam"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "Stoke still lost the game 2-1.",
+      "source": "https://en.wikipedia.org/wiki/Charlie_Adam"
+    },
+    {
+      "id": "str-0012",
+      "question": "Which club did Swansea sign Michu from in 2012?",
+      "options": [
+        "Getafe",
+        "Real Oviedo",
+        "Rayo Vallecano",
+        "Celta Vigo"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "He had scored 15 La Liga goals from midfield.",
+      "source": "https://en.wikipedia.org/wiki/Michu"
+    },
+    {
+      "id": "str-0013",
+      "question": "Which country did Ravel Morrison choose to play international football for?",
+      "options": [
+        "Ghana",
+        "Jamaica",
+        "England",
+        "Trinidad and Tobago"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "He had played for England at youth level.",
+      "source": "https://en.wikipedia.org/wiki/Ravel_Morrison"
+    },
+    {
+      "id": "str-0014",
+      "question": "Which Asian club did Jesse Lingard join in 2024?",
+      "options": [
+        "Ulsan HD",
+        "FC Seoul",
+        "Al-Ettifaq",
+        "Jeonbuk Hyundai Motors"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "He joined the South Korean side after leaving Nottingham Forest.",
+      "source": "https://en.wikipedia.org/wiki/Jesse_Lingard"
+    },
+    {
+      "id": "str-0015",
+      "question": "Which German club did Shinji Kagawa leave to join Manchester United in 2012?",
+      "options": [
+        "Bayer Leverkusen",
+        "Schalke 04",
+        "Borussia Dortmund",
+        "Werder Bremen"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "He had won two Bundesliga titles there.",
+      "source": "https://en.wikipedia.org/wiki/Shinji_Kagawa"
+    },
+    {
+      "id": "str-0016",
+      "question": "Which Sunderland striker scored a stoppage-time winner against Manchester City on New Year's Day 2012?",
+      "options": [
+        "Ji Dong-won",
+        "Nicklas Bendtner",
+        "Stéphane Sessègnon",
+        "Asamoah Gyan"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored in the 90th minute of a 1-0 win.",
+      "source": "https://en.wikipedia.org/wiki/Ji_Dong-won"
+    },
+    {
+      "id": "str-0017",
+      "question": "Which Southampton striker scored with his first touch on his England debut, aged 31, against Scotland in 2013?",
+      "options": [
+        "Charlie Austin",
+        "Jay Rodriguez",
+        "Rickie Lambert",
+        "Grant Holt"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "He had once worked in a beetroot bottling plant.",
+      "source": "https://en.wikipedia.org/wiki/Rickie_Lambert"
+    },
+    {
+      "id": "str-0018",
+      "question": "Which Newcastle winger dribbled from his own half to score against Bolton in 2012?",
+      "options": [
+        "Sylvain Marveaux",
+        "Yohan Cabaye",
+        "Hatem Ben Arfa",
+        "Jonás Gutiérrez"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "He began the run just inside his own half.",
+      "source": "https://en.wikipedia.org/wiki/Hatem_Ben_Arfa"
+    },
+    {
+      "id": "str-0019",
+      "question": "Which Everton striker joined Arsenal in 2001, billed as a 'fox in the box'?",
+      "options": [
+        "Francis Jeffers",
+        "Kevin Campbell",
+        "Jermaine Pennant",
+        "Nicolas Anelka"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored only four goals for Arsenal.",
+      "source": "https://en.wikipedia.org/wiki/Francis_Jeffers"
+    },
+    {
+      "id": "str-0020",
+      "question": "Which Italian club signed Adel Taarabt on loan in January 2014?",
+      "options": [
+        "Inter Milan",
+        "AC Milan",
+        "Fiorentina",
+        "Genoa"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "He signed on loan until the end of the season.",
+      "source": "https://en.wikipedia.org/wiki/Adel_Taarabt"
+    },
+    {
+      "id": "str-0021",
+      "question": "What fee did Liverpool pay Newcastle for Andy Carroll in January 2011?",
+      "options": [
+        "£40m",
+        "£30m",
+        "£35m",
+        "£25m"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "It was a British record at the time.",
+      "source": "https://en.wikipedia.org/wiki/Andy_Carroll"
+    },
+    {
+      "id": "str-0022",
+      "question": "Which Dutch striker scored on his Norwich debut in 2013 but managed only one Premier League goal for the club?",
+      "options": [
+        "Ricky van Wolfswinkel",
+        "Gary Hooper",
+        "Leroy Fer",
+        "Luciano Becchio"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "The transfer was worth about €10 million.",
+      "source": "https://en.wikipedia.org/wiki/Ricky_van_Wolfswinkel"
+    },
+    {
+      "id": "str-0023",
+      "question": "Which club signed Ravel Morrison from Manchester United in January 2012?",
+      "options": [
+        "Brighton & Hove Albion",
+        "West Ham United",
+        "Birmingham City",
+        "Queens Park Rangers"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "He had come through United's academy.",
+      "source": "https://en.wikipedia.org/wiki/Ravel_Morrison"
+    },
+    {
+      "id": "str-0024",
+      "question": "Against which team did Shinji Kagawa score his Man Utd hat-trick in March 2013?",
+      "options": [
+        "Norwich City",
+        "Sunderland",
+        "Aston Villa",
+        "Wigan Athletic"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "United won 4-0 at home.",
+      "source": "https://en.wikipedia.org/wiki/Shinji_Kagawa"
+    },
+    {
+      "id": "str-0025",
+      "question": "Which Ghana striker joined Sunderland for a club-record fee in 2010?",
+      "options": [
+        "Kevin-Prince Boateng",
+        "John Mensah",
+        "Sulley Muntari",
+        "Asamoah Gyan"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "He left for UAE club Al Ain the next year.",
+      "source": "https://en.wikipedia.org/wiki/Asamoah_Gyan"
+    },
+    {
+      "id": "str-0026",
+      "question": "Which Brazilian striker, Middlesbrough's record signing from Heerenveen, scored a hat-trick in an 8-1 win against Man City in 2008?",
+      "options": [
+        "Jô",
+        "Elano",
+        "Afonso Alves",
+        "Mido"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "He had scored 45 goals in 39 league games in the Netherlands.",
+      "source": "https://en.wikipedia.org/wiki/Afonso_Alves"
+    },
+    {
+      "id": "str-0027",
+      "question": "Which Wigan striker, on loan from Zamalek, scored 10 Premier League goals in 2008-09?",
+      "options": [
+        "Mido",
+        "Hugo Rodallega",
+        "Marcus Bent",
+        "Amr Zaki"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "He was on loan from Egyptian club Zamalek.",
+      "source": "https://en.wikipedia.org/wiki/Amr_Zaki"
+    },
+    {
+      "id": "str-0028",
+      "question": "Which Arsenal striker on loan at Juventus in 2012-13 won a Serie A title there?",
+      "options": [
+        "Carlos Vela",
+        "Nicklas Bendtner",
+        "Marouane Chamakh",
+        "Park Chu-young"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "These Streets Won't Forget",
+      "club": null,
+      "verified": true,
+      "explanation": "He played only a handful of games.",
+      "source": "https://en.wikipedia.org/wiki/Nicklas_Bendtner"
+    },
+    {
+      "id": "rec-0001",
+      "question": "Who is the Premier League's top-scoring Argentine?",
+      "options": [
+        "Carlos Tevez",
+        "Sergio Agüero",
+        "Julián Álvarez",
+        "Hernán Crespo"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "Agüero scored 184 Premier League goals.",
+      "source": "https://en.wikipedia.org/wiki/List_of_footballers_with_100_or_more_Premier_League_goals"
+    },
+    {
+      "id": "rec-0002",
+      "question": "Who is the Premier League's top-scoring Frenchman?",
+      "options": [
+        "Thierry Henry",
+        "Olivier Giroud",
+        "Eric Cantona",
+        "Nicolas Anelka"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "Henry scored 175 Premier League goals.",
+      "source": "https://en.wikipedia.org/wiki/List_of_footballers_with_100_or_more_Premier_League_goals"
+    },
+    {
+      "id": "rec-0003",
+      "question": "Who is the top-scoring Egyptian in Premier League history?",
+      "options": [
+        "Mohamed Salah",
+        "Mido",
+        "Mohamed Elneny",
+        "Omar Marmoush"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "He is also the top-scoring African.",
+      "source": "https://en.wikipedia.org/wiki/List_of_footballers_with_100_or_more_Premier_League_goals"
+    },
+    {
+      "id": "rec-0004",
+      "question": "Who is the top-scoring South Korean in Premier League history?",
+      "options": [
+        "Ki Sung-yueng",
+        "Hwang Hee-chan",
+        "Park Ji-sung",
+        "Son Heung-min"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "He was the first Asian player to reach 100 Premier League goals.",
+      "source": "https://en.wikipedia.org/wiki/List_of_footballers_with_100_or_more_Premier_League_goals"
+    },
+    {
+      "id": "rec-0005",
+      "question": "Who is the top-scoring Portuguese player in Premier League history?",
+      "options": [
+        "Cristiano Ronaldo",
+        "Bruno Fernandes",
+        "Diogo Jota",
+        "Bernardo Silva"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored 103.",
+      "source": "https://en.wikipedia.org/wiki/List_of_footballers_with_100_or_more_Premier_League_goals"
+    },
+    {
+      "id": "rec-0006",
+      "question": "Who set the Premier League record of 18 direct free-kick goals?",
+      "options": [
+        "Cristiano Ronaldo",
+        "Gianfranco Zola",
+        "David Beckham",
+        "Thierry Henry"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "Beckham scored 18.",
+      "source": "https://en.wikipedia.org/wiki/James_Ward-Prowse"
+    },
+    {
+      "id": "rec-0007",
+      "question": "Who has scored the most penalties in Premier League history?",
+      "options": [
+        "Alan Shearer",
+        "Steven Gerrard",
+        "Wayne Rooney",
+        "Frank Lampard"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "Shearer scored 56.",
+      "source": "https://en.wikipedia.org/wiki/Alan_Shearer"
+    },
+    {
+      "id": "rec-0008",
+      "question": "Who is the top-scoring Ivorian in Premier League history?",
+      "options": [
+        "Didier Drogba",
+        "Wilfried Bony",
+        "Wilfried Zaha",
+        "Yaya Touré"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored 104.",
+      "source": "https://en.wikipedia.org/wiki/List_of_footballers_with_100_or_more_Premier_League_goals"
+    },
+    {
+      "id": "rec-0009",
+      "question": "Who is the Premier League's top-scoring Dutchman?",
+      "options": [
+        "Robin van Persie",
+        "Jimmy Floyd Hasselbaink",
+        "Ruud van Nistelrooy",
+        "Dennis Bergkamp"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored 144; Jimmy Floyd Hasselbaink got 127.",
+      "source": "https://en.wikipedia.org/wiki/List_of_footballers_with_100_or_more_Premier_League_goals"
+    },
+    {
+      "id": "rec-0010",
+      "question": "Who is the Premier League's top-scoring Irish player?",
+      "options": [
+        "Robbie Keane",
+        "Shane Long",
+        "Niall Quinn",
+        "Damien Duff"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored 126.",
+      "source": "https://en.wikipedia.org/wiki/List_of_footballers_with_100_or_more_Premier_League_goals"
+    },
+    {
+      "id": "rec-0011",
+      "question": "Who is the Premier League's top-scoring Belgian?",
+      "options": [
+        "Romelu Lukaku",
+        "Kevin De Bruyne",
+        "Eden Hazard",
+        "Christian Benteke"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored 121.",
+      "source": "https://en.wikipedia.org/wiki/List_of_footballers_with_100_or_more_Premier_League_goals"
+    },
+    {
+      "id": "rec-0012",
+      "question": "Who is the top-scoring Senegalese player in Premier League history?",
+      "options": [
+        "Demba Ba",
+        "Ismaïla Sarr",
+        "Papiss Cissé",
+        "Sadio Mané"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored 111.",
+      "source": "https://en.wikipedia.org/wiki/List_of_footballers_with_100_or_more_Premier_League_goals"
+    },
+    {
+      "id": "rec-0013",
+      "question": "Who has picked up the most yellow cards in Premier League history?",
+      "options": [
+        "Wayne Rooney",
+        "Gareth Barry",
+        "Kevin Davies",
+        "Lee Cattermole"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "Barry got 122 yellow cards.",
+      "source": "https://en.wikipedia.org/wiki/Gareth_Barry"
+    },
+    {
+      "id": "rec-0014",
+      "question": "Which of these players shares the record for the most Premier League red cards?",
+      "options": [
+        "Patrick Vieira",
+        "Roy Keane",
+        "Joey Barton",
+        "Lee Cattermole"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "Vieira, Richard Dunne and Duncan Ferguson were each sent off eight times.",
+      "source": "https://en.wikipedia.org/wiki/Richard_Dunne"
+    },
+    {
+      "id": "rec-0015",
+      "question": "Which defender has scored the most own goals in Premier League history?",
+      "options": [
+        "Phil Jagielka",
+        "Richard Dunne",
+        "Jamie Carragher",
+        "Martin Škrtel"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored ten own goals.",
+      "source": "https://en.wikipedia.org/wiki/Richard_Dunne"
+    },
+    {
+      "id": "rec-0016",
+      "question": "Which Southampton midfielder had scored 17 Premier League free kicks by February 2023, one behind David Beckham?",
+      "options": [
+        "Matt Le Tissier",
+        "Adam Lallana",
+        "Dušan Tadić",
+        "James Ward-Prowse"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "He later played for West Ham.",
+      "source": "https://en.wikipedia.org/wiki/James_Ward-Prowse"
+    },
+    {
+      "id": "rec-0017",
+      "question": "Which Trinidad and Tobago striker scored over 120 Premier League goals?",
+      "options": [
+        "Dwight Yorke",
+        "Stern John",
+        "Carlos Edwards",
+        "Kenwyne Jones"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored 123.",
+      "source": "https://en.wikipedia.org/wiki/List_of_footballers_with_100_or_more_Premier_League_goals"
+    },
+    {
+      "id": "rec-0018",
+      "question": "Which three players share the record of eight Premier League red cards?",
+      "options": [
+        "Vieira, Keane and Barton",
+        "Vieira, Dunne and Ferguson",
+        "Keane, Ferguson and Vieira",
+        "Dunne, Cattermole and Ferguson"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "Patrick Vieira, Richard Dunne and Duncan Ferguson.",
+      "source": "https://en.wikipedia.org/wiki/Richard_Dunne"
+    },
+    {
+      "id": "rec-0019",
+      "question": "Which Sheffield United winger was sent off without the clock running after coming on as a sub against Reading in 2007?",
+      "options": [
+        "Phil Jagielka",
+        "Michael Tonge",
+        "Danny Webber",
+        "Keith Gillespie"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "He elbowed Stephen Hunt before play had restarted.",
+      "source": "https://en.wikipedia.org/wiki/Keith_Gillespie"
+    },
+    {
+      "id": "rec-0020",
+      "question": "How many direct free-kick goals did David Beckham score in the Premier League?",
+      "options": [
+        "12",
+        "22",
+        "15",
+        "18"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "James Ward-Prowse had reached 17 by February 2023.",
+      "source": "https://en.wikipedia.org/wiki/James_Ward-Prowse"
+    },
+    {
+      "id": "rec-0021",
+      "question": "How many yellow cards did Gareth Barry collect in the Premier League, a record?",
+      "options": [
+        "135",
+        "122",
+        "99",
+        "110"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "He played 653 Premier League games.",
+      "source": "https://en.wikipedia.org/wiki/Gareth_Barry"
+    },
+    {
+      "id": "rec-0022",
+      "question": "Which Togo striker played for Arsenal, Man City, Spurs and Crystal Palace?",
+      "options": [
+        "Emmanuel Adebayor",
+        "Floyd Ayité",
+        "Kader Coubadja",
+        "Moustapha Salifou"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "He played for all four in the Premier League.",
+      "source": "https://en.wikipedia.org/wiki/Emmanuel_Adebayor"
+    },
+    {
+      "id": "rec-0023",
+      "question": "Who has scored the most Premier League goals by a Welsh player?",
+      "options": [
+        "Ryan Giggs",
+        "Gareth Bale",
+        "Craig Bellamy",
+        "Mark Hughes"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored 109.",
+      "source": "https://en.wikipedia.org/wiki/List_of_footballers_with_100_or_more_Premier_League_goals"
+    },
+    {
+      "id": "rec-0024",
+      "question": "How many Premier League penalties did Alan Shearer score, a record?",
+      "options": [
+        "43",
+        "61",
+        "49",
+        "56"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "45 of them came for Newcastle.",
+      "source": "https://en.wikipedia.org/wiki/Alan_Shearer"
+    },
+    {
+      "id": "tit-0034",
+      "question": "Who managed Leicester for most of 2016-17, the season after they won the title, before being sacked in February?",
+      "options": [
+        "Brendan Rodgers",
+        "Craig Shakespeare",
+        "Nigel Pearson",
+        "Claudio Ranieri"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "Title races",
+      "club": null,
+      "verified": true,
+      "explanation": "Craig Shakespeare took over as caretaker.",
+      "source": "https://en.wikipedia.org/wiki/Claudio_Ranieri"
+    },
+    {
+      "id": "goa-0031",
+      "question": "Who was the first player to score five goals in a Premier League game?",
+      "options": [
+        "Alan Shearer",
+        "Jermain Defoe",
+        "Andy Cole",
+        "Dimitar Berbatov"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "Goals & records",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored five in a 9-0 win over Ipswich Town.",
+      "source": "https://en.wikipedia.org/wiki/Andy_Cole"
+    },
+    {
+      "id": "goa-0032",
+      "question": "How many goals did Sergio Agüero score against Newcastle in October 2015?",
+      "options": [
+        "5",
+        "4",
+        "6",
+        "3"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "Goals & records",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored all five in 23 minutes, the fastest five-goal haul in Premier League history.",
+      "source": "https://en.wikipedia.org/wiki/Sergio_Ag%C3%BCero"
+    },
+    {
+      "id": "pla-0029",
+      "question": "Who won back-to-back Premier League titles with two different clubs in 2016 and 2017?",
+      "options": [
+        "Christian Fuchs",
+        "N'Golo Kanté",
+        "Danny Drinkwater",
+        "Riyad Mahrez"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "Legends",
+      "club": null,
+      "verified": true,
+      "explanation": "He won with Leicester, then Chelsea.",
+      "source": "https://en.wikipedia.org/wiki/N%27Golo_Kant%C3%A9"
+    },
+    {
+      "id": "pla-0030",
+      "question": "Which Everton forward became the Premier League's youngest scorer, aged 16, in 2005?",
+      "options": [
+        "James Vaughan",
+        "Wayne Rooney",
+        "Jack Rodwell",
+        "Ross Barkley"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "Legends",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored against Crystal Palace.",
+      "source": "https://en.wikipedia.org/wiki/James_Vaughan"
+    },
+    {
+      "id": "man-0029",
+      "question": "How many Premier League Manager of the Month awards did Sir Alex Ferguson win?",
+      "options": [
+        "23",
+        "27",
+        "19",
+        "31"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "Managers",
+      "club": null,
+      "verified": true,
+      "explanation": "No other manager has won it more often.",
+      "source": "https://en.wikipedia.org/wiki/Premier_League_Manager_of_the_Month"
+    },
+    {
+      "id": "man-0030",
+      "question": "Who managed Blackburn Rovers to the 1995 Premier League title?",
+      "options": [
+        "Graeme Souness",
+        "Kenny Dalglish",
+        "Ray Harford",
+        "Kevin Keegan"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "Managers",
+      "club": null,
+      "verified": true,
+      "explanation": "He had led them up from the Second Division.",
+      "source": "https://en.wikipedia.org/wiki/Kenny_Dalglish"
+    },
+    {
+      "id": "mom-0020",
+      "question": "Which referee booked Croatia's Josip Šimunić three times before sending him off at the 2006 World Cup?",
+      "options": [
+        "Howard Webb",
+        "Graham Poll",
+        "Mike Riley",
+        "Mark Clattenburg"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "Big moments",
+      "club": null,
+      "verified": true,
+      "explanation": "Poll showed him a second yellow card but only sent him off after the third.",
+      "source": "https://en.wikipedia.org/wiki/Graham_Poll"
+    },
+    {
+      "id": "rec-0025",
+      "question": "Who is Norway's top Premier League scorer?",
+      "options": [
+        "Erling Haaland",
+        "John Carew",
+        "Tore André Flo",
+        "Ole Gunnar Solskjær"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "He is the only Norwegian with 100 Premier League goals.",
+      "source": "https://en.wikipedia.org/wiki/List_of_footballers_with_100_or_more_Premier_League_goals"
     },
     {
       "id": "brighton-0001",
