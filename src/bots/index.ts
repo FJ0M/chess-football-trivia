@@ -28,6 +28,21 @@ export async function bestMove(fen: string, chess960 = false, depth = 14, search
   return uci ? normaliseUci(pos, uci) : null;
 }
 
+/**
+ * A quick, shallow engine score for the commentator, from White's side in centipawns.
+ * Mates come back as +/-(MATE_CP - plies). Null if the engine can't say.
+ */
+export async function evaluate(fen: string, _chess960 = false): Promise<number | null> {
+  try {
+    const lines = await getSharedEngine().analyse(fen, { depth: 10, multiPv: 1, maxMs: 700 });
+    const cp = lines[0]?.scoreCp;
+    if (cp === undefined) return null;
+    return fen.split(" ")[1] === "b" ? -cp : cp;
+  } catch {
+    return null;
+  }
+}
+
 /** chessops writes castling as king-takes-rook (e1h1); standard-chess Stockfish wants e1g1. */
 function engineUci(fen: string, uci: string, chess960: boolean): string {
   if (chess960 || uci.length < 4) return uci;

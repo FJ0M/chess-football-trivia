@@ -20,6 +20,13 @@ describe("settings", () => {
     expect(sanitize({ style: "nope", sfxVolume: 7, musicTrack: "x", musicOn: "yes" })).toEqual({ ...DEFAULT_SETTINGS, sfxVolume: 1 });
     expect(loadSettings({ getItem: () => "{not json" })).toEqual(DEFAULT_SETTINGS);
   });
+
+  it("keeps the motion and commentator switches, defaulting to motion on and the commentator on", () => {
+    expect(DEFAULT_SETTINGS.reduceMotion).toBe(false);
+    expect(DEFAULT_SETTINGS.commentary).toBe(true);
+    expect(sanitize({ reduceMotion: true, commentary: false })).toMatchObject({ reduceMotion: true, commentary: false });
+    expect(sanitize({ reduceMotion: "yes", commentary: 0 })).toMatchObject({ reduceMotion: false, commentary: true });
+  });
 });
 
 describe("styles and music", () => {

@@ -42,6 +42,22 @@ export type Phase =
   | { kind: "shootout"; kicks: Array<{ color: Color; scored: boolean }>; q: Question; startedAt: number; choice: number | null; taker: Color }
   | { kind: "over" };
 
+/** Things that just happened, for the animations and the commentator. Each has a unique id. */
+export type GameEvent = { id: number; at: number } & (
+  | { kind: "move"; color: Color; from: string; to: string; captured: string | null; check: boolean; castle: boolean }
+  | { kind: "power"; color: Color; power: PowerUpId; square?: string }
+  | { kind: "answer"; color: Color; correct: boolean; puskas: boolean; hatTrick: boolean }
+  | { kind: "whoami"; color: Color; correct: boolean }
+  | { kind: "hot-spot"; color: Color; square: string }
+  | { kind: "ebk"; color: Color }
+  | { kind: "checkmate"; winner: Color }
+  | { kind: "shootout" }
+);
+type NewEvent = GameEvent extends infer E ? E extends GameEvent ? Omit<E, "id" | "at"> : never : never;
+
+/** Right answers in a row for the Elite Ball Knowledge badge. */
+export const EBK_RUN = 10;
+
 export interface Overlay {
   attacked?: string[];
   tip?: [string, string];
@@ -109,6 +125,23 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
   const [data, setData] = useState<Data | null>(null);
   const [mod, setMod] = useState<BotModule | null>(null);
   const [now, setNow] = useState(Date.now());
+  const [events, setEvents] = useState<GameEvent[]>([]);
+  const eventId = useRef(0);
+  /** Keeps the last few seconds of events. */
+  const emit = useCallback((e: NewEvent) => {
+    const at = Date.now();
+    setEvents((cur) => [...cur.filter((x) => at - x.at < 6000), { ...e, id: ++eventId.current, at } as GameEvent]);
+  }, []);
+  /** Right answers in a row for each side (unlike rightStreak, this doesn't reset at a hat-trick), and who has earned Elite Ball Knowledge. */
+  const runs = useRef<Record<Color, number>>({ white: 0, black: 0 });
+  const [ebk, setEbk] = useState<Record<Color, boolean>>({ white: false, black: false });
+  const countAnswer = useCallback((c: Color, correct: boolean) => {
+    runs.current[c] = correct ? runs.current[c] + 1 : 0;
+    if (runs.current[c] === EBK_RUN) {
+      setEbk((cur) => ({ ...cur, [c]: true }));
+      setTimeout(() => { if (alive.current) { emit({ kind: "ebk", color: c }); play("cheer"); } }, 700);
+    }
+  }, [emit, play]);
 
   const gameRef = useRef(game);
   const phaseRef = useRef(phase);
@@ -175,6 +208,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     if (notes.length) setNote(notes.join(". "));
     if (next.outcome) {
       play("fulltime");
+      if (next.outcome.kind === "checkmate") emit({ kind: "checkmate", winner: next.outcome.winner });
       const w = "winner" in next.outcome ? next.outcome.winner : null;
       if (w) { react(w, "win"); react(opposite(w), "loss"); }
       go({ kind: "over" });
@@ -182,6 +216,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     }
     if (next.pendingDraw && data) {
       setNote(`It's a draw (${next.pendingDraw}), so it goes to a Penalty Shootout!`);
+      emit({ kind: "shootout" });
       play("kickoff");
       go({ kind: "shootout", kicks: [], q: data.white.bank.any("medium"), startedAt: Date.now(), choice: null, taker: "white" });
       return;
@@ -189,7 +224,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     if (!notes.length) setNote(`${next.players[turnOf(next)].name} to move`);
     if (positionCheck(next)) play("check");
     go({ kind: "move" });
-  }, [data, go, play, react, setGame]);
+  }, [data, emit, go, play, react, setGame]);
 
   // ------------------------------------------------------------ moves
   const afterMove = useCallback((res: MoveResult, mover: Color) => {
@@ -198,6 +233,8 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     setGame(r.state);
     setOverlay({});
     play(r.captured ? "capture" : "move");
+    const lm = r.state.lastMove;
+    if (lm) emit({ kind: "move", color: mover, from: lm[0], to: lm[1], captured: r.captured, check: r.check, castle: r.san.startsWith("O-O") });
     if (r.captured) react(mover, "capture", "lostPiece");
     const name = r.state.players[mover].name;
     const t = r.trigger;
@@ -211,12 +248,12 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
       return;
     }
     const bonus = t.kind === "hot-spot";
-    if (bonus) { play("cheer"); react(mover, "hotSpot"); }
+    if (bonus) { play("cheer"); react(mover, "hotSpot"); emit({ kind: "hot-spot", color: mover, square: r.landed }); }
     else play("kickoff");
     const label = bonus ? "Club Bonus Round: your club's questions" : t.kind === "capture" ? "Capture: pick a question" : "Kick-off: pick a question";
     setNote(`${name}: ${label}`);
     go({ kind: "cards", color: mover, cards: data[mover].bank.deal(r.state.players[mover].club, bonus), bonus, landed: r.landed, label });
-  }, [data, endTurn, go, play, react, setGame]);
+  }, [data, emit, endTurn, go, play, react, setGame]);
 
   const move = useCallback((uci: string): boolean => {
     const g = gameRef.current;
@@ -240,6 +277,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
       play("powerup");
       setNote(res.note ?? "");
       react(me, "powerUp");
+      emit({ kind: "power", color: me, power: id, square: targets[0] });
       return res.state;
     };
     if (!POWER_UP_BY_ID[id].engine) {
@@ -274,7 +312,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
       }
     }, () => { if (alive.current) { go({ kind: "move" }); setNote("The engine didn't answer, so no Form spent"); } });
     return null;
-  }, [afterMove, go, mod, play, react, setGame]);
+  }, [afterMove, emit, go, mod, play, react, setGame]);
 
   /** Extra Time's second move is optional. */
   const skipExtra = useCallback(() => {
@@ -333,10 +371,13 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     if (p.kind !== "question") return;
     const ms = Date.now() - p.startedAt;
     const correct = choice === p.q.answer && ms <= p.limitMs + 250;
+    const hatTrick = correct && gameRef.current.players[p.color].rightStreak === 2;
     const out = applyAnswer(gameRef.current, {
       color: p.color, difficulty: p.card.difficulty, puskas: p.puskas, bonus: p.bonus, correct, ms, landed: p.landed,
     });
     setGame(out.state);
+    emit({ kind: "answer", color: p.color, correct, puskas: p.puskas, hatTrick });
+    countAnswer(p.color, correct);
     if (correct) { play("correct"); setTimeout(() => play("form"), 300); react(p.color, "ownRight"); }
     else { play("wrong"); setTimeout(() => play("groan"), 350); react(p.color, "ownWrong", "oppWrong"); }
     const who = out.state.players[p.color].name;
@@ -346,7 +387,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
       shownAt: Date.now(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [go, play, react, setGame]);
+  }, [countAnswer, emit, go, play, react, setGame]);
 
   const useHint = useCallback((id: TriviaHintId) => {
     const p = phaseRef.current;
@@ -382,6 +423,8 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     const choice = input === null || (typed !== null && !typed) ? null : 0;
     const res = resolvePromotion(gameRef.current, p.square, p.clues, correct);
     setGame(res.state);
+    emit({ kind: "whoami", color: p.color, correct });
+    countAnswer(p.color, correct);
     if (correct) { play("correct"); setTimeout(() => play("cheer"), 350); react(p.color, "ownRight"); }
     else { play("wrong"); react(p.color, "ownWrong", "oppWrong"); }
     const who = res.state.players[p.color].name;
@@ -397,7 +440,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
       next: res.state, auto: isBot(p.color), shownAt: Date.now(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, go, play, react, setGame]);
+  }, [countAnswer, data, emit, go, play, react, setGame]);
 
   const continueOn = useCallback(() => {
     const p = phaseRef.current;
@@ -530,6 +573,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
             play("powerup");
             setNote(res.note ?? "");
             talk(color, "powerUp");
+            emit({ kind: "power", color, power: id, square: targets[0] });
             g = res.state;
             if (id === "managers-tip") managersTip = true;
             await wait(900);
@@ -604,7 +648,9 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
   const botMeta: BotMeta[] = useMemo(() => (mod ? botList(mod) : []), [mod]);
 
   return {
-    game, phase, note, bubble, overlay, now, ready: !!data, botMeta, engineReady: !!mod,
+    game, phase, note, bubble, overlay, now, ready: !!data, botMeta, engineReady: !!mod, events, ebk, runs: runs.current,
+    /** White's engine score in centipawns for a position, or null (for the commentator). */
+    evaluate: useCallback((fen: string) => (mod?.evaluate ? mod.evaluate(fen, game.options.chess960) : Promise.resolve(null)), [mod, game.options.chess960]),
     move, choosePower, tapTarget, skipExtra, pickCard, answer, useHint, nextClue, guess, continueOn, kick, resign, agreeDraw,
   };
 }

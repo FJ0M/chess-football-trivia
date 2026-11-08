@@ -46,6 +46,8 @@ export interface BotModule {
   createBot(id: BotId, level?: BotLevel): BotLike;
   BOTS: BotMeta[] | Record<string, BotMeta>;
   bestMove(fen: string, chess960?: boolean, depth?: number, searchMoves?: string[]): Promise<string | null>;
+  /** A quick engine score from White's side, in centipawns (for the commentator). */
+  evaluate?(fen: string, chess960?: boolean): Promise<number | null>;
 }
 
 // ---------------------------------------------------------------- built-in stand-in
