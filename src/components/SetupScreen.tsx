@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ClubPicker } from "./ClubPicker";
+import { ScreenHead } from "./Menus";
 import { HandicapSetup, NO_HANDICAP, sanitizeHandicap, type HandicapChoice } from "./HandicapSetup";
 import { backRank, randomPosition, STANDARD_POSITION } from "../game/chess960";
 import { botList, loadBots, type BotLevel, type BotMeta } from "../game/bots";
@@ -76,7 +77,7 @@ export function SetupScreen({ mode, onStart, onBack }: { mode: "bot" | "local"; 
 
   return (
     <section className="setup" aria-labelledby="setup-title">
-      <div className="setup-head"><button type="button" className="ghost" onClick={onBack}>Back</button><h1 id="setup-title">{s.mode === "bot" ? "Play a bot" : "Pass and Play"}</h1></div>
+      <ScreenHead id="setup-title" title={s.mode === "bot" ? "Play a bot" : "Pass and Play"} onBack={onBack} />
 
       <div className="seg" role="radiogroup" aria-label="Mode">
         <button type="button" role="radio" aria-checked={s.mode === "bot"} className={s.mode === "bot" ? "on" : ""} onClick={() => set("mode", "bot")}>vs Bot</button>

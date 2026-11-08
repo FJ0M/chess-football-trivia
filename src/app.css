@@ -1,8 +1,8 @@
 /* App chrome around the game screen, plus the Settings sheet.
-   The sheet stays neutral so it reads the same whichever style is picked. */
+   Sheets use the whiteboard look of the menus, the same whichever style is picked. */
 :root {
   --chrome-bg: #e9edee; --chrome-fg: #18304a;
-  --sheet-bg: #ffffff; --sheet-fg: #1b1d1a; --sheet-muted: #5d625a; --sheet-line: #dde1e3; --sheet-accent: #1f5fbf;
+  --sheet-bg: #f7f9f9; --sheet-fg: #18304a; --sheet-muted: #5d6a75; --sheet-line: #c9d1d4; --sheet-accent: #1f5fbf;
   font-family: "Kalam", system-ui, sans-serif;
 }
 html[data-style="tactics"]   { --chrome-bg: #dfe5e8; --chrome-fg: #18304a; }
@@ -37,11 +37,11 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 
 /* Settings sheet */
 .sheet-backdrop { position: fixed; inset: 0; grid-template-columns: minmax(0, 1fr); background: rgba(10, 14, 20, .55); display: grid; align-items: end; justify-items: center; z-index: 20; }
-.sheet { grid-template-columns: minmax(0, 1fr); width: 100%; max-width: 520px; max-height: 88vh; overflow-y: auto; box-sizing: border-box; background: var(--sheet-bg); color: var(--sheet-fg); border-radius: 18px 18px 0 0; font-family: system-ui, sans-serif; font-size: 15px;
+.sheet { grid-template-columns: minmax(0, 1fr); width: 100%; max-width: 520px; max-height: 88vh; overflow-y: auto; box-sizing: border-box; background: var(--sheet-bg); color: var(--sheet-fg); border-radius: 18px 18px 0 0; font-family: "Kalam", system-ui, sans-serif; font-size: 15px;
   padding: 16px max(18px, env(safe-area-inset-right, 0px)) max(24px, env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px)); display: grid; gap: 12px; }
 @media (min-width: 640px) { .sheet-backdrop { align-items: center; } .sheet { border-radius: 18px; } }
 .sheet-head { display: flex; justify-content: space-between; align-items: center; }
-.sheet h2 { margin: 0; font-size: 22px; }
+.sheet h2 { margin: 0; font-size: 26px; line-height: 1.1; }
 .sheet h3 { margin: 10px 0 0; font-size: 12px; text-transform: uppercase; letter-spacing: .1em; color: var(--sheet-muted); }
 .ghost { background: transparent; border: 1px solid var(--sheet-line); color: var(--sheet-accent); font: inherit; font-weight: 600; border-radius: 999px; padding: 6px 14px; cursor: pointer; }
 .reset { justify-self: start; margin-top: 8px; }
@@ -146,19 +146,39 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 .screen .game-actions button { font: inherit; font-size: 13px; color: inherit; cursor: pointer; padding: 5px 12px; border-radius: 999px; border: 1px solid currentColor; background: transparent; opacity: .85; }
 .appbar .title { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
 
-/* Menus and setup use the Tactics Board look: whiteboard card, marker headings. */
-.menu, .setup { display: grid; gap: 10px; background: #f6f8f8; color: #18304a; border-radius: 14px; padding: 16px; box-shadow: 0 2px 0 #c9d1d4, 0 8px 24px rgba(24,48,74,.12);
-  background-image: linear-gradient(rgba(24,48,74,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(24,48,74,.05) 1px, transparent 1px); background-size: 22px 22px; font-family: "Kalam", system-ui, sans-serif; }
-.menu-title .kicker { font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: #d1342f; }
-.menu-title h1, .setup h1 { font-family: "Permanent Marker", "Kalam", cursive; font-weight: 400; font-size: 30px; margin: 2px 0; color: #1f5fbf; }
-.setup h1 { font-size: 24px; margin: 0; }
-.menu-title p { margin: 0; font-size: 15px; }
-.menu-logo { float: right; width: 72px; height: 72px; margin: 0 0 6px 10px; border-radius: 16px; box-shadow: 0 2px 6px rgba(24,48,74,.25); }
-.menu-btn { font: inherit; text-align: left; cursor: pointer; display: grid; gap: 1px; padding: 12px 14px; border-radius: 10px; border: 2px solid #18304a; background: #fff; color: #18304a; box-shadow: 3px 3px 0 #18304a; }
-.menu-btn b { font-size: 18px; } .menu-btn small { font-size: 13px; opacity: .75; }
-.menu-btn.primary { background: #fff7a8; }
-.menu-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #18304a; }
-.setup h3 { margin: 8px 0 0; font-size: 12px; text-transform: uppercase; letter-spacing: .1em; color: #5d6a75; font-family: system-ui, sans-serif; }
+/* Menus, setup and sheets use the Tactics Board look from main menu option 2 ("Marker Tactics"):
+   a clean whiteboard with a few faded marker drawings, marker headings with a red swoosh under them,
+   and buttons with a round magnet on the left. Same in every Look. */
+.menu, .setup { display: grid; gap: 10px; color: #18304a; border-radius: 14px; padding: 16px; box-shadow: 0 2px 0 #c9d1d4, 0 8px 24px rgba(24,48,74,.12); font-family: "Kalam", system-ui, sans-serif;
+  background: linear-gradient(115deg, transparent 40%, rgba(80,120,160,.07) 46%, transparent 56%), #f7f9f9; }
+.setup { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120' fill='none' stroke-linecap='round' stroke-width='3'%3E%3Cg opacity='.2'%3E%3Cpath d='M20 18l12 12M32 18L20 30' stroke='%23d1342f'/%3E%3Ccircle cx='96' cy='22' r='9' stroke='%231f5fbf'/%3E%3Cpath d='M58 100C70 70 96 74 100 46' stroke='%231f5fbf' stroke-dasharray='7 7'/%3E%3Cpath d='M92 54l8-10 4 13' stroke='%231f5fbf'/%3E%3C/g%3E%3C/svg%3E") right 4px top 4px / 110px 110px no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120' fill='none' stroke-linecap='round' stroke-width='3'%3E%3Cg opacity='.2'%3E%3Cpath d='M20 104C30 70 14 52 36 28' stroke='%23d1342f'/%3E%3Cpath d='M28 36l8-10 6 12' stroke='%23d1342f'/%3E%3Ccircle cx='80' cy='96' r='9' stroke='%231f5fbf'/%3E%3Cpath d='M92 70l12 12M104 70L92 82' stroke='%23d1342f'/%3E%3C/g%3E%3C/svg%3E") left 4px bottom 4px / 110px 110px no-repeat,
+  linear-gradient(115deg, transparent 40%, rgba(80,120,160,.07) 46%, transparent 56%), #f7f9f9; }
+.main-menu { position: relative; overflow: hidden; isolation: isolate; align-content: center; gap: 22px; padding: 30px 20px 24px; min-height: min(640px, calc(100dvh - 70px)); }
+.main-menu .doodles { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .2; z-index: -1; pointer-events: none; }
+.menu-title { display: grid; justify-items: center; gap: 8px; text-align: center; }
+.menu-title h1, .setup h1, .sheet h2 { font-family: "Permanent Marker", "Kalam", cursive; font-weight: 400; color: #1f5fbf; text-wrap: balance;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 170 14' fill='none'%3E%3Cpath d='M4 10C50 2 120 2 166 8' stroke='%23d1342f' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E") left bottom / 100% 12px no-repeat; padding-bottom: 12px; }
+.menu-title h1 { font-size: 34px; line-height: 1.05; margin: 4px 0 0; background-size: 170px 14px; background-position: center bottom; padding-bottom: 14px; }
+.setup h1 { font-size: 26px; line-height: 1.1; margin: 0; }
+.menu-title p { margin: 0; font-size: 16px; color: #c4302b; }
+.menu-logo { width: 104px; height: 104px; border-radius: 24px; box-shadow: 0 4px 12px rgba(24,48,74,.25); }
+.menu-btns { display: grid; gap: 10px; }
+.menu-btn { font: inherit; text-align: left; cursor: pointer; display: grid; grid-template-columns: 34px minmax(0, 1fr); align-items: center; gap: 12px; padding: 10px 14px 10px 10px;
+  border-radius: 16px 20px 14px 18px; border: 2px solid #18304a; background: #fff; color: #18304a; transition: transform .08s; }
+.menu-btn > span:last-child { display: grid; gap: 1px; min-width: 0; }
+.menu-btn b { font-family: "Permanent Marker", "Kalam", cursive; font-weight: 400; font-size: 21px; line-height: 1.15; }
+.menu-btn small { font-size: 13.5px; opacity: .78; line-height: 1.2; }
+.menu-btn:active { transform: translateY(2px); }
+.menu-btn:focus-visible, .setup .ghost:focus-visible, .sheet .ghost:focus-visible { outline: 3px solid #1f5fbf; outline-offset: 2px; }
+.mag { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: #1f5fbf; color: #fff; box-shadow: 0 2px 0 rgba(0,0,0,.35), inset 0 -3px 0 rgba(0,0,0,.2); }
+.menu-btn.primary .mag { background: #d1342f; }
+.mag svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.setup .ghost, .menu .ghost, .sheet .ghost { border: 2px solid #18304a; color: #18304a; background: #fff; font-family: "Kalam", system-ui, sans-serif; font-weight: 700; border-radius: 14px 18px 12px 16px; padding: 4px 14px; }
+.ghost.back::before { content: "\2039\00a0"; }
+.seg.tabs { margin-top: 2px; }
+.seg.tabs button { font-size: 14px; white-space: nowrap; padding-inline: 4px; }
+@media (prefers-reduced-motion: reduce) { .menu-btn { transition: none; } }
+.setup h3, .sheet h3 { margin: 8px 0 0; font-size: 16px; font-weight: 700; color: #c4302b; font-family: "Kalam", system-ui, sans-serif; text-transform: none; letter-spacing: 0; }
 .setup-head { display: flex; align-items: center; gap: 12px; }
 .seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; border: 2px solid #18304a; border-radius: 10px; overflow: hidden; }
 .seg button { font: inherit; font-size: 15px; padding: 8px; border: 0; background: #fff; color: #18304a; cursor: pointer; }

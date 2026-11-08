@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { GameScreen } from "./components/GameScreen";
 import { SetupScreen } from "./components/SetupScreen";
-import { HistoryScreen, MainMenu, PauseMenu, RulesScreen, ScoresScreen } from "./components/Menus";
+import { AchievementsHead, GAME_NAME, HistoryScreen, MainMenu, PauseMenu, PlayMenu, RulesScreen, ScoresScreen, type AchievementsTab } from "./components/Menus";
 import { loadScores, recordGame } from "./game/scores";
 import { awardBadges, type NewBadge } from "./game/badges";
 import { BadgeToast, CabinetScreen } from "./components/Cabinet";
@@ -20,7 +20,8 @@ import { playSfx, type SfxName } from "./audio/sfx";
 export function App() {
   const [settings, setSettings] = useState<Settings>(() => loadSettings());
   const [open, setOpen] = useState(false);
-  const [screen, setScreen] = useState<"menu" | "setup" | "game" | "scores" | "history" | "rules" | "cabinet">("menu");
+  const [screen, setScreen] = useState<"menu" | "play" | "setup" | "game" | "achievements" | "rules">("menu");
+  const [tab, setTab] = useState<AchievementsTab>("cabinet");
   const [mode, setMode] = useState<"bot" | "local">("bot");
   const [setup, setSetup] = useState<SetupChoice | null>(null);
   const [gameKey, setGameKey] = useState(0);
@@ -60,19 +61,24 @@ export function App() {
 
   return (
     <div className="app">
-      <header className="appbar">
-        <button type="button" className="title" onClick={() => (screen === "game" ? setPaused(true) : setScreen("menu"))}>They Think It's Checkmate</button>
+      {screen !== "menu" && <header className="appbar">
+        <button type="button" className="title" onClick={() => (screen === "game" ? setPaused(true) : setScreen("menu"))}>{GAME_NAME}</button>
         <button type="button" className="gear" aria-label="Settings" onClick={() => setOpen(true)}>
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" /></svg>
         </button>
-      </header>
+      </header>}
       <p className="tap-note" style={{ visibility: audioReady ? "hidden" : "visible" }}>Tap anywhere to turn on sound</p>
-      {screen === "menu" && <MainMenu onPlay={(m) => { setMode(m); setScreen("setup"); }} onSettings={() => setOpen(true)} onScores={() => setScreen("scores")} onHistory={() => setScreen("history")} onRules={() => setScreen("rules")} onCabinet={() => setScreen("cabinet")} />}
-      {screen === "setup" && <SetupScreen mode={mode} onBack={() => setScreen("menu")} onStart={(s) => { setSetup(s); setGameKey((k) => k + 1); setPaused(false); setScreen("game"); }} />}
-      {screen === "scores" && <ScoresScreen onBack={() => setScreen("menu")} />}
-      {screen === "history" && <HistoryScreen onBack={() => setScreen("menu")} />}
-      {screen === "cabinet" && <CabinetScreen onBack={() => setScreen("menu")} />}
-      {screen === "rules" && <RulesScreen onBack={() => setScreen("menu")} />}
+      {screen === "menu" && <MainMenu onPlay={() => setScreen("play")} onAchievements={() => setScreen("achievements")} onSettings={() => setOpen(true)} />}
+      {screen === "play" && <PlayMenu onPick={(m) => { setMode(m); setScreen("setup"); }} onRules={() => setScreen("rules")} onBack={() => setScreen("menu")} />}
+      {screen === "setup" && <SetupScreen mode={mode} onBack={() => setScreen("play")} onStart={(s) => { setSetup(s); setGameKey((k) => k + 1); setPaused(false); setScreen("game"); }} />}
+      {screen === "achievements" && (() => {
+        const back = () => setScreen("menu");
+        const head = <AchievementsHead tab={tab} onTab={setTab} onBack={back} />;
+        if (tab === "scores") return <ScoresScreen onBack={back} head={head} />;
+        if (tab === "history") return <HistoryScreen onBack={back} head={head} />;
+        return <CabinetScreen onBack={back} head={head} />;
+      })()}
+      {screen === "rules" && <RulesScreen onBack={() => setScreen("play")} />}
       {screen === "game" && setup && (
         <GameScreen key={gameKey} style={style} play={play} setup={setup} view={settings.passAndPlayView} motion={!settings.reduceMotion} commentary={settings.commentary} paused={paused || open}
           onPause={() => setPaused(true)} onExit={() => setScreen("menu")}
@@ -95,8 +101,8 @@ export function App() {
       {screen === "game" && paused && !open && (
         <PauseMenu onResume={() => setPaused(false)} onRestart={() => { setGameKey((k) => k + 1); setPaused(false); }} onSettings={() => setOpen(true)} onQuit={() => { setPaused(false); setScreen("menu"); }} />
       )}
-      {newBadges.length > 0 && screen !== "cabinet" && (
-        <BadgeToast badges={newBadges} onOpen={() => { setNewBadges([]); setPaused(false); setScreen("cabinet"); }} onClose={() => setNewBadges([])} />
+      {newBadges.length > 0 && !(screen === "achievements" && tab === "cabinet") && (
+        <BadgeToast badges={newBadges} onOpen={() => { setNewBadges([]); setPaused(false); setTab("cabinet"); setScreen("achievements"); }} onClose={() => setNewBadges([])} />
       )}
       {open && <SettingsPanel settings={settings} onChange={setSettings} onClose={() => setOpen(false)} play={play} />}
     </div>
