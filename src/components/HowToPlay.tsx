@@ -1,5 +1,6 @@
 // How to play: short, picture-first rules on the whiteboard.
 
+import { useState } from "react";
 import { FORM_CAP, POWER_UPS } from "../game/powerups";
 import { PowerIcon } from "./PowerIcons";
 import { ScreenHead } from "./Menus";
@@ -19,6 +20,8 @@ const LEVELS: { name: string; form: number; risk: string; card?: "yellow" | "red
 const PROMO: [string, string, string][] = [["1–2", "♛", "Queen"], ["3", "♜", "Rook"], ["4", "♝", "Bishop"], ["5", "♞", "Knight"]];
 
 export function RulesScreen({ onBack }: { onBack: () => void }) {
+  const [pick, setPick] = useState<string | null>(null);
+  const picked = POWER_UPS.find((p) => p.id === pick);
   return (
     <section className="setup rules htp" aria-labelledby="rules-title">
       <ScreenHead id="rules-title" title="How to play" onBack={onBack} />
@@ -60,13 +63,25 @@ export function RulesScreen({ onBack }: { onBack: () => void }) {
       <p className="htp-note">Spend Form before you move, one a turn. The green number is the cost. Each starts locked, then has a cooldown after use.</p>
       <div className="htp-powers">
         {POWER_UPS.map((p) => (
-          <div key={p.id} className="htp-power" title={p.effect}>
+          <button key={p.id} type="button" className={`htp-power${pick === p.id ? " on" : ""}`} aria-expanded={pick === p.id} aria-controls="htp-power-detail" onClick={() => setPick(pick === p.id ? null : p.id)}>
             <PowerIcon id={p.id} className={`htp-ic${p.id === "red-card" ? " red" : ""}`} />
             <small>{p.name}</small>
             <em>{p.cost}</em>
-          </div>
+          </button>
         ))}
       </div>
+      {picked ? (
+        <div className="htp-detail" id="htp-power-detail" role="status">
+          <PowerIcon id={picked.id} className={`htp-ic big${picked.id === "red-card" ? " red" : ""}`} />
+          <div>
+            <b>{picked.name}</b>
+            <p>{picked.effect}.</p>
+            {picked.rule && <small>{picked.rule}.</small>}
+            <span className="htp-facts"><span>{picked.cost} Form</span><span>Then rests for {picked.cooldown} of your moves</span>{picked.timedOnly && <span>Timed games only</span>}</span>
+          </div>
+          <button type="button" className="htp-close" aria-label="Close" onClick={() => setPick(null)}>×</button>
+        </div>
+      ) : <p className="htp-note htp-tap" id="htp-power-detail">Tap a power-up to see what it does.</p>}
       <h3>Promotion: Who am I?</h3>
       <p className="htp-note">Five clues about a footballer. Guess sooner, get a better piece.</p>
       <div className="htp-promo">

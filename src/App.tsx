@@ -61,7 +61,7 @@ export function App() {
   const play = useCallback((s: SfxName) => { if (settings.sfxOn) playSfx(s, style.voice); }, [settings.sfxOn, style.voice]);
 
   return (
-    <div className="app">
+    <div className={`app${screen === "menu" ? " app-menu" : ""}`}>
       {screen !== "menu" && <header className="appbar">
         <button type="button" className="title" onClick={() => (screen === "game" ? setPaused(true) : setScreen("menu"))}>{GAME_NAME}</button>
         <button type="button" className="gear" aria-label="Settings" onClick={() => setOpen(true)}>
