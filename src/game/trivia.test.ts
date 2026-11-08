@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import questions from "../../data/questions.json";
 import whoami from "../../data/whoami.json";
-import { QuestionBank, browserSeenStore, seenKey } from "./trivia";
+import { QuestionBank, browserSeenStore, seenKey, shuffleOptions } from "./trivia";
 import { WhoAmIBank, type WhoAmI } from "./whoami";
 import { shootoutWinner } from "./useGame";
 import { CLUBS } from "./clubs";
@@ -31,6 +31,30 @@ describe("question bank", () => {
       for (let i = 0; i < total; i++) asked.add(bank.draw(bank.deal(null).find((c) => c.difficulty === d)!).id);
       expect(asked.size).toBe(total);
     }
+  });
+  it("shuffles the options each time, keeping the right answer right", () => {
+    const q = qs.find((x) => !x.club && x.verified)!;
+    const slots = new Set<number>();
+    for (let i = 0; i < 200; i++) {
+      const s = shuffleOptions(q);
+      expect([...s.options].sort()).toEqual([...q.options].sort());
+      expect(s.options[s.answer]).toBe(q.options[q.answer]);
+      slots.add(s.answer);
+    }
+    expect(slots.size).toBe(4);
+    // The bank's own copy is never reordered.
+    expect(qs.find((x) => x.id === q.id)).toBe(q);
+  });
+  it("draws questions with the right answer spread across A to D", () => {
+    const bank = new QuestionBank(qs);
+    const count = [0, 0, 0, 0];
+    for (let i = 0; i < 2000; i++) {
+      const q = bank.draw(bank.deal(null)[i % 3]);
+      const orig = qs.find((x) => x.id === q.id)!;
+      expect(q.options[q.answer]).toBe(orig.options[orig.answer]);
+      count[q.answer]++;
+    }
+    for (const n of count) expect(n).toBeGreaterThan(400);
   });
   it("every club has enough questions for its own cards", () => {
     const bank = new QuestionBank(qs);

@@ -69,6 +69,20 @@ function pick<T>(list: T[], rng: Rng): T {
   return list[Math.floor(rng() * list.length)];
 }
 
+/**
+ * A copy of the question with its options in a fresh random order (Fisher-Yates)
+ * and `answer` pointing at the right one's new place, so the right answer isn't
+ * always the same letter for the same question. The bank itself is left untouched.
+ */
+export function shuffleOptions(q: Question, rng: Rng = Math.random): Question {
+  const order = q.options.map((_, i) => i);
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [order[i], order[j]] = [order[j], order[i]];
+  }
+  return { ...q, options: order.map((i) => q.options[i]), answer: order.indexOf(q.answer) };
+}
+
 export class QuestionBank {
   private general = new Map<Difficulty, Map<string, Question[]>>();
   private clubs = new Map<string, Map<Difficulty, Question[]>>();
@@ -149,7 +163,7 @@ export class QuestionBank {
     return byTopic.get(card.topic) ?? [...byTopic.values()].flat();
   }
 
-  /** Draws an unseen question for a card. When a pool runs out it starts again. */
+  /** Draws an unseen question for a card, options shuffled. When a pool runs out it starts again. */
   draw(card: Card): Question {
     const pool = this.poolFor(card);
     let fresh = pool.filter((q) => !this.seen.has(q.id));
@@ -159,7 +173,7 @@ export class QuestionBank {
     }
     const q = pick(fresh, this.rng);
     this.seen.add(q.id);
-    return q;
+    return shuffleOptions(q, this.rng);
   }
 
   /** A random general question of this difficulty (shootouts and promotion fallbacks). */
