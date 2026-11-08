@@ -385,3 +385,46 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 .screen.style-fanzine .strip { font-size: 9px; letter-spacing: 0; }
 /* Fanzine's tilted board keeps its tilt but stays inside its column. */
 .screen.style-fanzine .board { transform: rotate(.6deg) scale(.985); }
+
+/* Trophy cabinet: wooden shelves behind glass, the same in every style. */
+.cabinet-screen { max-width: 760px; }
+.cab-count { margin: 0; font-family: system-ui, sans-serif; font-size: 14px; opacity: .8; }
+.cabinet { position: relative; border-radius: 14px; padding: 10px 10px 14px; border: 6px solid #4a2a12; color: #f6e7c8; font-family: system-ui, sans-serif;
+  background: linear-gradient(90deg, rgba(0,0,0,.25), transparent 8%, transparent 92%, rgba(0,0,0,.25)), repeating-linear-gradient(90deg, #6b3d1c 0 22px, #74431f 22px 40px, #66391a 40px 61px), #6b3d1c;
+  box-shadow: inset 0 0 24px rgba(0,0,0,.55), 0 6px 14px rgba(0,0,0,.25); overflow: hidden; }
+.cabinet::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(115deg, rgba(255,255,255,.12) 0 18%, transparent 18% 30%, rgba(255,255,255,.07) 30% 34%, transparent 34%); }
+.shelf-label { margin: 10px 4px 4px; font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #ffd98a; }
+.shelf-label span { opacity: .7; margin-left: 4px; }
+.shelf { display: grid; gap: 4px 6px; padding: 6px 4px 0; border-bottom: 10px solid #3a200c; box-shadow: 0 6px 6px -4px rgba(0,0,0,.6); background: linear-gradient(transparent 80%, rgba(0,0,0,.18)); }
+.shelf.cups { grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); }
+.shelf.cups.originals { grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); }
+.shelf.pins { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); }
+.cup-slot, .pin-slot { font: inherit; color: inherit; background: none; border: 0; padding: 4px 0 2px; display: grid; justify-items: center; align-content: end; gap: 3px; cursor: pointer; min-width: 0; }
+.pin-slot.mystery { cursor: default; }
+.cup { width: 44px; height: 56px; filter: drop-shadow(0 3px 2px rgba(0,0,0,.5)); }
+.cup.empty { color: rgba(246,231,200,.28); filter: none; }
+.pin-art { width: 46px; height: 46px; filter: drop-shadow(0 3px 2px rgba(0,0,0,.5)); }
+.pin-art.small { width: 30px; height: 30px; }
+.mystery-art { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; border: 2px dashed rgba(246,231,200,.35); color: rgba(246,231,200,.45); font-weight: 800; font-size: 20px; margin: 2px 0; }
+.plaque { max-width: 100%; box-sizing: border-box; font-size: 10px; line-height: 1.2; font-weight: 700; padding: 2px 4px; border-radius: 3px; background: linear-gradient(#e3c26a, #b48b2c); color: #2b1a06; text-align: center; overflow-wrap: anywhere; }
+.mystery .plaque, .cup-slot:has(.cup.empty) .plaque { background: rgba(0,0,0,.25); color: rgba(246,231,200,.6); }
+.cup-slot:focus-visible, .pin-slot:focus-visible { outline: 2px solid #ffd98a; border-radius: 6px; }
+.cabinet-screen .muted { font-family: system-ui, sans-serif; font-size: 13px; opacity: .7; margin: 0; }
+.cab-detail { justify-items: center; text-align: center; }
+.cab-detail .cup { width: 72px; height: 90px; color: var(--sheet-muted); }
+.cab-detail .pin-art { width: 84px; height: 84px; }
+.cab-detail p { margin: 0; }
+.cab-detail .muted { color: var(--sheet-muted); font-size: 13px; }
+.cab-detail .menu-btn { justify-self: stretch; text-align: center; }
+/* "New badge!" at full time. */
+.badge-toast { position: fixed; z-index: 30; left: 50%; transform: translateX(-50%); bottom: max(12px, env(safe-area-inset-bottom, 0px)); width: min(520px, calc(100vw - 24px)); box-sizing: border-box;
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 14px; font-family: system-ui, sans-serif;
+  background: #4a2a12; color: #f6e7c8; border: 2px solid #e3c26a; box-shadow: 0 8px 22px rgba(0,0,0,.4); animation: toast-in .4s ease-out both; }
+.bt-pins { display: flex; } .bt-pins .pin-art + .pin-art { margin-left: -10px; }
+.bt-text { display: grid; gap: 1px; font-size: 13px; } .bt-text b { font-size: 16px; color: #ffd98a; }
+.bt-actions { display: flex; gap: 6px; align-items: center; }
+.bt-actions .menu-btn { padding: 6px 12px; box-shadow: 2px 2px 0 #18304a; }
+.bt-actions .menu-btn b { font-size: 15px; }
+.bt-actions .ghost { color: #f6e7c8; border-color: rgba(246,231,200,.4); padding: 6px 10px; }
+@keyframes toast-in { from { opacity: 0; transform: translate(-50%, 20px); } }
+@media (prefers-reduced-motion: reduce) { .badge-toast { animation: none; } }

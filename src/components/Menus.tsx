@@ -13,7 +13,7 @@ const BOT = BOT_NAMES;
 const levelTag = (id: string | undefined, level: string | undefined) =>
   level && !(id && LADDER_BOT_IDS.includes(id)) ? ` · ${LEVEL[level] ?? level}` : "";
 
-export function MainMenu({ onPlay, onSettings, onScores, onHistory, onRules }: { onPlay: (mode: "bot" | "local") => void; onSettings: () => void; onScores: () => void; onHistory: () => void; onRules: () => void }) {
+export function MainMenu({ onPlay, onSettings, onScores, onHistory, onRules, onCabinet }: { onPlay: (mode: "bot" | "local") => void; onSettings: () => void; onScores: () => void; onHistory: () => void; onRules: () => void; onCabinet: () => void }) {
   return (
     <nav className="menu" aria-label="Main menu">
       <div className="menu-title">
@@ -25,6 +25,7 @@ export function MainMenu({ onPlay, onSettings, onScores, onHistory, onRules }: {
       <button type="button" className="menu-btn primary" onClick={() => onPlay("bot")}><b>Play a bot</b><small>Ten bots, from 400 to 2150 Elo</small></button>
       <button type="button" className="menu-btn" onClick={() => onPlay("local")}><b>Pass and Play</b><small>Two players, one device</small></button>
       <button type="button" className="menu-btn" onClick={onScores}><b>High scores</b><small>Your record against each bot</small></button>
+      <button type="button" className="menu-btn" onClick={onCabinet}><b>Trophy cabinet</b><small>Cups for beating bots, and badges to find</small></button>
       <button type="button" className="menu-btn" onClick={onHistory}><b>Game history</b><small>Every game you've finished on this device</small></button>
       <button type="button" className="menu-btn" onClick={onRules}><b>How to play</b><small>Triggers, Form and power-ups</small></button>
       <button type="button" className="menu-btn" onClick={onSettings}><b>Settings</b><small>Style, sound and music</small></button>
