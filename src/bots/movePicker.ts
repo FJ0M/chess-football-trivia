@@ -120,6 +120,22 @@ export interface PickContext {
   rng: Rng;
   /** Manager's Tip: take the top line. */
   forceBest?: boolean;
+  /** Hot Spot squares that count for the bot, and what landing on one is worth to it in centipawns. */
+  hotSpots?: string[];
+  hotSpotCp?: number;
+  /** Golden Boot is running: each capture earns Form. */
+  goldenBoot?: boolean;
+}
+
+/** Golden Boot's +2 Form for a capture, in centipawns (1 Form is roughly a fifth of a pawn). */
+export const GOLDEN_BOOT_CAPTURE_CP = 40;
+
+/** Extra centipawns a candidate gets for the game around the chess: Hot Spots and Golden Boot captures. */
+export function gameBonus(ctx: { hotSpots?: string[]; hotSpotCp?: number; goldenBoot?: boolean }, f: MoveFeatures, uci: string): number {
+  let b = 0;
+  if (ctx.hotSpots?.length && ctx.hotSpotCp && !f.castle && ctx.hotSpots.includes(uci.slice(2, 4))) b += ctx.hotSpotCp;
+  if (ctx.goldenBoot && f.capture) b += GOLDEN_BOOT_CAPTURE_CP;
+  return b;
 }
 
 export interface Pick {
@@ -158,7 +174,8 @@ export function pickMove(ctx: PickContext): Pick {
   const weights = lines.map((l) => {
     if (l.scoreCp > MATE_CP - 100 && l === best) return Infinity;
     const diff = Math.max(-2000, l.scoreCp - best.scoreCp);
-    const bonus = styleBonus(style, moveFeatures(pos, l.uci), best.scoreCp, fullmoves);
+    const f = moveFeatures(pos, l.uci);
+    const bonus = styleBonus(style, f, best.scoreCp, fullmoves) + gameBonus(ctx, f, l.uci);
     const t = Math.max(1, strength.temperatureCp);
     return Math.exp((diff + bonus) / t);
   });

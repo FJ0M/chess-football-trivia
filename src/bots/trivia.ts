@@ -1,7 +1,7 @@
 // How a bot picks a question card and "answers" it.
 
 import type { Rng } from "./movePicker";
-import type { AnswerRequest, AnswerResult, BotProfile, CardChoice, CardRequest, TriviaSkill } from "./types";
+import type { AnswerRequest, AnswerResult, BotProfile, CardChoice, CardRequest, HintRequest, TriviaSkill } from "./types";
 
 
 function weightedIndex(weights: number[], rng: Rng): number {
@@ -62,4 +62,21 @@ export function answerQuestion(profile: BotProfile, skill: TriviaSkill, req: Ans
   const scale = req.puskas ? 0.55 : q.difficulty === "hard" ? 1.1 : q.difficulty === "easy" ? 0.85 : 1;
   const delayMs = Math.round((lo + rng() * (hi - lo)) * scale);
   return { choice, delayMs };
+}
+
+/** Below this chance of a right answer, a bot buys a 50:50 if it can. */
+export const HINT_BELOW = 0.65;
+
+/**
+ * Which trivia hint the bot buys before answering, or null. Bots only use the 50:50:
+ * it turns a likely miss into a coin flip, which is worth 1 Form on a Highlight or Screamer.
+ */
+export function chooseHint(profile: BotProfile, skill: TriviaSkill, req: HintRequest): string | null {
+  if (req.puskas) return null;
+  const fifty = req.available.find((h) => h.id === "fifty-fifty");
+  if (!fifty || req.form < fifty.cost) return null;
+  // Tap-ins are worth 1 Form: paying 1 to save it isn't worth it.
+  if (req.question.difficulty === "easy") return null;
+  if (profile.saveFor && req.form - fifty.cost < profile.saveFor.reserve) return null;
+  return answerChance(profile, skill, { question: req.question }) < HINT_BELOW ? fifty.id : null;
 }

@@ -91,7 +91,19 @@ function choose(id: PowerUpId, pos: Chess, me: Color): PowerUpChoice | null {
   }
 }
 
-export function choosePowerUp(profile: BotProfile, req: PowerUpRequest, rng: Rng, lastMoveLossCp: number): PowerUpChoice | null {
+/** What the bot's own look at the position found (bot.ts fills this in from the engine). */
+export interface PowerUpContext {
+  /** The engine's best move right now is a capture, so Golden Boot pays at least its cost back. */
+  bestIsCapture?: boolean;
+}
+
+export function choosePowerUp(
+  profile: BotProfile,
+  req: PowerUpRequest,
+  rng: Rng,
+  lastMoveLossCp: number,
+  ctx: PowerUpContext = {},
+): PowerUpChoice | null {
   if (req.available.length === 0) return null;
   const pos = positionFromFen(req.fen);
   const me = pos.turn;
@@ -113,8 +125,8 @@ export function choosePowerUp(profile: BotProfile, req: PowerUpRequest, rng: Rng
     if (profile.saveFor && !profile.saveFor.ids.includes(id) && req.form - cost < profile.saveFor.reserve) continue;
     // Park the Bus only when under pressure.
     if (id === "park-the-bus" && (req.evalCp ?? 0) > -150) continue;
-    // Golden Boot only if there is something to take soon; keep it simple: when ahead or level.
-    if (id === "golden-boot" && (req.evalCp ?? 0) < -200) continue;
+    // Golden Boot costs 2 and pays 2 a capture, so only buy it with a good capture on the board now.
+    if (id === "golden-boot" && !ctx.bestIsCapture) continue;
     const pick = choose(id as PowerUpId, pos, me);
     if (pick) return pick;
   }

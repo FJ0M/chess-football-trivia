@@ -2,11 +2,16 @@
 
 import { useState } from "react";
 import { loadScores, resetScores } from "../game/scores";
+import { TRIVIA_WEIGHT, TRIVIA_BASE, loadTriviaRating, resetTriviaRating, triviaTitle } from "../game/triviaElo";
 import { clearHistory, loadHistory, resultKind, resultText, type HistoryEntry } from "../game/history";
 import type { Color } from "../game/types";
+import { BOT_NAMES, LADDER_BOT_IDS } from "../game/bots";
 
 const LEVEL = { low: "Easy", medium: "Medium", hard: "Hard" } as Record<string, string>;
-const BOT = { ollie: "Ollie", ryan: "Ryan", freddie: "Freddie" } as Record<string, string>;
+const BOT = BOT_NAMES;
+/** "· Hard" after a bot's name, or nothing for a ladder bot (one level only). */
+const levelTag = (id: string | undefined, level: string | undefined) =>
+  level && !(id && LADDER_BOT_IDS.includes(id)) ? ` · ${LEVEL[level] ?? level}` : "";
 
 export function MainMenu({ onPlay, onSettings, onScores, onHistory, onRules }: { onPlay: (mode: "bot" | "local") => void; onSettings: () => void; onScores: () => void; onHistory: () => void; onRules: () => void }) {
   return (
@@ -17,7 +22,7 @@ export function MainMenu({ onPlay, onSettings, onScores, onHistory, onRules }: {
         <h1>They Think It's Checkmate</h1>
         <p>Play chess, answer football questions, spend your Form on power-ups.</p>
       </div>
-      <button type="button" className="menu-btn primary" onClick={() => onPlay("bot")}><b>Play a bot</b><small>Freddie, Ryan or Ollie</small></button>
+      <button type="button" className="menu-btn primary" onClick={() => onPlay("bot")}><b>Play a bot</b><small>Ten bots, from 400 to 2150 Elo</small></button>
       <button type="button" className="menu-btn" onClick={() => onPlay("local")}><b>Pass and Play</b><small>Two players, one device</small></button>
       <button type="button" className="menu-btn" onClick={onScores}><b>High scores</b><small>Your record against each bot</small></button>
       <button type="button" className="menu-btn" onClick={onHistory}><b>Game history</b><small>Every game you've finished on this device</small></button>
@@ -29,11 +34,32 @@ export function MainMenu({ onPlay, onSettings, onScores, onHistory, onRules }: {
 
 export function ScoresScreen({ onBack }: { onBack: () => void }) {
   const [scores, setScores] = useState(loadScores);
+  const [trivia, setTrivia] = useState(loadTriviaRating);
   const bots = Object.entries(scores.bots).sort(([a], [b]) => a.localeCompare(b));
+  const best = scores.best;
   const local = Object.entries(scores.local).sort(([, a], [, b]) => b - a);
   return (
     <section className="setup scores" aria-labelledby="scores-title">
       <h1 id="scores-title">High scores</h1>
+      <div className="score-cards">
+        <div className="score-card">
+          <small>Best win</small>
+          {best ? (
+            <>
+              <b>{best.match}</b>
+              <span>{BOT[best.botId] ?? best.botId}{levelTag(best.botId, best.level)}</span>
+              <small>Chess {best.chess} · Trivia {best.triviaElo}</small>
+            </>
+          ) : <span>Beat a bot to set one</span>}
+        </div>
+        <div className="score-card">
+          <small>Your trivia Elo</small>
+          <b>{trivia.rating}</b>
+          <span>{trivia.answers ? triviaTitle(trivia.rating) : "Answer questions against a bot"}</span>
+          <small>{trivia.answers} question{trivia.answers === 1 ? "" : "s"} answered</small>
+        </div>
+      </div>
+      <p className="muted">The high score is the highest combined rating you've beaten: the bot's chess Elo, plus {TRIVIA_WEIGHT} × how far its trivia Elo is above or below an average quizzer ({TRIVIA_BASE}). Chess counts for more because it decides more games.</p>
       <h3>vs bots</h3>
       {bots.length ? (
         <table>
@@ -41,7 +67,7 @@ export function ScoresScreen({ onBack }: { onBack: () => void }) {
           <tbody>
             {bots.map(([k, r]) => {
               const [id, level] = k.split(":");
-              return <tr key={k}><td>{BOT[id] ?? id} · {LEVEL[level] ?? level}</td><td>{r.played}</td><td>{r.won}</td><td>{r.drawn}</td><td>{r.lost}</td><td>{r.best}</td></tr>;
+              return <tr key={k}><td>{BOT[id] ?? id}{levelTag(id, level)}</td><td>{r.played}</td><td>{r.won}</td><td>{r.drawn}</td><td>{r.lost}</td><td>{r.best}</td></tr>;
             })}
           </tbody>
         </table>
@@ -50,7 +76,7 @@ export function ScoresScreen({ onBack }: { onBack: () => void }) {
       {local.length ? <ol>{local.map(([n, w]) => <li key={n}>{n}: {w}</li>)}</ol> : <p className="muted">No Pass and Play games yet.</p>}
       <div className="row-btns">
         <button type="button" className="ghost" onClick={onBack}>Back</button>
-        <button type="button" className="ghost" onClick={() => { resetScores(); setScores(loadScores()); }}>Reset</button>
+        <button type="button" className="ghost" onClick={() => { resetScores(); resetTriviaRating(); setScores(loadScores()); setTrivia(loadTriviaRating()); }}>Reset</button>
       </div>
     </section>
   );
@@ -68,7 +94,7 @@ function when(iso: string): string {
 function HistoryRow({ e }: { e: HistoryEntry }) {
   const kind = resultKind(e);
   const them: Color | undefined = e.you ? (e.you === "white" ? "black" : "white") : undefined;
-  const title = e.you && them ? `vs ${e.names[them]}${e.botLevel ? ` · ${LEVEL[e.botLevel] ?? e.botLevel}` : ""}` : `${e.names.white} v ${e.names.black}`;
+  const title = e.you && them ? `vs ${e.names[them]}${levelTag(e.botId, e.botLevel)}` : `${e.names.white} v ${e.names.black}`;
   const facts = [resultText(e), `${e.moves} move${e.moves === 1 ? "" : "s"}`, e.you ? `played ${e.you === "white" ? "White" : "Black"}` : "", e.chess960 ? "Chess960" : ""].filter(Boolean);
   const tally = (c: Color) => `${e.quiz[c].right}/${e.quiz[c].asked}`;
   let numbers: string;

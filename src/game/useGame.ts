@@ -589,7 +589,11 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
       if (!allowed.length) return;
       let uci = allowed[0];
       try {
-        const res = await bot.chooseMove({ fen: g.fen, chess960: g.options.chess960, allowedMoves: allowed, managersTip });
+        const me = g.players[color];
+        const res = await bot.chooseMove({
+          fen: g.fen, chess960: g.options.chess960, allowedMoves: allowed, managersTip,
+          hotSpots: g.hotSpots, goldenBoot: me.goldenBootMoves > 0,
+        });
         await wait(Math.min(res.thinkMs, 2500));
         uci = resolveMove(gameRef.current, res.uci) ?? allowed[Math.floor(Math.random() * allowed.length)];
       } catch {
@@ -603,9 +607,21 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
       const c = await bot.chooseCard({ cards: p.cards, puskasAllowed: true, form: gameRef.current.players[color].form, bonusRound: p.bonus });
       pickCard(Math.min(2, Math.max(0, c.index)), c.puskas);
     } else if (p.kind === "question") {
-      const a = await bot.answer({ question: p.q, puskas: p.puskas, removed: p.hidden });
+      // Bots can buy a 50:50 on a question they're unsure of, like a player can.
+      // Buying it changes the phase, so from then on this run follows the new one.
+      let current: Phase = p;
+      const form = gameRef.current.players[color].form;
+      const hint = bot.chooseHint?.({ question: p.q, puskas: p.puskas, form, available: TRIVIA_HINTS.map((h) => ({ id: h.id, cost: h.cost })) });
+      if (hint === "fifty-fifty" && !p.puskas && !p.hidden.length) {
+        await wait(700);
+        if (!still()) return;
+        useHint("fifty-fifty");
+        current = phaseRef.current;
+      }
+      const hidden = current.kind === "question" ? current.hidden : p.hidden;
+      const a = await bot.answer({ question: p.q, puskas: p.puskas, removed: hidden });
       await wait(Math.min(a.delayMs, p.limitMs + 100));
-      if (!still()) return;
+      if (!alive.current || pausedRef.current || phaseRef.current !== current) return;
       answer(a.delayMs > p.limitMs ? null : a.choice);
     } else if (p.kind === "whoami") {
       const aim = PROMOTION_AIM[bot.promotionPick()] ?? PROMOTION_AIM.n;

@@ -3,6 +3,8 @@ import { GameScreen } from "./components/GameScreen";
 import { SetupScreen } from "./components/SetupScreen";
 import { HistoryScreen, MainMenu, PauseMenu, RulesScreen, ScoresScreen } from "./components/Menus";
 import { recordGame } from "./game/scores";
+import { botList, loadBots } from "./game/bots";
+import { loadTriviaRating, saveTriviaRating, updateTriviaRating } from "./game/triviaElo";
 import { entryFor, recordHistory, type MatchStats } from "./game/history";
 import type { SetupChoice } from "./game/useGame";
 import type { GameState } from "./game/types";
@@ -70,11 +72,16 @@ export function App() {
       {screen === "game" && setup && (
         <GameScreen key={gameKey} style={style} play={play} setup={setup} view={settings.passAndPlayView} motion={!settings.reduceMotion} commentary={settings.commentary} paused={paused || open}
           onPause={() => setPaused(true)} onExit={() => setScreen("menu")}
-          onFinish={(g: GameState, stats: MatchStats) => {
+          onFinish={async (g: GameState, stats: MatchStats) => {
             const human = g.players.white.kind === "human" ? "white" : "black";
-            recordGame(g, setup.botLevel, stats.formEarned[human]);
             const entry = entryFor(g, stats, setup.botLevel);
             if (entry) recordHistory(entry);
+            if (g.options.mode !== "bot") { recordGame(g, setup.botLevel, stats.formEarned[human]); return; }
+            // Your trivia Elo moves with your answers against bots (Pass and Play shares a device, so it doesn't count).
+            if (stats.answers[human].length) saveTriviaRating(updateTriviaRating(loadTriviaRating(), stats.answers[human]));
+            const botId = g.players[human === "white" ? "black" : "white"].botId;
+            const meta = await loadBots().then((m) => botList(m).find((b) => b.id === botId)).catch(() => undefined);
+            recordGame(g, setup.botLevel, stats.formEarned[human], meta?.ratings?.[setup.botLevel]);
           }} />
       )}
       {screen === "game" && paused && !open && (

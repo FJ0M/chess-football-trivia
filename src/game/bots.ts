@@ -7,14 +7,34 @@ import { makeUci, parseUci } from "chessops/util";
 import { positionOf } from "./rules";
 import type { Difficulty, PromoRole } from "./types";
 
-export type BotId = "ollie" | "ryan" | "freddie";
+export type BotId =
+  | "ollie" | "ryan" | "freddie"
+  | "pawny" | "eezy" | "chillwall" | "gambit-gary" | "mo-mate" | "knightingale" | "rookland";
 export type BotLevel = "low" | "medium" | "hard";
 export type TalkMoment = "start" | "capture" | "lostPiece" | "oppWrong" | "ownRight" | "ownWrong" | "powerUp" | "hotSpot" | "win" | "loss";
 
-export interface BotMeta { id: BotId; name: string; club: string; blurb: string }
+/** The Elo ladder bots: one strength each, so no level is shown for them. */
+export const LADDER_BOT_IDS: readonly string[] = ["pawny", "eezy", "chillwall", "gambit-gary", "mo-mate", "knightingale", "rookland"];
+
+/** Display names, for screens that don't load the bots (high scores, history). */
+export const BOT_NAMES: Record<string, string> = {
+  ollie: "Ollie", ryan: "Ryan", freddie: "Freddie",
+  pawny: "Pawny Dribbles", eezy: "Eezy Peasy", chillwall: "Billy Chillwall", "gambit-gary": "Gambit Gary",
+  "mo-mate": "Mo Mate", knightingale: "Florence Knightingale", rookland: "Ragnar Rookland",
+};
+
+export interface BotRatingMeta { chess: number; trivia: number; triviaElo: number; match: number }
+export interface BotMeta {
+  id: BotId; name: string; club: string; blurb: string;
+  /** One strength only (the Elo ladder): no level picker. */
+  fixedLevel?: boolean;
+  ratings?: Record<BotLevel, BotRatingMeta>;
+}
 
 export interface BotLike {
-  chooseMove(req: { fen: string; chess960?: boolean; allowedMoves?: string[]; managersTip?: boolean }): Promise<{ uci: string; thinkMs: number }>;
+  chooseMove(req: { fen: string; chess960?: boolean; allowedMoves?: string[]; managersTip?: boolean; hotSpots?: string[]; goldenBoot?: boolean }): Promise<{ uci: string; thinkMs: number }>;
+  /** A trivia hint to buy before answering ("fifty-fifty"), or null. */
+  chooseHint?(req: { question: { options: string[]; answer: number; difficulty: Difficulty; club?: string | null }; puskas?: boolean; form: number; available: { id: string; cost: number }[] }): string | null;
   chooseCard(req: { cards: { topic: string; difficulty: Difficulty; club: string | null }[]; puskasAllowed: boolean; form: number; bonusRound?: boolean }): { index: number; puskas: boolean } | Promise<{ index: number; puskas: boolean }>;
   answer(req: { question: { options: string[]; answer: number; difficulty: Difficulty; club?: string | null }; puskas?: boolean; removed?: number[] }): { choice: number; delayMs: number } | Promise<{ choice: number; delayMs: number }>;
   choosePowerUp(req: { fen: string; color?: "white" | "black"; form: number; available: { id: string; cost: number }[]; inCheck?: boolean; timed?: boolean; clockMs?: number }): { id: string; target?: string; target2?: string } | null | Promise<{ id: string; target?: string; target2?: string } | null>;
@@ -82,20 +102,20 @@ function allMoves(fen: string): string[] {
   return out;
 }
 
-const SKILL: Record<BotId, { noise: number; accuracy: number; pick: Difficulty; aim: PromoRole }> = {
+const SKILL: Partial<Record<BotId, { noise: number; accuracy: number; pick: Difficulty; aim: PromoRole }>> = {
   ollie: { noise: 3, accuracy: 0.85, pick: "hard", aim: "q" },
   ryan: { noise: 1.2, accuracy: 0.7, pick: "medium", aim: "r" },
   freddie: { noise: 0.2, accuracy: 0.45, pick: "easy", aim: "n" },
 };
 
-const LINES: Record<BotId, Partial<Record<TalkMoment, string>>> = {
+const LINES: Partial<Record<BotId, Partial<Record<TalkMoment, string>>>> = {
   ollie: { start: "Chess is just the bit between the questions.", oppWrong: "Genuinely, how did you not know that?", ownWrong: "That was a trick question, I'm appealing.", capture: "Is the horse allowed to do that? Too late now.", hotSpot: "Your club round? I probably know them better than you.", win: "Brains over board, every time." },
   ryan: { start: "Come on you Irons. Let's have it.", oppWrong: "Even Freddie knew that one.", ownWrong: "Wasn't a West Ham question, was it.", capture: "Bowen, Prague, 2023. Same energy.", hotSpot: "Bubbles are flying!", win: "Forever blowing bubbles, mate." },
   freddie: { start: "You can have the quiz. I'll have the board.", oppWrong: "Finally, someone worse at this than me.", ownWrong: "Football's a distraction. Mate in four, anyway.", capture: "Thanks for that. Didn't even need a hint.", hotSpot: "Oh no. Not the club round.", win: "Should have spent less time on the questions." },
 };
 
 function fallbackBot(id: BotId): BotLike {
-  const skill = SKILL[id];
+  const skill = SKILL[id]!;
   let movesSinceTalk = 2;
   return {
     async chooseMove({ fen, allowedMoves }) {
@@ -121,7 +141,7 @@ function fallbackBot(id: BotId): BotLike {
     promotionPick: () => skill.aim,
     say(moment) {
       if (movesSinceTalk < 2 && moment !== "win" && moment !== "start") return null;
-      const line = LINES[id][moment] ?? null;
+      const line = LINES[id]?.[moment] ?? null;
       if (line) movesSinceTalk = 0;
       return line;
     },
@@ -129,7 +149,7 @@ function fallbackBot(id: BotId): BotLike {
 }
 
 export const fallbackModule: BotModule = {
-  createBot: (id) => fallbackBot(id),
+  createBot: (id) => fallbackBot(id in SKILL ? id : "ryan"),
   BOTS: FALLBACK_BOTS,
   async bestMove(fen, _chess960, _depth, searchMoves) {
     const moves = searchMoves?.length ? allMoves(fen).filter((m) => searchMoves.includes(m)) : allMoves(fen);

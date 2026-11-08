@@ -4,7 +4,9 @@
 import type { GameState } from "./types";
 
 export interface Record3 { played: number; won: number; drawn: number; lost: number; streak: number; best: number; formEarned: number }
-export interface Scores { bots: Record<string, Record3>; local: Record<string, number> }
+/** The strongest bot you've beaten, by combined chess + trivia rating (the high score). */
+export interface BestWin { match: number; chess: number; triviaElo: number; botId: string; level: string; at: string }
+export interface Scores { bots: Record<string, Record3>; local: Record<string, number>; best?: BestWin }
 
 const KEY = "cft.scores.v1";
 const empty = (): Record3 => ({ played: 0, won: 0, drawn: 0, lost: 0, streak: 0, best: 0, formEarned: 0 });
@@ -12,15 +14,15 @@ const empty = (): Record3 => ({ played: 0, won: 0, drawn: 0, lost: 0, streak: 0,
 export function loadScores(): Scores {
   try {
     const raw = JSON.parse(localStorage.getItem(KEY) ?? "null");
-    if (raw && typeof raw === "object") return { bots: raw.bots ?? {}, local: raw.local ?? {} };
+    if (raw && typeof raw === "object") return { bots: raw.bots ?? {}, local: raw.local ?? {}, ...(raw.best ? { best: raw.best } : {}) };
   } catch { /* ignore */ }
   return { bots: {}, local: {} };
 }
 
 function save(s: Scores) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch { /* ignore */ } }
 
-/** Records a finished game. `level` is the bot level for vs-bot games. */
-export function recordGame(game: GameState, level: string, formEarned: number): Scores {
+/** Records a finished game. `level` is the bot level for vs-bot games; `rating` is that bot's, for the high score. */
+export function recordGame(game: GameState, level: string, formEarned: number, rating?: { chess: number; triviaElo: number; match: number }, at = new Date()): Scores {
   const s = loadScores();
   const o = game.outcome;
   if (!o) return s;
@@ -33,7 +35,12 @@ export function recordGame(game: GameState, level: string, formEarned: number): 
     r.played++;
     r.formEarned += formEarned;
     if (!winner) { r.drawn++; r.streak = 0; }
-    else if (winner === human) { r.won++; r.streak++; r.best = Math.max(r.best, r.streak); }
+    else if (winner === human) {
+      r.won++; r.streak++; r.best = Math.max(r.best, r.streak);
+      if (rating && bot.botId && (!s.best || rating.match > s.best.match)) {
+        s.best = { match: rating.match, chess: rating.chess, triviaElo: rating.triviaElo, botId: bot.botId, level, at: at.toISOString() };
+      }
+    }
     else { r.lost++; r.streak = 0; }
     s.bots[key] = r;
   } else if (winner) {

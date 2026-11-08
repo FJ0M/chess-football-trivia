@@ -21,7 +21,8 @@ import type { UciEngine } from "../../src/bots/engine";
 import { legalMoves, moveFeatures, normaliseUci } from "../../src/bots/movePicker";
 import { BOT_PROFILES } from "../../src/bots/profiles";
 import type { BotId, BotLevel, BotProfile, Difficulty, PowerUpId, TriviaSkill } from "../../src/bots/types";
-import { chess960Fen, mulberry32, nodeEngine, type GameResult } from "./match";
+import { chess960Fen, mulberry32, nodeEngine, parseBotSpec } from "./common";
+import type { GameResult } from "./match";
 
 const STANDARD = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
@@ -72,13 +73,13 @@ async function makeFullPlayer(name: string, seed: number): Promise<FullPlayer> {
     await sf.setOption("UCI_Elo", Number(chessSpec.slice(3)));
     base = BOT_PROFILES.ryan;
   } else {
-    [id, level] = chessSpec.split("-") as [BotId, BotLevel];
+    [id, level] = parseBotSpec(chessSpec);
     base = BOT_PROFILES[id];
   }
   let trivia: TriviaSkill;
   if (triviaSpec.startsWith("acc-")) trivia = triviaFromAccuracy(Number(triviaSpec.slice(4)) / 100);
   else {
-    const [tid, tl] = triviaSpec.split("-") as [BotId, BotLevel];
+    const [tid, tl] = parseBotSpec(triviaSpec);
     trivia = BOT_PROFILES[tid].levels[tl].trivia;
   }
   const profile: BotProfile = {
@@ -272,7 +273,7 @@ export async function playFullGame(white: FullPlayer, black: FullPlayer, startFe
       const available = Object.entries(POWER_UPS)
         .filter(([id, v]) => v.cost <= side.form && side.cooldown[id] <= 0)
         .map(([id, v]) => ({ id: id as PowerUpId, cost: v.cost }));
-      const choice = players[c].bot.choosePowerUp({ fen, form: side.form, available, inCheck: pos.isCheck(), evalCp: side.lastEval });
+      const choice = await players[c].bot.choosePowerUp({ fen, form: side.form, available, inCheck: pos.isCheck(), evalCp: side.lastEval });
       if (choice && POWER_UPS[choice.id]) {
         let used = true;
         const t = choice.target ? parseSquare(choice.target) : undefined;

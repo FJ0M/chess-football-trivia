@@ -2,10 +2,16 @@
 // List only (no replays). Each game keeps the date, who played, the result, Form earned and the trivia score.
 
 import type { Color, GameState, Outcome } from "./types";
+import type { Answer } from "./triviaElo";
 
 export interface Tally { right: number; asked: number }
 /** What happened during a game that the final GameState doesn't remember. */
-export interface MatchStats { formEarned: Record<Color, number>; trivia: Record<Color, Tally> }
+export interface MatchStats {
+  formEarned: Record<Color, number>;
+  trivia: Record<Color, Tally>;
+  /** Each question card answered (not "Who am I?" or shootout kicks), for the trivia Elo. */
+  answers: Record<Color, Answer[]>;
+}
 
 export interface HistoryEntry {
   /** When the game ended, as an ISO date. */
@@ -35,6 +41,7 @@ export const HISTORY_MAX = 100;
 export const emptyStats = (): MatchStats => ({
   formEarned: { white: 0, black: 0 },
   trivia: { white: { right: 0, asked: 0 }, black: { right: 0, asked: 0 } },
+  answers: { white: [], black: [] },
 });
 
 type Store = Pick<Storage, "getItem" | "setItem">;
