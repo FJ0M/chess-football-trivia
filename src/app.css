@@ -128,7 +128,6 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 .screen .clues { margin: 0; padding-left: 20px; display: grid; gap: 4px; font-size: 14px; line-height: 1.3; }
 .screen .clues li { animation: pop .25s ease-out; }
 .screen .fine { font-size: 11px; opacity: .75; }
-.screen .whoami-stage { min-height: min(92vw, 520px); min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; }
 .screen .board[hidden] { display: none; }
 .screen .guess { display: flex; gap: 8px; }
 .screen .guess input { flex: 1; width: 0; min-width: 0; font: inherit; font-size: 16px; padding: 10px 12px; border-radius: 10px; border: 2px solid currentColor; background: rgba(255,255,255,.9); color: #111; }
@@ -255,27 +254,6 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
    laptops and landscape phones: board on the left (sized to the window height),
    question panel and power-ups on the right. */
 .menu, .setup { width: 100%; max-width: 460px; margin: 0 auto; box-sizing: border-box; }
-@media (min-width: 600px) and (orientation: portrait) {
-  .app { max-width: 640px; }
-  .app .screen { max-width: min(640px, calc(100dvh - 260px)); min-width: min(100%, 460px); }
-  .pc { font-size: clamp(20px, 5vw, 40px); }
-}
-@media (orientation: landscape) and (min-width: 560px) {
-  .app { max-width: 1180px; }
-  .app .screen { max-width: none; align-items: start; align-content: start; grid-template-rows: auto auto auto auto auto 1fr;
-    grid-template-columns: clamp(240px, min(calc(100dvh - 170px), 58vw), 720px) minmax(0, 1fr); column-gap: 18px; }
-  .app .screen > :not(.side), .app .screen > .side > :not(.controls) { grid-column: 1; }
-  .app .screen > .side > .controls { grid-column: 2; grid-row: 1 / span 6; align-self: start; position: sticky; top: 10px; }
-  .app .screen .pc { font-size: clamp(14px, calc((100dvh - 170px) / 8 * .55), 52px); }
-  .app .screen.style-tactics .pc, .app .screen.style-tabletop .pc, .app .screen.style-sticker .pc { font-size: clamp(12px, calc((100dvh - 170px) / 8 * .38), 36px); }
-}
-/* Landscape phones are short: drop the sound note so the board gets the height. */
-@media (orientation: landscape) and (max-height: 500px) {
-  .tap-note { display: none; }
-  .app { gap: 4px; }
-  .app .screen { grid-template-columns: clamp(200px, min(calc(100dvh - 110px), 55vw), 480px) minmax(0, 1fr); padding: 8px; gap: 6px; }
-  .app .screen .pc { font-size: clamp(12px, calc((100dvh - 110px) / 8 * .55), 40px); }
-}
 /* Very narrow phones (Galaxy Fold cover screen): drop the pips, keep the number. */
 @media (max-width: 340px) {
   .screen .form-meter .pips { display: none; }
@@ -412,30 +390,8 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
    controls) are invisible wrappers, except in Pass and Play "Flat on the table". There the screen is
    laid out symmetrically: the board in the middle and the same space on each side, each side scrolling
    on its own. The 180-degree turn for Black then maps the board onto itself, so it stays put on the
-   table between turns while the controls swap to whoever is up. */
+   table between turns while the controls swap to whoever is up. (Layout: "match screen fits the window".) */
 .screen > .side { display: contents; }
-.app .screen.flip-mode { height: max(620px, calc(100dvh - 110px)); grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr); align-content: stretch; }
-.app .screen.flip-mode > .side { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; min-height: 0; overflow-y: auto; overscroll-behavior: contain; align-content: start; }
-.app .screen.flip-mode > .side.far { grid-row: 1; align-content: end; }
-.app .screen.flip-mode > .side.near { grid-row: 3; }
-.app .screen.flip-mode > .board, .app .screen.flip-mode > .whoami-stage { grid-row: 2; grid-column: 1; justify-self: center; width: min(100%, max(240px, calc(100dvh - 530px))); }
-.app .screen.flip-mode > .whoami-stage { aspect-ratio: 1; min-height: 0; overflow-y: auto; }
-.app .screen.flip-mode > .board-cover { grid-row: 2; grid-column: 1; justify-self: center; align-self: stretch; width: min(100%, max(240px, calc(100dvh - 530px))); z-index: 6; contain: size; display: grid; grid-template-columns: minmax(0, 1fr); align-content: safe center; overflow-y: auto; padding: 8px; box-sizing: border-box; background: rgba(10, 20, 30, .45); border-radius: 6px; }
-.app .screen.flip-mode > .board-cover.late { animation: cover-late 1.4s steps(1, end) both; }
-@keyframes cover-late { from { opacity: 0; visibility: hidden; } to { opacity: 1; visibility: visible; } }
-@media (orientation: landscape) and (min-width: 560px) {
-  .app .screen.flip-mode { height: max(360px, calc(100dvh - 90px)); grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
-  .app .screen.flip-mode > .board, .app .screen.flip-mode > .whoami-stage { grid-row: 1; }
-  .app .screen.flip-mode > .side.far { grid-row: 1; grid-column: 1; align-content: center; }
-  .app .screen.flip-mode > .side.near { grid-row: 1; grid-column: 3; }
-  .app .screen.flip-mode > .board, .app .screen.flip-mode > .whoami-stage, .app .screen.flip-mode > .board-cover { grid-row: 1; grid-column: 2; align-self: center; width: min(calc(100dvh - 130px), 46vw); }
-  .app .screen.flip-mode > .board-cover { aspect-ratio: 1; }
-  .app .screen.flip-mode > .side > * { grid-column: auto; grid-row: auto; position: static; }
-}
-@media (orientation: landscape) and (max-height: 500px) {
-  .app .screen.flip-mode { height: max(300px, calc(100dvh - 30px)); }
-  .app .screen.flip-mode > .board, .app .screen.flip-mode > .whoami-stage, .app .screen.flip-mode > .board-cover { width: min(calc(100dvh - 50px), 42vw); }
-}
 .screen.style-fanzine .strip { font-size: 9px; letter-spacing: 0; }
 /* Fanzine's tilted board keeps its tilt but stays inside its column. */
 .screen.style-fanzine .board { transform: rotate(.6deg) scale(.985); }
@@ -558,3 +514,96 @@ button.htp-power:focus-visible, .htp-close:focus-visible { outline: 3px solid #1
 .htp-close { position: absolute; top: 4px; right: 6px; border: 0; background: none; font: inherit; font-size: 22px; line-height: 1; padding: 4px; cursor: pointer; color: #18304a; }
 .htp .htp-tap { font-style: italic; }
 @media (prefers-reduced-motion: reduce) { .htp-detail { animation: none; } }
+
+/* ---------------------------------------------------------------- match screen fits the window
+   No header and no page scroll during a match, on any phone, tablet or computer. The screen is exactly the
+   window's height; the strip, players and controls take what they need and the board gets the rest.
+   .board-wrap is a size container, so the board is the biggest square that fits in it (min of its width
+   and height) and the pieces scale with it. Questions, cards and results cover the board in one column
+   (GameScreen panelOnBoard); power-ups open in a drawer from the Form meter. */
+.app.app-game { max-width: none; height: 100vh; height: 100dvh; box-sizing: border-box; overflow: hidden; gap: 0; grid-template-rows: minmax(0, 1fr);
+  padding: max(6px, env(safe-area-inset-top, 0px)) max(6px, env(safe-area-inset-right, 0px)) max(6px, env(safe-area-inset-bottom, 0px)) max(6px, env(safe-area-inset-left, 0px)); }
+.app-game > .screen { height: 100%; min-height: 0; max-width: 620px; display: flex; flex-direction: column; gap: 8px; padding: 10px; }
+.app-game > .screen > *, .app-game > .screen > .side > * { flex: none; }
+.app-game > .screen > .board-wrap { flex: 1 1 0; }
+.app-game > .screen.style-tactics { border-width: 6px; }
+.app-game > .screen.style-tabletop { padding: 12px; }
+.board-wrap { position: relative; min-width: 0; min-height: 0; container-type: size; display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); place-items: center; }
+.board-wrap > * { grid-area: 1 / 1; }
+.board-wrap > .board { width: min(100cqw, 100cqh); box-sizing: border-box; }
+.board-wrap .pc { font-size: calc(min(100cqw, 100cqh) / 8 * .55); }
+.screen.style-tactics .board-wrap .pc, .screen.style-tabletop .board-wrap .pc, .screen.style-sticker .board-wrap .pc { font-size: calc(min(100cqw, 100cqh) / 8 * .4); }
+.board-wrap > .whoami-stage, .board-wrap > .board-cover { place-self: stretch; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: grid; grid-template-columns: minmax(0, 1fr); align-content: safe center; }
+.board-wrap > .board-cover { z-index: 6; padding: 8px; box-sizing: border-box; background: rgba(10, 20, 30, .7); background: color-mix(in srgb, var(--drawer-bg, #0a141e) 88%, transparent); border-radius: 6px; }
+.board-wrap > .board-cover.late { animation: cover-late 1.4s steps(1, end) both; }
+@keyframes cover-late { from { opacity: 0; visibility: hidden; } to { opacity: 1; visibility: visible; } }
+.app-game .screen .controls { gap: 8px; }
+.app-game .screen .commentary { min-height: 0; }
+
+/* The Form meter opens the power-ups. */
+.screen .power-toggle { flex-wrap: wrap; row-gap: 6px; font: inherit; font-size: 14px; color: inherit; background: transparent; cursor: pointer; width: 100%; text-align: left; min-height: 44px; box-sizing: border-box; }
+.screen .power-toggle .open-tag { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px 4px 8px; border-radius: 999px; border: 2px solid currentColor; font-weight: 700; white-space: nowrap; }
+.screen .power-toggle .open-tag .bolt { width: 16px; height: 16px; fill: #e0a800; stroke: currentColor; stroke-width: 1.5; }
+.screen .power-toggle .open-tag em { font-style: normal; min-width: 18px; height: 18px; padding: 0 4px; box-sizing: border-box; display: grid; place-items: center; border-radius: 9px; background: #2e9d4f; color: #fff; font-size: 11px; font-family: system-ui, sans-serif; }
+.screen .power-toggle.ready .open-tag { animation: pop .3s ease-out; }
+.screen .drawer-backdrop { position: absolute; inset: 0; z-index: 20; background: rgba(0, 0, 0, .35); animation: fade-in .2s ease-out; }
+.screen .power-drawer { position: absolute; z-index: 21; left: 0; right: 0; bottom: 0; max-height: 78%; overflow-y: auto; overscroll-behavior: contain; display: grid; gap: 10px; align-content: start;
+  padding: 12px 12px max(14px, env(safe-area-inset-bottom, 0px)); border-radius: 16px 16px 0 0; background: var(--drawer-bg, #f7f9f9); box-shadow: 0 -6px 24px rgba(0, 0, 0, .35); animation: drawer-up .22s ease-out; }
+.screen .power-drawer .drawer-head { display: flex; gap: 8px; align-items: center; position: sticky; top: -12px; margin: -12px -12px 0; padding: 12px 12px 4px; background: inherit; z-index: 1; }
+.screen .power-drawer .drawer-head .form-meter { flex: 1; min-width: 0; }
+.screen .drawer-close { flex: none; width: 40px; height: 40px; border-radius: 50%; border: 2px solid currentColor; background: transparent; color: inherit; font: inherit; font-size: 24px; line-height: 1; cursor: pointer; display: grid; place-items: center; padding: 0 0 2px; }
+.screen .drawer-note { margin: 0; text-align: center; }
+.screen .power-drawer .confirm { position: sticky; bottom: calc(-1 * max(14px, env(safe-area-inset-bottom, 0px))); background: var(--drawer-bg, #f7f9f9); box-shadow: 0 -6px 14px rgba(0, 0, 0, .18); }
+@keyframes drawer-up { from { transform: translateY(40%); opacity: 0; } }
+@keyframes drawer-side { from { transform: translateX(40%); opacity: 0; } }
+@keyframes fade-in { from { opacity: 0; } }
+.style-tactics { --drawer-bg: #f6f8f8; } .style-floodlit { --drawer-bg: #101a38; } .style-programme { --drawer-bg: #a9d4ee; }
+.style-sticker { --drawer-bg: #ffd23f; } .style-tabletop { --drawer-bg: #5a3419; } .style-fanzine { --drawer-bg: #f0efe9; }
+.style-broadcast { --drawer-bg: #04161a; } .style-teletext { --drawer-bg: #000; } .style-shirt { --drawer-bg: #6b1d33; } .style-pundit { --drawer-bg: #fbfbf9; }
+@media (prefers-reduced-motion: reduce) { .screen .power-drawer, .screen .drawer-backdrop, .screen .power-toggle.ready .open-tag { animation: none; } }
+
+/* Landscape tablets, laptops and landscape phones: board column on the left (as wide as the board can be
+   tall), everything else in a column on the right that scrolls on its own if it ever has to. */
+@media (orientation: landscape) and (min-width: 560px) {
+  .app-game > .screen { max-width: 1240px; display: grid; column-gap: 18px; row-gap: 6px;
+    grid-template-columns: minmax(0, min(calc(100dvh - 150px), 62%)) minmax(240px, 1fr); grid-template-rows: auto auto minmax(0, 1fr) auto; }
+  .app-game > .screen:not(.flip-mode) > .side.far > .strip { grid-area: 1 / 1; }
+  .app-game > .screen:not(.flip-mode) > .side.far > .player { grid-area: 2 / 1; }
+  .app-game > .screen:not(.flip-mode) > .board-wrap { grid-area: 3 / 1; }
+  .app-game > .screen:not(.flip-mode) > .side.near > .player { grid-area: 4 / 1; }
+  .app-game > .screen:not(.flip-mode) > .side.near > .controls { grid-area: 1 / 2 / -1 / 3; min-height: 0; overflow-y: auto; overscroll-behavior: contain; align-content: start; }
+  .screen .power-drawer { left: auto; top: 0; width: min(440px, 52%); max-height: none; border-radius: 16px 0 0 16px; animation-name: drawer-side; box-shadow: -6px 0 24px rgba(0, 0, 0, .35); }
+  .screen .power-drawer .confirm { bottom: -14px; }
+}
+/* Landscape phones are short: the board gets the whole height on the left; the strip, both players and
+   the controls go on the right. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .app-game > .screen { padding: 8px; row-gap: 4px; grid-template-columns: minmax(0, calc(100dvh - 28px)) minmax(220px, 1fr); grid-template-rows: auto auto minmax(0, 1fr) auto; }
+  .app-game > .screen:not(.flip-mode) > .side.far > .strip { grid-area: 1 / 2; }
+  .app-game > .screen:not(.flip-mode) > .side.far > .player { grid-area: 2 / 2; }
+  .app-game > .screen:not(.flip-mode) > .board-wrap { grid-area: 1 / 1 / -1 / 2; }
+  .app-game > .screen:not(.flip-mode) > .side.near > .player { grid-area: 4 / 2; }
+  .app-game > .screen:not(.flip-mode) > .side.near > .controls { grid-area: 3 / 2; }
+  .app-game > .screen:not(.flip-mode) > .side.near > .player .bubble { top: auto; bottom: 100%; }
+  .app-game > .screen.style-broadcast .strip, .app-game > .screen.style-programme .strip { margin: -8px 0 0 -8px; }
+}
+
+/* "Flat on the table": board in the middle, the same space either side of it. */
+.app-game > .screen.flip-mode { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr); align-content: stretch; }
+.app-game > .screen.flip-mode > .side { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; min-height: 0; overflow-y: auto; overscroll-behavior: contain; align-content: start; }
+.app-game > .screen.flip-mode > .side.far { grid-row: 1; align-content: end; }
+.app-game > .screen.flip-mode > .side.near { grid-row: 3; }
+.app-game > .screen.flip-mode > .board-wrap { grid-area: 2 / 1; justify-self: center; width: min(100%, max(240px, calc(100dvh - 400px))); aspect-ratio: 1; }
+.app-game > .screen.flip-mode > .side > * { grid-area: auto; }
+@media (orientation: landscape) and (min-width: 560px) {
+  .app-game > .screen.flip-mode { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
+  .app-game > .screen.flip-mode > .side.far { grid-area: 1 / 1; align-content: center; }
+  .app-game > .screen.flip-mode > .side.near { grid-area: 1 / 3; }
+  .app-game > .screen.flip-mode > .board-wrap { grid-area: 1 / 2; align-self: center; width: min(calc(100dvh - 40px), 46vw); }
+  .app-game > .screen.flip-mode > .side > .controls { overflow: visible; }
+  .app-game > .screen.flip-mode .power-toggle > .label, .app-game > .screen.flip-mode .power-toggle > .pips { display: none; }
+}
+/* Short screens: the "Questions come on captures..." reminder goes, so the board keeps its size. */
+@media (max-height: 760px) and (orientation: portrait), (orientation: landscape) and (max-height: 500px) {
+  .app-game .screen .quiz.idle .q.explainer { display: none; }
+}

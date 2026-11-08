@@ -61,14 +61,15 @@ export function App() {
   const play = useCallback((s: SfxName) => { if (settings.sfxOn) playSfx(s, style.voice); }, [settings.sfxOn, style.voice]);
 
   return (
-    <div className={`app${screen === "menu" ? " app-menu" : ""}`}>
-      {screen !== "menu" && <header className="appbar">
-        <button type="button" className="title" onClick={() => (screen === "game" ? setPaused(true) : setScreen("menu"))}>{GAME_NAME}</button>
+    <div className={`app${screen === "menu" ? " app-menu" : screen === "game" ? " app-game" : ""}`}>
+      {/* No header during a match: the game fills the screen, and its Menu button pauses (Settings are in there). */}
+      {screen !== "menu" && screen !== "game" && <header className="appbar">
+        <button type="button" className="title" onClick={() => setScreen("menu")}>{GAME_NAME}</button>
         <button type="button" className="gear" aria-label="Settings" onClick={() => setOpen(true)}>
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" /></svg>
         </button>
       </header>}
-      <p className="tap-note" style={{ visibility: audioReady ? "hidden" : "visible" }}>Tap anywhere to turn on sound</p>
+      {screen !== "game" && <p className="tap-note" style={{ visibility: audioReady ? "hidden" : "visible" }}>Tap anywhere to turn on sound</p>}
       {screen === "menu" && <MainMenu onPlay={() => setScreen("play")} onAchievements={() => setScreen("achievements")} onSettings={() => setOpen(true)} />}
       {screen === "play" && <PlayMenu onPick={(m) => { setMode(m); setScreen("setup"); }} onRules={() => setScreen("rules")} onBack={() => setScreen("menu")} />}
       {screen === "setup" && <SetupScreen mode={mode} onBack={() => setScreen("play")} onStart={(s) => { setSetup(s); setGameKey((k) => k + 1); setPaused(false); setScreen("game"); }} />}
