@@ -4,76 +4,19 @@
 //   npx vite-node tools/playtest/match.ts -- <config.json> <out.json>
 //
 // config: { "pairs": [["ollie-low","ryan-low"], ...], "games": 10, "seed": 1 }
-// Players are "<bot>-<level>" or "sf-<elo>" (Stockfish with UCI_LimitStrength).
+// Players are "<bot>-<level>", "<ladder bot>" or "sf-<elo>" (Stockfish with UCI_LimitStrength).
 
-import { spawn } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
-import { createRequire } from "node:module";
 import { makeFen } from "chessops/fen";
 import { parseUci } from "chessops/util";
 import { Chess } from "chessops/chess";
 import { parseFen } from "chessops/fen";
 import { createBotWith, type Bot } from "../../src/bots/bot";
-import { UciEngine, type Transport } from "../../src/bots/engine";
+import { chess960Fen, mulberry32, nodeEngine, parseBotSpec } from "./common";
+import type { UciEngine } from "../../src/bots/engine";
 import { normaliseUci, positionFromFen } from "../../src/bots/movePicker";
-import type { BotId, BotLevel } from "../../src/bots/types";
 
-const require = createRequire(import.meta.url);
-const ENGINE_JS = require.resolve("stockfish/src/stockfish-17.1-lite-single-03e3232.js");
-
-export function nodeEngine(): UciEngine {
-  const child = spawn(process.execPath, [ENGINE_JS], { stdio: ["pipe", "pipe", "pipe"] });
-  child.stderr.on("data", (d: Buffer) => console.log(`ENGINE STDERR ${d.toString().slice(0, 300)}`));
-  child.on("exit", (code, sig) => {
-    if (code !== 0 && sig !== "SIGTERM") console.log(`ENGINE EXIT ${code} ${sig}`);
-  });
-  let buf = "";
-  const cbs: ((l: string) => void)[] = [];
-  child.stdout.on("data", (d: Buffer) => {
-    buf += d.toString();
-    let i;
-    while ((i = buf.indexOf("\n")) >= 0) {
-      const line = buf.slice(0, i).trim();
-      buf = buf.slice(i + 1);
-      if (line) for (const cb of cbs) cb(line);
-    }
-  });
-  const transport: Transport = {
-    send: (cmd) => child.stdin.write(cmd + "\n"),
-    onLine: (cb) => cbs.push(cb),
-    close: () => child.kill(),
-  };
-  return new UciEngine(transport);
-}
-
-export function mulberry32(seed: number) {
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-/** A random Chess960 start position. */
-export function chess960Fen(rng: () => number): string {
-  const rank: (string | null)[] = Array(8).fill(null);
-  const free = () => rank.map((v, i) => (v ? -1 : i)).filter((i) => i >= 0);
-  const pick = (arr: number[]) => arr[Math.floor(rng() * arr.length)];
-  rank[pick([0, 2, 4, 6])] = "b";
-  rank[pick([1, 3, 5, 7])] = "b";
-  rank[pick(free())] = "q";
-  rank[pick(free())] = "n";
-  rank[pick(free())] = "n";
-  const [a, k, c] = free();
-  rank[a] = "r";
-  rank[k] = "k";
-  rank[c] = "r";
-  const black = rank.join("");
-  return `${black}/pppppppp/8/8/8/8/PPPPPPPP/${black.toUpperCase()} w KQkq - 0 1`;
-}
+export { chess960Fen, mulberry32, nodeEngine, parseBotSpec };
 
 const OPENINGS = [
   "e2e4 e7e5 g1f3 b8c6",
@@ -110,7 +53,7 @@ async function makePlayer(name: string, seed: number): Promise<Player> {
       close: () => engine.close(),
     };
   }
-  const [id, level] = name.split("-") as [BotId, BotLevel];
+  const [id, level] = parseBotSpec(name);
   let bot: Bot = createBotWith(id, level, engine, mulberry32(seed));
   return {
     name,
