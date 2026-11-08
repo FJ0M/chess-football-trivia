@@ -1,6 +1,6 @@
 // Match animations, all drawn over the board or the game card and never in the way of a tap:
 // a ball trail on each move, the net rippling on a capture, a Red Card flash, hat-trick
-// confetti, a crowd wave on a Hot Spot, a trophy lift on checkmate and the Elite Ball
+// confetti, Scorched Turf on a Hot Spot (a ring of fire and a burnt patch), a trophy lift on checkmate and the Elite Ball
 // Knowledge celebration. Each shows for a short time after its event, then goes.
 // None of them show when motion is off (the setting, or the phone's reduce-motion setting).
 
@@ -12,7 +12,7 @@ const FILES = "abcdefgh";
 
 /** How long each animation lasts, in ms. */
 export const FX_MS: Partial<Record<GameEvent["kind"], number>> = {
-  move: 650, power: 1300, answer: 2600, "hot-spot": 2200, checkmate: 4200, ebk: 3800,
+  move: 650, power: 1300, answer: 2600, "hot-spot": 2800, checkmate: 4200, ebk: 3800,
 };
 
 /** Square centre in board units (0 to 8) as seen from `orientation`. */
@@ -52,9 +52,13 @@ export function BoardFx({ events, now, orientation }: { events: GameEvent[]; now
         }
         if (e.kind === "hot-spot") {
           return (
-            <div key={e.id} className="fx-layer">
-              <span className="fx-ring" style={at(e.square, orientation)} />
-              <div className="fx-wave">{Array.from({ length: 16 }, (_, i) => <Fan key={i} i={i} />)}</div>
+            // Scorched Turf (Freddie's pick, 2026-11-08): a ring of fire races out from the square
+            // and leaves a burnt patch of grass round the piece, with smoke curling off it.
+            <div key={e.id} className="fx-scorch" style={at(e.square, orientation)}>
+              <span className="burn" />
+              <span className="fire-ring" />
+              {Array.from({ length: 10 }, (_, i) => <span key={i} className="tongue" style={{ "--a": `${i * 36}deg` } as CSSProperties} />)}
+              {[0, 1, 2].map((i) => <span key={i} className="wisp" style={{ left: `${30 + i * 18}%`, "--t": `${1.2 + i * 0.3}s`, "--x": `${(i - 1) * 40}%` } as CSSProperties} />)}
             </div>
           );
         }
@@ -126,17 +130,6 @@ function Ball() {
       <circle cx="12" cy="12" r="10" fill="#fff" stroke="#111" strokeWidth="1.5" />
       <path d="M12 7l4 3-1.5 4.5h-5L8 10z" fill="#111" />
     </g>
-  );
-}
-
-function Fan({ i }: { i: number }) {
-  const shirt = i % 2 ? "#d1342f" : "#1f5fbf";
-  return (
-    <svg className="fan" viewBox="0 0 20 28" style={{ animationDelay: `${i * 55}ms` }}>
-      <path d="M4 10L1 1M16 10l3-9" stroke={shirt} strokeWidth="3" strokeLinecap="round" />
-      <circle cx="10" cy="8" r="5" fill="#f2c9a0" stroke="#5b3a22" strokeWidth="1" />
-      <path d="M3 28v-9a7 7 0 0 1 14 0v9z" fill={shirt} />
-    </svg>
   );
 }
 
