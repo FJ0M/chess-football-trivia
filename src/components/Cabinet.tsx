@@ -1,7 +1,8 @@
 // The trophy cabinet: wooden shelves with a cup for each bot you've beaten and pin badges
 // for special feats. Badges you haven't won stay hidden as "?" until you do.
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
+import { ScreenHead } from "./Menus";
 import { BADGES, BADGE_BY_ID, cups, loadCabinet, tierFor, TIERS, type BadgeDef, type BadgeGroup, type Cup, type Earned, type NewBadge, type Tier } from "../game/badges";
 import { loadScores } from "../game/scores";
 import { EbkBadge } from "./MatchFx";
@@ -49,7 +50,7 @@ export function BadgePin({ def, tier, small }: { def: BadgeDef; tier?: Tier; sma
 
 type Pick = { kind: "badge"; def: BadgeDef; e: Earned } | { kind: "cup"; cup: Cup };
 
-export function CabinetScreen({ onBack }: { onBack: () => void }) {
+export function CabinetScreen({ onBack, head }: { onBack: () => void; head?: ReactNode }) {
   const [cab] = useState(loadCabinet);
   const [scores] = useState(loadScores);
   const [pick, setPick] = useState<Pick | null>(null);
@@ -61,8 +62,8 @@ export function CabinetScreen({ onBack }: { onBack: () => void }) {
   const groups: BadgeGroup[] = ["trivia", "chess", "career"];
 
   return (
-    <section className="setup cabinet-screen" aria-labelledby="cabinet-title">
-      <div className="setup-head"><button type="button" className="ghost" onClick={onBack}>Back</button><h1 id="cabinet-title">Trophy cabinet</h1></div>
+    <section className="setup cabinet-screen" aria-labelledby={head ? "achievements-title" : "cabinet-title"}>
+      {head ?? <ScreenHead id="cabinet-title" title="Trophy cabinet" onBack={onBack} />}
       <p className="cab-count">{cupsWon} of {all.length} cups · {found} of {BADGES.length} badges found</p>
       <div className="cabinet">
         <div className="shelf-label">The ladder</div>
