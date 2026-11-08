@@ -6,7 +6,12 @@
 //    (safeCp). If the engine sees something big that hasn't happened yet (a hanging queen,
 //    a fork, a mate coming) the commentator only describes the material, so it can't tip
 //    anyone off;
-//  - mate scores are never mentioned until the game is actually over.
+//  - mate scores are never mentioned until the game is actually over;
+//  - it never judges a move while VAR Review could still undo it. VAR Review undoes your
+//    last move and the reply, so a quick "what a howler" would make it a free undo button.
+//    During play the hook (useCommentary) only shows it the material on the board, and the
+//    engine's view of a move comes later, as a verdict (judgeMove), once the player who made
+//    it has moved again and that move can no longer be reviewed.
 
 import type { Color } from "./types";
 
@@ -19,7 +24,11 @@ export type CommentEvent =
   | { kind: "hot-spot"; color: Color }
   | { kind: "ebk"; color: Color }
   | { kind: "shootout" }
-  | { kind: "checkmate"; winner: Color };
+  | { kind: "checkmate"; winner: Color }
+  | { kind: "verdict"; color: Color; verdict: Verdict };
+
+/** The delayed call on a big mistake: it cost them, or they got away with it. */
+export type Verdict = "costly" | "escaped";
 
 export interface CommentInput {
   event: CommentEvent;
@@ -99,6 +108,12 @@ export function comment(i: CommentInput): Comment {
 
   const e = i.event;
   switch (e.kind) {
+    case "verdict": {
+      const who = n[e.color];
+      return { bucket, text: e.verdict === "costly"
+        ? pick([`${who} will regret that one. The replays aren't kind.`, `Looking back, that was a howler from ${who}.`, `${who} will be seeing that move in their sleep.`, `The pundits will have a field day with ${who}'s blunder.`], rand)
+        : pick([`${who} got away with one there. That could have been costly.`, `Lucky, lucky ${who}. Nobody punished that mistake.`, `${who} is breathing a sigh of relief. That was a let-off.`], rand) };
+    }
     case "kickoff":
       return { bucket, text: pick([`We're under way! ${n.white} kick off against ${n.black}.`, `And they're off! ${n.white} v ${n.black}.`], rand) };
     case "checkmate":
@@ -139,6 +154,38 @@ export function comment(i: CommentInput): Comment {
       ], rand) };
     }
   }
+}
+
+/** How much worse a move must make things, by the engine, to count as a blunder. */
+export const BLUNDER_CP = 200;
+
+/** One side's move waiting for its verdict. All scores are from White's side, in centipawns. */
+export interface PendingMove {
+  color: Color;
+  /** Engine score before and after the move. */
+  evalBefore: number | null;
+  evalAfter: number | null;
+  /** Material before the move. */
+  materialBefore: number;
+}
+
+const capped = (cp: number) => Math.max(-1500, Math.min(1500, cp));
+
+/**
+ * The verdict on a move once VAR Review can no longer undo it, or null to say nothing.
+ * `evalNow` and `materialNow` are for the position the opponent is about to move in, so the
+ * verdict must not tip the opponent off either: it only says "costly" once the damage is on
+ * the board (material lost), and "escaped" once the engine says the danger has passed.
+ * A blunder that is still waiting to be punished gets no verdict.
+ */
+export function judgeMove(m: PendingMove, evalNow: number | null, materialNow: number): Verdict | null {
+  if (m.evalBefore === null || m.evalAfter === null) return null;
+  const sign = m.color === "white" ? 1 : -1;
+  const before = sign * capped(m.evalBefore);
+  if (sign * capped(m.evalAfter) - before > -BLUNDER_CP) return null;
+  if (sign * (m.materialBefore - materialNow) >= 150) return "costly";
+  if (evalNow !== null && sign * capped(evalNow) >= before - 100) return "escaped";
+  return null;
 }
 
 /** True if a line names a square (e4) or a move, which the commentator must never do. */
