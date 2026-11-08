@@ -161,7 +161,8 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
         {g.overlay.tip && <MarkerArrow from={g.overlay.tip[0]} to={g.overlay.tip[1]} orientation={orientation} color="#ff2d95" id="tip" outline />}
         {fx && <BoardFx events={g.events} now={g.now} orientation={orientation} />}
       </div>
-      {panelOnBoard && <div className="board-cover"><Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} /></div>}
+      {/* After a Hot Spot the cards wait a moment, so the Scorched Turf animation shows before they cover the board. */}
+      {panelOnBoard && <div className={`board-cover${fx && phase.kind === "cards" && phase.bonus ? " late" : ""}`}><Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} /></div>}
       <div className="side near">
         <PlayerBar game={game} color={bottom} active={active} ticking={clockOwner(game, phase)} bubble={g.bubble} bench={mat.bench[bottom]} lead={mat.score[bottom] - mat.score[top]} ebk={g.ebk[bottom]} />
         {!flipMode && commentaryLine}
