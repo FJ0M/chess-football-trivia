@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { GameScreen } from "./components/GameScreen";
 import { SetupScreen } from "./components/SetupScreen";
-import { AchievementsHead, GAME_NAME, HistoryScreen, MainMenu, PauseMenu, PlayMenu, RulesScreen, ScoresScreen, type AchievementsTab } from "./components/Menus";
+import { AchievementsHead, GAME_NAME, HistoryScreen, MainMenu, PauseMenu, PlayMenu, ScoresScreen, type AchievementsTab } from "./components/Menus";
 import { loadScores, recordGame } from "./game/scores";
 import { awardBadges, type NewBadge } from "./game/badges";
 import { BadgeToast, CabinetScreen } from "./components/Cabinet";
@@ -10,6 +10,7 @@ import { loadTriviaRating, saveTriviaRating, updateTriviaRating } from "./game/t
 import { entryFor, recordHistory, type MatchStats } from "./game/history";
 import type { SetupChoice } from "./game/useGame";
 import type { GameState } from "./game/types";
+import { RulesScreen } from "./components/HowToPlay";
 import { SettingsPanel } from "./components/SettingsPanel";
 import { getStyle } from "./theme/themes";
 import { loadSettings, saveSettings, type Settings } from "./settings/settings";

@@ -219,33 +219,6 @@ export function HistoryScreen({ onBack, head }: { onBack: () => void; head?: Rea
   );
 }
 
-export function RulesScreen({ onBack }: { onBack: () => void }) {
-  return (
-    <section className="setup rules" aria-labelledby="rules-title">
-      <ScreenHead id="rules-title" title="How to play" onBack={onBack} />
-      <p>It's chess, and your moves are always free. Some moves bring up a football question for the player who made them:</p>
-      <ul>
-        <li><b>Hot Spot</b> (circled square): a Club Bonus Round: questions on your own club.</li>
-        <li><b>Capture</b>: pick one of three cards.</li>
-        <li><b>Kick-off</b>: every 4th move with no other question.</li>
-      </ul>
-      <p>Each card shows a topic and a difficulty. Harder pays more, but costs more if you're wrong:</p>
-      <ul>
-        <li>Tap-in (easy): +1 Form, no risk.</li>
-        <li>Highlight (medium): +2 Form. Wrong and your opponent gets +2.</li>
-        <li>Screamer (hard): +3 Form. Wrong and the piece you moved is booked (frozen) next turn.</li>
-        <li>Puskás (a Screamer you upgrade): +5 Form in 8 seconds, no hints. Wrong and you're sent off: you miss a turn and your opponent takes a Free Kick.</li>
-      </ul>
-      <p>Answer a Screamer or Puskás within 5 seconds for +1, and get three in a row for a hat-trick (+2). If you're behind on material, every right answer earns +1 more. Form is capped at 12.</p>
-      <p><b>Power-ups</b> cost Form, one per turn before you move. Each has a cooldown and starts the game locked, and its stars show roughly how much it can swing the board. <b>Hints</b> during a question: 50:50, Ask the Crowd, Phone a friend.</p>
-      <p><b>Promotion</b> is a "Who am I?": the board hides, the clocks stop, and five clues about a footballer appear. Type one guess (the surname is enough). Right on clue 1 or 2 earns a queen, clue 3 a rook, clue 4 a bishop, clue 5 a knight. Wrong: a knight, and your opponent gets +2 Form.</p>
-      <p><b>Timed games:</b> your clock keeps running during questions too, so answer fast. Questions have 10 seconds, and every move adds 3 seconds to your clock.</p>
-      <p>Checkmate wins. Any draw goes to a Penalty Shootout of five questions each.</p>
-      <button type="button" className="ghost" onClick={onBack}>Back to Play</button>
-    </section>
-  );
-}
-
 export function PauseMenu({ onResume, onRestart, onSettings, onQuit }: { onResume: () => void; onRestart: () => void; onSettings: () => void; onQuit: () => void }) {
   return (
     <div className="sheet-backdrop" onClick={onResume}>
