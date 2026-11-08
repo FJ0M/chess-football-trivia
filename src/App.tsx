@@ -2,7 +2,9 @@ import { useCallback, useEffect, useState } from "react";
 import { GameScreen } from "./components/GameScreen";
 import { SetupScreen } from "./components/SetupScreen";
 import { HistoryScreen, MainMenu, PauseMenu, RulesScreen, ScoresScreen } from "./components/Menus";
-import { recordGame } from "./game/scores";
+import { loadScores, recordGame } from "./game/scores";
+import { awardBadges, type NewBadge } from "./game/badges";
+import { BadgeToast, CabinetScreen } from "./components/Cabinet";
 import { botList, loadBots } from "./game/bots";
 import { loadTriviaRating, saveTriviaRating, updateTriviaRating } from "./game/triviaElo";
 import { entryFor, recordHistory, type MatchStats } from "./game/history";
@@ -18,11 +20,12 @@ import { playSfx, type SfxName } from "./audio/sfx";
 export function App() {
   const [settings, setSettings] = useState<Settings>(() => loadSettings());
   const [open, setOpen] = useState(false);
-  const [screen, setScreen] = useState<"menu" | "setup" | "game" | "scores" | "history" | "rules">("menu");
+  const [screen, setScreen] = useState<"menu" | "setup" | "game" | "scores" | "history" | "rules" | "cabinet">("menu");
   const [mode, setMode] = useState<"bot" | "local">("bot");
   const [setup, setSetup] = useState<SetupChoice | null>(null);
   const [gameKey, setGameKey] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [newBadges, setNewBadges] = useState<NewBadge[]>([]);
   const [audioReady, setAudioReady] = useState(isAudioUnlocked());
   const style = getStyle(settings.style);
 
@@ -64,10 +67,11 @@ export function App() {
         </button>
       </header>
       <p className="tap-note" style={{ visibility: audioReady ? "hidden" : "visible" }}>Tap anywhere to turn on sound</p>
-      {screen === "menu" && <MainMenu onPlay={(m) => { setMode(m); setScreen("setup"); }} onSettings={() => setOpen(true)} onScores={() => setScreen("scores")} onHistory={() => setScreen("history")} onRules={() => setScreen("rules")} />}
+      {screen === "menu" && <MainMenu onPlay={(m) => { setMode(m); setScreen("setup"); }} onSettings={() => setOpen(true)} onScores={() => setScreen("scores")} onHistory={() => setScreen("history")} onRules={() => setScreen("rules")} onCabinet={() => setScreen("cabinet")} />}
       {screen === "setup" && <SetupScreen mode={mode} onBack={() => setScreen("menu")} onStart={(s) => { setSetup(s); setGameKey((k) => k + 1); setPaused(false); setScreen("game"); }} />}
       {screen === "scores" && <ScoresScreen onBack={() => setScreen("menu")} />}
       {screen === "history" && <HistoryScreen onBack={() => setScreen("menu")} />}
+      {screen === "cabinet" && <CabinetScreen onBack={() => setScreen("menu")} />}
       {screen === "rules" && <RulesScreen onBack={() => setScreen("menu")} />}
       {screen === "game" && setup && (
         <GameScreen key={gameKey} style={style} play={play} setup={setup} view={settings.passAndPlayView} motion={!settings.reduceMotion} commentary={settings.commentary} paused={paused || open}
@@ -81,11 +85,18 @@ export function App() {
             if (stats.answers[human].length) saveTriviaRating(updateTriviaRating(loadTriviaRating(), stats.answers[human]));
             const botId = g.players[human === "white" ? "black" : "white"].botId;
             const meta = await loadBots().then((m) => botList(m).find((b) => b.id === botId)).catch(() => undefined);
-            recordGame(g, setup.botLevel, stats.formEarned[human], meta?.ratings?.[setup.botLevel]);
+            const rating = meta?.ratings?.[setup.botLevel];
+            const prevBestMatch = loadScores().best?.match;
+            recordGame(g, setup.botLevel, stats.formEarned[human], rating);
+            const won = awardBadges({ game: g, stats, human, botMatch: rating?.match, prevBestMatch });
+            if (won.length) { setNewBadges(won); play("cheer"); }
           }} />
       )}
       {screen === "game" && paused && !open && (
         <PauseMenu onResume={() => setPaused(false)} onRestart={() => { setGameKey((k) => k + 1); setPaused(false); }} onSettings={() => setOpen(true)} onQuit={() => { setPaused(false); setScreen("menu"); }} />
+      )}
+      {newBadges.length > 0 && screen !== "cabinet" && (
+        <BadgeToast badges={newBadges} onOpen={() => { setNewBadges([]); setPaused(false); setScreen("cabinet"); }} onClose={() => setNewBadges([])} />
       )}
       {open && <SettingsPanel settings={settings} onChange={setSettings} onClose={() => setOpen(false)} play={play} />}
     </div>

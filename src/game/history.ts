@@ -3,6 +3,7 @@
 
 import type { Color, GameState, Outcome } from "./types";
 import type { Answer } from "./triviaElo";
+import { emptyFeats, type Feats } from "./badges";
 
 export interface Tally { right: number; asked: number }
 /** What happened during a game that the final GameState doesn't remember. */
@@ -11,6 +12,8 @@ export interface MatchStats {
   trivia: Record<Color, Tally>;
   /** Each question card answered (not "Who am I?" or shootout kicks), for the trivia Elo. */
   answers: Record<Color, Answer[]>;
+  /** What each side did that the badges need (see badges.ts). */
+  feats?: Record<Color, Feats>;
 }
 
 export interface HistoryEntry {
@@ -42,6 +45,7 @@ export const emptyStats = (): MatchStats => ({
   formEarned: { white: 0, black: 0 },
   trivia: { white: { right: 0, asked: 0 }, black: { right: 0, asked: 0 } },
   answers: { white: [], black: [] },
+  feats: { white: emptyFeats(), black: emptyFeats() },
 });
 
 type Store = Pick<Storage, "getItem" | "setItem">;
