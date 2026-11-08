@@ -90,12 +90,12 @@ export class WhoAmIBank {
     return isRightGuess(set, typed, others);
   }
 
-  /** Chance of a Club Bonus "Who am I?" (a set about your own club) when your club has any. Hot Spots never sit on the promotion ranks, so it can't hang off them. */
+  /** Chance of a "Who am I?" about your own club, when your club has any sets. */
   static CLUB_CHANCE = 0.5;
 
-  /** A club set (forced by `bonus`, otherwise half the time when the club has sets), else a general set. */
-  draw(club: string | null, bonus = false): WhoAmI {
-    const wantClub = bonus || this.rng() < WhoAmIBank.CLUB_CHANCE;
+  /** A club set half the time when the club has sets, else a general set. */
+  draw(club: string | null): WhoAmI {
+    const wantClub = this.rng() < WhoAmIBank.CLUB_CHANCE;
     const clubSets = wantClub && club ? this.sets.filter((s) => s.club === club) : [];
     const pool = clubSets.length ? clubSets : this.sets.filter((s) => !s.club || s.club === club);
     let fresh = pool.filter((s) => !this.seen.has(s.id));

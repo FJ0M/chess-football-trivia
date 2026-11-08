@@ -6,7 +6,7 @@ Nov 4, 2026 · Freddie Martin
 
 ## Summary
 
-Chess is played normally, and football questions pop up along the way. A right answer earns **Form**, which you spend on power-ups and hints. A wrong answer can cost you, and how much depends on the question you picked: easy questions are safe, hard ones pay more but can freeze a piece or cost a turn.
+Chess is played normally, and football questions pop up along the way. A right answer earns **Form**, which you spend on power-ups and chess hints. A wrong answer can cost you, and how much depends on the question you picked: easy questions are safe, hard ones pay more but can freeze a piece or cost a turn.
 
 This builds on the [research doc](https://claude.ai/artifact/288D72mj429RgxhCALFLa8) and Freddie's answers to the planning questions:
 
@@ -27,7 +27,7 @@ All numbers below (Form costs, timers, bot accuracy) are first guesses to tune i
 There are two ways to play, and both use the same rules.
 
 - **vs Bot.** Pick a bot from the Elo ladder (400 to 1600) or Freddie, Ryan or Ollie. You answer questions yourself; the bot "answers" using its trivia profile and talks trash throughout.
-- **Pass and Play.** Two people on one device. Whoever triggered the question answers it, and the other player hands over the device without peeking (honour system, as at the pub). The screen faces whoever is up. Settings has two views, each with a picture. **Flat on the table** (the default, on phones, tablets and computers) turns the whole game round 180 degrees on Black's turn, so the board, question card and power-ups all face them with the device flat on the table. **Pass the phone** flips only the board, for handing the device across. (The old Face to face and Off views were removed in playtest round 3; saved settings move to Flat on the table and Pass the phone.) **Handicap** (Pass and Play setup): pick who gets the help, then piece odds from the other player (the f-pawn, the queenside knight, the queenside rook with its castling right, or the queen; Chess960 back ranks too) and a Form boost on the weaker player's right answers (x1.25, x1.5 or x2, with fractions carried to the next answer). Enter both chess ratings for a suggestion: the biggest piece the rating gap covers (pawn ~150, knight ~350, rook ~550, queen ~900 Elo), then a Form boost for what's left (x1.25 ~50, x1.5 ~100, x2 ~200). These values are first guesses to tune in playtesting. Odds count as already given, so the player who gave them doesn't get the material catch-up bonus just for that.
+- **Pass and Play.** Two people on one device. Whoever triggered the question answers it, and the other player hands over the device without peeking (honour system, as at the pub). The screen faces whoever is up. Settings has two views, each with a picture. **Flat on the table** (the default, on phones, tablets and computers) turns the whole game round 180 degrees on Black's turn, so the board, question card and power-ups all face them with the device flat on the table. The layout is symmetric about the board (the same space on each side, each side scrolling on its own, side by side in landscape), so the turn leaves the board exactly where it was: it never jumps between moves (playtest, 2026-11-08). Cards, questions and results sit over the board in this view, since each side is too small for them. **Pass the phone** flips only the board, for handing the device across. (The old Face to face and Off views were removed in playtest round 3; saved settings move to Flat on the table and Pass the phone.) **Handicap** (Pass and Play setup): pick who gets the help, then piece odds from the other player (the f-pawn, the queenside knight, the queenside rook with its castling right, or the queen; Chess960 back ranks too) and a Form boost on the weaker player's right answers (x1.25, x1.5 or x2, with fractions carried to the next answer). Enter both chess ratings for a suggestion: the biggest piece the rating gap covers (pawn ~150, knight ~350, rook ~550, queen ~900 Elo), then a Form boost for what's left (x1.25 ~50, x1.5 ~100, x2 ~200). These values are first guesses to tune in playtesting. Odds count as already given, so the player who gave them doesn't get the material catch-up bonus just for that.
 
 Each game also has a **Plain Chess** toggle (no trivia) and a **Timed** toggle (3, 5, 10, 15 or 30 minutes each, shown on stadium-style scoreboard clocks), so it works for a quick game or a serious one. In a timed game the clock of whoever has to act **always runs**: while choosing a move, picking a card, answering, reading the result (which moves on by itself after 2.5 seconds) and while the engine thinks for a power-up. It stops only for a "Who am I?", the Penalty Shootout and the pause menu. Every move adds **3 seconds** to the mover's clock.
 
@@ -44,7 +44,7 @@ When a pawn reaches the last rank, you earn your new piece with a **"Who am I?"*
 | Clue 4 | Bishop |
 | Clue 5 | Knight |
 
-A wrong guess, or no guess by 12 seconds after the fifth clue, gives you a knight **and your opponent +2 Form**. That way a blind early guess is a real gamble. The question replaces any other trigger on that move, and it restarts the Kick-off count. Hot Spots never sit on the promotion ranks, so instead about half of all "Who am I?"s are a **Club Bonus** player from your own club, where your club has clue sets.
+A wrong guess, or no guess by 12 seconds after the fifth clue, gives you a knight **and your opponent +2 Form**. That way a blind early guess is a real gamble. The question replaces any other trigger on that move, and it restarts the Kick-off count. About half of all "Who am I?"s are a player from your own club, where your club has clue sets.
 
 Clue sets live in `data/whoami.json`, built by `tools/build_whoami.py`: 30 Premier League players from 2000 onwards, 10 West Ham and 8 Brighton. Every clue was checked against the player's Wikipedia page on 2026-11-04. Bots aim for a piece (Ollie a queen, Ryan a rook, Freddie a knight) and guess with their usual trivia accuracy.
 
@@ -52,7 +52,7 @@ Clue sets live in `data/whoami.json`, built by `tools/build_whoami.py`: 30 Premi
 
 ## Picking your club
 
-Before each game every player picks the club they support from all 92 Premier League and EFL clubs (or none). Landing on a Hot Spot gives a **Club Bonus Round** on your own club (normal Form, since playtest round 3), and about one deal in three swaps a card for a club card at the same difficulty. A club with fewer than 10 questions at a difficulty falls back to general questions. Bots have clubs too: Ryan and Ollie West Ham, Freddie Brighton.
+Before each game every player picks the club they support from all 92 Premier League and EFL clubs (or none). About one deal in three (Hot Spots included) swaps a card for a club card at the same difficulty. A club with fewer than 10 questions at a difficulty falls back to general questions. Bots have clubs too: Ryan and Ollie West Ham, Freddie Brighton.
 
 ## Menus
 
@@ -64,7 +64,7 @@ A question appears straight after a move that triggers one, and the player who m
 
 | Trigger | Fires when | Question type |
 | --- | --- | --- |
-| Hot Spot | You land on one of 2 marked squares (a football icon) | **Club Bonus Round**: questions on your club |
+| Hot Spot | You land on one of 2 marked squares (a football icon) | Normal pick of three cards from the whole bank |
 | Capture | You take a piece | Normal pick of three cards |
 | Kick-off | Every 4th move you make with no other question | Normal pick of three cards |
 
@@ -88,7 +88,7 @@ You pick your own question, and the harder it is, the more you win and the more 
 | Tap-in (easy) | 10 s | +1 Form | Nothing, you just miss out |
 | Highlight (medium) | 10 s | +2 Form | Opponent gets +2 Form ("scored on the break") |
 | Screamer (hard) | 10 s | +3 Form | **Booked**: the piece you just moved is frozen for your next turn |
-| Puskás (hard, no hints) | 8 s | +5 Form | **Sent off**: you lose your next turn, and the opponent gets a Free Kick |
+| Puskás (hard) | 8 s | +5 Form | **Sent off**: you lose your next turn, and the opponent gets a Free Kick |
 
 **Extras on top:**
 
@@ -96,7 +96,7 @@ You pick your own question, and the harder it is, the more you win and the more 
 - **Hat-trick:** three right in a row earns +2 Form and a commentary line.
 - **Catch-up:** if you're behind on material (pawn 1, knight and bishop 3, rook 5, queen 9), every right answer earns +1 Form more.
 - **Yellow card:** two wrong in a row is a yellow (banter only). Four wrong in a row is a red, and your next power-up costing 3 Form or more costs double. Cheaper ones don't pay the double price and don't clear it.
-- **Club Bonus Round** (Hot Spots): every card is a question on your club. Rewards and penalties are the normal ones (Freddie, 2026-11-07: no double Form, so chasing Hot Spots doesn't farm Form).
+- **Hot Spots** deal from the whole bank like any other trigger, with normal rewards and penalties. They used to be a Club Bonus Round on your club, but with 30 questions a club those came round often enough to memorise (Freddie, 2026-11-08). Double Form was already dropped on 2026-11-07 so chasing Hot Spots doesn't farm Form.
 
 **Penalty safety rules,** so trivia never decides a game on its own:
 
@@ -104,9 +104,9 @@ You pick your own question, and the harder it is, the more you win and the more 
 - A Free Kick is an extra move for the opponent that cannot capture or give check. It is cancelled if you are in check.
 - Form is capped at 12, so nobody can hoard a game-winning stack.
 
-## Form, power-ups and hints
+## Form, power-ups and chess hints
 
-Form is spent on one power-up per turn, before you move, plus any number of hints during a question. The target is about 1.2 Form per move for a strong quizzer, so cheap items come often and big ones a few times a game. `tools/playtest/formsim.ts` measures it with the real rules (playtest round 3, 300 games per row, 40 moves a side):
+Form is spent on one power-up per turn, before you move. (Trivia hints during a question, 50:50, Ask the Crowd and Phone Ollie, were removed on 2026-11-08 as too complicated.) The target is about 1.2 Form per move for a strong quizzer, so cheap items come often and big ones a few times a game. `tools/playtest/formsim.ts` measures it with the real rules (playtest round 3, 300 games per row, 40 moves a side):
 
 | Player | Before round 3 | Now | Now, chasing every Hot Spot |
 | --- | --- | --- | --- |
@@ -143,14 +143,6 @@ Each power-up shows a **value of 1 to 5 stars**: roughly how much it swings the 
 | Assistant's Flag | 1 | 3 | ★ | Highlights every square the opponent attacks |
 | Scout Report | 2 | 4 | ★ | Shows the piece the opponent will most likely move next |
 | Manager's Tip | 4 | 10 | ★★ | Shows the engine's best move |
-
-**Trivia hints** (during a question, not allowed on a Puskás):
-
-| Hint | Cost | Effect |
-| --- | --- | --- |
-| 50:50 | 1 | Removes two wrong answers |
-| Ask the Crowd | 1 | A crowd vote that leans towards the right answer (right about 65% of the time) |
-| Phone Ollie | 2 | Ollie suggests an answer, right about 80% of the time. Becomes "Phone Ryan" when you're playing Ollie |
 
 ## Bots: Freddie, Ryan and Ollie
 
@@ -197,7 +189,6 @@ Every bot (ladder and originals) also plays the game around the chess (review bu
 
 - **It sees the evaluation.** Before deciding on a power-up, the bot takes a quick look at the position with the engine (depth 8 at most). So Park the Bus fires when it's losing, VAR Review fires when the score has swung against it since its last move, and it picks safer cards when it's well ahead.
 - **It chases Hot Spots.** A move onto a Hot Spot gets a bonus worth up to 0.4 of a pawn, scaled by how well the bot knows its own club, so good quizzers go for them and poor ones mostly don't.
-- **It uses hints.** On a Highlight or Screamer it rates below 65%, the bot buys a 50:50 if it has the Form (never on a Tap-in or a Puskás).
 - **Golden Boot only pays.** The bot buys it only when the engine's best move is a capture, and while it runs the bot likes captures a bit more, so it doesn't lose Form on it.
 
 ## Tech stack and deployment
@@ -232,7 +223,7 @@ The game is a static web app with no server: everything, including the bots, run
 }
 ```
 
-`difficulty` is easy, medium or hard (a Puskás reuses hard questions; the data keeps the keys easy/medium/hard, which the game shows as Tap-in/Highlight/Screamer). `topic` drives the card labels, and `club` (a club id, or null for general questions) decides what can appear in a Club Bonus Round. Only `verified` questions are shown in the game.
+`difficulty` is easy, medium or hard (a Puskás reuses hard questions; the data keeps the keys easy/medium/hard, which the game shows as Tap-in/Highlight/Screamer). `topic` drives the card labels, and `club` (a club id, or null for general questions) decides which club cards a player can be dealt. Only `verified` questions are shown in the game.
 
 ## Build order and open questions
 
@@ -240,7 +231,7 @@ Each step ends with something playable on a phone, so the game can be tested wit
 
 1. **Playable chess.** Board, rules, Pass and Play, installable and hosted.
 2. **Trivia and Form.** Triggers, the three-card pick, rewards, penalties and Hot Spots, using the question bank.
-3. **Power-ups and hints.** The tables above, with tests for every rule.
+3. **Power-ups and chess hints.** The tables above, with tests for every rule.
 4. **Bots.** Stockfish in the browser, then the three personalities and their trash talk.
 5. **Theme and polish.** Claret-and-blue board, commentary, sounds, Penalty Shootout.
 

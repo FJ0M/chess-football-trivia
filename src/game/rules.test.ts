@@ -128,7 +128,7 @@ describe("triggers", () => {
 
 describe("answers", () => {
   const ctx = { color: "white" as const, puskas: false, bonus: false, ms: 9000, landed: "e4" };
-  it("rewards 1/2/3/5 (not doubled in a Club Bonus Round), with a quick bonus on Screamers and Puskás only", () => {
+  it("rewards 1/2/3/5 (the same on a Hot Spot), with a quick bonus on Screamers and Puskás only", () => {
     const g = game();
     expect(applyAnswer(g, { ...ctx, difficulty: "easy", correct: true }).state.players.white.form).toBe(1);
     expect(applyAnswer(g, { ...ctx, difficulty: "medium", correct: true }).state.players.white.form).toBe(2);

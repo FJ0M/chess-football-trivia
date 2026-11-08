@@ -7,7 +7,7 @@ import type { GameStyle } from "../theme/themes";
 import type { SfxName } from "../audio/sfx";
 import type { PassAndPlayView } from "../settings/settings";
 import { useGame, cardLabel, clockOwner, RESULT_MS, type Phase, type SetupChoice } from "../game/useGame";
-import { FORM_CAP, POWER_UPS, POWER_UP_BY_ID, TRIVIA_HINTS, fergieMs, fmtSeconds, type PowerUpDef } from "../game/powerups";
+import { FORM_CAP, POWER_UPS, POWER_UP_BY_ID, fergieMs, fmtSeconds, type PowerUpDef } from "../game/powerups";
 import {
   KICKOFF_EVERY, REWARD, destsFor, isPromotion, pieceAt, powerBlocked, powerCost, powerTargets, resolveMove, turnOf, WHO_AM_I_PIECES, ROLE_NAME,
 } from "../game/rules";
@@ -59,15 +59,9 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
   /** "Flat on the table": the whole game turns 180 degrees for Black, so the board and every card face them. */
   const flipAll = local && view === "flip" && active === "black";
   const humanToAct = game.players[active].kind === "human";
-  // When the whole screen turns round, mirror the scroll position so the player now facing it
-  // sees the same part (board or controls) the other player was looking at.
-  const firstFlip = useRef(true);
-  useEffect(() => {
-    if (firstFlip.current) { firstFlip.current = false; return; }
-    if (!(local && view === "flip")) return;
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    if (max > 0) window.scrollTo({ top: max - window.scrollY });
-  }, [flipAll]); // eslint-disable-line react-hooks/exhaustive-deps
+  // In "Flat on the table" the layout is symmetric about the board (app.css, .flip-mode): equal space on
+  // each side, each scrolling on its own. Turning the screen 180 degrees then leaves the board exactly
+  // where it was, so it never jumps between turns and the page scroll never has to change.
 
   const dests = useMemo(() => (phase.kind === "move" && humanToAct ? destsFor(game) : new Map<string, string[]>()), [game, phase.kind, humanToAct]);
   const targets = useMemo(() => {
@@ -110,15 +104,26 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
   const line = useCommentary(game, g.events, commentary && phase.kind !== "whoami", names, g.evaluate);
   const osReduce = usePrefersReducedMotion();
   const fx = motion && !osReduce;
+  const flipMode = local && view === "flip";
+  // Flat on the table, each side of the board is only about a quarter of the screen: too small for a
+  // question. So questions, cards and results sit over the board instead (it isn't playable then anyway).
+  const panelOnBoard = flipMode && (phase.kind === "cards" || phase.kind === "question" || phase.kind === "result" || phase.kind === "shootout");
+  const commentaryLine = line && <p className="commentary" aria-live="polite"><Mic /><span key={line.id}>{line.text}</span></p>;
 
   return (
-    <div className={`screen style-${style.id}${local && view === "flip" ? " flip-mode" : ""}${flipAll ? " flip-all" : ""}`}>
-      <div className="strip">
-        <span>{game.options.chess960 ? `Chess960 · No. ${game.options.position}` : game.options.trivia ? <><em className="wide-only">Football </em>trivia</> : "Plain chess"}</span>
-        <Scoreline game={game} score={mat.score} />
-        <span>Move {Math.ceil((game.history.length + 1) / 2)}</span>
+    <div className={`screen style-${style.id}${flipMode ? " flip-mode" : ""}${flipAll ? " flip-all" : ""}`}>
+      {/* The two sides of the board. They only become boxes of their own in "Flat on the table";
+          everywhere else they're display: contents, so the layout is the same as without them. */}
+      <div className="side far">
+        <div className="strip">
+          <span>{game.options.chess960 ? `Chess960 · No. ${game.options.position}` : game.options.trivia ? <><em className="wide-only">Football </em>trivia</> : "Plain chess"}</span>
+          <Scoreline game={game} score={mat.score} />
+          <span>Move {Math.ceil((game.history.length + 1) / 2)}</span>
+        </div>
+        {/* Flat on the table: the commentary sits on the far side, where there's room, facing the player who's waiting. */}
+        {flipMode && commentaryLine}
+        <PlayerBar game={game} color={top} active={active} ticking={clockOwner(game, phase)} bubble={g.bubble} bench={mat.bench[top]} lead={mat.score[top] - mat.score[bottom]} ebk={g.ebk[top]} />
       </div>
-      <PlayerBar game={game} color={top} active={active} ticking={clockOwner(game, phase)} bubble={g.bubble} bench={mat.bench[top]} lead={mat.score[top] - mat.score[bottom]} ebk={g.ebk[top]} />
       {/* During a "Who am I?" the board is hidden (and the clocks stop): it's just the footballer. */}
       {phase.kind === "whoami" && <div className="whoami-stage"><Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} /></div>}
       <div className="board" role="grid" aria-label="Chess board" hidden={phase.kind === "whoami"}>
@@ -156,34 +161,37 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
         {g.overlay.tip && <MarkerArrow from={g.overlay.tip[0]} to={g.overlay.tip[1]} orientation={orientation} color="#ff2d95" id="tip" outline />}
         {fx && <BoardFx events={g.events} now={g.now} orientation={orientation} />}
       </div>
-      <PlayerBar game={game} color={bottom} active={active} ticking={clockOwner(game, phase)} bubble={g.bubble} bench={mat.bench[bottom]} lead={mat.score[bottom] - mat.score[top]} ebk={g.ebk[bottom]} />
-      {line && <p className="commentary" aria-live="polite"><Mic /><span key={line.id}>{line.text}</span></p>}
-      {fx && <ScreenFx events={g.events} now={g.now} names={names} />}
+      {panelOnBoard && <div className="board-cover"><Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} /></div>}
+      <div className="side near">
+        <PlayerBar game={game} color={bottom} active={active} ticking={clockOwner(game, phase)} bubble={g.bubble} bench={mat.bench[bottom]} lead={mat.score[bottom] - mat.score[top]} ebk={g.ebk[bottom]} />
+        {!flipMode && commentaryLine}
 
-      <div className="controls">
-        {phase.kind !== "whoami" && <Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} />}
-        {game.options.trivia && phase.kind !== "over" && phase.kind !== "shootout" && phase.kind !== "whoami" && (
-          <PowerBar game={game} phase={phase} color={local ? active : humans[0] ?? turn} enabled={humanToAct && phase.kind === "move"} onPick={g.choosePower} play={play} />
-        )}
-        {style.id === "broadcast" ? <div className="ticker"><b>LIVE</b> · {selNote ?? g.note}</div> : <p className="hint" aria-live="polite">{selNote ?? g.note}</p>}
-        {phase.kind !== "over" && (
-          <div className="game-actions">
-            {confirm ? (
-              <>
-                <span>{confirm === "resign" ? "Resign this game?" : "Both agree a draw?"}</span>
-                <button type="button" onClick={() => { if (confirm === "resign") g.resign(humans.length === 1 ? humans[0] : turn); else g.agreeDraw(); setConfirm(null); }}>Yes</button>
-                <button type="button" onClick={() => setConfirm(null)}>No</button>
-              </>
-            ) : (
-              <>
-                <button type="button" onClick={() => setConfirm("resign")}>Resign</button>
-                {local && <button type="button" onClick={() => setConfirm("draw")}>Offer draw</button>}
-                <button type="button" onClick={onPause}>Menu</button>
-              </>
-            )}
-          </div>
-        )}
+        <div className="controls">
+          {phase.kind !== "whoami" && !panelOnBoard && <Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} />}
+          {game.options.trivia && phase.kind !== "over" && phase.kind !== "shootout" && phase.kind !== "whoami" && (
+            <PowerBar game={game} phase={phase} color={local ? active : humans[0] ?? turn} enabled={humanToAct && phase.kind === "move"} onPick={g.choosePower} play={play} />
+          )}
+          {style.id === "broadcast" ? <div className="ticker"><b>LIVE</b> · {selNote ?? g.note}</div> : <p className="hint" aria-live="polite">{selNote ?? g.note}</p>}
+          {phase.kind !== "over" && (
+            <div className="game-actions">
+              {confirm ? (
+                <>
+                  <span>{confirm === "resign" ? "Resign this game?" : "Both agree a draw?"}</span>
+                  <button type="button" onClick={() => { if (confirm === "resign") g.resign(humans.length === 1 ? humans[0] : turn); else g.agreeDraw(); setConfirm(null); }}>Yes</button>
+                  <button type="button" onClick={() => setConfirm(null)}>No</button>
+                </>
+              ) : (
+                <>
+                  <button type="button" onClick={() => setConfirm("resign")}>Resign</button>
+                  {local && <button type="button" onClick={() => setConfirm("draw")}>Offer draw</button>}
+                  <button type="button" onClick={onPause}>Menu</button>
+                </>
+              )}
+            </div>
+          )}
+        </div>
       </div>
+      {fx && <ScreenFx events={g.events} now={g.now} names={names} />}
     </div>
   );
 }
@@ -321,7 +329,7 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
         </div>
         {humanToAct && (
           <button type="button" className="cta" onClick={() => g.pickCard(phase.cards.findIndex((c) => c.difficulty === "hard"), true)}>
-            Go for a Puskás: turn the Screamer into the goal of the season. +{REWARD.puskas} Form, 8 seconds, no hints. Wrong and you're sent off
+            Go for a Puskás: turn the Screamer into the goal of the season. +{REWARD.puskas} Form, 8 seconds. Wrong and you're sent off
           </button>
         )}
       </div>
@@ -330,9 +338,7 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
 
   if (phase.kind === "question") {
     const name = game.players[phase.color].name;
-    const form = game.players[phase.color].form;
     const left = Math.max(0, Math.ceil((phase.limitMs - (g.now - phase.startedAt)) / 1000));
-    const friend = game.options.mode === "bot" && Object.values(game.players).some((p) => p.botId === "ollie") ? "Phone Ryan" : "Phone Ollie";
     return (
       <div className="quiz">
         <div className="meta"><span>{phase.label}</span><span>{name} · {left}s</span></div>
@@ -340,20 +346,11 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
         <div className="timer live" style={timerStyle(phase.startedAt, phase.limitMs)} />
         <div className="answers">
           {phase.q.options.map((o, k) => (
-            <button key={k} type="button" disabled={!humanToAct || phase.hidden.includes(k)} className={phase.hidden.includes(k) ? "dim" : phase.friend === k ? "suggested" : ""} onClick={() => g.answer(k)}>
-              <b>{"ABCD"[k]}</b><span>{phase.hidden.includes(k) ? "" : o}{phase.crowd ? <em className="crowd"> {phase.crowd[k]}%</em> : null}</span>
+            <button key={k} type="button" disabled={!humanToAct} onClick={() => g.answer(k)}>
+              <b>{"ABCD"[k]}</b><span>{o}</span>
             </button>
           ))}
         </div>
-        {humanToAct && !phase.puskas && (
-          <div className="thints">
-            {TRIVIA_HINTS.map((h) => (
-              <button key={h.id} type="button" disabled={form < h.cost} onClick={() => g.useHint(h.id)}>
-                {h.id === "phone-a-friend" ? friend : h.name} <small>{h.cost} Form</small>
-              </button>
-            ))}
-          </div>
-        )}
       </div>
     );
   }

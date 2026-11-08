@@ -1,7 +1,7 @@
 // Power-up, chess hint and trivia hint definitions. Prices were rebalanced after
 // playtest round 3 (see docs/game-design.md); tune further in playtesting.
 
-import type { PowerUpId, TriviaHintId } from "./types";
+import type { PowerUpId } from "./types";
 
 export type TargetKind =
   | "none"
@@ -61,19 +61,6 @@ export const POWER_UP_BY_ID = Object.fromEntries(POWER_UPS.map((p) => [p.id, p])
 export function startingCooldowns(): Record<PowerUpId, number> {
   return Object.fromEntries(POWER_UPS.map((p) => [p.id, p.cooldown])) as Record<PowerUpId, number>;
 }
-
-export interface TriviaHintDef {
-  id: TriviaHintId;
-  name: string;
-  cost: number;
-  effect: string;
-}
-
-export const TRIVIA_HINTS: TriviaHintDef[] = [
-  { id: "fifty-fifty", name: "50:50", cost: 1, effect: "Removes two wrong answers" },
-  { id: "ask-the-crowd", name: "Ask the Crowd", cost: 1, effect: "A crowd vote that leans towards the right answer" },
-  { id: "phone-a-friend", name: "Phone Ollie", cost: 2, effect: "Ollie suggests an answer" },
-];
 
 export const FORM_CAP = 12;
 

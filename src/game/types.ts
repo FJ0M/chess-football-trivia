@@ -37,7 +37,6 @@ export type PowerUpId =
   | "managers-tip"
   | "masterclass";
 
-export type TriviaHintId = "fifty-fifty" | "ask-the-crowd" | "phone-a-friend";
 
 export interface PlayerState {
   name: string;

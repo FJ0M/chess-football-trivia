@@ -123,13 +123,7 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 .screen .qcard.d-easy { border-color: #2e9d4f; } .screen .qcard.d-medium { border-color: #e0a100; } .screen .qcard.d-hard { border-color: #d1342f; }
 .screen .qcard:disabled { cursor: default; }
 .screen .cta { font: inherit; font-size: 13px; color: inherit; cursor: pointer; padding: 9px 10px; border-radius: 10px; border: 2px dashed currentColor; background: transparent; text-align: center; }
-.screen .thints { display: flex; flex-wrap: wrap; gap: 6px; }
-.screen .thints button { font: inherit; font-size: 12px; color: inherit; cursor: pointer; padding: 5px 9px; border-radius: 999px; border: 1px solid currentColor; background: transparent; }
-.screen .thints button:disabled { opacity: .4; cursor: default; }
-.screen .thints small { opacity: .7; }
-.screen .answers button.suggested { outline: 3px dashed #1f5fbf; outline-offset: -3px; }
 .screen .answers button:disabled { cursor: default; }
-.screen .answers .crowd { font-style: normal; font-weight: 700; opacity: .8; }
 .screen .timer.live::after { inset: 0 auto 0 0; width: var(--left, 100%); transition: width .2s linear; }
 .screen .clues { margin: 0; padding-left: 20px; display: grid; gap: 4px; font-size: 14px; line-height: 1.3; }
 .screen .clues li { animation: pop .25s ease-out; }
@@ -270,8 +264,8 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
   .app { max-width: 1180px; }
   .app .screen { max-width: none; align-items: start; align-content: start; grid-template-rows: auto auto auto auto auto 1fr;
     grid-template-columns: clamp(240px, min(calc(100dvh - 170px), 58vw), 720px) minmax(0, 1fr); column-gap: 18px; }
-  .app .screen > :not(.controls) { grid-column: 1; }
-  .app .screen > .controls { grid-column: 2; grid-row: 1 / span 6; align-self: start; position: sticky; top: 10px; }
+  .app .screen > :not(.side), .app .screen > .side > :not(.controls) { grid-column: 1; }
+  .app .screen > .side > .controls { grid-column: 2; grid-row: 1 / span 6; align-self: start; position: sticky; top: 10px; }
   .app .screen .pc { font-size: clamp(14px, calc((100dvh - 170px) / 8 * .55), 52px); }
   .app .screen.style-tactics .pc, .app .screen.style-tabletop .pc, .app .screen.style-sticker .pc { font-size: clamp(12px, calc((100dvh - 170px) / 8 * .38), 36px); }
 }
@@ -401,7 +395,34 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 @media (max-width: 419px), (orientation: landscape) and (max-height: 500px) { .screen .strip .wide-only { display: none; } }
 .screen .strip .wide-only { font-style: inherit; }
 /* Grid children may shrink below their content (a long strip in Fanzine's wide font was widening the whole card at 320px). */
-.screen > * { min-width: 0; }
+.screen > *, .screen > .side > * { min-width: 0; }
+
+/* The two sides of the board (.side.far: strip and the far player; .side.near: the near player and the
+   controls) are invisible wrappers, except in Pass and Play "Flat on the table". There the screen is
+   laid out symmetrically: the board in the middle and the same space on each side, each side scrolling
+   on its own. The 180-degree turn for Black then maps the board onto itself, so it stays put on the
+   table between turns while the controls swap to whoever is up. */
+.screen > .side { display: contents; }
+.app .screen.flip-mode { height: max(620px, calc(100dvh - 110px)); grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr); align-content: stretch; }
+.app .screen.flip-mode > .side { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; min-height: 0; overflow-y: auto; overscroll-behavior: contain; align-content: start; }
+.app .screen.flip-mode > .side.far { grid-row: 1; align-content: end; }
+.app .screen.flip-mode > .side.near { grid-row: 3; }
+.app .screen.flip-mode > .board, .app .screen.flip-mode > .whoami-stage { grid-row: 2; grid-column: 1; justify-self: center; width: min(100%, max(240px, calc(100dvh - 530px))); }
+.app .screen.flip-mode > .whoami-stage { aspect-ratio: 1; min-height: 0; overflow-y: auto; }
+.app .screen.flip-mode > .board-cover { grid-row: 2; grid-column: 1; justify-self: center; align-self: stretch; width: min(100%, max(240px, calc(100dvh - 530px))); z-index: 6; contain: size; display: grid; grid-template-columns: minmax(0, 1fr); align-content: safe center; overflow-y: auto; padding: 8px; box-sizing: border-box; background: rgba(10, 20, 30, .45); border-radius: 6px; }
+@media (orientation: landscape) and (min-width: 560px) {
+  .app .screen.flip-mode { height: max(360px, calc(100dvh - 90px)); grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
+  .app .screen.flip-mode > .board, .app .screen.flip-mode > .whoami-stage { grid-row: 1; }
+  .app .screen.flip-mode > .side.far { grid-row: 1; grid-column: 1; align-content: center; }
+  .app .screen.flip-mode > .side.near { grid-row: 1; grid-column: 3; }
+  .app .screen.flip-mode > .board, .app .screen.flip-mode > .whoami-stage, .app .screen.flip-mode > .board-cover { grid-row: 1; grid-column: 2; align-self: center; width: min(calc(100dvh - 130px), 46vw); }
+  .app .screen.flip-mode > .board-cover { aspect-ratio: 1; }
+  .app .screen.flip-mode > .side > * { grid-column: auto; grid-row: auto; position: static; }
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  .app .screen.flip-mode { height: max(300px, calc(100dvh - 30px)); }
+  .app .screen.flip-mode > .board, .app .screen.flip-mode > .whoami-stage, .app .screen.flip-mode > .board-cover { width: min(calc(100dvh - 50px), 42vw); }
+}
 .screen.style-fanzine .strip { font-size: 9px; letter-spacing: 0; }
 /* Fanzine's tilted board keeps its tilt but stays inside its column. */
 .screen.style-fanzine .board { transform: rotate(.6deg) scale(.985); }

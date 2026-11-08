@@ -151,21 +151,6 @@ export interface QuestionLike {
 export interface AnswerRequest {
   question: QuestionLike;
   puskas?: boolean;
-  /** Indexes already removed by a 50:50, if any. */
-  removed?: number[];
-}
-
-export interface HintOffer {
-  id: string;
-  cost: number;
-}
-
-export interface HintRequest {
-  question: QuestionLike;
-  puskas?: boolean;
-  form: number;
-  /** Trivia hints the bot can pay for now. */
-  available: HintOffer[];
 }
 
 export interface AnswerResult {
