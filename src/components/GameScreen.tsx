@@ -105,9 +105,11 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
   const osReduce = usePrefersReducedMotion();
   const fx = motion && !osReduce;
   const flipMode = local && view === "flip";
-  // Flat on the table, each side of the board is only about a quarter of the screen: too small for a
-  // question. So questions, cards and results sit over the board instead (it isn't playable then anyway).
-  const panelOnBoard = flipMode && (phase.kind === "cards" || phase.kind === "question" || phase.kind === "result" || phase.kind === "shootout");
+  // The screen never scrolls, so where there's only one column (phones and tablets held upright, and
+  // "Flat on the table") questions, cards and results sit over the board instead of pushing it off the
+  // screen (it isn't playable then anyway). With a second column beside the board they go there.
+  const twoColumns = useMedia(TWO_COLUMNS);
+  const panelOnBoard = (flipMode || !twoColumns) && (phase.kind === "cards" || phase.kind === "question" || phase.kind === "result" || phase.kind === "shootout");
   const commentaryLine = line && <p className="commentary" aria-live="polite"><Mic /><span key={line.id}>{line.text}</span></p>;
 
   return (
@@ -124,50 +126,54 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
         {flipMode && commentaryLine}
         <PlayerBar game={game} color={top} active={active} ticking={clockOwner(game, phase)} bubble={g.bubble} bench={mat.bench[top]} lead={mat.score[top] - mat.score[bottom]} ebk={g.ebk[top]} />
       </div>
-      {/* During a "Who am I?" the board is hidden (and the clocks stop): it's just the footballer. */}
-      {phase.kind === "whoami" && <div className="whoami-stage"><Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} /></div>}
-      <div className="board" role="grid" aria-label="Chess board" hidden={phase.kind === "whoami"}>
-        {rows.map((r) => cols.map((c) => {
-          const sq = FILES[c] + (r + 1);
-          const p = board[r][c];
-          const cls = [
-            "sq", (r + c) % 2 === 1 ? "l" : "",
-            last && (last[0] === sq || last[1] === sq) ? "last" : "",
-            sel === sq ? "sel" : "",
-            game.hotSpots.includes(sq) ? "hot" : "",
-            game.frozen.some((f) => f.square === sq) ? "frozen" : "",
-            targets.has(sq) ? "target" : "",
-            phase.kind === "target" && phase.first === sq ? "sel" : "",
-            g.overlay.attacked?.includes(sq) ? "flagged" : "",
-            g.overlay.scout === sq ? "scout" : "",
-          ].join(" ");
-          const isDest = !!sel && !!dests.get(sel)?.includes(sq);
-          // Coordinates sit inside the edge squares: files along the bottom row, ranks up the left column.
-          const fileMark = r === rows[7] ? FILES[c] : null;
-          const rankMark = c === cols[0] ? String(r + 1) : null;
-          return (
-            <button key={sq} type="button" className={cls} onClick={() => tap(sq)} aria-label={`${sq}${p ? ` ${p.color} ${ROLE_NAME[p.role]}` : ""}`}>
-              {game.hotSpots.includes(sq) && <HotSpotIcon />}
-              {p && <span className={`pc ${p.color === "white" ? "w" : "b"}`}>{GLYPH[p.role]}{"︎"}</span>}
-              {isDest && <span className={p ? "dot cap" : "dot"} />}
-              {rankMark && <span className="coord rank" aria-hidden="true">{rankMark}</span>}
-              {fileMark && <span className="coord file" aria-hidden="true">{fileMark}</span>}
-              {g.overlay.scout === sq && <span className="scout-tag" aria-hidden="true"><ScoutEye /></span>}
-            </button>
-          );
-        }))}
-        {/* No last-move arrow while a Scout Report is showing, so the only marking is the scouted piece. */}
-        {style.id === "tactics" && last && !g.overlay.scout && <MarkerArrow from={last[0]} to={last[1]} orientation={orientation} color="#fff7a8" id="ah" />}
-        {g.overlay.tip && <MarkerArrow from={g.overlay.tip[0]} to={g.overlay.tip[1]} orientation={orientation} color="#ff2d95" id="tip" outline />}
-        {fx && <BoardFx events={g.events} now={g.now} orientation={orientation} />}
+      {/* The board takes whatever height is left; .board-wrap is a size container, so the board is the
+          largest square that fits in it. Questions and the "Who am I?" are drawn in the same space. */}
+      <div className="board-wrap">
+        {/* During a "Who am I?" the board is hidden (and the clocks stop): it's just the footballer. */}
+        {phase.kind === "whoami" && <div className="whoami-stage"><Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} /></div>}
+        <div className="board" role="grid" aria-label="Chess board" hidden={phase.kind === "whoami"}>
+          {rows.map((r) => cols.map((c) => {
+            const sq = FILES[c] + (r + 1);
+            const p = board[r][c];
+            const cls = [
+              "sq", (r + c) % 2 === 1 ? "l" : "",
+              last && (last[0] === sq || last[1] === sq) ? "last" : "",
+              sel === sq ? "sel" : "",
+              game.hotSpots.includes(sq) ? "hot" : "",
+              game.frozen.some((f) => f.square === sq) ? "frozen" : "",
+              targets.has(sq) ? "target" : "",
+              phase.kind === "target" && phase.first === sq ? "sel" : "",
+              g.overlay.attacked?.includes(sq) ? "flagged" : "",
+              g.overlay.scout === sq ? "scout" : "",
+            ].join(" ");
+            const isDest = !!sel && !!dests.get(sel)?.includes(sq);
+            // Coordinates sit inside the edge squares: files along the bottom row, ranks up the left column.
+            const fileMark = r === rows[7] ? FILES[c] : null;
+            const rankMark = c === cols[0] ? String(r + 1) : null;
+            return (
+              <button key={sq} type="button" className={cls} onClick={() => tap(sq)} aria-label={`${sq}${p ? ` ${p.color} ${ROLE_NAME[p.role]}` : ""}`}>
+                {game.hotSpots.includes(sq) && <HotSpotIcon />}
+                {p && <span className={`pc ${p.color === "white" ? "w" : "b"}`}>{GLYPH[p.role]}{"︎"}</span>}
+                {isDest && <span className={p ? "dot cap" : "dot"} />}
+                {rankMark && <span className="coord rank" aria-hidden="true">{rankMark}</span>}
+                {fileMark && <span className="coord file" aria-hidden="true">{fileMark}</span>}
+                {g.overlay.scout === sq && <span className="scout-tag" aria-hidden="true"><ScoutEye /></span>}
+              </button>
+            );
+          }))}
+          {/* No last-move arrow while a Scout Report is showing, so the only marking is the scouted piece. */}
+          {style.id === "tactics" && last && !g.overlay.scout && <MarkerArrow from={last[0]} to={last[1]} orientation={orientation} color="#fff7a8" id="ah" />}
+          {g.overlay.tip && <MarkerArrow from={g.overlay.tip[0]} to={g.overlay.tip[1]} orientation={orientation} color="#ff2d95" id="tip" outline />}
+          {fx && <BoardFx events={g.events} now={g.now} orientation={orientation} />}
+        </div>
+        {/* After a Hot Spot the cards wait a moment, so the Scorched Turf animation shows before they cover the board. */}
+        {panelOnBoard && <div className={`board-cover${fx && phase.kind === "cards" && phase.bonus ? " late" : ""}`}><Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} /></div>}
       </div>
-      {/* After a Hot Spot the cards wait a moment, so the Scorched Turf animation shows before they cover the board. */}
-      {panelOnBoard && <div className={`board-cover${fx && phase.kind === "cards" && phase.bonus ? " late" : ""}`}><Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} /></div>}
       <div className="side near">
         <PlayerBar game={game} color={bottom} active={active} ticking={clockOwner(game, phase)} bubble={g.bubble} bench={mat.bench[bottom]} lead={mat.score[bottom] - mat.score[top]} ebk={g.ebk[bottom]} />
-        {!flipMode && commentaryLine}
 
         <div className="controls">
+          {!flipMode && commentaryLine}
           {phase.kind !== "whoami" && !panelOnBoard && <Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} />}
           {game.options.trivia && phase.kind !== "over" && phase.kind !== "shootout" && phase.kind !== "whoami" && (
             <PowerBar game={game} phase={phase} color={local ? active : humans[0] ?? turn} enabled={humanToAct && phase.kind === "move"} onPick={g.choosePower} play={play} />
@@ -276,6 +282,23 @@ function callName(game: GameState, c: Color): string {
   return p.club ? clubShort(p.club) : c === "white" ? "White" : "Black";
 }
 
+/** Wide enough for a second column beside the board (matches the landscape layout in app.css). */
+const TWO_COLUMNS = "(orientation: landscape) and (min-width: 560px)";
+
+function useMedia(query: string): boolean {
+  const media = () => (typeof window !== "undefined" && window.matchMedia ? window.matchMedia(query) : null);
+  const [on, setOn] = useState(() => !!media()?.matches);
+  useEffect(() => {
+    const q = media();
+    if (!q) return;
+    const change = () => setOn(q.matches);
+    change();
+    q.addEventListener?.("change", change);
+    return () => q.removeEventListener?.("change", change);
+  }, [query]); // eslint-disable-line react-hooks/exhaustive-deps
+  return on;
+}
+
 function usePrefersReducedMotion(): boolean {
   const media = () => (typeof window !== "undefined" && window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null);
   const [reduce, setReduce] = useState(() => !!media()?.matches);
@@ -296,6 +319,10 @@ function Mic() {
       <path d="M6 11a6 6 0 0 0 12 0M12 17v4M8.5 21h7" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
+}
+
+function Bolt() {
+  return <svg className="pw-icon bolt" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7z" /></svg>;
 }
 
 function ScoutEye() {
@@ -424,7 +451,7 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
         <span>{game.step === "free-kick" ? "Free Kick" : game.step === "extra-time" ? "Extra Time" : phase.kind === "target" ? POWER_UP_BY_ID[phase.power].name : "Open play"}</span>
         <span>{mover.name} to move</span>
       </div>
-      <p className="q small">{phase.kind === "target" ? `Pick a target to finish ${POWER_UP_BY_ID[phase.power].name}.` : mover.kind === "bot" ? `${mover.name} is thinking…` : game.step === "extra-time" ? "Second move: no captures or checks. You can skip it if it would hurt you." : game.options.trivia ? `Questions come on captures, every ${KICKOFF_EVERY}th quiet move and on Hot Spots (circled squares).` : "Plain chess: no trivia this game."}</p>
+      <p className={`q small${phase.kind === "move" && mover.kind === "human" && game.step === "normal" ? " explainer" : ""}`}>{phase.kind === "target" ? `Pick a target to finish ${POWER_UP_BY_ID[phase.power].name}.` : mover.kind === "bot" ? `${mover.name} is thinking…` : game.step === "extra-time" ? "Second move: no captures or checks. You can skip it if it would hurt you." : game.options.trivia ? `Questions come on captures, every ${KICKOFF_EVERY}th quiet move and on Hot Spots (circled squares).` : "Plain chess: no trivia this game."}</p>
       {game.step === "extra-time" && humanToAct && phase.kind === "move" && <button type="button" className="cta" onClick={g.skipExtra}>Skip the second move</button>}
     </div>
   );
@@ -493,57 +520,93 @@ function hasTargets(game: GameState, id: PowerUpId): boolean {
   return firsts.some((f) => powerTargets(game, id, f).length > 0);
 }
 
+/**
+ * The Form meter is a button: tapping it opens the power-ups in a drawer over the screen (from the
+ * bottom on phones, from the side in landscape), so they never push the board off the screen.
+ */
 function PowerBar({ game, phase, color, enabled, onPick, play }: { game: GameState; phase: Phase; color: Color; enabled: boolean; onPick: (id: PowerUpId) => void; play: (s: SfxName) => void }): ReactNode {
   const me = game.players[color];
   const myTurn = turnOf(game) === color;
+  const [open, setOpen] = useState(false);
   const [pending, setPending] = useState<PowerUpId | null>(null);
   useEffect(() => { if (!enabled) setPending(null); }, [enabled]);
+  // A question, a target to pick or the other player's turn: the drawer gets out of the way.
+  useEffect(() => { setOpen(false); setPending(null); }, [phase.kind, color]);
+  useEffect(() => {
+    if (!open) return;
+    const key = (e: KeyboardEvent) => { if (e.key === "Escape") { setOpen(false); setPending(null); } };
+    window.addEventListener("keydown", key);
+    return () => window.removeEventListener("keydown", key);
+  }, [open]);
   const list = POWER_UPS.filter((p) => !p.timedOnly || game.options.timed);
   const def = pending ? POWER_UP_BY_ID[pending] : null;
   const pendingCost = pending ? powerCost(game, color, pending) : 0;
   const pendingBlocked = pending ? powerBlocked(game, pending) ?? (hasTargets(game, pending) ? null : "No valid target right now") : null;
+  const ready = enabled ? list.filter((p) => !powerBlocked(game, p.id) && !(me.cooldowns[p.id] > 0) && me.form >= powerCost(game, color, p.id)).length : 0;
+  const label = (me.kind === "human" && game.options.mode === "bot") || me.name.toLowerCase() === "you" ? "Your Form" : `${me.name}'s Form`;
+  const close = () => { setOpen(false); setPending(null); };
+  const meter = (
+    <>
+      <span className="label">{label}</span>
+      <span className="pips" aria-hidden="true">{Array.from({ length: FORM_CAP }, (_, i) => <i key={i} className={i < me.form ? "on" : ""} />)}</span>
+      <b className="num">{me.form}<small>/{FORM_CAP}</small></b>
+    </>
+  );
 
   return (
     <div className="powerbox">
-      <div className="form-meter" aria-label={`${me.name} has ${me.form} Form to spend`}>
-        <span className="label">{(me.kind === "human" && game.options.mode === "bot") || me.name.toLowerCase() === "you" ? "Your Form" : `${me.name}'s Form`}</span>
-        <span className="pips" aria-hidden="true">{Array.from({ length: FORM_CAP }, (_, i) => <i key={i} className={i < me.form ? "on" : ""} />)}</span>
-        <b className="num">{me.form}<small>/{FORM_CAP}</small></b>
-      </div>
-      {def && (
-        <div className="confirm" role="dialog" aria-label={`Use ${def.name}?`}>
-          <div className="confirm-head"><PowerIcon id={def.id} className="pw-icon big" /><b>{def.name}</b><Stars n={def.stars} /><span className="cost">{pendingCost} Form</span></div>
-          <p>{powerEffect(game, def)}{def.rule ? `. ${def.rule}.` : "."}</p>
-          {pendingBlocked ? <p className="why">{pendingBlocked}</p> : <p className="fine">Once you confirm it can't be cancelled{def.target !== "none" ? ": you'll have to pick a target" : ""}.</p>}
-          <div className="row-btns">
-            <button type="button" className="go" disabled={!!pendingBlocked} onClick={() => { const id = pending!; setPending(null); onPick(id); }}>Confirm</button>
-            <button type="button" onClick={() => setPending(null)}>Not now</button>
+      <button type="button" className={`form-meter power-toggle${ready ? " ready" : ""}`} aria-expanded={open} aria-haspopup="dialog"
+        aria-label={`Power-ups: ${me.name} has ${me.form} Form to spend${ready ? `, ${ready} ready to use` : ""}`}
+        onClick={() => { play("select"); if (open) close(); else setOpen(true); }}>
+        {meter}
+        <span className="open-tag"><Bolt />Power-ups{ready ? <em>{ready}</em> : null}</span>
+      </button>
+      {open && (
+        <>
+          <div className="drawer-backdrop" onClick={close} />
+          <div className="power-drawer" role="dialog" aria-label="Power-ups">
+            <div className="drawer-head">
+              <div className="form-meter">{meter}</div>
+              <button type="button" className="drawer-close" aria-label="Close power-ups" onClick={close}>×</button>
+            </div>
+            {!enabled && <p className="fine drawer-note">{myTurn ? "Power-ups are used before you move." : "You can use power-ups on your turn."}</p>}
+            <div className="powers" aria-label="Power-ups">
+              {list.map((p) => {
+                const blocked = myTurn ? powerBlocked(game, p.id) : "Not your turn";
+                const cd = me.cooldowns[p.id];
+                const cost = powerCost(game, color, p.id);
+                const on = (phase.kind === "target" || phase.kind === "thinking") && phase.power === p.id;
+                // Faded: you can't afford it or it's cooling down. Other reasons show when you tap it.
+                const faded = cd > 0 || me.form < cost;
+                const tap = () => {
+                  if (!enabled) return;
+                  play("select");
+                  setPending((cur) => (cur === p.id ? null : p.id));
+                };
+                return (
+                  <button key={p.id} type="button" title={`${powerEffect(game, p)}${p.rule ? `. ${p.rule}` : ""}`} className={`pw${faded ? " faded" : ""}${blocked || !enabled ? " locked" : ""}${on || pending === p.id ? " on" : ""}${me.form >= cost ? " afford" : ""}`} onClick={tap}>
+                    <PowerIcon id={p.id} className="pw-icon" />
+                    <span>{p.name}</span>
+                    <Stars n={p.stars} />
+                    <span className="cost">{cost} Form{cd > 0 ? ` · ${cd} to go` : ""}</span>
+                  </button>
+                );
+              })}
+            </div>
+            {def && (
+              <div className="confirm" role="dialog" aria-label={`Use ${def.name}?`}>
+                <div className="confirm-head"><PowerIcon id={def.id} className="pw-icon big" /><b>{def.name}</b><Stars n={def.stars} /><span className="cost">{pendingCost} Form</span></div>
+                <p>{powerEffect(game, def)}{def.rule ? `. ${def.rule}.` : "."}</p>
+                {pendingBlocked ? <p className="why">{pendingBlocked}</p> : <p className="fine">Once you confirm it can't be cancelled{def.target !== "none" ? ": you'll have to pick a target" : ""}.</p>}
+                <div className="row-btns">
+                  <button type="button" className="go" disabled={!!pendingBlocked} onClick={() => { const id = pending!; close(); onPick(id); }}>Confirm</button>
+                  <button type="button" onClick={() => setPending(null)}>Not now</button>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
+        </>
       )}
-      <div className="powers" aria-label="Power-ups">
-        {list.map((p) => {
-          const blocked = myTurn ? powerBlocked(game, p.id) : "Not your turn";
-          const cd = me.cooldowns[p.id];
-          const cost = powerCost(game, color, p.id);
-          const on = (phase.kind === "target" || phase.kind === "thinking") && phase.power === p.id;
-          // Faded: you can't afford it or it's cooling down. Other reasons show when you tap it.
-          const faded = cd > 0 || me.form < cost;
-          const tap = () => {
-            if (!enabled) return;
-            play("select");
-            setPending((cur) => (cur === p.id ? null : p.id));
-          };
-          return (
-            <button key={p.id} type="button" title={`${powerEffect(game, p)}${p.rule ? `. ${p.rule}` : ""}`} className={`pw${faded ? " faded" : ""}${blocked || !enabled ? " locked" : ""}${on || pending === p.id ? " on" : ""}${me.form >= cost ? " afford" : ""}`} onClick={tap}>
-              <PowerIcon id={p.id} className="pw-icon" />
-              <span>{p.name}</span>
-              <Stars n={p.stars} />
-              <span className="cost">{cost} Form{cd > 0 ? ` · ${cd} to go` : ""}</span>
-            </button>
-          );
-        })}
-      </div>
     </div>
   );
 }
