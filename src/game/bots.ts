@@ -33,10 +33,8 @@ export interface BotMeta {
 
 export interface BotLike {
   chooseMove(req: { fen: string; chess960?: boolean; allowedMoves?: string[]; managersTip?: boolean; hotSpots?: string[]; goldenBoot?: boolean }): Promise<{ uci: string; thinkMs: number }>;
-  /** A trivia hint to buy before answering ("fifty-fifty"), or null. */
-  chooseHint?(req: { question: { options: string[]; answer: number; difficulty: Difficulty; club?: string | null }; puskas?: boolean; form: number; available: { id: string; cost: number }[] }): string | null;
   chooseCard(req: { cards: { topic: string; difficulty: Difficulty; club: string | null }[]; puskasAllowed: boolean; form: number; bonusRound?: boolean }): { index: number; puskas: boolean } | Promise<{ index: number; puskas: boolean }>;
-  answer(req: { question: { options: string[]; answer: number; difficulty: Difficulty; club?: string | null }; puskas?: boolean; removed?: number[] }): { choice: number; delayMs: number } | Promise<{ choice: number; delayMs: number }>;
+  answer(req: { question: { options: string[]; answer: number; difficulty: Difficulty; club?: string | null }; puskas?: boolean }): { choice: number; delayMs: number } | Promise<{ choice: number; delayMs: number }>;
   choosePowerUp(req: { fen: string; color?: "white" | "black"; form: number; available: { id: string; cost: number }[]; inCheck?: boolean; timed?: boolean; clockMs?: number }): { id: string; target?: string; target2?: string } | null | Promise<{ id: string; target?: string; target2?: string } | null>;
   promotionPick(): PromoRole;
   say(moment: TalkMoment): string | null;

@@ -128,28 +128,6 @@ const ICONS: Record<string, ReactNode> = {
       <path d="M19.5 13v3M18 14.5h3" />
     </>
   ),
-  // Trivia hints.
-  "fifty-fifty": (
-    <>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 3v18" />
-      <path d="M12 3a9 9 0 0 1 0 18z" style={F} />
-    </>
-  ),
-  "ask-the-crowd": (
-    <>
-      <circle cx="12" cy="8" r="2.5" />
-      <circle cx="5" cy="10" r="2" />
-      <circle cx="19" cy="10" r="2" />
-      <path d="M7.5 18c0-3 2-5 4.5-5s4.5 2 4.5 5M1.5 17c0-2 1.5-3.5 3.5-3.5M22.5 17c0-2-1.5-3.5-3.5-3.5" />
-    </>
-  ),
-  "phone-a-friend": (
-    <>
-      <rect x="7" y="2.5" width="10" height="19" rx="2" />
-      <path d="M10.5 18.5h3M10 5h4" />
-    </>
-  ),
 };
 
 /** The generic icon for a power-up that has no drawing yet. */

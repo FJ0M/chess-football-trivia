@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import questions from "../../data/questions.json";
 import whoami from "../../data/whoami.json";
-import { QuestionBank, askTheCrowd, browserSeenStore, fiftyFifty, seenKey } from "./trivia";
+import { QuestionBank, browserSeenStore, seenKey } from "./trivia";
 import { WhoAmIBank, type WhoAmI } from "./whoami";
 import { shootoutWinner } from "./useGame";
 import { CLUBS } from "./clubs";
@@ -10,36 +10,31 @@ import type { Question } from "./types";
 const qs = (questions as { questions: Question[] }).questions;
 
 describe("question bank", () => {
-  it("deals one card of each difficulty, and bonus rounds are all on your club", () => {
+  it("deals one card of each difficulty, mostly general with at most one club card", () => {
     const bank = new QuestionBank(qs);
-    for (let i = 0; i < 30; i++) {
-      const cards = bank.deal("west-ham", false);
+    let general = 0;
+    for (let i = 0; i < 300; i++) {
+      const cards = bank.deal("west-ham");
       expect(cards.map((c) => c.difficulty)).toEqual(["easy", "medium", "hard"]);
       for (const c of cards) expect(bank.draw(c).difficulty).toBe(c.difficulty);
+      // Hot Spots deal this way too, so they draw on the whole bank rather than one club's 30.
+      expect(cards.filter((c) => c.club).length).toBeLessThanOrEqual(1);
+      general += cards.filter((c) => !c.club).length;
     }
-    const bonus = bank.deal("york", true);
-    expect(bonus.every((c) => c.club === "york")).toBe(true);
-    expect(bank.draw(bonus[2]).club).toBe("york");
+    expect(general).toBeGreaterThan(750);
   });
   it("doesn't repeat a general question until every one at that difficulty has been asked", () => {
     const bank = new QuestionBank(qs);
     for (const d of ["easy", "medium", "hard"] as const) {
       const total = qs.filter((q) => !q.club && q.verified && q.difficulty === d).length;
       const asked = new Set<string>();
-      for (let i = 0; i < total; i++) asked.add(bank.draw(bank.deal(null, false).find((c) => c.difficulty === d)!).id);
+      for (let i = 0; i < total; i++) asked.add(bank.draw(bank.deal(null).find((c) => c.difficulty === d)!).id);
       expect(asked.size).toBe(total);
     }
   });
   it("every club has enough questions for its own cards", () => {
     const bank = new QuestionBank(qs);
     for (const c of CLUBS) for (const d of ["easy", "medium", "hard"] as const) expect(bank.hasClub(c.id, d)).toBe(true);
-  });
-  it("hints", () => {
-    const q = qs[0];
-    const hidden = fiftyFifty(q);
-    expect(hidden).toHaveLength(2);
-    expect(hidden).not.toContain(q.answer);
-    expect(askTheCrowd(q).reduce((a, b) => a + b, 0)).toBe(100);
   });
 });
 
@@ -52,10 +47,10 @@ describe("Who am I", () => {
       expect(s.answer).toBeGreaterThanOrEqual(0);
     }
   });
-  it("gives a club set on a Hot Spot when the club has one", () => {
+  it("mixes in your club's sets when it has some", () => {
     const bank = new WhoAmIBank(sets, new Set());
-    expect(bank.draw("brighton", true).club).toBe("brighton");
-    expect(bank.draw("york", true).club).toBeNull();
+    expect(Array.from({ length: 40 }, () => bank.draw("brighton").club)).toContain("brighton");
+    expect(Array.from({ length: 20 }, () => bank.draw("york").club).every((c) => c === null)).toBe(true);
   });
 });
 

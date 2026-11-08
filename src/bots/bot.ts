@@ -3,7 +3,7 @@ import { legalMoves, moveFeatures, normaliseUci, pickMove, positionFromFen, type
 import { BOT_PROFILES } from "./profiles";
 import { choosePowerUp } from "./powerUps";
 import { Talker } from "./talk";
-import { answerQuestion, chooseCard, chooseHint } from "./trivia";
+import { answerQuestion, chooseCard } from "./trivia";
 import type {
   AnswerRequest,
   AnswerResult,
@@ -12,7 +12,6 @@ import type {
   BotProfile,
   CardChoice,
   CardRequest,
-  HintRequest,
   MoveRequest,
   MoveResult,
   PowerUpChoice,
@@ -52,8 +51,6 @@ export interface Bot {
   answer(req: AnswerRequest): AnswerResult;
   /** Async because the bot first takes a quick look at the position with the engine. */
   choosePowerUp(req: PowerUpRequest): Promise<PowerUpChoice | null>;
-  /** A trivia hint to buy before answering, or null. */
-  chooseHint(req: HintRequest): string | null;
   /**
    * Piece the bot aims for on a promotion "Who am I?": q guesses on clue 1, r on clue 2,
    * b on clue 3, n on clue 4. A wrong guess costs Form, so bad quizzers aim low.
@@ -126,7 +123,6 @@ export function createBotWith(
     // The card comes after the bot's move, so its eval is the one it expected from that move.
     chooseCard: (req) => chooseCard(profile, trivia, { ...req, evalCp: req.evalCp ?? knownCp }, rng),
     answer: (req) => answerQuestion(profile, trivia, req, rng),
-    chooseHint: (req) => chooseHint(profile, trivia, req),
 
     async choosePowerUp(req) {
       if (req.available.length === 0) return null;

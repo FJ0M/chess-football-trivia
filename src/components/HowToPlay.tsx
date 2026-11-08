@@ -1,6 +1,6 @@
 // How to play: short, picture-first rules on the whiteboard.
 
-import { FORM_CAP, POWER_UPS, TRIVIA_HINTS } from "../game/powerups";
+import { FORM_CAP, POWER_UPS } from "../game/powerups";
 import { PowerIcon } from "./PowerIcons";
 import { ScreenHead } from "./Menus";
 
@@ -13,7 +13,7 @@ const LEVELS: { name: string; form: number; risk: string; card?: "yellow" | "red
   { name: "Tap-in", form: 1, risk: "No risk", tag: "Easy" },
   { name: "Highlight", form: 2, risk: "Opponent +2", tag: "Medium" },
   { name: "Screamer", form: 3, risk: "Piece booked", card: "yellow", tag: "Hard" },
-  { name: "Puskás", form: 5, risk: "Sent off", card: "red", tag: "8 sec, no hints" },
+  { name: "Puskás", form: 5, risk: "Sent off", card: "red", tag: "8 sec" },
 ];
 
 const PROMO: [string, string, string][] = [["1–2", "♛", "Queen"], ["3", "♜", "Rook"], ["4", "♝", "Bishop"], ["5", "♞", "Knight"]];
@@ -31,7 +31,7 @@ export function RulesScreen({ onBack }: { onBack: () => void }) {
 
       <h3>What asks a question</h3>
       <div className="htp-tiles three">
-        <div className="htp-tile"><span className="htp-sq hot" aria-hidden="true"><i /></span><b>Hot Spot</b><small>Land on a circled square: a question on your club</small></div>
+        <div className="htp-tile"><span className="htp-sq hot" aria-hidden="true"><i /></span><b>Hot Spot</b><small>Land on a circled square: pick one of 3 cards</small></div>
         <div className="htp-tile"><span className="htp-sq cap" aria-hidden="true">✕</span><b>Capture</b><small>Take a piece: pick one of 3 cards</small></div>
         <div className="htp-tile"><span className="htp-sq ko" aria-hidden="true">4</span><b>Kick-off</b><small>Every 4th quiet move</small></div>
       </div>
@@ -67,13 +67,6 @@ export function RulesScreen({ onBack }: { onBack: () => void }) {
           </div>
         ))}
       </div>
-      <h3>Stuck on a question?</h3>
-      <div className="htp-tiles three">
-        {TRIVIA_HINTS.map((h) => (
-          <div key={h.id} className="htp-tile"><PowerIcon id={h.id} className="htp-ic" /><b>{h.name}</b><small>{h.cost} Form</small></div>
-        ))}
-      </div>
-
       <h3>Promotion: Who am I?</h3>
       <p className="htp-note">Five clues about a footballer. Guess sooner, get a better piece.</p>
       <div className="htp-promo">

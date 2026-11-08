@@ -6,15 +6,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { opposite } from "chessops/util";
 import type { SfxName } from "../audio/sfx";
 import { botList, loadBots, type BotLike, type BotLevel, type BotMeta, type BotModule, type TalkMoment } from "./bots";
-import { POWER_UP_BY_ID, POWER_UPS, TRIVIA_HINTS } from "./powerups";
+import { POWER_UP_BY_ID, POWER_UPS } from "./powerups";
 import {
   PROMOTION_AIM, addIncrement, applyAnswer, attackedSquares, withClocksFrom, finishTurn, flipTurn, legalMoves, newGame, playMove, powerBlocked, powerCost,
-  resign as resignRule, resolveMove, resolvePromotion, setClock, skipExtraTime, spendForm, timeout, turnOf, usePowerUp, endInDraw,
+  resign as resignRule, resolveMove, resolvePromotion, setClock, skipExtraTime, timeout, turnOf, usePowerUp, endInDraw,
   type MoveResult, type PlayerInit,
 } from "./rules";
-import { QuestionBank, TIMER_MS, askTheCrowd, browserSeenStore, fiftyFifty, memorySeenStore, phoneAFriend, type Card } from "./trivia";
+import { QuestionBank, TIMER_MS, browserSeenStore, memorySeenStore, type Card } from "./trivia";
 import { CLUE_MS, WhoAmIBank, type WhoAmI } from "./whoami";
-import type { Color, GameOptions, GameState, PowerUpId, Question, TriviaHintId } from "./types";
+import type { Color, GameOptions, GameState, PowerUpId, Question } from "./types";
 
 export interface SetupChoice {
   options: GameOptions;
@@ -30,7 +30,7 @@ export type Phase =
   | { kind: "cards"; color: Color; cards: Card[]; bonus: boolean; landed: string | null; label: string }
   | {
       kind: "question"; color: Color; q: Question; card: Card; puskas: boolean; bonus: boolean; landed: string | null;
-      startedAt: number; limitMs: number; hidden: number[]; crowd?: number[]; friend?: number; label: string;
+      startedAt: number; limitMs: number; label: string;
     }
   | { kind: "whoami"; color: Color; set: WhoAmI; square: string; clues: number; clueAt: number; bonus: boolean }
   | {
@@ -243,16 +243,16 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
       play("kickoff");
       setNote(`${name} reaches the end: "Who am I?" decides the new piece`);
       const club = r.state.players[mover].club;
-      const set = data[mover].whoami.draw(club, t.bonus);
+      const set = data[mover].whoami.draw(club);
       go({ kind: "whoami", color: mover, set, square: t.square, clues: 1, clueAt: Date.now(), bonus: !!club && set.club === club });
       return;
     }
     const bonus = t.kind === "hot-spot";
     if (bonus) { play("cheer"); react(mover, "hotSpot"); emit({ kind: "hot-spot", color: mover, square: r.landed }); }
     else play("kickoff");
-    const label = bonus ? "Club Bonus Round: your club's questions" : t.kind === "capture" ? "Capture: pick a question" : "Kick-off: pick a question";
+    const label = bonus ? "Hot Spot: pick a question" : t.kind === "capture" ? "Capture: pick a question" : "Kick-off: pick a question";
     setNote(`${name}: ${label}`);
-    go({ kind: "cards", color: mover, cards: data[mover].bank.deal(r.state.players[mover].club, bonus), bonus, landed: r.landed, label });
+    go({ kind: "cards", color: mover, cards: data[mover].bank.deal(r.state.players[mover].club), bonus, landed: r.landed, label });
   }, [data, emit, endTurn, go, play, react, setGame]);
 
   const move = useCallback((uci: string): boolean => {
@@ -362,7 +362,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     play("select");
     go({
       kind: "question", color: p.color, q: data[p.color].bank.draw(card), card, puskas: isPuskas, bonus: p.bonus, landed: p.landed,
-      startedAt: Date.now(), limitMs: isPuskas ? TIMER_MS.puskas : TIMER_MS.normal, hidden: [], label: cardLabel(card, isPuskas),
+      startedAt: Date.now(), limitMs: isPuskas ? TIMER_MS.puskas : TIMER_MS.normal, label: cardLabel(card, isPuskas),
     });
   }, [data, go, play]);
 
@@ -388,20 +388,6 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [countAnswer, emit, go, play, react, setGame]);
-
-  const useHint = useCallback((id: TriviaHintId) => {
-    const p = phaseRef.current;
-    if (p.kind !== "question" || p.puskas) return;
-    const def = TRIVIA_HINTS.find((h) => h.id === id)!;
-    const g = gameRef.current;
-    if (g.players[p.color].form < def.cost) { play("locked"); setNote(`${def.name} needs ${def.cost} Form`); return; }
-    if ((id === "fifty-fifty" && p.hidden.length) || (id === "ask-the-crowd" && p.crowd) || (id === "phone-a-friend" && p.friend !== undefined)) return;
-    setGame(spendForm(g, p.color, def.cost));
-    play("powerup");
-    if (id === "fifty-fifty") go({ ...p, hidden: fiftyFifty(p.q) });
-    if (id === "ask-the-crowd") go({ ...p, crowd: askTheCrowd(p.q, Math.random, p.hidden) });
-    if (id === "phone-a-friend") go({ ...p, friend: phoneAFriend(p.q, Math.random, p.hidden) });
-  }, [go, play, setGame]);
 
   // "Who am I?"
   const nextClue = useCallback(() => {
@@ -607,21 +593,9 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
       const c = await bot.chooseCard({ cards: p.cards, puskasAllowed: true, form: gameRef.current.players[color].form, bonusRound: p.bonus });
       pickCard(Math.min(2, Math.max(0, c.index)), c.puskas);
     } else if (p.kind === "question") {
-      // Bots can buy a 50:50 on a question they're unsure of, like a player can.
-      // Buying it changes the phase, so from then on this run follows the new one.
-      let current: Phase = p;
-      const form = gameRef.current.players[color].form;
-      const hint = bot.chooseHint?.({ question: p.q, puskas: p.puskas, form, available: TRIVIA_HINTS.map((h) => ({ id: h.id, cost: h.cost })) });
-      if (hint === "fifty-fifty" && !p.puskas && !p.hidden.length) {
-        await wait(700);
-        if (!still()) return;
-        useHint("fifty-fifty");
-        current = phaseRef.current;
-      }
-      const hidden = current.kind === "question" ? current.hidden : p.hidden;
-      const a = await bot.answer({ question: p.q, puskas: p.puskas, removed: hidden });
+      const a = await bot.answer({ question: p.q, puskas: p.puskas });
       await wait(Math.min(a.delayMs, p.limitMs + 100));
-      if (!alive.current || pausedRef.current || phaseRef.current !== current) return;
+      if (!alive.current || pausedRef.current || phaseRef.current !== p) return;
       answer(a.delayMs > p.limitMs ? null : a.choice);
     } else if (p.kind === "whoami") {
       const aim = PROMOTION_AIM[bot.promotionPick()] ?? PROMOTION_AIM.n;
@@ -651,7 +625,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     game, phase, note, bubble, overlay, now, ready: !!data, botMeta, engineReady: !!mod, events, ebk, runs: runs.current,
     /** White's engine score in centipawns for a position, or null (for the commentator). */
     evaluate: useCallback((fen: string) => (mod?.evaluate ? mod.evaluate(fen, game.options.chess960) : Promise.resolve(null)), [mod, game.options.chess960]),
-    move, choosePower, tapTarget, skipExtra, pickCard, answer, useHint, nextClue, guess, continueOn, kick, resign, agreeDraw,
+    move, choosePower, tapTarget, skipExtra, pickCard, answer, nextClue, guess, continueOn, kick, resign, agreeDraw,
   };
 }
 

@@ -32,7 +32,6 @@ Ladder bots run the same code as the originals. What differs is in the profile: 
 
 - **Evaluation.** `bot.choosePowerUp()` is async: the bot first analyses the position (depth up to 8). It uses that score for Park the Bus (when behind by 1.5 pawns or more), for VAR Review (when the score has dropped 2.5 pawns or more since the eval it expected after its own last move, or after its own blunder) and for picking safer cards when well ahead. The card choice reuses the eval from the bot's own move.
 - **Hot Spots.** The game passes the Hot Spots. Moves onto one get a bonus of `(own-club accuracy − 0.5) × 100` centipawns, capped at 40 (a Hot Spot is a club question at normal Form since round 3). Hot Spot moves that aren't in the engine's top lines get a separate search so they can be considered.
-- **Hints.** `bot.chooseHint()` buys a 50:50 on a Highlight or Screamer the bot rates below 65%, if it can pay and keep any reserve it saves for. Never on a Tap-in or a Puskás.
 - **Golden Boot.** Bought only when the engine's best move is a capture (it costs 2 and pays 2 a capture). While it runs, captures get a 40 cp bonus.
 
 ## Measured chess strength (the original three)

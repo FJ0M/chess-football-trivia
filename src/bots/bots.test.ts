@@ -5,7 +5,7 @@ import { GOLDEN_BOOT_CAPTURE_CP, legalMoves, normaliseUci, pickMove, positionFro
 import { BOT_IDS, BOT_LEVELS, BOT_PROFILES, CLASSIC_IDS, LADDER_IDS } from "./profiles";
 import { choosePowerUp } from "./powerUps";
 import { TALK, Talker } from "./talk";
-import { answerChance, answerQuestion, chooseCard, chooseHint } from "./trivia";
+import { answerChance, answerQuestion, chooseCard } from "./trivia";
 import type { CardOffer, QuestionLike } from "./types";
 
 const START = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
@@ -189,14 +189,6 @@ describe("trivia", () => {
     }
   });
 
-  it("guesses only among what's left after a 50:50", () => {
-    const p = BOT_PROFILES.freddie;
-    const rng = seeded(4);
-    for (let i = 0; i < 200; i++) {
-      expect([1, 2]).toContain(answerQuestion(p, p.levels.low.trivia, { question: q("hard"), removed: [0, 3] }, rng).choice);
-    }
-  });
-
   const deal: CardOffer[] = [
     { topic: "Managers", difficulty: "easy", club: null },
     { topic: "Transfers", difficulty: "medium", club: null },
@@ -368,20 +360,6 @@ describe("the game around the chess", () => {
     const req = { fen, form: 6, available: [{ id: "golden-boot", cost: 2 }] };
     expect(choosePowerUp(BOT_PROFILES.ollie, req, () => 0, 0)).toBeNull();
     expect(choosePowerUp(BOT_PROFILES.ollie, req, () => 0, 0, { bestIsCapture: true })).toEqual({ id: "golden-boot" });
-  });
-
-  it("buys a 50:50 on a question it is unsure of, never on a Puskás or a Tap-in", () => {
-    const p = BOT_PROFILES.rookland;
-    const t = p.levels.medium.trivia;
-    const question = { options: ["a", "b", "c", "d"], answer: 0, difficulty: "hard" as const, club: null };
-    const available = [{ id: "fifty-fifty", cost: 1 }];
-    expect(chooseHint(p, t, { question, form: 10, available })).toBe("fifty-fifty");
-    expect(chooseHint(p, t, { question, form: 10, available, puskas: true })).toBeNull();
-    expect(chooseHint(p, t, { question: { ...question, difficulty: "easy" }, form: 10, available })).toBeNull();
-    expect(chooseHint(p, t, { question, form: 0, available })).toBeNull();
-    // Gambit Gary knows his stuff and keeps his Form.
-    const g = BOT_PROFILES["gambit-gary"];
-    expect(chooseHint(g, g.levels.medium.trivia, { question: { ...question, difficulty: "medium" }, form: 10, available })).toBeNull();
   });
 
   it("looks at the position before a power-up, so Park the Bus fires when it's losing (bug 10)", async () => {

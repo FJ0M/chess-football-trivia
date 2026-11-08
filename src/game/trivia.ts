@@ -129,13 +129,11 @@ export class QuestionBank {
   }
 
   /**
-   * Three cards, one of each difficulty. A bonus round makes all three about the
-   * player's club; otherwise about one deal in three swaps a card for a club card.
+   * Three cards, one of each difficulty, from the whole bank; about one deal in three
+   * swaps a card for a club card. Hot Spots deal the same way, so their questions come
+   * from the full bank and can't be learned by heart.
    */
-  deal(club: string | null, bonus: boolean): Card[] {
-    if (bonus) {
-      return DIFFS.map((d) => (this.hasClub(club, d) ? this.clubCard(club!, d) : this.generalCard(d, [])));
-    }
+  deal(club: string | null): Card[] {
     const cards: Card[] = [];
     for (const d of DIFFS) cards.push(this.generalCard(d, cards.map((c) => c.topic)));
     if (club && this.rng() < 1 / 3) {
@@ -170,33 +168,4 @@ export class QuestionBank {
   }
 }
 
-// ---------------------------------------------------------------- trivia hints
-
-/** 50:50: the two wrong options to hide. */
-export function fiftyFifty(q: Question, rng: Rng = Math.random): number[] {
-  const wrong = q.options.map((_, i) => i).filter((i) => i !== q.answer);
-  const keep = pick(wrong, rng);
-  return wrong.filter((i) => i !== keep);
-}
-
-/** Ask the Crowd: vote percentages; the crowd's favourite is right about 65% of the time. */
-export function askTheCrowd(q: Question, rng: Rng = Math.random, hidden: number[] = []): number[] {
-  const live = q.options.map((_, i) => i).filter((i) => !hidden.includes(i));
-  const favourite = rng() < 0.65 ? q.answer : pick(live.filter((i) => i !== q.answer), rng) ?? q.answer;
-  const weights = q.options.map((_, i) => (hidden.includes(i) ? 0 : i === favourite ? 45 + rng() * 25 : 5 + rng() * 15));
-  const total = weights.reduce((a, b) => a + b, 0);
-  const pct = weights.map((w) => Math.round((w / total) * 100));
-  // Make it add up to 100.
-  pct[favourite] += 100 - pct.reduce((a, b) => a + b, 0);
-  return pct;
-}
-
-/** Phone a friend: the option they suggest, right about 80% of the time. */
-export function phoneAFriend(q: Question, rng: Rng = Math.random, hidden: number[] = []): number {
-  if (rng() < 0.8) return q.answer;
-  const wrong = q.options.map((_, i) => i).filter((i) => i !== q.answer && !hidden.includes(i));
-  return wrong.length ? pick(wrong, rng) : q.answer;
-}
-
-/** Question timers. The chess clock keeps running during questions, so these are short. */
 export const TIMER_MS = { normal: 10_000, puskas: 8_000 };

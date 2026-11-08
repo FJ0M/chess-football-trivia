@@ -108,7 +108,7 @@ export function comment(i: CommentInput): Comment {
     case "ebk":
       return { bucket, text: `ELITE BALL KNOWLEDGE! Ten in a row for ${n[e.color]}. Take a bow.` };
     case "hot-spot":
-      return { bucket, text: pick([`${n[e.color]} on the Hot Spot. Club Bonus Round!`, `The crowd are up as ${n[e.color]} hits the Hot Spot!`], rand) };
+      return { bucket, text: pick([`${n[e.color]} lands on the Hot Spot!`, `The crowd are up as ${n[e.color]} hits the Hot Spot!`], rand) };
     case "power":
       return { bucket, text: pick([`${n[e.color]} goes to the bench for ${e.name}.`, `${e.name} from ${n[e.color]}. Tactical genius or panic?`], rand) };
     case "whoami":
