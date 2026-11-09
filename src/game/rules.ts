@@ -641,7 +641,6 @@ export function powerBlocked(state: GameState, id: PowerUpId): string | null {
   if (me.form < cost) return `Needs ${cost} Form`;
   const pos = positionOf(state.fen);
   if ((id === "park-the-bus" || id === "scout-report" || id === "formation-change") && pos.isCheck()) return "Not while in check";
-  if (id === "masterclass" && legalMoves(state).moves.length === 0) return "No move to play";
   if (id === "var-review") {
     const i = varTarget(state);
     if (i === null) return "Nothing to review yet";
@@ -813,7 +812,6 @@ export function usePowerUp(state: GameState, id: PowerUpId, targets: string[] = 
     case "assistants-flag":
     case "scout-report":
     case "managers-tip":
-    case "masterclass":
       break;
   }
 

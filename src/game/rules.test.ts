@@ -373,11 +373,9 @@ describe("power-ups", () => {
     expect(merged.players.white.clockMs).toBe(1000);
     expect(merged.players.white.form).toBe(7);
   });
-  it("Masterclass and Scout Report can't be used when they'd do nothing", () => {
+  it("Scout Report can't be used when it would do nothing", () => {
     const check = at("4k3/8/8/8/8/8/4r3/4K3 w - - 0 1");
     expect(powerBlocked(check, "scout-report")).toMatch(/check/);
-    expect(powerBlocked(check, "masterclass")).toBeNull();
-    expect(usePowerUp(check, "masterclass").state.players.white.form).toBe(6);
   });
   it("red card from four wrong answers doubles the next power-up", () => {
     let g = at("4k3/8/8/8/8/8/8/4K3 w - - 0 1");

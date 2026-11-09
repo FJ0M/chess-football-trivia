@@ -51,7 +51,6 @@ export const POWER_UPS: PowerUpDef[] = [
   { id: "extra-time", name: "Extra Time", kind: "chess", cost: 10, cooldown: 25, stars: 4, effect: "Make two moves this turn", rule: "Neither move can capture, and the second can't give check", target: "none" },
   { id: "assistants-flag", name: "Assistant's Flag", kind: "hint", cost: 1, cooldown: 3, stars: 1, effect: "Shows every square the opponent attacks", target: "none" },
   { id: "scout-report", name: "Scout Report", kind: "hint", cost: 2, cooldown: 4, stars: 1, effect: "Shows the piece the opponent will most likely move next", target: "none", engine: true },
-  { id: "masterclass", name: "Masterclass", kind: "chess", cost: 6, cooldown: 12, stars: 3, effect: "The engine plays the best move for you", rule: "Plays the best move your freezes and penalties allow", target: "none", engine: true },
   { id: "managers-tip", name: "Manager's Tip", kind: "hint", cost: 4, cooldown: 10, stars: 2, effect: "Shows the best move", target: "none", engine: true },
 ];
 

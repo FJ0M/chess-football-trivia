@@ -119,7 +119,7 @@ Each power-up shows a **value of 1 to 5 stars**: roughly how much it swings the 
 
 **Power-ups** (one per turn, used before your move). Each has a cooldown: once used, it is locked for that many of your own moves, and every power-up also starts the game locked for its cooldown. The button shows when it's ready, and a Form meter above the buttons shows how much you have to spend. Tapping a power-up opens a card with its cost and effect; nothing is spent until you tap Confirm, and once confirmed it can't be cancelled (so targeted power-ups only offer Confirm when there is a valid target).
 
-**No own goals.** A power-up should never hurt the player who uses it: Extra Time's second move is optional, engine power-ups (Manager's Tip, Scout Report, Masterclass) cost nothing if the engine can't answer, Scout Report can't be used in check, and freezes or Park the Bus are lifted if they would leave the opponent with no legal move (so they can't force a stalemate).
+**No own goals.** A power-up should never hurt the player who uses it: Extra Time's second move is optional, engine hints (Manager's Tip, Scout Report) cost nothing if the engine can't answer, Scout Report can't be used in check, and freezes or Park the Bus are lifted if they would leave the opponent with no legal move (so they can't force a stalemate).
 
 | Power-up | Style | Cost | Cooldown (your moves) | Value | Effect | Balance rule |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -134,7 +134,6 @@ Each power-up shows a **value of 1 to 5 stars**: roughly how much it swings the 
 | Super-Sub | Football | 7 | 15 | ★★★★ | Upgrade a pawn to a knight | |
 | Red Card | Football | 5 | 15 | ★★★ | Send off one enemy pawn (removed) | Not a pawn on its 6th or 7th rank |
 | Extra Time | Chess | 10 | 25 | ★★★★ | Make two moves this turn | Neither move can capture; the second can't give check, and can be skipped |
-| Masterclass | Chess | 6 | 12 | ★★★ | The engine plays the best move for you | Best move that your freezes and penalties allow |
 
 **Chess hints** (count as your power-up for the turn):
 

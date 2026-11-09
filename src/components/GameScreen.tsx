@@ -438,7 +438,7 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
     return (
       <div className="quiz idle">
         <div className="meta"><span>{POWER_UP_BY_ID[phase.power].name}</span><span>{game.players[turnOf(game)].name}</span></div>
-        <p className="q small">{phase.power === "masterclass" ? "The engine is finding the best move…" : "The engine is reading the game…"}</p>
+        <p className="q small">The engine is reading the game…</p>
       </div>
     );
   }
