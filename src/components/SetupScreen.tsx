@@ -101,7 +101,7 @@ export function SetupScreen({ mode, onStart, onBack }: { mode: "bot" | "local"; 
               <h4>{title}</h4>
               <div className="bot-list" role="radiogroup" aria-label={`Opponent: ${title}`}>
                 {list.map((b) => (
-                  <button key={b.id} type="button" role="radio" aria-checked={s.botId === b.id} className={`bot-card${s.botId === b.id ? " on" : ""}`} onClick={() => set("botId", b.id)}>
+                  <button key={b.id} type="button" role="radio" aria-checked={bot?.id === b.id} className={`bot-card${bot?.id === b.id ? " on" : ""}`} onClick={() => set("botId", b.id)}>
                     <span className={`badge${b.fixedLevel ? " elo" : ""}`}>{b.fixedLevel ? b.ratings?.medium.chess ?? b.name[0] : b.name[0]}</span>
                     <strong>{b.name}</strong>
                   </button>

@@ -345,7 +345,7 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
     const name = game.players[phase.color].name;
     return (
       <div className="quiz">
-        <div className="meta"><span>{phase.label}</span><span>{name} picks</span></div>
+        <div className="meta"><span>{phase.label}</span><span>{name === "You" ? "You pick" : `${name} picks`}</span></div>
         <div className="cards">
           {phase.cards.map((c, i) => (
             <button key={i} type="button" className={`qcard d-${c.difficulty}`} disabled={!humanToAct} onClick={() => g.pickCard(i, false)}>

@@ -1,6 +1,7 @@
 // Public entry point for the bots. The game imports only from here.
 
 import { createBotWith, type Bot } from "./bot";
+import { BOT_PROFILES } from "./profiles";
 import { getSharedEngine, type Analyser } from "./engine";
 import { parseSquare } from "chessops/util";
 import { normaliseUci, positionFromFen } from "./movePicker";
@@ -13,7 +14,9 @@ export { TALK } from "./talk";
 
 /** Creates a bot. Stockfish starts in a Web Worker the first time any bot or hint needs it. */
 export function createBot(id: BotId, level: BotLevel = "medium", engine?: Analyser): Bot {
-  return createBotWith(id, level, engine ?? getSharedEngine());
+  // A retired bot (Ollie, Ryan, Freddie) from an old saved setup plays as Gambit Gary.
+  const known: BotId = id in BOT_PROFILES ? id : "gambit-gary";
+  return createBotWith(known, level, engine ?? getSharedEngine());
 }
 
 /**

@@ -17,7 +17,7 @@ This builds on the [research doc](https://claude.ai/artifact/288D72mj429RgxhCALF
 | Modes | vs bots, and two players on one device, each with an optional Chess960 start |
 | Questions | Premier League from 2000/01, plus questions on the club you pick (all 92 league clubs) |
 | Power-ups | Chess-style and football-themed |
-| Bots | An Elo ladder of 7 made-up characters (400 to 1600 chess Elo), plus Freddie, Ryan and Ollie with three levels each; every bot has a style and trash talk |
+| Bots | An Elo ladder of 7 made-up characters (400 to 1600 chess Elo); every bot has a style and trash talk |
 | Tech | Installable web app (PWA), one link for phone, tablet and computer |
 
 All numbers below (Form costs, timers, bot accuracy) are first guesses to tune in playtesting.
@@ -26,7 +26,7 @@ All numbers below (Form costs, timers, bot accuracy) are first guesses to tune i
 
 There are two ways to play, and both use the same rules.
 
-- **vs Bot.** Pick a bot from the Elo ladder (400 to 1600) or Freddie, Ryan or Ollie. You answer questions yourself; the bot "answers" using its trivia profile and talks trash throughout.
+- **vs Bot.** Pick a bot from the Elo ladder (400 to 1600). You answer questions yourself; the bot "answers" using its trivia profile and talks trash throughout.
 - **Pass and Play.** Two people on one device. Whoever triggered the question answers it, and the other player hands over the device without peeking (honour system, as at the pub). The screen faces whoever is up. Settings has two views, each with a picture. **Flat on the table** (the default, on phones, tablets and computers) turns the whole game round 180 degrees on Black's turn, so the board, question card and power-ups all face them with the device flat on the table. The layout is symmetric about the board (the same space on each side, each side scrolling on its own, side by side in landscape), so the turn leaves the board exactly where it was: it never jumps between moves (playtest, 2026-11-08). Cards, questions and results sit over the board in this view, since each side is too small for them. **Pass the phone** flips only the board, for handing the device across. (The old Face to face and Off views were removed in playtest round 3; saved settings move to Flat on the table and Pass the phone.) **Handicap** (Pass and Play setup): pick who gets the help, then piece odds from the other player (the f-pawn, the queenside knight, the queenside rook with its castling right, or the queen; Chess960 back ranks too) and a Form boost on the weaker player's right answers (x1.25, x1.5 or x2, with fractions carried to the next answer). Enter both chess ratings for a suggestion: the biggest piece the rating gap covers (pawn ~150, knight ~350, rook ~550, queen ~900 Elo), then a Form boost for what's left (x1.25 ~50, x1.5 ~100, x2 ~200). These values are first guesses to tune in playtesting. Odds count as already given, so the player who gave them doesn't get the material catch-up bonus just for that.
 
 Each game also has a **Plain Chess** toggle (no trivia) and a **Timed** toggle (3, 5, 10, 15 or 30 minutes each, shown on stadium-style scoreboard clocks), so it works for a quick game or a serious one. In a timed game the clock of whoever has to act **always runs**: while choosing a move, picking a card, answering, reading the result (which moves on by itself after 2.5 seconds) and while the engine thinks for a power-up. It stops only for a "Who am I?", the Penalty Shootout and the pause menu. Every move adds **3 seconds** to the mover's clock.
@@ -46,17 +46,17 @@ When a pawn reaches the last rank, you earn your new piece with a **"Who am I?"*
 
 A wrong guess, or no guess by 12 seconds after the fifth clue, gives you a knight **and your opponent +2 Form**. That way a blind early guess is a real gamble. The question replaces any other trigger on that move, and it restarts the Kick-off count. About half of all "Who am I?"s are a player from your own club, where your club has clue sets.
 
-Clue sets live in `data/whoami.json`, built by `tools/build_whoami.py`: 30 Premier League players from 2000 onwards, 10 West Ham and 8 Brighton. Every clue was checked against the player's Wikipedia page on 2026-11-04. Bots aim for a piece (Ollie a queen, Ryan a rook, Freddie a knight) and guess with their usual trivia accuracy.
+Clue sets live in `data/whoami.json`, built by `tools/build_whoami.py`: 30 Premier League players from 2000 onwards, 10 West Ham and 8 Brighton. Every clue was checked against the player's Wikipedia page on 2026-11-04. Bots aim for a piece (good quizzers a queen, poor ones a bishop or knight) and guess with their usual trivia accuracy.
 
 **Chess960.** A toggle on the setup screen, in every mode. The back rank starts in one of 960 arrangements (numbered with the standard scheme; 518 is normal chess), shown on screen with a Reroll button. Castling follows Chess960 rules: king and rook end on the usual squares (tap the king, then the rook). Formation Change on an unmoved rook removes castling on that side.
 
 ## Picking your club
 
-Before each game every player picks the club they support from all 92 Premier League and EFL clubs (or none). About one deal in three (Hot Spots included) swaps a card for a club card at the same difficulty. A club with fewer than 10 questions at a difficulty falls back to general questions. Bots have clubs too: Ryan and Ollie West Ham, Freddie Brighton.
+Before each game every player picks the club they support from all 92 Premier League and EFL clubs (or none). About one deal in three (Hot Spots included) swaps a card for a club card at the same difficulty. A club with fewer than 10 questions at a difficulty falls back to general questions. Bots have clubs too (see the ladder table).
 
 ## Menus
 
-The game opens on a **main menu** in the Tactics Board style: Play a bot (pick a ladder bot, or Freddie, Ryan or Ollie and Easy, Medium or Hard), Pass and Play, High scores, Game history, How to play and Settings. The setup screen then takes clubs (one A to Z list of all 92 with a search box, not grouped by division, so it doesn't date when clubs go up or down), colour, and the Trivia, Timed and Chess960 toggles. During a game the **Menu** button (or the title bar) pauses everything, including clocks, question timers and bots, with Resume, Restart, Settings and Quit to menu. High scores keep your record (played, won, drawn, lost, best winning run) against each bot at each level, plus Pass and Play wins by name, on the device. The top of the page shows your **best win** (the bot with the highest combined chess + trivia rating you have beaten) and your **trivia Elo**, which moves with your answers against bots and tops out at the title Elite Ball Knowledge (docs/bots.md). **Game history** lists the last 100 finished games, newest first (no replays): date, opponent and level, result and how it ended, moves, Form earned and trivia score (right/asked, including Who am I? and shootout kicks).
+The game opens on a **main menu** in the Tactics Board style: Play a bot (pick one of the seven ladder bots), Pass and Play, High scores, Game history, How to play and Settings. The setup screen then takes clubs (one A to Z list of all 92 with a search box, not grouped by division, so it doesn't date when clubs go up or down), colour, and the Trivia, Timed and Chess960 toggles. During a game the **Menu** button (or the title bar) pauses everything, including clocks, question timers and bots, with Resume, Restart, Settings and Quit to menu. High scores keep your record (played, won, drawn, lost, best winning run) against each bot at each level, plus Pass and Play wins by name, on the device. The top of the page shows your **best win** (the bot with the highest combined chess + trivia rating you have beaten) and your **trivia Elo**, which moves with your answers against bots and tops out at the title Elite Ball Knowledge (docs/bots.md). **Game history** lists the last 100 finished games, newest first (no replays): date, opponent and level, result and how it ended, moves, Form earned and trivia score (right/asked, including Who am I? and shootout kicks).
 
 ## When trivia comes up
 
@@ -144,32 +144,13 @@ Each power-up shows a **value of 1 to 5 stars**: roughly how much it swings the 
 | Scout Report | 2 | 4 | ★ | Shows the piece the opponent will most likely move next |
 | Manager's Tip | 4 | 10 | ★★ | Shows the engine's best move |
 
-## Bots: Freddie, Ryan and Ollie
+## Bots
 
-The three bots are mirror images, so each one beats you a different way: Ollie out-quizzes you, Freddie out-plays you, and Ryan does a bit of both. Each runs on Stockfish with its strength capped, then picks among the engine's top moves with its own style and mistake rate.
+The original three bots, Freddie, Ryan and Ollie (each with Easy, Medium and Hard), were retired on 2026-11-09 at Freddie's request, leaving the seven Elo ladder bots below. Their names stay in game history, and any of their cups already won stay in the trophy cabinet. A saved setup that still names one of them plays Gambit Gary.
 
-| | Ollie | Ryan | Freddie |
-| --- | --- | --- | --- |
-| Chess strength | Weak, about 700 | Middle, about 1200 | Strong, about 1800 |
-| Engine setup | Skill Level 0, picks from top 5 moves, blunders often | Skill Level 6, picks from top 3, blunders sometimes | UCI_Elo 1800, top move nearly always |
-| Chess style | Chaotic: early queen raids, grabs every capture | Balanced, turns aggressive when ahead | Solid and positional, trades into endgames |
-| Trivia accuracy | 85% overall | 70% overall, 92% on West Ham | 45% overall |
-| Answer speed | Fast, 2 to 5 s | Medium, 4 to 9 s | Slow, 7 to 13 s |
-| Question picks | Hard or Puskás most of the time | Medium, but always Hard on a West Ham card | Easy most of the time |
-| Spends Form on | VAR Review and Manager's Tip, to bail out his chess | Tactical Foul and Red Card | Saves up for Extra Time and Super-Sub |
+Every bot runs on Stockfish with its strength capped, then picks among the engine's top moves with its own style and mistake rate. Each has 3 to 5 trash-talk lines for each moment (game start, capture, losing a piece, opponent's wrong answer, own right and wrong answers, power-up, Hot Spot, win and loss), shown in a speech bubble at most once every two moves.
 
-The strength numbers are rough chess ratings. Stockfish's own Elo setting doesn't go below about 1320, so Ollie and Ryan are weakened with its Skill Level and by picking worse moves on purpose. If the real Freddie, Ryan and Ollie share their chess.com or Lichess usernames, the bots can use their real openings and ratings.
-
-**Trash talk.** Each bot has 3 to 5 lines for each of these moments: game start, capture, losing a piece, opponent's wrong answer, own right answer, own wrong answer, power-up used, Hot Spot, win and loss. A line shows in a speech bubble for 3 seconds, at most once every two moves. Starter lines, for the real three to rewrite:
-
-| Moment | Ollie | Ryan | Freddie |
-| --- | --- | --- | --- |
-| Game start | "Chess is just the bit between the questions." | "Come on you Irons. Let's have it." | "You can have the quiz. I'll have the board." |
-| Opponent's wrong answer | "Genuinely, how did you not know that?" | "Even Freddie knew that one." | "Finally, someone worse at this than me." |
-| Own wrong answer | "That was a trick question, I'm appealing." | "Wasn't a West Ham question, was it." | "Football's a distraction. Mate in four, anyway." |
-| Captures a piece | "Is the horse allowed to do that? Too late now." | "Bowen, Prague, 2023. Same energy." | "Thanks for that. Didn't even need a hint." |
-| Hot Spot | "West Ham round? I know more about them than Ryan." | "Bubbles are flying!" | "Oh no. Not the West Ham round." |
-| Wins | "Brains over board, every time." | "Forever blowing bubbles, mate." | "Should have spent less time on the questions." |
+**Downloads.** The bots and the question bank are separate downloads. If one fails, the game tries again, and if it still fails it reloads the page once (the usual cause is a page left open from before a deploy, whose files no longer exist). It never quietly plays on without them: while they're missing it says so and keeps trying. (Playtest 2026-11-09: a failed download used to swap in three stand-in bots and skip every question, so Hot Spots seemed broken.) `npm run smoke` plays the built app in a real browser and checks the bot list, a bot reply, a Hot Spot question and this recovery; CI runs it on every pull request.
 
 ## The Elo ladder
 
@@ -189,7 +170,7 @@ Every bot (ladder and originals) also plays the game around the chess (review bu
 
 - **It sees the evaluation.** Before deciding on a power-up, the bot takes a quick look at the position with the engine (depth 8 at most). So Park the Bus fires when it's losing, VAR Review fires when the score has swung against it since its last move, and it picks safer cards when it's well ahead.
 - **It chases Hot Spots.** A move onto a Hot Spot gets a bonus worth up to 0.4 of a pawn, scaled by how well the bot knows its own club, so good quizzers go for them and poor ones mostly don't.
-- **It plans power-ups with the engine** (Freddie, 2026-11-09: "the bots don't really know how to make the best of the power-ups"). The game lists every valid way to use each power-up in the real rules (`src/game/botPowers.ts`: every Red Card pawn, Super-Sub pawn, Substitution square, Tactical Foul target, Counter-Attack dash, the 16 most promising Formation Change swaps, Park the Bus, Extra Time, VAR). The bot plays each one out (`src/bots/planner.ts`): its best move after the power-up, a second move for Extra Time, then the engine's view of the opponent's reply with any freezes or Park the Bus in force. The same is done with no power-up, and the difference is the gain. A point of Form is worth 0.3 of a pawn (half that at 10+ Form, since the cap wastes it), so it buys the power-up with the best gain for its cost, or nothing. Everything gets a quick depth-3 look, then the best four a proper one at the bot's own depth (3 to 8), so weaker bots judge worse. Favourites get a small nudge and savers still save. Manager's Tip is worth what the bot would risk missing (how much better the top move is than the second, times the bot's mistake rate), Golden Boot about 3 Form when a capture is on, and Fergie Time still fires under a minute. In `tools/playtest/powerduel.ts` (real rules, trivia included, 30 games each, planner vs old rules of thumb, same bot both sides) the planner scored 73% (Pawny), 82% (Billy Chillwall), 97% (Ryan medium), 87% (Mo Mate) and 95% (Freddie hard), taking 20 to 50 ms a turn on average. The old rules of thumb froze pieces most turns, which the no-capture rule now makes much weaker, and never used Formation Change or Substitution.
+- **It plans power-ups with the engine** (Freddie, 2026-11-09: "the bots don't really know how to make the best of the power-ups"). The game lists every valid way to use each power-up in the real rules (`src/game/botPowers.ts`: every Red Card pawn, Super-Sub pawn, Substitution square, Tactical Foul target, Counter-Attack dash, the 16 most promising Formation Change swaps, Park the Bus, Extra Time, VAR). The bot plays each one out (`src/bots/planner.ts`): its best move after the power-up, a second move for Extra Time, then the engine's view of the opponent's reply with any freezes or Park the Bus in force. The same is done with no power-up, and the difference is the gain. A point of Form is worth 0.3 of a pawn (half that at 10+ Form, since the cap wastes it), so it buys the power-up with the best gain for its cost, or nothing. Everything gets a quick depth-3 look, then the best four a proper one at the bot's own depth (3 to 8), so weaker bots judge worse. Favourites get a small nudge and savers still save. Manager's Tip is worth what the bot would risk missing (how much better the top move is than the second, times the bot's mistake rate), Golden Boot about 3 Form when a capture is on, and Fergie Time still fires under a minute. In `tools/playtest/powerduel.ts` (real rules, trivia included, 30 games each, planner vs old rules of thumb, same bot both sides) the planner scored 73% (Pawny), 82% (Billy Chillwall), 97% (Ryan medium, since retired), 87% (Mo Mate) and 95% (Freddie hard, since retired), taking 20 to 50 ms a turn on average. The old rules of thumb froze pieces most turns, which the no-capture rule now makes much weaker, and never used Formation Change or Substitution.
 - **Golden Boot only pays.** The bot buys it only when the engine's best move is a capture, and while it runs the bot likes captures a bit more, so it doesn't lose Form on it.
 
 ## Tech stack and deployment
@@ -238,7 +219,6 @@ Each step ends with something playable on a phone, so the game can be tested wit
 
 **Open questions for Freddie, Ryan and Ollie:**
 
-- [ ] chess.com or Lichess usernames, so the bots can copy real openings and ratings
-- [ ] Real catchphrases and in-jokes to replace the starter trash talk
+- [x] ~~chess.com or Lichess usernames and catchphrases for their bots~~ (their bots were retired on 2026-11-09)
 - [x] Question timer: 10 seconds, with the chess clock running (playtest round 3)
 - [x] Hot Spot bonus rounds use each player's own club
