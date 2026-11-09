@@ -120,14 +120,6 @@ const ICONS: Record<string, ReactNode> = {
       <path d="M7.5 9.5l2 2M9.5 9.5l-2 2" />
     </>
   ),
-  // A pawn with sparkles: the engine plays a masterclass for you.
-  masterclass: (
-    <>
-      {pawn(9, 15)}
-      <path d="M18 3l1 2.5L21.5 6.5 19 7.5 18 10l-1-2.5L14.5 6.5 17 5.5z" style={F} />
-      <path d="M19.5 13v3M18 14.5h3" />
-    </>
-  ),
 };
 
 /** The generic icon for a power-up that has no drawing yet. */

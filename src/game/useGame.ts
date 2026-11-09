@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { opposite } from "chessops/util";
 import type { SfxName } from "../audio/sfx";
 import { botList, loadBots, type BotLike, type BotLevel, type BotMeta, type BotModule, type TalkMoment } from "./bots";
+import { botPowerOptions } from "./botPowers";
 import { POWER_UP_BY_ID, POWER_UPS } from "./powerups";
 import {
   PROMOTION_AIM, addIncrement, applyAnswer, attackedSquares, withClocksFrom, finishTurn, flipTurn, legalMoves, newGame, playMove, powerBlocked, powerCost,
@@ -25,7 +26,7 @@ export interface SetupChoice {
 export type Phase =
   | { kind: "move" }
   | { kind: "target"; power: PowerUpId; first?: string }
-  /** Waiting on the engine for Manager's Tip, Scout Report or Masterclass. */
+  /** Waiting on the engine for Manager's Tip or Scout Report. */
   | { kind: "thinking"; power: PowerUpId }
   | { kind: "cards"; color: Color; cards: Card[]; bonus: boolean; landed: string | null; label: string }
   | {
@@ -288,20 +289,15 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     if (!mod) { play("locked"); setNote("The engine is still warming up. Try again in a moment"); return "engine"; }
     const fen = id === "scout-report" ? flipTurn(g.fen) : g.fen;
     if (!fen) { play("locked"); setNote("The scouts can't read the game right now"); return "engine"; }
-    const allowed = id === "masterclass" ? legalMoves(g).moves : undefined;
     const back = phaseRef.current;
     go({ kind: "thinking", power: id });
     setNote(`${POWER_UP_BY_ID[id].name}: thinking…`);
-    mod.bestMove(fen, g.options.chess960, id === "masterclass" ? 18 : undefined, allowed).then((best) => {
+    mod.bestMove(fen, g.options.chess960).then((best) => {
       if (!alive.current) return;
       const legal = best ? (id === "scout-report" ? best : resolveMove(gameRef.current, best)) : null;
-      const ok = !!legal && (!allowed || allowed.includes(legal));
-      if (!ok) { go(back.kind === "target" ? { kind: "move" } : back); setNote(`${POWER_UP_BY_ID[id].name}: the gaffer's stumped, so no Form spent`); return; }
-      const after = commit();
-      if (id === "masterclass") {
-        setNote(`Masterclass: ${legal!.slice(0, 2)} to ${legal!.slice(2, 4)}`);
-        afterMove(playMove(after, legal!), me);
-      } else if (id === "managers-tip") {
+      if (!legal) { go(back.kind === "target" ? { kind: "move" } : back); setNote(`${POWER_UP_BY_ID[id].name}: the gaffer's stumped, so no Form spent`); return; }
+      commit();
+      if (id === "managers-tip") {
         go({ kind: "move" });
         setOverlay({ tip: [legal!.slice(0, 2), legal!.slice(2, 4)] });
         setNote(`Manager's Tip: ${legal!.slice(0, 2)} to ${legal!.slice(2, 4)}`);
@@ -549,6 +545,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
       if (available.length) {
         const choice = await bot.choosePowerUp({
           fen: g.fen, color, form: g.players[color].form, available, inCheck: positionCheck(g), timed: g.options.timed, clockMs: g.players[color].clockMs ?? undefined,
+          options: botPowerOptions(g),
         });
         if (choice && available.some((a) => a.id === choice.id)) {
           const id = choice.id as PowerUpId;

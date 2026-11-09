@@ -163,6 +163,31 @@ export interface PowerUpOffer {
   cost: number;
 }
 
+/**
+ * A position in the game's own rules, so the bot can try a power-up and see what it does.
+ * The game builds these (src/game/botPowers.ts); the bot never needs the rules itself.
+ */
+export interface SimNode {
+  fen: string;
+  /** Legal moves for the side to move, after freezes, Park the Bus and no-capture rules (UCI). */
+  moves: string[];
+  /** The bot is to move here (it's the opponent's turn otherwise). */
+  mine: boolean;
+  /** The game ended: from the bot's side. */
+  over?: "win" | "loss" | "draw";
+  /** Plays one of `moves` and finishes the turn. Null if the move isn't allowed. */
+  play(uci: string): SimNode | null;
+}
+
+/** One way to use one power-up right now: the position it leaves, ready for the bot's move. */
+export interface PowerUpOption {
+  id: PowerUpId;
+  cost: number;
+  target?: string;
+  target2?: string;
+  node: SimNode;
+}
+
 export interface PowerUpRequest {
   fen: string;
   /** Side the bot plays. Optional: the side to move in `fen` is used. */
@@ -177,6 +202,12 @@ export interface PowerUpRequest {
   evalCp?: number;
   timed?: boolean;
   clockMs?: number;
+  /**
+   * Every valid way to use the available power-ups, plus the position with none (`base`).
+   * With this the bot tries each one with the engine and buys the best value; without it,
+   * it falls back to simple rules of thumb.
+   */
+  options?: { base: SimNode; options: PowerUpOption[] };
 }
 
 export interface PowerUpChoice {

@@ -9,7 +9,7 @@ import type { PassAndPlayView } from "../settings/settings";
 import { useGame, cardLabel, clockOwner, RESULT_MS, type Phase, type SetupChoice } from "../game/useGame";
 import { FORM_CAP, POWER_UPS, POWER_UP_BY_ID, fergieMs, fmtSeconds, type PowerUpDef } from "../game/powerups";
 import {
-  KICKOFF_EVERY, REWARD, destsFor, isPromotion, pieceAt, powerBlocked, powerCost, powerTargets, resolveMove, turnOf, WHO_AM_I_PIECES, ROLE_NAME,
+  KICKOFF_EVERY, REWARD, comebackShift, destsFor, isPromotion, pieceAt, powerBlocked, powerCost, powerTargets, resolveMove, turnOf, WHO_AM_I_PIECES, ROLE_NAME,
 } from "../game/rules";
 import { clubShort } from "../game/clubs";
 import { PowerIcon } from "./PowerIcons";
@@ -438,7 +438,7 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
     return (
       <div className="quiz idle">
         <div className="meta"><span>{POWER_UP_BY_ID[phase.power].name}</span><span>{game.players[turnOf(game)].name}</span></div>
-        <p className="q small">{phase.power === "masterclass" ? "The engine is finding the best move…" : "The engine is reading the game…"}</p>
+        <p className="q small">The engine is reading the game…</p>
       </div>
     );
   }
@@ -569,6 +569,8 @@ function PowerBar({ game, phase, color, enabled, onPick, play }: { game: GameSta
               <div className="form-meter">{meter}</div>
               <button type="button" className="drawer-close" aria-label="Close power-ups" onClick={close}>×</button>
             </div>
+            {comebackShift(game, color) < 0 && <p className="fine drawer-note comeback">Comeback: you're 3+ points down, so power-ups cost 1 less and cool down twice as fast.</p>}
+            {comebackShift(game, color) > 0 && <p className="fine drawer-note comeback">You're 3+ points up, so power-ups cost 1 more.</p>}
             {!enabled && <p className="fine drawer-note">{myTurn ? "Power-ups are used before you move." : "You can use power-ups on your turn."}</p>}
             <div className="powers" aria-label="Power-ups">
               {list.map((p) => {

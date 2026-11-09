@@ -34,8 +34,7 @@ export type PowerUpId =
   | "extra-time"
   | "assistants-flag"
   | "scout-report"
-  | "managers-tip"
-  | "masterclass";
+  | "managers-tip";
 
 
 export interface PlayerState {

@@ -304,7 +304,8 @@ export function legalMoves(state: GameState): MoveFilter {
   const frozen = new Set(state.frozen.filter((f) => f.owner === turn).map((f) => f.square));
   const restricted = state.step !== "normal";
   // Extra Time: the first move can't capture either (it may give check, which cancels the second move).
-  const noCapture = restricted || state.extraTimePending;
+  // Formation Change, Tactical Foul and Super-Sub: no capture on the turn you use one.
+  const noCapture = restricted || state.extraTimePending || (!!state.powerUsedId && NO_CAPTURE_AFTER.includes(state.powerUsedId));
   const bus = state.parkTheBus === opposite(turn) ? state.parkTheBus : null;
   const busRanks = bus === "white" ? [0, 1] : bus === "black" ? [6, 7] : [];
 
@@ -478,7 +479,9 @@ export function playMove(state: GameState, uci: string, rng: Rng = Math.random):
     if (me.goldenBootMoves > 0) patch.goldenBootMoves = me.goldenBootMoves - 1;
     const used = state.powerUsedId;
     const cd = { ...me.cooldowns };
-    for (const id of Object.keys(cd) as PowerUpId[]) if (id !== used && cd[id] > 0) cd[id] -= 1;
+    // Comeback: 3+ points down on material (before this move), cooldowns run twice as fast.
+    const tick = comebackShift(state, mover) < 0 ? 2 : 1;
+    for (const id of Object.keys(cd) as PowerUpId[]) if (id !== used && cd[id] > 0) cd[id] = Math.max(0, cd[id] - tick);
     patch.cooldowns = cd;
     patch.kickoffCount = me.kickoffCount + 1;
   }
@@ -622,8 +625,29 @@ export function doubles(id: PowerUpId): boolean {
   return POWER_UP_BY_ID[id].cost >= DOUBLE_COST_MIN;
 }
 
+/** Points of material ahead (positive) or behind (negative). Handicap odds count as already given, as for catch-up Form. */
+export function materialEdge(state: GameState, color: Color): number {
+  const mat = material(state.fen);
+  const h = state.options.mode === "local" && isActive(state.options.handicap) ? state.options.handicap : null;
+  if (h) mat[opposite(h.weaker)] += ODDS_POINTS[h.odds];
+  return mat[color] - mat[opposite(color)];
+}
+
+/** Comeback pricing kicks in at this many points of material up or down. */
+export const COMEBACK_EDGE = 3;
+
+/** -1 when well behind (cheaper power-ups, faster cooldowns), +1 when well ahead (dearer), else 0. */
+export function comebackShift(state: GameState, color: Color): -1 | 0 | 1 {
+  const edge = materialEdge(state, color);
+  return edge <= -COMEBACK_EDGE ? -1 : edge >= COMEBACK_EDGE ? 1 : 0;
+}
+
+/** After using one of these, your move that turn can't capture (Freddie, 2026-11-09). */
+export const NO_CAPTURE_AFTER: readonly PowerUpId[] = ["formation-change", "tactical-foul", "super-sub"];
+
 export function powerCost(state: GameState, color: Color, id: PowerUpId): number {
-  const base = POWER_UP_BY_ID[id].cost;
+  // Comeback pricing: 1 Form cheaper when 3+ points down, 1 dearer when 3+ up (never below 1).
+  const base = Math.max(1, POWER_UP_BY_ID[id].cost + comebackShift(state, color));
   return state.players[color].doubleNextPower && doubles(id) ? base * 2 : base;
 }
 
@@ -641,7 +665,6 @@ export function powerBlocked(state: GameState, id: PowerUpId): string | null {
   if (me.form < cost) return `Needs ${cost} Form`;
   const pos = positionOf(state.fen);
   if ((id === "park-the-bus" || id === "scout-report" || id === "formation-change") && pos.isCheck()) return "Not while in check";
-  if (id === "masterclass" && legalMoves(state).moves.length === 0) return "No move to play";
   if (id === "var-review") {
     const i = varTarget(state);
     if (i === null) return "Nothing to review yet";
@@ -813,8 +836,11 @@ export function usePowerUp(state: GameState, id: PowerUpId, targets: string[] = 
     case "assistants-flag":
     case "scout-report":
     case "managers-tip":
-    case "masterclass":
       break;
+  }
+
+  if (NO_CAPTURE_AFTER.includes(id) && legalMoves({ ...next, powerUsedId: id }).lifted && !legalMoves(next).lifted) {
+    return fail("You'd have no move left that isn't a capture");
   }
 
   const cost = powerCost(state, color, id);
@@ -880,10 +906,8 @@ export function applyAnswer(state: GameState, a: AnswerCtx): AnswerOutcome {
     if (streak >= 3) { gained += HAT_TRICK_BONUS; streak = 0; lines.push(`Hat-trick! +${HAT_TRICK_BONUS} Form`); }
     // Catch-up: whoever is behind on material gets a little extra. Handicap odds count as already given,
     // so the player giving them isn't "behind" just because of the odds.
-    const mat = material(state.fen);
     const h = state.options.mode === "local" && isActive(state.options.handicap) ? state.options.handicap : null;
-    if (h) mat[opposite(h.weaker)] += ODDS_POINTS[h.odds];
-    if (mat[a.color] < mat[enemy]) { gained += 1; lines.push("+1 catch-up (you're behind on material)"); }
+    if (materialEdge(state, a.color) < 0) { gained += 1; lines.push("+1 catch-up (you're behind on material)"); }
     let carry = me.formCarry ?? 0;
     if (h && h.weaker === a.color && h.formBoost !== 1) {
       const boosted = boostForm(gained, h.formBoost, carry);
