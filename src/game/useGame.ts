@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { opposite } from "chessops/util";
 import type { SfxName } from "../audio/sfx";
 import { botList, loadBots, type BotLike, type BotLevel, type BotMeta, type BotModule, type TalkMoment } from "./bots";
+import { botPowerOptions } from "./botPowers";
 import { POWER_UP_BY_ID, POWER_UPS } from "./powerups";
 import {
   PROMOTION_AIM, addIncrement, applyAnswer, attackedSquares, withClocksFrom, finishTurn, flipTurn, legalMoves, newGame, playMove, powerBlocked, powerCost,
@@ -544,6 +545,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
       if (available.length) {
         const choice = await bot.choosePowerUp({
           fen: g.fen, color, form: g.players[color].form, available, inCheck: positionCheck(g), timed: g.options.timed, clockMs: g.players[color].clockMs ?? undefined,
+          options: botPowerOptions(g),
         });
         if (choice && available.some((a) => a.id === choice.id)) {
           const id = choice.id as PowerUpId;
