@@ -5,7 +5,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { opposite } from "chessops/util";
 import type { SfxName } from "../audio/sfx";
-import { botList, loadBots, type BotLike, type BotLevel, type BotMeta, type BotModule, type TalkMoment } from "./bots";
+import { botList, importWithRetry, loadBots, type BotLike, type BotLevel, type BotMeta, type BotModule, type TalkMoment } from "./bots";
 import { botPowerOptions } from "./botPowers";
 import { POWER_UP_BY_ID, POWER_UPS } from "./powerups";
 import {
@@ -75,10 +75,12 @@ type Data = Record<Color, Banks>;
 let rawPromise: Promise<{ questions: Question[]; sets: WhoAmI[] }> | null = null;
 function loadData(players: SetupChoice["players"]): Promise<Data> {
   if (!rawPromise) {
-    rawPromise = Promise.all([import("../../data/questions.json"), import("../../data/whoami.json")]).then(([q, w]) => ({
+    rawPromise = importWithRetry(() => Promise.all([import("../../data/questions.json"), import("../../data/whoami.json")])).then(([q, w]) => ({
       questions: (q.default as { questions: Question[] }).questions,
       sets: (w.default as { sets: WhoAmI[] }).sets,
     }));
+    // Don't remember a failed download: the next game (or retry) tries again.
+    rawPromise.catch(() => { rawPromise = null; });
   }
   return rawPromise.then(({ questions, sets }) => {
     const banks = (c: Color): Banks => {
@@ -170,9 +172,23 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     else if (p.kind === "result") go({ ...p, shownAt: p.shownAt + d });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paused]);
-  useEffect(() => { loadData(setup.players).then((d) => alive.current && setData(d)); }, []);
+  // Questions and bots are downloaded separately. If either fails, say so and keep trying,
+  // rather than quietly playing without them (playtest 2026-11-09).
   useEffect(() => {
-    loadBots().then((m) => {
+    if (!setup.options.trivia) return;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const attempt = () => loadData(setup.players).then((d) => alive.current && setData(d), () => {
+      if (!alive.current) return;
+      setNote("Couldn't download the questions. Check your connection: trying again…");
+      timer = setTimeout(attempt, 5000);
+    });
+    attempt();
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const attempt = () => loadBots().then((m) => {
       if (!alive.current) return;
       setMod(m);
       for (const c of ["white", "black"] as Color[]) {
@@ -180,7 +196,13 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
         if (p.kind === "bot" && p.botId) bots.current[c] = m.createBot(p.botId as never, setup.botLevel);
       }
       for (const c of ["white", "black"] as Color[]) talk(c, "start");
+    }, () => {
+      if (!alive.current) return;
+      setNote("Couldn't download the bots. Check your connection: trying again…");
+      timer = setTimeout(attempt, 5000);
     });
+    attempt();
+    return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -26,7 +26,7 @@ interface Saved {
 
 const KEY = "cft.setup.v1";
 const DEFAULTS: Saved = {
-  mode: "bot", botId: "ryan", botLevel: "medium", side: "white", names: ["You", "Player 2"], clubs: ["west-ham", "brighton"],
+  mode: "bot", botId: "gambit-gary", botLevel: "medium", side: "white", names: ["You", "Player 2"], clubs: ["west-ham", "brighton"],
   trivia: true, timed: false, minutes: DEFAULT_MINUTES, chess960: false, handicap: NO_HANDICAP,
 };
 
@@ -43,10 +43,15 @@ function loadSaved(): Saved {
 export function SetupScreen({ mode, onStart, onBack }: { mode: "bot" | "local"; onStart: (s: SetupChoice) => void; onBack: () => void }) {
   const [s, setS] = useState<Saved>(() => ({ ...loadSaved(), mode }));
   const [bots, setBots] = useState<BotMeta[]>([]);
+  const [botsFailed, setBotsFailed] = useState(false);
   const [position, setPosition] = useState(() => randomPosition());
   const set = <K extends keyof Saved>(k: K, v: Saved[K]) => setS((o) => ({ ...o, [k]: v }));
 
-  useEffect(() => { loadBots().then((m) => setBots(botList(m))); }, []);
+  const fetchBots = () => {
+    setBotsFailed(false);
+    loadBots().then((m) => setBots(botList(m)), () => setBotsFailed(true));
+  };
+  useEffect(fetchBots, []);
   useEffect(() => { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch { /* ignore */ } }, [s]);
 
   const bot = bots.find((b) => b.id === s.botId) ?? bots[0];
@@ -87,7 +92,11 @@ export function SetupScreen({ mode, onStart, onBack }: { mode: "bot" | "local"; 
       {s.mode === "bot" ? (
         <>
           <h3>Opponent</h3>
-          {([["Elo ladder", bots.filter((b) => b.fixedLevel)], ["The originals", bots.filter((b) => !b.fixedLevel)]] as const).map(([title, list]) => list.length > 0 && (
+          {botsFailed && (
+            <p className="why" role="alert">Couldn't download the bots. Check your connection. <button type="button" className="ghost" onClick={fetchBots}>Try again</button></p>
+          )}
+          {!botsFailed && bots.length === 0 && <p className="fine">Loading the bots…</p>}
+          {([["Elo ladder", bots]] as const).map(([title, list]) => list.length > 0 && (
             <div key={title} className="bot-group">
               <h4>{title}</h4>
               <div className="bot-list" role="radiogroup" aria-label={`Opponent: ${title}`}>

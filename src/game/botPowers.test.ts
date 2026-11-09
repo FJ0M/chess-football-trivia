@@ -50,8 +50,8 @@ describe("bot power-up options", () => {
 });
 
 describe("power-up planner", () => {
-  const profile = { ...BOT_PROFILES.ryan, favouritePowerUps: [] };
-  const strength = BOT_PROFILES.ryan.levels.medium.chess;
+  const profile = { ...BOT_PROFILES["mo-mate"], favouritePowerUps: [] };
+  const strength = BOT_PROFILES["mo-mate"].levels.medium.chess;
   const plan = (g: GameState) => planPowerUp(greedy, profile, strength, { form: g.players.white.form, ...botPowerOptions(g) }, () => 0.5);
 
   it("buys a power-up only when it gains more than its Form is worth", async () => {
@@ -66,7 +66,7 @@ describe("power-up planner", () => {
 
   it("the bot uses the planner when the game sends options", async () => {
     const g = at("4k3/p7/8/8/8/8/3P3P/4K3 w - - 0 1", 12);
-    const bot = createBotWith("ryan", "medium", greedy, () => 0.5, profile);
+    const bot = createBotWith("mo-mate", "medium", greedy, () => 0.5, profile);
     const available = [{ id: "super-sub", cost: 7 }];
     const pick = await bot.choosePowerUp({ fen: g.fen, form: 12, available, options: botPowerOptions(g) });
     expect(pick).toEqual({ id: "super-sub", target: "d2" });

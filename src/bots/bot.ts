@@ -21,18 +21,6 @@ import type {
   TalkMoment,
 } from "./types";
 
-const THINK_MS: Partial<Record<BotId, [number, number]>> = {
-  ollie: [400, 1400],
-  ryan: [700, 2000],
-  freddie: [900, 2600],
-};
-
-const PROMOTION_AIM: Partial<Record<BotId, Record<BotLevel, PromotionRole>>> = {
-  ollie: { low: "r", medium: "q", hard: "q" },
-  ryan: { low: "b", medium: "r", hard: "r" },
-  freddie: { low: "n", medium: "n", hard: "b" },
-};
-
 /** Depth of the bot's quick look at the position before it decides on a power-up. */
 const LOOK_DEPTH = 8;
 
@@ -117,7 +105,7 @@ export function createBotWith(
       expectedCp = pick.scoreCp;
       knownCp = pick.scoreCp;
       talker.tickMove();
-      const [lo, hi] = profile.thinkMs ?? THINK_MS[id] ?? [600, 1800];
+      const [lo, hi] = profile.thinkMs ?? [600, 1800];
       return { uci: pick.uci, evalCp: pick.scoreCp, thinkMs: Math.round(lo + rng() * (hi - lo)) };
     },
 
@@ -172,7 +160,7 @@ export function createBotWith(
       }
     },
 
-    promotionPick: () => profile.promotionAim?.[level] ?? PROMOTION_AIM[id]?.[level] ?? "r",
+    promotionPick: () => profile.promotionAim?.[level] ?? "r",
     say: (moment) => talker.say(moment),
   };
 }

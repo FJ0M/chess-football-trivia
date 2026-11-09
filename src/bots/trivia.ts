@@ -19,12 +19,6 @@ export function chooseCard(profile: BotProfile, skill: TriviaSkill, req: CardReq
   const { cards } = req;
   if (cards.length === 0) return { index: 0, puskas: false };
 
-  // Ryan: always goes Hard on a card about his own club (doc: "always Hard on a West Ham card").
-  if (profile.id === "ryan") {
-    const own = cards.findIndex((c) => c.club === profile.club && c.difficulty === "hard");
-    if (own >= 0) return { index: own, puskas: req.puskasAllowed && rng() < skill.puskasRate * 2 };
-  }
-
   const weights = cards.map((c) => {
     let w = skill.cardWeights[c.difficulty];
     // Everyone fancies a question on their own club a bit more.

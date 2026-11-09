@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { createBotWith } from "./bot";
 import { MATE_CP, parseInfoLine, type Analyser, type EngineLine } from "./engine";
 import { GOLDEN_BOOT_CAPTURE_CP, legalMoves, normaliseUci, pickMove, positionFromFen } from "./movePicker";
-import { BOT_IDS, BOT_LEVELS, BOT_PROFILES, CLASSIC_IDS, LADDER_IDS } from "./profiles";
+import { BOT_IDS, BOT_PROFILES, LADDER_IDS, triviaAccuracy } from "./profiles";
 import { choosePowerUp } from "./powerUps";
 import { TALK, Talker } from "./talk";
 import { answerChance, answerQuestion, chooseCard } from "./trivia";
@@ -62,13 +62,13 @@ describe("move picking", () => {
     expect(normaliseUci(pos, "e1e3")).toBeNull();
   });
 
-  it("always plays a mate it can see, even at Ollie's weakest", () => {
+  it("always plays a mate it can see, even the weakest bot", () => {
     const pos = positionFromFen("6k1/5ppp/8/8/8/8/8/R5K1 w - - 0 1");
     const lines: EngineLine[] = [
       { uci: "a1a8", scoreCp: MATE_CP - 1, depth: 4, multipv: 1 },
       { uci: "a1a2", scoreCp: 500, depth: 4, multipv: 2 },
     ];
-    const strength = BOT_PROFILES.ollie.levels.low.chess;
+    const strength = BOT_PROFILES.pawny.levels.medium.chess;
     for (let s = 1; s < 50; s++) {
       const pick = pickMove({ pos, lines, allowed: legalMoves(pos), strength, style: "chaotic", rng: seeded(s) });
       expect(pick.uci).toBe("a1a8");
@@ -82,7 +82,7 @@ describe("move picking", () => {
       { uci: "d2d4", scoreCp: 35, depth: 8, multipv: 2 },
     ];
     for (let s = 1; s < 50; s++) {
-      const pick = pickMove({ pos, lines, allowed: ["d2d4", "a2a3"], strength: BOT_PROFILES.ollie.levels.low.chess, style: "chaotic", rng: seeded(s) });
+      const pick = pickMove({ pos, lines, allowed: ["d2d4", "a2a3"], strength: BOT_PROFILES.pawny.levels.medium.chess, style: "chaotic", rng: seeded(s) });
       expect(["d2d4", "a2a3"]).toContain(pick.uci);
     }
   });
@@ -94,35 +94,36 @@ describe("move picking", () => {
       { uci: "d2d4", scoreCp: 39, depth: 14, multipv: 2 },
     ];
     for (let s = 1; s < 30; s++) {
-      expect(pickMove({ pos, lines, allowed: legalMoves(pos), strength: { ...BOT_PROFILES.freddie.levels.hard.chess, temperatureCp: 0, blunderRate: 0 }, style: "positional", rng: seeded(s) }).uci).toBe("e2e4");
+      expect(pickMove({ pos, lines, allowed: legalMoves(pos), strength: { ...BOT_PROFILES.rookland.levels.medium.chess, temperatureCp: 0, blunderRate: 0 }, style: "positional", rng: seeded(s) }).uci).toBe("e2e4");
     }
   });
 
-  it("Ollie grabs captures more than Freddie does", () => {
+  it("chaotic Eezy grabs captures more than positional Florence", () => {
     // White can take a pawn on d5 (slightly worse per engine) or play quietly.
     const pos = positionFromFen("rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2");
     const lines: EngineLine[] = [
       { uci: "b1c3", scoreCp: 40, depth: 8, multipv: 1 },
       { uci: "e4d5", scoreCp: 20, depth: 8, multipv: 2 },
     ];
-    const rate = (id: "ollie" | "freddie") => {
+    const rate = (id: "eezy" | "knightingale") => {
       let n = 0;
       for (let s = 1; s <= 400; s++) {
         const p = BOT_PROFILES[id];
-        const strength = { ...p.levels.medium.chess, blunderRate: 0 };
+        // Same strength for both, so only the style differs.
+        const strength = { ...BOT_PROFILES["mo-mate"].levels.medium.chess, blunderRate: 0 };
         if (pickMove({ pos, lines, allowed: legalMoves(pos), strength, style: p.style, rng: seeded(s) }).uci === "e4d5") n++;
       }
       return n / 400;
     };
-    expect(rate("ollie")).toBeGreaterThan(0.5);
-    expect(rate("freddie")).toBeLessThan(rate("ollie") - 0.15);
+    expect(rate("eezy")).toBeGreaterThan(0.5);
+    expect(rate("knightingale")).toBeLessThan(rate("eezy") - 0.15);
   });
 });
 
 describe("bot.chooseMove", () => {
   it("passes restricted moves to the engine as searchmoves", async () => {
     const engine = fakeEngine();
-    const bot = createBotWith("ryan", "medium", engine, seeded(3));
+    const bot = createBotWith("mo-mate", "medium", engine, seeded(3));
     const res = await bot.chooseMove({ fen: START, allowedMoves: ["g1f3", "b1c3"] });
     expect(["g1f3", "b1c3"]).toContain(res.uci);
     expect((engine.calls[0] as { searchMoves: string[] }).searchMoves).toEqual(["g1f3", "b1c3"]);
@@ -132,14 +133,14 @@ describe("bot.chooseMove", () => {
     // Chess960: king b1, rook a1; castling queenside is the only legal-and-offered move.
     const fen = "rk6/8/8/8/8/8/8/RK6 w Aa - 0 1";
     const engine = fakeEngine([{ uci: "b1a1", scoreCp: 0, depth: 6, multipv: 1 }]);
-    const bot = createBotWith("freddie", "hard", engine, seeded(1));
+    const bot = createBotWith("rookland", "medium", engine, seeded(1));
     const res = await bot.chooseMove({ fen, chess960: true });
     expect(res.uci).toBe("b1a1");
   });
 
   it("skips the engine when only one move is allowed", async () => {
     const engine = fakeEngine();
-    const bot = createBotWith("ollie", "low", engine, seeded(1));
+    const bot = createBotWith("pawny", "medium", engine, seeded(1));
     expect((await bot.chooseMove({ fen: START, allowedMoves: ["a2a3"] })).uci).toBe("a2a3");
     expect(engine.calls).toHaveLength(0);
   });
@@ -153,7 +154,7 @@ describe("trivia", () => {
     club,
   });
 
-  function rate(id: "ollie" | "ryan" | "freddie", question: QuestionLike, puskas = false) {
+  function rate(id: (typeof LADDER_IDS)[number], question: QuestionLike, puskas = false) {
     const p = BOT_PROFILES[id];
     const rng = seeded(7);
     let right = 0;
@@ -161,27 +162,20 @@ describe("trivia", () => {
     return right / 4000;
   }
 
-  it("matches the design doc's overall accuracy at medium (Ollie 85, Ryan 70, Freddie 45)", () => {
-    const avg = (id: "ollie" | "ryan" | "freddie") => (rate(id, q("easy")) + rate(id, q("medium")) + rate(id, q("hard"))) / 3;
-    expect(avg("ollie")).toBeCloseTo(0.87, 1);
-    expect(avg("ryan")).toBeCloseTo(0.72, 1);
-    expect(avg("freddie")).toBeCloseTo(0.44, 1);
-  });
-
-  it("Ryan is about 92% on West Ham", () => {
-    expect(rate("ryan", q("hard", "west-ham"))).toBeCloseTo(0.92, 1);
-  });
-
-  it("is ordered low < medium < hard for every bot with levels", () => {
-    for (const id of CLASSIC_IDS) {
-      const [lo, mid, hi] = BOT_LEVELS.map((l) => answerChance(BOT_PROFILES[id], BOT_PROFILES[id].levels[l].trivia, { question: q("medium") }));
-      expect(lo).toBeLessThan(mid);
-      expect(mid).toBeLessThan(hi);
+  it("answers about as often as its profile says", () => {
+    for (const id of LADDER_IDS) {
+      const avg = (rate(id, q("easy")) + rate(id, q("medium")) + rate(id, q("hard"))) / 3;
+      expect(Math.abs(avg - triviaAccuracy(BOT_PROFILES[id].levels.medium.trivia))).toBeLessThan(0.03);
     }
   });
 
+  it("knows its own club best", () => {
+    const p = BOT_PROFILES["mo-mate"];
+    expect(answerChance(p, p.levels.medium.trivia, { question: q("hard", p.club) })).toBeGreaterThan(answerChance(p, p.levels.medium.trivia, { question: q("hard") }));
+  });
+
   it("answers inside the timer, and faster on a Puskás", () => {
-    const p = BOT_PROFILES.freddie;
+    const p = BOT_PROFILES.rookland;
     const rng = seeded(2);
     for (let i = 0; i < 200; i++) {
       expect(answerQuestion(p, p.levels.medium.trivia, { question: q("hard") }, rng).delayMs).toBeLessThan(10000);
@@ -195,23 +189,17 @@ describe("trivia", () => {
     { topic: "West Ham players", difficulty: "hard", club: "west-ham" },
   ];
 
-  it("Ryan always goes Hard on a West Ham card", () => {
-    const p = BOT_PROFILES.ryan;
-    const rng = seeded(5);
-    for (let i = 0; i < 100; i++) expect(chooseCard(p, p.levels.medium.trivia, { cards: deal, puskasAllowed: true, form: 0 }, rng).index).toBe(2);
-  });
-
-  it("Ollie mostly goes Hard, Freddie mostly goes Easy", () => {
+  it("Eezy mostly goes Hard, Ragnar mostly goes Easy", () => {
     const general: CardOffer[] = deal.map((c) => ({ ...c, club: null }));
-    const share = (id: "ollie" | "freddie", diff: number) => {
+    const share = (id: "eezy" | "rookland", diff: number) => {
       const p = BOT_PROFILES[id];
       const rng = seeded(6);
       let n = 0;
       for (let i = 0; i < 1000; i++) if (chooseCard(p, p.levels.medium.trivia, { cards: general, puskasAllowed: true, form: 0 }, rng).index === diff) n++;
       return n / 1000;
     };
-    expect(share("ollie", 2)).toBeGreaterThan(0.6);
-    expect(share("freddie", 0)).toBeGreaterThan(0.6);
+    expect(share("eezy", 2)).toBeGreaterThan(0.5);
+    expect(share("rookland", 0)).toBeGreaterThan(0.5);
   });
 });
 
@@ -219,8 +207,8 @@ describe("power-ups", () => {
   const fen = "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3";
   const always = () => 0;
 
-  it("Ryan fouls the most valuable enemy piece he's allowed to (not the queen)", () => {
-    const pick = choosePowerUp(BOT_PROFILES.ryan, { fen, form: 5, available: [{ id: "tactical-foul", cost: 5 }] }, always, 0);
+  it("fouls the most valuable enemy piece it's allowed to (not the queen)", () => {
+    const pick = choosePowerUp(BOT_PROFILES.chillwall, { fen, form: 5, available: [{ id: "tactical-foul", cost: 5 }] }, always, 0);
     expect(pick?.id).toBe("tactical-foul");
     expect(["a8", "h8"]).toContain(pick?.target);
   });
@@ -228,24 +216,24 @@ describe("power-ups", () => {
   it("Red Card never targets a pawn on its 6th or 7th rank", () => {
     // Black pawns on a3 (black's 6th rank) and h5 (black's 4th).
     const f = "4k3/8/8/7p/8/p7/8/4K3 w - - 0 1";
-    const pick = choosePowerUp(BOT_PROFILES.ryan, { fen: f, form: 9, available: [{ id: "red-card", cost: 7 }] }, always, 0);
+    const pick = choosePowerUp(BOT_PROFILES.chillwall, { fen: f, form: 9, available: [{ id: "red-card", cost: 7 }] }, always, 0);
     expect(pick).toEqual({ id: "red-card", target: "h5" });
   });
 
-  it("Ollie uses VAR Review after a blunder", () => {
-    const pick = choosePowerUp(BOT_PROFILES.ollie, { fen, form: 3, available: [{ id: "var-review", cost: 3 }] }, () => 0.99, 400);
+  it("uses VAR Review after a blunder", () => {
+    const pick = choosePowerUp(BOT_PROFILES.eezy, { fen, form: 3, available: [{ id: "var-review", cost: 3 }] }, () => 0.99, 400);
     expect(pick).toEqual({ id: "var-review" });
   });
 
-  it("Freddie saves up instead of buying small things", () => {
-    const req = { fen, form: 9, available: [{ id: "park-the-bus", cost: 3 }], evalCp: -300 };
-    expect(choosePowerUp(BOT_PROFILES.freddie, req, always, 0)).toBeNull();
-    expect(choosePowerUp(BOT_PROFILES.freddie, { ...req, form: 11 }, always, 0)).toEqual({ id: "park-the-bus" });
-    expect(choosePowerUp(BOT_PROFILES.freddie, { fen, form: 8, available: [{ id: "extra-time", cost: 8 }] }, always, 0)).toEqual({ id: "extra-time" });
+  it("Ragnar saves up instead of buying small things", () => {
+    const req = { fen, form: 9, available: [{ id: "red-card", cost: 4 }] };
+    expect(choosePowerUp(BOT_PROFILES.rookland, req, always, 0)).toBeNull();
+    expect(choosePowerUp(BOT_PROFILES.rookland, { ...req, form: 12 }, always, 0)?.id).toBe("red-card");
+    expect(choosePowerUp(BOT_PROFILES.rookland, { fen, form: 8, available: [{ id: "extra-time", cost: 8 }] }, always, 0)).toEqual({ id: "extra-time" });
   });
 
   it("buys nothing while in check (except VAR after a blunder)", () => {
-    expect(choosePowerUp(BOT_PROFILES.ryan, { fen, form: 9, inCheck: true, available: [{ id: "tactical-foul", cost: 3 }] }, always, 0)).toBeNull();
+    expect(choosePowerUp(BOT_PROFILES.chillwall, { fen, form: 9, inCheck: true, available: [{ id: "tactical-foul", cost: 3 }] }, always, 0)).toBeNull();
   });
 });
 
@@ -255,7 +243,7 @@ describe("trash talk", () => {
   });
 
   it("speaks at most once every two bot moves, but always at the start", () => {
-    const t = new Talker("ryan", "West Ham", () => 0.9);
+    const t = new Talker("mo-mate", "Liverpool", () => 0.9);
     expect(t.say("start")).toBeTruthy();
     expect(t.say("capture")).toBeNull();
     t.tickMove();
@@ -265,27 +253,21 @@ describe("trash talk", () => {
   });
 
   it("fills in the club name", () => {
-    const t = new Talker("ryan", "West Ham", () => 0.5);
+    const t = new Talker("mo-mate", "Liverpool", () => 0.5);
     for (let i = 0; i < 6; i++) expect(t.say("hotSpot")).not.toContain("{club}");
   });
 });
 
 describe("promotion", () => {
-  it("Ollie aims for a queen, Freddie for a knight", () => {
+  it("aims for the piece its profile says", () => {
     const e = fakeEngine();
-    expect(createBotWith("ollie", "medium", e).promotionPick()).toBe("q");
-    expect(createBotWith("ryan", "medium", e).promotionPick()).toBe("r");
-    expect(createBotWith("freddie", "medium", e).promotionPick()).toBe("n");
+    for (const id of LADDER_IDS) expect(createBotWith(id, "medium", e).promotionPick()).toBe(BOT_PROFILES[id].promotionAim?.medium ?? "r");
   });
 });
 
 describe("ratings", () => {
-  it("orders each bot's levels and keeps chess as the main part of the match rating", async () => {
-    const { BOTS, matchRating } = await import("./profiles");
-    for (const b of BOTS.filter((x) => !x.fixedLevel)) {
-      expect(b.ratings.low.match).toBeLessThan(b.ratings.medium.match);
-      expect(b.ratings.medium.match).toBeLessThan(b.ratings.hard.match);
-    }
+  it("keeps chess as the main part of the match rating", async () => {
+    const { matchRating } = await import("./profiles");
     // 2500 chess with no football knowledge beats perfect trivia with 600 chess.
     expect(matchRating(2500, 800)).toBeGreaterThan(matchRating(600, 2200));
   });
@@ -300,7 +282,7 @@ describe("the Elo ladder", () => {
       expect(p.levels.low).toEqual(p.levels.medium);
       expect(p.levels.hard).toEqual(p.levels.medium);
     }
-    expect(new Set(BOT_IDS).size).toBe(10);
+    expect(BOT_IDS).toEqual(LADDER_IDS);
   });
 
   it("answers inside the 10-second question timer", () => {
@@ -358,8 +340,8 @@ describe("the game around the chess", () => {
   it("only buys Golden Boot with a capture on (it costs 2 and pays 2 a capture)", () => {
     const fen = "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3";
     const req = { fen, form: 6, available: [{ id: "golden-boot", cost: 2 }] };
-    expect(choosePowerUp(BOT_PROFILES.ollie, req, () => 0, 0)).toBeNull();
-    expect(choosePowerUp(BOT_PROFILES.ollie, req, () => 0, 0, { bestIsCapture: true })).toEqual({ id: "golden-boot" });
+    expect(choosePowerUp(BOT_PROFILES.eezy, req, () => 0, 0)).toBeNull();
+    expect(choosePowerUp(BOT_PROFILES.eezy, req, () => 0, 0, { bestIsCapture: true })).toEqual({ id: "golden-boot" });
   });
 
   it("looks at the position before a power-up, so Park the Bus fires when it's losing (bug 10)", async () => {
