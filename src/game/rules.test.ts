@@ -373,6 +373,40 @@ describe("power-ups", () => {
     expect(merged.players.white.clockMs).toBe(1000);
     expect(merged.players.white.form).toBe(7);
   });
+  it("no capture on the turn you use Formation Change, Tactical Foul or Super-Sub", () => {
+    // White rook a1 can take the knight on a8; after swapping with the h1 bishop it could take h8.
+    const g = at("n3k2n/8/8/8/8/8/1P6/R3K2B w - - 0 1");
+    expect(legalMoves(g).moves).toContain("a1a8");
+    for (const [id, t] of [["tactical-foul", ["e8"]], ["super-sub", ["b2"]]] as const) {
+      const r = usePowerUp(g, id, [...t]);
+      if (id === "tactical-foul") { expect(r.error).toBe("Not the king"); continue; }
+      expect(r.error).toBeUndefined();
+      expect(legalMoves(r.state).moves).not.toContain("a1a8");
+    }
+    const foul = usePowerUp(g, "tactical-foul", ["h8"]);
+    expect(legalMoves(foul.state).moves).not.toContain("a1a8");
+    const swap = usePowerUp(g, "formation-change", ["a1", "h1"]);
+    expect(swap.error).toBeUndefined();
+    expect(legalMoves(swap.state).moves).not.toContain("h1h8");
+    expect(legalMoves(swap.state).moves).toContain("h1h7");
+    // A power-up that would leave only captures is refused.
+    const onlyCapture = at("4k3/8/8/8/8/7p/1r5P/K7 w - - 0 1");
+    expect(legalMoves(onlyCapture).moves).toEqual(["a1b2"]);
+    expect(usePowerUp(onlyCapture, "tactical-foul", ["h3"]).error).toMatch(/isn't a capture/);
+  });
+  it("comeback pricing: 3+ points down is 1 cheaper with faster cooldowns, 3+ up is 1 dearer", () => {
+    // White has an extra rook.
+    const g = at("4k3/pppp4/8/8/8/8/PPPP4/R3K3 w - - 0 1");
+    expect(powerCost(g, "white", "red-card")).toBe(6);
+    expect(powerCost(g, "black", "red-card")).toBe(4);
+    expect(powerCost(g, "black", "assistants-flag")).toBe(1);
+    const level = at("4k3/pppp4/8/8/8/8/PPPP4/4K3 w - - 0 1");
+    expect(powerCost(level, "white", "red-card")).toBe(5);
+    const cd = (st: GameState) => ({ ...st, players: { white: { ...st.players.white, cooldowns: { ...st.players.white.cooldowns, "red-card": 5 } }, black: { ...st.players.black, cooldowns: { ...st.players.black.cooldowns, "red-card": 5 } } } });
+    const after = move(move(cd(g), "e1f1"), "e8f8");
+    expect(after.players.white.cooldowns["red-card"]).toBe(4);
+    expect(after.players.black.cooldowns["red-card"]).toBe(3);
+  });
   it("Scout Report can't be used when it would do nothing", () => {
     const check = at("4k3/8/8/8/8/8/4r3/4K3 w - - 0 1");
     expect(powerBlocked(check, "scout-report")).toMatch(/check/);

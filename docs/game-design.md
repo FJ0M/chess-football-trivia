@@ -95,6 +95,7 @@ You pick your own question, and the harder it is, the more you win and the more 
 - **Quick answer:** +1 Form if you answer a Screamer or Puskás correctly in under 5 seconds.
 - **Hat-trick:** three right in a row earns +2 Form and a commentary line.
 - **Catch-up:** if you're behind on material (pawn 1, knight and bishop 3, rook 5, queen 9), every right answer earns +1 Form more.
+- **Comeback pricing** (Freddie, 2026-11-09, so the leader can't run away with it): 3 or more points down on material, every power-up costs 1 Form less (never below 1) and cooldowns drop 2 per move instead of 1. 3 or more points up, every power-up costs 1 Form more. Handicap odds count as already given, as for catch-up. The power-up drawer says when it applies.
 - **Yellow card:** two wrong in a row is a yellow (banter only). Four wrong in a row is a red, and your next power-up costing 3 Form or more costs double. Cheaper ones don't pay the double price and don't clear it.
 - **Hot Spots** deal from the whole bank like any other trigger, with normal rewards and penalties. They used to be a Club Bonus Round on your club, but with 30 questions a club those came round often enough to memorise (Freddie, 2026-11-08). Double Form was already dropped on 2026-11-07 so chasing Hot Spots doesn't farm Form.
 
@@ -119,19 +120,19 @@ Each power-up shows a **value of 1 to 5 stars**: roughly how much it swings the 
 
 **Power-ups** (one per turn, used before your move). Each has a cooldown: once used, it is locked for that many of your own moves, and every power-up also starts the game locked for its cooldown. The button shows when it's ready, and a Form meter above the buttons shows how much you have to spend. Tapping a power-up opens a card with its cost and effect; nothing is spent until you tap Confirm, and once confirmed it can't be cancelled (so targeted power-ups only offer Confirm when there is a valid target).
 
-**No own goals.** A power-up should never hurt the player who uses it: Extra Time's second move is optional, engine hints (Manager's Tip, Scout Report) cost nothing if the engine can't answer, Scout Report can't be used in check, and freezes or Park the Bus are lifted if they would leave the opponent with no legal move (so they can't force a stalemate).
+**No own goals.** A power-up should never hurt the player who uses it: Extra Time's second move is optional, engine hints (Manager's Tip, Scout Report) cost nothing if the engine can't answer, Scout Report can't be used in check, and freezes or Park the Bus are lifted if they would leave the opponent with no legal move (so they can't force a stalemate). **No capture that turn** (Freddie, 2026-11-09): after Formation Change, Tactical Foul or Super-Sub your move can't capture, which stops the swap-then-take, freeze-the-defender and new-knight-forks-at-once combos; the power-up is refused if it would leave you only captures.
 
 | Power-up | Style | Cost | Cooldown (your moves) | Value | Effect | Balance rule |
 | --- | --- | --- | --- | --- | --- | --- |
 | Fergie Time | Football | 2 | 8 | ★★ | Adds a tenth of the starting clock: 20s (3 min), 30s (5), 1:00 (10), 1:30 (15), 3:00 (30) | Timed games only |
-| Tactical Foul | Football | 5 | 10 | ★★ | Freeze one enemy piece for their next turn | Not the king, the queen, or a piece giving check |
+| Tactical Foul | Football | 5 | 10 | ★★ | Freeze one enemy piece for their next turn | Not the king, the queen, or a piece giving check; your move that turn can't capture |
 | Park the Bus | Football | 2 | 6 | ★ | Your pieces on your own back two ranks can't be captured next turn | Not while in check |
 | VAR Review | Chess | 6 | 15 | ★★★★★ | Undo your last move and the opponent's reply | Form, cooldowns, streaks and freezes roll back too (clocks don't); the cost comes out of the Form you had before that move |
 | Counter-Attack | Chess | 3 | 8 | ★ | One pawn may move two squares from anywhere this turn | Path must be clear; can't reach the 7th rank, or skip past a square an enemy pawn covers (it would dodge en passant) |
 | Substitution | Chess | 4 | 12 | ★★★ | Bring one captured pawn back on your second rank | |
 | Golden Boot | Football | 2 | 8 | ★ | +2 Form for each capture in your next 3 moves (this one included) | |
-| Formation Change | Chess | 6 | 12 | ★★ | Swap two of your own pieces (not the king) | Not while in check, not a frozen piece, a pawn can only land on its 2nd to 5th rank; can't give check |
-| Super-Sub | Football | 7 | 15 | ★★★★ | Upgrade a pawn to a knight | |
+| Formation Change | Chess | 6 | 12 | ★★ | Swap two of your own pieces (not the king) | Not while in check, not a frozen piece, a pawn can only land on its 2nd to 5th rank; can't give check; your move that turn can't capture |
+| Super-Sub | Football | 7 | 15 | ★★★★ | Upgrade a pawn to a knight | Your move that turn can't capture |
 | Red Card | Football | 5 | 15 | ★★★ | Send off one enemy pawn (removed) | Not a pawn on its 6th or 7th rank |
 | Extra Time | Chess | 10 | 25 | ★★★★ | Make two moves this turn | Neither move can capture; the second can't give check, and can be skipped |
 
