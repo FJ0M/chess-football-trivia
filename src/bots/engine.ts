@@ -73,6 +73,10 @@ export class UciEngine implements Analyser {
   private listeners: ((line: string) => void)[] = [];
   private ready: Promise<void>;
   private queue: Promise<unknown> = Promise.resolve();
+  /** Searches waiting or running. */
+  private jobs = 0;
+  /** True while a search is queued or running (the commentator skips its look then). */
+  get busy(): boolean { return this.jobs > 0; }
   private lastSent = "";
 
   constructor(private transport: Transport) {
@@ -179,7 +183,8 @@ export class UciEngine implements Analyser {
   }
 
   private enqueue<T>(job: () => Promise<T>): Promise<T> {
-    const run = this.queue.then(job, job);
+    this.jobs++;
+    const run = this.queue.then(job, job).finally(() => { this.jobs--; });
     this.queue = run.catch(() => undefined);
     return run;
   }

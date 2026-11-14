@@ -4,7 +4,7 @@
 import { Chess, normalizeMove } from "chessops/chess";
 import { parseFen } from "chessops/fen";
 import { makeUci, parseUci } from "chessops/util";
-import type { Role } from "chessops/types";
+import type { NormalMove, Role } from "chessops/types";
 import { MATE_CP, type EngineLine } from "./engine";
 import type { ChessStrength, ChessStyle } from "./types";
 
@@ -146,6 +146,38 @@ export interface Pick {
   blunder: boolean;
 }
 
+/** Mistakes worth making: at least this much worse than the best line. */
+const MISTAKE_MIN_CP = 80;
+
+/**
+ * A mistake a person might make. Usually one of the worse lines the engine looked at (a
+ * natural-looking move that misses something); otherwise a tempting move: grabbing a piece,
+ * giving check, or developing, with aimless king walks rare. Never the best move.
+ */
+export function humanMistake(ctx: PickContext, lines: { uci: string; scoreCp: number }[], bestUci: string, bestCp: number): string {
+  const { pos, rng } = ctx;
+  const worse = lines.filter((l) => l.uci !== bestUci && bestCp - l.scoreCp >= MISTAKE_MIN_CP);
+  if (worse.length && rng() < 0.6) return worse[Math.floor(rng() * worse.length)].uci;
+  const pool = ctx.allowed.filter((u) => u !== bestUci);
+  if (!pool.length) return bestUci;
+  const weights = pool.map((u) => {
+    const f = moveFeatures(pos, u);
+    const role = pos.board.get((parseUci(u) as NormalMove).from)?.role;
+    if (f.capture) return 3;
+    if (f.check) return 2;
+    if (role === "king" && !f.castle) return 0.25;
+    if (role === "pawn") return 1;
+    return 1.5;
+  });
+  const total = weights.reduce((a, b) => a + b, 0);
+  let r = rng() * total;
+  for (let i = 0; i < pool.length; i++) {
+    r -= weights[i];
+    if (r <= 0) return pool[i];
+  }
+  return pool[pool.length - 1];
+}
+
 export function pickMove(ctx: PickContext): Pick {
   const { pos, strength, style, rng } = ctx;
   const allowedSet = new Set(ctx.allowed);
@@ -165,7 +197,7 @@ export function pickMove(ctx: PickContext): Pick {
   // Never blunder out of a mate we can see, so wins still get finished (badly).
   const mateFound = best.scoreCp > MATE_CP - 100;
   if (!mateFound && rng() < strength.blunderRate && ctx.allowed.length > 1) {
-    const uci = ctx.allowed[Math.floor(rng() * ctx.allowed.length)];
+    const uci = strength.blunderStyle === "random" ? ctx.allowed[Math.floor(rng() * ctx.allowed.length)] : humanMistake(ctx, lines, best.uci, best.scoreCp);
     const known = lines.find((l) => l.uci === uci);
     return { uci, scoreCp: known?.scoreCp ?? best.scoreCp - 300, lossCp: known ? best.scoreCp - known.scoreCp : 300, blunder: true };
   }

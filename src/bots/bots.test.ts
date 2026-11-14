@@ -353,3 +353,22 @@ describe("the game around the chess", () => {
     expect(await createBotWith("chillwall", "medium", level, () => 0).choosePowerUp(req)).toBeNull();
   });
 });
+
+describe("human-like mistakes", () => {
+  it("never picks the best move, prefers the engine's worse lines and rarely walks the king", async () => {
+    const { humanMistake, positionFromFen: pf, legalMoves: lm } = await import("./movePicker");
+    const pos = pf("r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3");
+    const allowed = lm(pos);
+    const lines = [{ uci: "f1b5", scoreCp: 40 }, { uci: "d2d4", scoreCp: 35 }, { uci: "f3g5", scoreCp: -60 }];
+    let kingWalks = 0, fromLines = 0;
+    for (let s = 1; s <= 400; s++) {
+      const ctx = { pos, lines: [], allowed, strength: BOT_PROFILES.pawny.levels.medium.chess, style: "chaotic" as const, rng: seeded(s) };
+      const u = humanMistake(ctx, lines, "f1b5", 40);
+      expect(u).not.toBe("f1b5");
+      if (u === "e1e2") kingWalks++;
+      if (u === "f3g5") fromLines++;
+    }
+    expect(fromLines).toBeGreaterThan(200);
+    expect(kingWalks).toBeLessThan(10);
+  });
+});
