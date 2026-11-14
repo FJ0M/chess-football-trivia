@@ -34,8 +34,6 @@ export interface PowerUpDef {
 /** Golden Boot: how many of your moves it lasts, and the Form each capture in them earns. */
 export const GOLDEN_BOOT_MOVES = 3;
 export const GOLDEN_BOOT_FORM = 2;
-/** The "next power-up costs double" penalty only applies to (and is only cleared by) power-ups costing at least this. */
-export const DOUBLE_COST_MIN = 3;
 
 export const POWER_UPS: PowerUpDef[] = [
   { id: "fergie-time", name: "Fergie Time", kind: "football", cost: 2, cooldown: 8, stars: 2, effect: "Adds a tenth of your starting time to your clock", target: "none", timedOnly: true },

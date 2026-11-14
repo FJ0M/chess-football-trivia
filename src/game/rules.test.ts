@@ -146,12 +146,21 @@ describe("answers", () => {
     expect(applyAnswer(zero(behind), { ...ctx, color: "black", difficulty: "easy", correct: true }).state.players.black.form).toBe(2);
     expect(applyAnswer(zero(behind), { ...ctx, color: "white", difficulty: "easy", correct: true }).state.players.white.form).toBe(1);
   });
-  it("penalties: medium feeds the opponent, hard books the piece, Puskás sends you off", () => {
+  it("penalties: medium feeds the opponent, hard books the piece, Puskás books it and costs 2 Form", () => {
     const g = game();
     expect(applyAnswer(g, { ...ctx, difficulty: "easy", correct: false }).state.players.black.form).toBe(0);
     expect(applyAnswer(g, { ...ctx, difficulty: "medium", correct: false }).state.players.black.form).toBe(2);
     expect(applyAnswer(g, { ...ctx, difficulty: "hard", correct: false }).state.frozen).toEqual([{ square: "e4", owner: "white", reason: "booked" }]);
-    expect(applyAnswer(g, { ...ctx, difficulty: "hard", puskas: true, correct: false }).state.players.white.sentOff).toBe(true);
+    const rich = { ...g, players: { ...g.players, white: { ...g.players.white, form: 5 } } };
+    const missed = applyAnswer(rich, { ...ctx, difficulty: "hard", puskas: true, correct: false }).state;
+    expect(missed.frozen).toEqual([{ square: "e4", owner: "white", reason: "booked" }]);
+    expect(missed.players.white.form).toBe(3);
+    expect(missed.players.white.wrongStreak).toBe(1);
+    // Off a Hot Spot the Puskás is a free shot: no booking, no Form lost, no step towards a card.
+    const free = applyAnswer(rich, { ...ctx, difficulty: "hard", puskas: true, bonus: true, correct: false }).state;
+    expect(free.frozen).toEqual([]);
+    expect(free.players.white.form).toBe(5);
+    expect(free.players.white.wrongStreak).toBe(0);
   });
   it("hat-trick, Form cap and the four-wrong red card", () => {
     let g = game();
@@ -159,8 +168,12 @@ describe("answers", () => {
     expect(g.players.white.form).toBe(5);
     for (let i = 0; i < 6; i++) g = applyAnswer(g, { ...ctx, difficulty: "hard", correct: true }).state;
     expect(g.players.white.form).toBe(12);
-    for (let i = 0; i < 4; i++) g = applyAnswer(g, { ...ctx, difficulty: "easy", correct: false }).state;
-    expect(g.players.white.doubleNextPower).toBe(true);
+    for (let i = 0; i < 3; i++) g = applyAnswer(g, { ...ctx, difficulty: "easy", correct: false }).state;
+    expect(g.players.white.form).toBe(12);
+    const red = applyAnswer(g, { ...ctx, difficulty: "easy", correct: false });
+    expect(red.state.players.white.form).toBe(9);
+    expect(red.state.players.white.wrongStreak).toBe(0);
+    expect(red.lines.join(" ")).toMatch(/red card/);
   });
   it("a booked piece can't move next turn, then is free again", () => {
     let g = at("4k3/8/8/8/8/8/8/R3K3 w - - 0 1");
@@ -182,21 +195,17 @@ describe("answers", () => {
   });
 });
 
-describe("Puskás sending off", () => {
-  it("skips the next turn and gives the opponent a quiet Free Kick", () => {
+describe("missed Puskás", () => {
+  it("books the piece but nobody loses a turn", () => {
     let g = at("4k3/pppppppp/8/8/8/8/PPPPPPPP/4K3 w - - 0 1");
     const r = playMove(g, "e2e4");
     g = applyAnswer(r.state, { color: "white", difficulty: "hard", puskas: true, bonus: false, correct: false, ms: 8000, landed: r.landed }).state;
     g = finishTurn(g).state;
     expect(turnOf(g)).toBe("black");
     g = move(g, "d7d5");
-    // White's turn is skipped: Black takes a Free Kick, which can't capture.
-    expect(turnOf(g)).toBe("black");
-    expect(g.step).toBe("free-kick");
-    expect(legalMoves(g).moves).not.toContain("d5e4");
-    g = move(g, "a7a6");
     expect(turnOf(g)).toBe("white");
     expect(g.step).toBe("normal");
+    expect(legalMoves(g).moves.some((m) => m.startsWith("e4"))).toBe(false);
   });
 });
 
@@ -394,10 +403,10 @@ describe("power-ups", () => {
     expect(legalMoves(onlyCapture).moves).toEqual(["a1b2"]);
     expect(usePowerUp(onlyCapture, "tactical-foul", ["h3"]).error).toMatch(/isn't a capture/);
   });
-  it("comeback pricing: 3+ points down is 1 cheaper with faster cooldowns, 3+ up is 1 dearer", () => {
+  it("comeback pricing: 3+ points down is 1 cheaper; the leader pays normal prices and cooldowns run as normal", () => {
     // White has an extra rook.
     const g = at("4k3/pppp4/8/8/8/8/PPPP4/R3K3 w - - 0 1");
-    expect(powerCost(g, "white", "red-card")).toBe(6);
+    expect(powerCost(g, "white", "red-card")).toBe(5);
     expect(powerCost(g, "black", "red-card")).toBe(4);
     expect(powerCost(g, "black", "assistants-flag")).toBe(1);
     const level = at("4k3/pppp4/8/8/8/8/PPPP4/4K3 w - - 0 1");
@@ -405,23 +414,11 @@ describe("power-ups", () => {
     const cd = (st: GameState) => ({ ...st, players: { white: { ...st.players.white, cooldowns: { ...st.players.white.cooldowns, "red-card": 5 } }, black: { ...st.players.black, cooldowns: { ...st.players.black.cooldowns, "red-card": 5 } } } });
     const after = move(move(cd(g), "e1f1"), "e8f8");
     expect(after.players.white.cooldowns["red-card"]).toBe(4);
-    expect(after.players.black.cooldowns["red-card"]).toBe(3);
+    expect(after.players.black.cooldowns["red-card"]).toBe(4);
   });
   it("Scout Report can't be used when it would do nothing", () => {
     const check = at("4k3/8/8/8/8/8/4r3/4K3 w - - 0 1");
     expect(powerBlocked(check, "scout-report")).toMatch(/check/);
-  });
-  it("red card from four wrong answers doubles the next power-up", () => {
-    let g = at("4k3/8/8/8/8/8/8/4K3 w - - 0 1");
-    g = { ...g, players: { ...g.players, white: { ...g.players.white, doubleNextPower: true, form: 9 } } };
-    expect(powerBlocked(g, "red-card")).toMatch(/Needs 10/);
-    // Cheap power-ups (under 3 Form) neither pay the double price nor clear it.
-    expect(powerCost(g, "white", "assistants-flag")).toBe(1);
-    const flagged = usePowerUp(g, "assistants-flag").state;
-    expect(flagged.players.white.doubleNextPower).toBe(true);
-    const sub = usePowerUp({ ...g, captured: { white: ["p"], black: [] } }, "substitution", ["a2"]).state;
-    expect(sub.players.white.form).toBe(1);
-    expect(sub.players.white.doubleNextPower).toBe(false);
   });
   it("lists valid targets", () => {
     const g = at("4k3/pppp4/8/8/8/8/PPPP4/4K3 w - - 0 1");

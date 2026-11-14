@@ -133,7 +133,7 @@ export function comment(i: CommentInput): Comment {
       if (e.hatTrick) return { bucket, text: `Hat-trick for ${n[e.color]}! Three right on the bounce.` };
       if (e.correct && e.puskas) return { bucket, text: `A PUSKÁS from ${n[e.color]}! Goal of the season contender!` };
       if (e.correct) return { bucket, text: pick([`Back of the net for ${n[e.color]}!`, `${n[e.color]} knows the game.`, `Textbook from ${n[e.color]}.`], rand) };
-      return { bucket, text: e.puskas ? `${n[e.color]} went for the Puskás and skied it. Sent off!` : pick([`${n[e.color]} fluffs their lines.`, `Off the post for ${n[e.color]}.`, `That one's in Row Z, ${n[e.color]}.`], rand) };
+      return { bucket, text: e.puskas ? `${n[e.color]} went for the Puskás and skied it. That's a booking!` : pick([`${n[e.color]} fluffs their lines.`, `Off the post for ${n[e.color]}.`, `That one's in Row Z, ${n[e.color]}.`], rand) };
     case "move": {
       const who = n[e.color];
       if (e.captured) {

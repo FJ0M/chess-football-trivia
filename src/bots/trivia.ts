@@ -18,6 +18,9 @@ function weightedIndex(weights: number[], rng: Rng): number {
 export function chooseCard(profile: BotProfile, skill: TriviaSkill, req: CardRequest, rng: Rng): CardChoice {
   const { cards } = req;
   if (cards.length === 0) return { index: 0, puskas: false };
+  // A Hot Spot's Puskás costs nothing if missed, so anyone with a real chance takes it.
+  const hard = cards.findIndex((c) => c.difficulty === "hard");
+  if (req.bonusRound && req.puskasAllowed && hard >= 0 && skill.accuracy.puskas >= 0.15) return { index: hard, puskas: true };
 
   const weights = cards.map((c) => {
     let w = skill.cardWeights[c.difficulty];

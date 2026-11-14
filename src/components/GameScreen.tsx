@@ -9,7 +9,7 @@ import type { PassAndPlayView } from "../settings/settings";
 import { useGame, cardLabel, clockOwner, RESULT_MS, RESULT_MS_HUMAN, type Phase, type SetupChoice } from "../game/useGame";
 import { FORM_CAP, POWER_UPS, POWER_UP_BY_ID, fergieMs, fmtSeconds, type PowerUpDef } from "../game/powerups";
 import {
-  KICKOFF_EVERY, REWARD, comebackShift, destsFor, isPromotion, pieceAt, powerBlocked, powerCost, powerTargets, resolveMove, turnOf, WHO_AM_I_PIECES, ROLE_NAME,
+  KICKOFF_EVERY, PUSKAS_MISS_FORM, REWARD, comebackShift, destsFor, isPromotion, pieceAt, powerBlocked, powerCost, powerTargets, resolveMove, turnOf, WHO_AM_I_PIECES, ROLE_NAME,
 } from "../game/rules";
 import { clubShort } from "../game/clubs";
 import { PowerIcon } from "./PowerIcons";
@@ -277,8 +277,7 @@ function PlayerBar({ game, color, active, ticking, bubble, bench, lead, ebk }: {
 }): ReactNode {
   const p = game.players[color];
   const status = [
-    p.sentOff ? "Sent off" : "",
-    p.doubleNextPower ? "Red card: next power-up costs double" : p.wrongStreak >= 2 ? "Yellow card" : "",
+    p.wrongStreak >= 2 ? "Yellow card" : "",
     p.goldenBootMoves > 0 ? `Golden Boot (${p.goldenBootMoves})` : "",
     handicapTag(game, color),
   ].filter(Boolean);
@@ -403,8 +402,10 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
           ))}
         </div>
         {humanToAct && (
-          <button type="button" className="cta" onClick={() => g.pickCard(phase.cards.findIndex((c) => c.difficulty === "hard"), true)}>
-            Go for a Puskás: turn the Screamer into the goal of the season. +{REWARD.puskas} Form, 8 seconds. Wrong and you're sent off
+          <button type="button" className={`cta${phase.bonus ? " free-puskas" : ""}`} onClick={() => g.pickCard(phase.cards.findIndex((c) => c.difficulty === "hard"), true)}>
+            {phase.bonus
+              ? <>Free Puskás from the Hot Spot: +{REWARD.puskas} Form, 8 seconds. Wrong costs nothing</>
+              : <>Go for a Puskás: turn the Screamer into the goal of the season. +{REWARD.puskas} Form, 8 seconds. Wrong: booked and -{PUSKAS_MISS_FORM} Form</>}
           </button>
         )}
       </div>
@@ -652,8 +653,7 @@ const PowerBar = memo(function PowerBar({ game, phase, color, enabled, onPick, p
               <div className="form-meter">{meter}</div>
               <button type="button" className="drawer-close" aria-label="Close power-ups" onClick={close}>×</button>
             </div>
-            {comebackShift(game, color) < 0 && <p className="fine drawer-note comeback">Comeback: you're 3+ points down, so power-ups cost 1 less and cool down twice as fast.</p>}
-            {comebackShift(game, color) > 0 && <p className="fine drawer-note comeback">You're 3+ points up, so power-ups cost 1 more.</p>}
+            {comebackShift(game, color) < 0 && <p className="fine drawer-note comeback">Comeback: you're 3+ points down, so power-ups cost 1 less.</p>}
             {!enabled && <p className="fine drawer-note">{myTurn ? "Power-ups are used before you move." : "You can use power-ups on your turn."}</p>}
             <div className="powers" aria-label="Power-ups">
               {list.map((p) => {

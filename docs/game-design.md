@@ -88,21 +88,20 @@ You pick your own question, and the harder it is, the more you win and the more 
 | Tap-in (easy) | 10 s | +1 Form | Nothing, you just miss out |
 | Highlight (medium) | 10 s | +2 Form | Opponent gets +2 Form ("scored on the break") |
 | Screamer (hard) | 10 s | +3 Form | **Booked**: the piece you just moved is frozen for your next turn |
-| Puskás (hard) | 8 s | +5 Form | **Sent off**: you lose your next turn, and the opponent gets a Free Kick |
+| Puskás (hard) | 8 s | +5 Form | **Booked and -2 Form**: the piece you just moved is frozen for your next turn and you lose 2 Form (Freddie, 2026-11-14; it used to be a sending off and a lost turn). Off a Hot Spot it's free |
 
 **Extras on top:**
 
 - **Quick answer:** +1 Form if you answer a Screamer or Puskás correctly in under 5 seconds.
 - **Hat-trick:** three right in a row earns +2 Form and a commentary line.
 - **Catch-up:** if you're behind on material (pawn 1, knight and bishop 3, rook 5, queen 9), every right answer earns +1 Form more.
-- **Comeback pricing** (Freddie, 2026-11-09, so the leader can't run away with it): 3 or more points down on material, every power-up costs 1 Form less (never below 1) and cooldowns drop 2 per move instead of 1. 3 or more points up, every power-up costs 1 Form more. Handicap odds count as already given, as for catch-up. The power-up drawer says when it applies.
-- **Yellow card:** two wrong in a row is a yellow (banter only). Four wrong in a row is a red, and your next power-up costing 3 Form or more costs double. Cheaper ones don't pay the double price and don't clear it.
-- **Hot Spots** deal from the whole bank like any other trigger, with normal rewards and penalties. They used to be a Club Bonus Round on your club, but with 30 questions a club those came round often enough to memorise (Freddie, 2026-11-08). Double Form was already dropped on 2026-11-07 so chasing Hot Spots doesn't farm Form.
+- **Comeback pricing** (Freddie, 2026-11-09, so the leader can't run away with it; trimmed 2026-11-14 to this and catch-up Form only, dropping faster cooldowns and dearer prices for the leader): 3 or more points down on material, every power-up costs 1 Form less (never below 1). Handicap odds count as already given, as for catch-up. The power-up drawer says when it applies.
+- **Yellow card:** two wrong in a row is a yellow (a warning). Four wrong in a row is a red, which takes 3 Form off you (Freddie, 2026-11-14; it used to double your next power-up's price). A missed Puskás off a Hot Spot doesn't count towards either.
+- **Hot Spots** deal from the whole bank like any other trigger, and the Puskás on a Hot Spot is a **free shot** (Freddie, 2026-11-14): +5 Form if right, and no booking, Form loss or step towards a card if wrong. They used to be a Club Bonus Round on your club, but with 30 questions a club those came round often enough to memorise (Freddie, 2026-11-08). Double Form was already dropped on 2026-11-07 so chasing Hot Spots doesn't farm Form.
 
 **Penalty safety rules,** so trivia never decides a game on its own:
 
 - A frozen piece is unfrozen if you are in check and it is needed to get out, or if freezing it leaves you no legal move.
-- A Free Kick is an extra move for the opponent that cannot capture or give check. It is cancelled if you are in check.
 - Form is capped at 12, so nobody can hoard a game-winning stack.
 
 ## Form, power-ups and chess hints
@@ -169,7 +168,7 @@ Playtest round 3 (Freddie, 7 Nov 2026) added one bot at each of 400, 600, 800, 1
 Every bot (ladder and originals) also plays the game around the chess (review bug 10 and "easy bots"):
 
 - **It sees the evaluation.** Before deciding on a power-up, the bot takes a quick look at the position with the engine (depth 8 at most). So Park the Bus fires when it's losing, VAR Review fires when the score has swung against it since its last move, and it picks safer cards when it's well ahead.
-- **It chases Hot Spots.** A move onto a Hot Spot gets a bonus worth up to 0.4 of a pawn, scaled by how well the bot knows its own club, so good quizzers go for them and poor ones mostly don't.
+- **It chases Hot Spots.** A move onto a Hot Spot gets a bonus worth up to 0.45 of a pawn, scaled by the bot's Puskás accuracy (a Hot Spot offers a free Puskás), so good quizzers go for them and poor ones mostly don't. On a Hot Spot every bot with a fair chance takes the free Puskás.
 - **It plans power-ups with the engine** (Freddie, 2026-11-09: "the bots don't really know how to make the best of the power-ups"). The game lists every valid way to use each power-up in the real rules (`src/game/botPowers.ts`: every Red Card pawn, Super-Sub pawn, Substitution square, Tactical Foul target, Counter-Attack dash, the 16 most promising Formation Change swaps, Park the Bus, Extra Time, VAR). The bot plays each one out (`src/bots/planner.ts`): its best move after the power-up, a second move for Extra Time, then the engine's view of the opponent's reply with any freezes or Park the Bus in force. The same is done with no power-up, and the difference is the gain. A point of Form is worth 0.3 of a pawn (half that at 10+ Form, since the cap wastes it), so it buys the power-up with the best gain for its cost, or nothing. Everything gets a quick depth-3 look, then the best four a proper one at the bot's own depth (3 to 8), so weaker bots judge worse. Favourites get a small nudge and savers still save. Manager's Tip is worth what the bot would risk missing (how much better the top move is than the second, times the bot's mistake rate), Golden Boot about 3 Form when a capture is on, and Fergie Time still fires under a minute. In `tools/playtest/powerduel.ts` (real rules, trivia included, 30 games each, planner vs old rules of thumb, same bot both sides) the planner scored 73% (Pawny), 82% (Billy Chillwall), 97% (Ryan medium, since retired), 87% (Mo Mate) and 95% (Freddie hard, since retired), taking 20 to 50 ms a turn on average. The old rules of thumb froze pieces most turns, which the no-capture rule now makes much weaker, and never used Formation Change or Substitution.
 - **Golden Boot only pays.** The bot buys it only when the engine's best move is a capture, and while it runs the bot likes captures a bit more, so it doesn't lose Form on it.
 

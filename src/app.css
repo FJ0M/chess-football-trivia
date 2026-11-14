@@ -123,6 +123,7 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 .screen .qcard.d-easy { border-color: #2e9d4f; } .screen .qcard.d-medium { border-color: #e0a100; } .screen .qcard.d-hard { border-color: #d1342f; }
 .screen .qcard:disabled { cursor: default; }
 .screen .cta { font: inherit; font-size: 13px; color: inherit; cursor: pointer; padding: 9px 10px; border-radius: 10px; border: 2px dashed currentColor; background: transparent; text-align: center; }
+.screen .cta.free-puskas { border-style: solid; font-weight: 700; }
 .screen .answers button:disabled { cursor: default; }
 .screen .timer.live::after { inset: 0 auto 0 0; width: var(--left, 100%); transition: width .2s linear; }
 .screen .clues { margin: 0; padding-left: 20px; display: grid; gap: 4px; font-size: 14px; line-height: 1.3; }

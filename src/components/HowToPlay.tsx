@@ -14,7 +14,7 @@ const LEVELS: { name: string; form: number; risk: string; card?: "yellow" | "red
   { name: "Tap-in", form: 1, risk: "No risk", tag: "Easy" },
   { name: "Highlight", form: 2, risk: "Opponent +2", tag: "Medium" },
   { name: "Screamer", form: 3, risk: "Piece booked", card: "yellow", tag: "Hard" },
-  { name: "Puskás", form: 5, risk: "Sent off", card: "red", tag: "8 sec" },
+  { name: "Puskás", form: 5, risk: "Booked, -2 Form", card: "yellow", tag: "8 sec" },
 ];
 
 const PROMO: [string, string, string][] = [["1–2", "♛", "Queen"], ["3", "♜", "Rook"], ["4", "♝", "Bishop"], ["5", "♞", "Knight"]];
@@ -49,7 +49,7 @@ export function RulesScreen({ onBack }: { onBack: () => void }) {
           </div>
         ))}
       </div>
-      <p className="htp-note">Wrong on a Puskás: you miss a turn and they take a Free Kick.</p>
+      <p className="htp-note">Wrong on a Puskás: your piece is booked and you lose 2 Form. Off a Hot Spot the Puskás is free.</p>
 
       <h3>Bonus Form</h3>
       <div className="htp-chips">
