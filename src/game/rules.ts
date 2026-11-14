@@ -770,6 +770,7 @@ export function usePowerUp(state: GameState, id: PowerUpId, targets: string[] = 
       const rank = color === "white" ? 1 : 6;
       if (squareRank(sq) !== rank || piece) return fail("Pick an empty square on your 2nd rank");
       s.board.set(sq, { role: "pawn", color });
+      s.halfmoves = 0;
       const fen = validFen(s);
       if (!fen) return fail("That would put the king in check");
       const caps = [...state.captured[color]];
@@ -801,6 +802,7 @@ export function usePowerUp(state: GameState, id: PowerUpId, targets: string[] = 
       s.board.set(sq2!, piece);
       s.castlingRights = s.castlingRights.without(sq!).without(sq2!);
       s.epSquare = undefined;
+      if (piece.role === "pawn" || p2.role === "pawn") s.halfmoves = 0;
       const r = Chess.fromSetup(s);
       if (!r.isOk) return fail("Can't give check");
       if (r.value.isCheck()) return fail("That would leave you in check");
@@ -811,6 +813,7 @@ export function usePowerUp(state: GameState, id: PowerUpId, targets: string[] = 
     case "super-sub": {
       if (!piece || piece.color !== color || piece.role !== "pawn") return fail("Pick one of your pawns");
       s.board.set(sq!, { role: "knight", color });
+      s.halfmoves = 0;
       const fen = validFen(s);
       if (!fen) return fail("Can't give check");
       next = { ...next, fen };
@@ -823,8 +826,11 @@ export function usePowerUp(state: GameState, id: PowerUpId, targets: string[] = 
       if (relRank >= 6) return fail("Not a pawn on its 6th or 7th rank");
       s.board.take(sq!);
       s.epSquare = undefined;
+      s.halfmoves = 0;
       const fen = validFen(s);
       if (!fen) return fail("Not allowed here");
+      // No own goals: taking the pawn away mustn't open a line onto your own king.
+      if (positionOf(fen).isCheck()) return fail("That would put your own king in check");
       next = { ...next, fen, captured: { ...next.captured, [enemy]: [...next.captured[enemy], "p"] } };
       note = `Red Card! ${me.name} sends off the pawn on ${targets[0]}`;
       break;
@@ -945,8 +951,14 @@ export function spendForm(state: GameState, color: Color, n: number): GameState 
   return withPlayer(state, color, { form: Math.max(0, state.players[color].form - n) });
 }
 
+/**
+ * A flag fall. As in normal chess, it's only a loss if the other side still has the
+ * pieces to give mate (a lone king, or king and knight, can't): otherwise it's a draw.
+ */
 export function timeout(state: GameState, loser: Color): GameState {
-  return { ...state, outcome: { kind: "timeout", winner: opposite(loser) } };
+  const winner = opposite(loser);
+  if (positionOf(state.fen).hasInsufficientMaterial(winner)) return endInDraw(state, "timeout-insufficient");
+  return { ...state, outcome: { kind: "timeout", winner } };
 }
 
 export function setClock(state: GameState, color: Color, ms: number): GameState {

@@ -101,7 +101,7 @@ export type Outcome =
   | { kind: "shootout"; winner: Color; score: Record<Color, number> }
   | { kind: "draw"; reason: DrawReason };
 
-export type DrawReason = "stalemate" | "repetition" | "fifty-moves" | "insufficient" | "agreement";
+export type DrawReason = "stalemate" | "repetition" | "fifty-moves" | "insufficient" | "agreement" | "timeout-insufficient";
 
 export interface GameOptions {
   mode: "bot" | "local";
