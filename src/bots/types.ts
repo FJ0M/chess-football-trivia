@@ -49,8 +49,14 @@ export interface ChessStrength {
    * higher values make the bot happier to play a worse move.
    */
   temperatureCp: number;
-  /** Chance per move of ignoring the engine and playing a random legal move. */
+  /** Chance per move of a mistake: a move a person might play that the engine wouldn't. */
   blunderRate: number;
+  /**
+   * "human" (default): mistakes are plausible moves, such as a worse line the engine also
+   * looked at, a grabbed piece or a check. "random": any legal move (the old behaviour,
+   * kept so the playtest can compare the two).
+   */
+  blunderStyle?: "human" | "random";
 }
 
 export type ChessStyle = "chaotic" | "balanced" | "positional";

@@ -10,7 +10,7 @@ import { botPowerOptions } from "./botPowers";
 import { POWER_UP_BY_ID, POWER_UPS } from "./powerups";
 import {
   PROMOTION_AIM, addIncrement, applyAnswer, attackedSquares, withClocksFrom, finishTurn, flipTurn, legalMoves, newGame, playMove, powerBlocked, powerCost,
-  resign as resignRule, resolveMove, resolvePromotion, setClock, skipExtraTime, timeout, turnOf, usePowerUp, endInDraw,
+  positionOf, resign as resignRule, resolveMove, resolvePromotion, setClock, skipExtraTime, timeout, turnOf, usePowerUp, endInDraw,
   type MoveResult, type PlayerInit,
 } from "./rules";
 import { QuestionBank, TIMER_MS, browserSeenStore, memorySeenStore, type Card } from "./trivia";
@@ -698,11 +698,9 @@ export function clockOwner(g: GameState, p: Phase): Color | null {
 function positionCheck(g: GameState): boolean {
   // In check if the side to move has its king attacked.
   try {
-    const { positionOf } = rulesModule;
     return positionOf(g.fen).isCheck();
   } catch { return false; }
 }
-import * as rulesModule from "./rules";
 
 function targetPrompt(t: string): string {
   switch (t) {

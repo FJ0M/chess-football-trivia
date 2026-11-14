@@ -12,6 +12,8 @@ import { parseUci } from "chessops/util";
 import { Chess } from "chessops/chess";
 import { parseFen } from "chessops/fen";
 import { createBotWith, type Bot } from "../../src/bots/bot";
+import { BOT_PROFILES } from "../../src/bots/profiles";
+import type { BotProfile } from "../../src/bots/types";
 import { chess960Fen, mulberry32, nodeEngine, parseBotSpec } from "./common";
 import type { UciEngine } from "../../src/bots/engine";
 import { normaliseUci, positionFromFen } from "../../src/bots/movePicker";
@@ -53,13 +55,23 @@ async function makePlayer(name: string, seed: number): Promise<Player> {
       close: () => engine.close(),
     };
   }
-  const [id, level] = parseBotSpec(name);
-  let bot: Bot = createBotWith(id, level, engine, mulberry32(seed));
+  // "<bot>@random": the same bot with the old any-legal-move mistakes, to compare against "human" ones.
+  const [spec, variant] = name.split("@");
+  const [id, level] = parseBotSpec(spec);
+  const base = BOT_PROFILES[id];
+  // "<bot>@b0.6": the same bot with a different mistake rate, for tuning.
+  const tweak = (chess: BotProfile["levels"]["low"]["chess"]) =>
+    variant === "random" ? { ...chess, blunderStyle: "random" as const }
+      : variant?.startsWith("b") ? { ...chess, blunderRate: Number(variant.slice(1)) } : chess;
+  const profile: BotProfile = variant
+    ? { ...base, levels: Object.fromEntries(Object.entries(base.levels).map(([l, v]) => [l, { ...v, chess: tweak(v.chess) }])) as BotProfile["levels"] }
+    : base;
+  let bot: Bot = createBotWith(id, level, engine, mulberry32(seed), profile);
   return {
     name,
     move: async (fen) => (await bot.chooseMove({ fen })).uci,
     newGame: async () => {
-      bot = createBotWith(id, level, engine, mulberry32(seed++));
+      bot = createBotWith(id, level, engine, mulberry32(seed++), profile);
       await engine.newGame();
     },
     close: () => engine.close(),

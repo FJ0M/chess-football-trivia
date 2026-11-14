@@ -36,6 +36,9 @@ export async function bestMove(fen: string, chess960 = false, depth = 14, search
  * Mates come back as +/-(MATE_CP - plies). Null if the engine can't say.
  */
 export async function evaluate(fen: string, _chess960 = false): Promise<number | null> {
+  // The commentator comes last: if a bot or a hint is using the engine, it goes without
+  // rather than make them wait.
+  if (getSharedEngine().busy) return null;
   try {
     const lines = await getSharedEngine().analyse(fen, { depth: 10, multiPv: 1, maxMs: 700 });
     const cp = lines[0]?.scoreCp;

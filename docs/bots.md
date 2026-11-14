@@ -14,15 +14,17 @@ The code is in `src/bots/`, and the game imports only `src/bots/index.ts`. There
 
 | Target | Bot | Measured | Engine setup (depth, lines, temperature, blunder rate) | Style |
 | --- | --- | --- | --- | --- |
-| 400 | Pawny Dribbles | 439 | 2, 6, 240 cp, 50% | chaotic |
+| 400 | Pawny Dribbles | 439 | 2, 6, 240 cp, 62% | chaotic |
 | 600 | Eezy Peasy | 596 | 3, 5, 200 cp, 38% | chaotic |
-| 800 | Billy Chillwall | 801 | 4, 4, 150 cp, 25% | positional |
+| 800 | Billy Chillwall | 801 | 4, 4, 150 cp, 31% | positional |
 | 1000 | Gambit Gary | 1050 | 5, 3, 115 cp, 16% | balanced |
 | 1200 | Mo Mate | 1256 | 6, 3, 95 cp, 12% | balanced |
 | 1400 | Florence Knightingale | 1393 | 7, 3, 75 cp, 8% | positional |
 | 1600 | Ragnar Rookland | 1622 | 8, 3, 60 cp, 6.5% | balanced |
 
 Calibrated on 7 Nov 2026 with `tools/playtest/match.ts`: 410 games in the final fit (16 to 20 games per pairing, half of them Chess960), against neighbouring ladder bots, the original bots and Stockfish at `UCI_Elo 1320` (pinned to 1320 in `ratings.py`). Three rounds: Eezy, Chillwall and Rookland came out 100 to 200 too strong in the first round and were retuned. Treat every number as ±100. Stockfish's Elo setting can't go below 1320, so the bottom of the ladder hangs off the chain Pawny → Ollie low → Eezy → Ollie medium → Chillwall → Ollie hard / Ryan low → sf-1320. That's the main source of error at 400 to 800.
+
+**Human-like mistakes (14 Nov 2026).** A mistake used to be any legal move at random, so the weakest bots shuffled their king for no reason. Now 60% of mistakes are one of the worse lines the engine also looked at (at least 0.8 of a pawn worse), and the rest are tempting moves: grabbing a piece, giving check, or developing, with aimless king moves rare (`humanMistake` in `src/bots/movePicker.ts`). Those mistakes cost less, so each bot was matched against its old self (`tools/playtest/match.ts` with a `<bot>@random` player, 60 to 160 games each) and the mistake rate raised until they scored about 50%: Pawny 50% to 62% (0.49 against the old Pawny over 80 games), Chillwall 25% to 31% (between 0.42 at 34% and 0.59 at 29%). Eezy (0.48) and Gary (0.49) were already level and stay as they were; the stronger bots make few mistakes, so the ratings above still stand within their ±100.
 
 The same fit re-measured the original bots as a check: Ollie 541 / 812 / 1059, Ryan 1026 / 1389 / 1561, Freddie low 1769. That's within about 150 of the table below everywhere, so their numbers stay as they are.
 
