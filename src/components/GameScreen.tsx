@@ -2,7 +2,7 @@
 // Class names (.board, .sq, .pc, .quiz, .powers, .pw, .player) are the ones every
 // style in themes.css dresses up.
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { memo, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { GameStyle } from "../theme/themes";
 import type { SfxName } from "../audio/sfx";
 import type { PassAndPlayView } from "../settings/settings";
@@ -47,7 +47,11 @@ interface Props {
 export function GameScreen({ style, play, setup, view, motion = true, commentary = true, paused, onPause, onExit, onFinish, resume }: Props) {
   const g = useGame(setup, play, paused, resume?.game);
   const { game, phase } = g;
-  const stats = useMatchStats(game, phase, resume?.stats);
+  // The clocks change the game state 5 times a second. Everything that only depends on the
+  // position (legal moves, power-up targets, prices) works from this copy, which only changes
+  // when something other than a clock does.
+  const board0 = useStableGame(game);
+  const stats = useMatchStats(board0, phase, resume?.stats);
   const latest = useRef({ game, phase });
   latest.current = { game, phase };
   // Save the match after every finished turn, so a reload doesn't lose it.
@@ -85,11 +89,11 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
   // each side, each scrolling on its own. Turning the screen 180 degrees then leaves the board exactly
   // where it was, so it never jumps between turns and the page scroll never has to change.
 
-  const dests = useMemo(() => (phase.kind === "move" && humanToAct ? destsFor(game) : new Map<string, string[]>()), [game, phase.kind, humanToAct]);
+  const dests = useMemo(() => (phase.kind === "move" && humanToAct ? destsFor(board0) : new Map<string, string[]>()), [board0, phase.kind, humanToAct]);
   const targets = useMemo(() => {
     if (phase.kind !== "target") return new Set<string>();
-    return new Set(powerTargets(game, phase.power, phase.first));
-  }, [game, phase]);
+    return new Set(powerTargets(board0, phase.power, phase.first));
+  }, [board0, phase]);
 
   function tap(sq: string) {
     if (phase.kind === "target") { g.tapTarget(sq); return; }
@@ -123,7 +127,7 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
   const bottom: Color = orientation;
   const mat = material(game.captured);
   const names = { white: callName(game, "white"), black: callName(game, "black") };
-  const line = useCommentary(game, g.events, commentary && phase.kind !== "whoami", names, g.evaluate);
+  const line = useCommentary(board0, g.events, commentary && phase.kind !== "whoami", names, g.evaluate);
   const osReduce = usePrefersReducedMotion();
   const fx = motion && !osReduce;
   const flipMode = local && view === "flip";
@@ -198,7 +202,7 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
           {!flipMode && commentaryLine}
           {phase.kind !== "whoami" && !panelOnBoard && <Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} />}
           {game.options.trivia && phase.kind !== "over" && phase.kind !== "shootout" && phase.kind !== "whoami" && (
-            <PowerBar game={game} phase={phase} color={local ? active : humans[0] ?? turn} enabled={humanToAct && phase.kind === "move"} onPick={g.choosePower} play={play} />
+            <PowerBar game={board0} phase={phase} color={local ? active : humans[0] ?? turn} enabled={humanToAct && phase.kind === "move"} onPick={g.choosePower} play={play} />
           )}
           {style.id === "broadcast" ? <div className="ticker"><b>LIVE</b> · {selNote ?? g.note}</div> : <p className="hint" aria-live="polite">{selNote ?? g.note}</p>}
           {phase.kind !== "over" && (
@@ -534,6 +538,29 @@ function powerEffect(game: GameState, p: PowerUpDef): string {
 }
 
 /** Can this power-up be finished once confirmed? Targeted ones need at least one valid target. */
+/**
+ * The game state with clock-only changes ignored: returns the previous object when nothing but
+ * a player's clock has changed, so memos keyed on it don't rerun on every clock tick.
+ */
+export function useStableGame(game: GameState): GameState {
+  const last = useRef(game);
+  if (last.current !== game && !sameApartFromClocks(last.current, game)) last.current = game;
+  return last.current;
+}
+
+export function sameApartFromClocks(a: GameState, b: GameState): boolean {
+  for (const k of Object.keys(b) as (keyof GameState)[]) {
+    if (k === "players") continue;
+    if (a[k] !== b[k]) return false;
+  }
+  for (const c of ["white", "black"] as Color[]) {
+    const pa = a.players[c], pb = b.players[c];
+    if (pa === pb) continue;
+    for (const k of Object.keys(pb) as (keyof typeof pb)[]) if (k !== "clockMs" && pa[k] !== pb[k]) return false;
+  }
+  return true;
+}
+
 function hasTargets(game: GameState, id: PowerUpId): boolean {
   const def = POWER_UP_BY_ID[id];
   if (def.target === "none") return true;
@@ -546,7 +573,7 @@ function hasTargets(game: GameState, id: PowerUpId): boolean {
  * The Form meter is a button: tapping it opens the power-ups in a drawer over the screen (from the
  * bottom on phones, from the side in landscape), so they never push the board off the screen.
  */
-function PowerBar({ game, phase, color, enabled, onPick, play }: { game: GameState; phase: Phase; color: Color; enabled: boolean; onPick: (id: PowerUpId) => void; play: (s: SfxName) => void }): ReactNode {
+const PowerBar = memo(function PowerBar({ game, phase, color, enabled, onPick, play }: { game: GameState; phase: Phase; color: Color; enabled: boolean; onPick: (id: PowerUpId) => void; play: (s: SfxName) => void }): ReactNode {
   const me = game.players[color];
   const myTurn = turnOf(game) === color;
   const [open, setOpen] = useState(false);
@@ -563,7 +590,7 @@ function PowerBar({ game, phase, color, enabled, onPick, play }: { game: GameSta
   const list = POWER_UPS.filter((p) => !p.timedOnly || game.options.timed);
   const def = pending ? POWER_UP_BY_ID[pending] : null;
   const pendingCost = pending ? powerCost(game, color, pending) : 0;
-  const pendingBlocked = pending ? powerBlocked(game, pending) ?? (hasTargets(game, pending) ? null : "No valid target right now") : null;
+  const pendingBlocked = useMemo(() => (pending ? powerBlocked(game, pending) ?? (hasTargets(game, pending) ? null : "No valid target right now") : null), [game, pending]);
   const ready = enabled ? list.filter((p) => !powerBlocked(game, p.id) && !(me.cooldowns[p.id] > 0) && me.form >= powerCost(game, color, p.id)).length : 0;
   const label = (me.kind === "human" && game.options.mode === "bot") || me.name.toLowerCase() === "you" ? "Your Form" : `${me.name}'s Form`;
   const close = () => { setOpen(false); setPending(null); };
@@ -633,7 +660,7 @@ function PowerBar({ game, phase, color, enabled, onPick, play }: { game: GameSta
       )}
     </div>
   );
-}
+});
 
 /** Power-up value, 1 to 5 stars: roughly how much it swings the board. */
 function Stars({ n }: { n: number }) {
