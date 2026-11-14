@@ -39,12 +39,14 @@ interface Props {
   paused: boolean;
   onPause: () => void;
   onExit: () => void;
+  /** Label for the button on the full-time panel (default "New game"). */
+  exitLabel?: string;
   onFinish: (game: GameState, stats: MatchStats) => void;
   /** A saved match to carry on with. */
   resume?: SavedMatch;
 }
 
-export function GameScreen({ style, play, setup, view, motion = true, commentary = true, paused, onPause, onExit, onFinish, resume }: Props) {
+export function GameScreen({ style, play, setup, view, motion = true, commentary = true, paused, onPause, onExit, exitLabel, onFinish, resume }: Props) {
   const g = useGame(setup, play, paused, resume?.game);
   const { game, phase } = g;
   // The clocks change the game state 5 times a second. Everything that only depends on the
@@ -167,7 +169,7 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
           largest square that fits in it. Questions and the "Who am I?" are drawn in the same space. */}
       <div className="board-wrap">
         {/* During a "Who am I?" the board is hidden (and the clocks stop): it's just the footballer. */}
-        {phase.kind === "whoami" && <div className="whoami-stage"><Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} /></div>}
+        {phase.kind === "whoami" && <div className="whoami-stage"><Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} exitLabel={exitLabel} /></div>}
         <div className="board" role="grid" aria-label="Chess board" hidden={phase.kind === "whoami"}>
           {rows.map((r) => cols.map((c) => {
             const sq = FILES[c] + (r + 1);
@@ -206,7 +208,7 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
         {/* After a Hot Spot the cards wait a moment, so the Scorched Turf animation shows before they cover the board. */}
         {panelOnBoard && (
           <div className={`board-cover${fx && phase.kind === "cards" && phase.bonus ? " late" : ""}${peek ? " peek" : ""}`}>
-            {!peek && <Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} />}
+            {!peek && <Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} exitLabel={exitLabel} />}
             {/* The card choice depends on the position (a wrong Screamer freezes the piece you moved), so you can look first. */}
             {phase.kind === "cards" && humanToAct && (
               <button type="button" className="peek-btn" aria-pressed={peek} onClick={() => setPeek((v) => !v)}>
@@ -221,7 +223,7 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
 
         <div className="controls">
           {!flipMode && commentaryLine}
-          {phase.kind !== "whoami" && !panelOnBoard && <Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} />}
+          {phase.kind !== "whoami" && !panelOnBoard && <Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} exitLabel={exitLabel} />}
           {game.options.trivia && phase.kind !== "over" && phase.kind !== "shootout" && phase.kind !== "whoami" && (
             <PowerBar game={board0} phase={phase} color={local ? active : humans[0] ?? turn} enabled={humanToAct && phase.kind === "move"} onPick={g.choosePower} play={play} />
           )}
@@ -382,7 +384,7 @@ function ScoutEye() {
 
 type G = ReturnType<typeof useGame>;
 
-function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; game: GameState; humanToAct: boolean; onExit: () => void }): ReactNode {
+function Panel({ g, phase, game, humanToAct, onExit, exitLabel }: { g: G; phase: Phase; game: GameState; humanToAct: boolean; onExit: () => void; exitLabel?: string }): ReactNode {
   const timerStyle = (startedAt: number, limit: number) => ({ "--left": `${Math.max(0, 1 - (g.now - startedAt) / limit) * 100}%` }) as React.CSSProperties;
 
   if (!g.ready && game.options.trivia) return <div className="quiz"><p className="q">Warming up the question bank…</p></div>;
@@ -501,7 +503,7 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
       <div className="quiz result">
         <div className="meta"><span>Full time</span></div>
         <p className="q">{outcomeText(game, game.outcome)}</p>
-        <button type="button" className="cta" onClick={onExit}>New game</button>
+        <button type="button" className="cta" onClick={onExit}>{exitLabel ?? "New game"}</button>
       </div>
     );
   }
@@ -523,7 +525,7 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
         <span>{game.step === "free-kick" ? "Free Kick" : game.step === "extra-time" ? "Extra Time" : phase.kind === "target" ? POWER_UP_BY_ID[phase.power].name : "Open play"}</span>
         <span>{mover.name} to move</span>
       </div>
-      <p className={`q small${phase.kind === "move" && mover.kind === "human" && game.step === "normal" ? " explainer" : ""}`}>{phase.kind === "target" ? `Pick a target to finish ${POWER_UP_BY_ID[phase.power].name}.` : mover.kind === "bot" ? `${mover.name} is thinking…` : game.step === "extra-time" ? "Second move: no captures or checks. You can skip it if it would hurt you." : game.options.trivia ? `Questions come on captures, every ${SET_PIECE_EVERY}th quiet move and on Hot Spots (circled squares).` : "Plain chess: no trivia this game."}</p>
+      <p className={`q small${phase.kind === "move" && mover.kind === "human" && game.step === "normal" ? " explainer" : ""}`}>{phase.kind === "target" ? `Pick a target to finish ${POWER_UP_BY_ID[phase.power].name}.` : mover.kind === "bot" ? `${mover.name} is thinking…` : game.step === "extra-time" ? "Second move: no captures or checks. You can skip it if it would hurt you." : game.options.trivia ? `Questions come on captures, every ${SET_PIECE_EVERY}th quiet move and on Hot Spots (circled squares, from move 4).` : "Plain chess: no trivia this game."}</p>
       {game.step === "extra-time" && humanToAct && phase.kind === "move" && <button type="button" className="cta" onClick={g.skipExtra}>Skip the second move</button>}
     </div>
   );
