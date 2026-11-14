@@ -12,7 +12,7 @@ import type { NormalMove, Role, Square } from "chessops/types";
 import { startFen } from "./chess960";
 import { ODDS_POINTS, applyOdds, boostForm, isActive } from "./handicap";
 import {
-  DEFAULT_MINUTES, DOUBLE_COST_MIN, FORM_CAP, GOLDEN_BOOT_FORM, GOLDEN_BOOT_MOVES, POWER_UP_BY_ID, fergieMs, fmtSeconds, startingCooldowns,
+  DEFAULT_MINUTES, FORM_CAP, GOLDEN_BOOT_FORM, GOLDEN_BOOT_MOVES, POWER_UP_BY_ID, fergieMs, fmtSeconds, startingCooldowns,
 } from "./powerups";
 import type {
   Color, Difficulty, DrawReason, Frozen, GameOptions, GameState, MoveRecord, PlayerState, PowerUpId, PromoRole, Snapshot, Trigger,
@@ -80,9 +80,7 @@ function newPlayer(p: PlayerInit, timed: boolean, minutes: number): PlayerState 
     kickoffCount: 0,
     rightStreak: 0,
     wrongStreak: 0,
-    doubleNextPower: false,
     goldenBootMoves: 0,
-    sentOff: false,
     clockMs: timed ? minutes * 60 * 1000 : null,
   };
 }
@@ -479,9 +477,7 @@ export function playMove(state: GameState, uci: string, rng: Rng = Math.random):
     if (me.goldenBootMoves > 0) patch.goldenBootMoves = me.goldenBootMoves - 1;
     const used = state.powerUsedId;
     const cd = { ...me.cooldowns };
-    // Comeback: 3+ points down on material (before this move), cooldowns run twice as fast.
-    const tick = comebackShift(state, mover) < 0 ? 2 : 1;
-    for (const id of Object.keys(cd) as PowerUpId[]) if (id !== used && cd[id] > 0) cd[id] = Math.max(0, cd[id] - tick);
+    for (const id of Object.keys(cd) as PowerUpId[]) if (id !== used && cd[id] > 0) cd[id] = cd[id] - 1;
     patch.cooldowns = cd;
     patch.kickoffCount = me.kickoffCount + 1;
   }
@@ -591,21 +587,6 @@ export function finishTurn(state: GameState): TurnInfo {
   }
 
   next = { ...next, step: "normal", powerUsed: false, powerUsedId: null, counterAttack: null };
-  const toMove = pos.turn;
-  if (next.players[toMove].sentOff) {
-    next = withPlayer(next, toMove, { sentOff: false });
-    if (pos.isCheck()) {
-      notes.push(`${next.players[toMove].name}'s sending off is cancelled: they're in check`);
-    } else {
-      const flipped = flipTurn(next.fen);
-      const candidate: GameState | null = flipped ? { ...next, fen: flipped, step: "free-kick", powerUsed: true } : null;
-      if (candidate && legalMoves(candidate).moves.length) {
-        notes.push(`${next.players[toMove].name} is sent off for a turn. Free Kick to ${next.players[mover].name}: no captures or checks`);
-        return { state: candidate, notes };
-      }
-      notes.push("No quiet Free Kick available, so play goes on");
-    }
-  }
   return { state: next, notes };
 }
 
@@ -620,11 +601,6 @@ export function resign(state: GameState, loser: Color): GameState {
 
 // ---------------------------------------------------------------- power-ups
 
-/** Does the "next power-up costs double" penalty apply to this power-up? Cheap ones (under 3 Form) neither pay it nor clear it. */
-export function doubles(id: PowerUpId): boolean {
-  return POWER_UP_BY_ID[id].cost >= DOUBLE_COST_MIN;
-}
-
 /** Points of material ahead (positive) or behind (negative). Handicap odds count as already given, as for catch-up Form. */
 export function materialEdge(state: GameState, color: Color): number {
   const mat = material(state.fen);
@@ -636,19 +612,20 @@ export function materialEdge(state: GameState, color: Color): number {
 /** Comeback pricing kicks in at this many points of material up or down. */
 export const COMEBACK_EDGE = 3;
 
-/** -1 when well behind (cheaper power-ups, faster cooldowns), +1 when well ahead (dearer), else 0. */
-export function comebackShift(state: GameState, color: Color): -1 | 0 | 1 {
-  const edge = materialEdge(state, color);
-  return edge <= -COMEBACK_EDGE ? -1 : edge >= COMEBACK_EDGE ? 1 : 0;
+/**
+ * -1 when well behind (power-ups 1 Form cheaper), else 0. The leader no longer pays more and
+ * cooldowns no longer speed up (Freddie, 2026-11-14: keep two catch-up systems, not four).
+ */
+export function comebackShift(state: GameState, color: Color): -1 | 0 {
+  return materialEdge(state, color) <= -COMEBACK_EDGE ? -1 : 0;
 }
 
 /** After using one of these, your move that turn can't capture (Freddie, 2026-11-09). */
 export const NO_CAPTURE_AFTER: readonly PowerUpId[] = ["formation-change", "tactical-foul", "super-sub"];
 
 export function powerCost(state: GameState, color: Color, id: PowerUpId): number {
-  // Comeback pricing: 1 Form cheaper when 3+ points down, 1 dearer when 3+ up (never below 1).
-  const base = Math.max(1, POWER_UP_BY_ID[id].cost + comebackShift(state, color));
-  return state.players[color].doubleNextPower && doubles(id) ? base * 2 : base;
+  // Comeback pricing: 1 Form cheaper when 3+ points down (never below 1).
+  return Math.max(1, POWER_UP_BY_ID[id].cost + comebackShift(state, color));
 }
 
 /** Why a power-up can't be used right now, or null if it can (targets aside). */
@@ -854,7 +831,6 @@ export function usePowerUp(state: GameState, id: PowerUpId, targets: string[] = 
     form: Math.max(0, next.players[color].form - cost),
     cooldowns: { ...next.players[color].cooldowns, [id]: def.cooldown },
     // Paying a doubled price clears the red card; the cheap power-ups don't count.
-    doubleNextPower: doubles(id) ? false : next.players[color].doubleNextPower,
   });
   next = { ...next, powerUsed: true, powerUsedId: id, log: [...next.log, note] };
   return { state: next, note };
@@ -889,6 +865,10 @@ export const REWARD: Record<Difficulty | "puskas", number> = { easy: 1, medium: 
 /** Answer a Screamer or Puskás inside this time for +1. */
 export const QUICK_MS = 5000;
 export const HAT_TRICK_BONUS = 2;
+/** Form lost for a missed Puskás (off a Hot Spot it's free). */
+export const PUSKAS_MISS_FORM = 2;
+/** Form lost for a red card (four wrong in a row). */
+export const RED_CARD_FORM = 3;
 
 export interface AnswerOutcome {
   state: GameState;
@@ -923,11 +903,17 @@ export function applyAnswer(state: GameState, a: AnswerCtx): AnswerOutcome {
     }
     next = withPlayer(next, a.color, { form: addForm(me.form, gained), formCarry: carry, rightStreak: streak, wrongStreak: 0 });
   } else {
+    if (a.puskas && a.bonus) {
+      // A Hot Spot's Puskás is a free shot (Freddie, 2026-11-14): no penalty, and it doesn't count towards a card.
+      lines.push("Free Puskás from the Hot Spot: no harm done");
+      return { state: withPlayer(next, a.color, { rightStreak: 0 }), lines, formGained: 0 };
+    }
     let wrong = me.wrongStreak + 1;
-    let doubleNext = me.doubleNextPower;
     if (a.puskas) {
-      next = withPlayer(next, a.color, { sentOff: true });
-      lines.push("Sent off! You lose your next turn and the opponent gets a Free Kick");
+      // Missed Puskás (Freddie, 2026-11-14): a booking plus 2 Form, no lost turn.
+      if (a.landed) next = { ...next, frozen: [...next.frozen, { square: a.landed, owner: a.color, reason: "booked" }] };
+      next = spendForm(next, a.color, PUSKAS_MISS_FORM);
+      lines.push(`Missed the Puskás: booked (that piece is frozen for your next turn) and -${PUSKAS_MISS_FORM} Form`);
     } else if (a.difficulty === "hard") {
       if (a.landed) next = { ...next, frozen: [...next.frozen, { square: a.landed, owner: a.color, reason: "booked" }] };
       lines.push("Booked: the piece you just moved is frozen for your next turn");
@@ -938,8 +924,12 @@ export function applyAnswer(state: GameState, a: AnswerCtx): AnswerOutcome {
       lines.push("No harm done, you just miss out");
     }
     if (wrong === 2) lines.push("Two wrong in a row: that's a yellow card");
-    if (wrong >= 4) { doubleNext = true; wrong = 0; lines.push("Four wrong in a row: red card! Your next power-up costs double"); }
-    next = withPlayer(next, a.color, { wrongStreak: wrong, rightStreak: 0, doubleNextPower: doubleNext });
+    if (wrong >= 4) {
+      wrong = 0;
+      next = spendForm(next, a.color, RED_CARD_FORM);
+      lines.push(`Four wrong in a row: red card! -${RED_CARD_FORM} Form`);
+    }
+    next = withPlayer(next, a.color, { wrongStreak: wrong, rightStreak: 0 });
   }
   return { state: next, lines, formGained: gained };
 }

@@ -51,12 +51,8 @@ export interface PlayerState {
   kickoffCount: number;
   rightStreak: number;
   wrongStreak: number;
-  /** Red card from four wrong answers in a row: next power-up costs double. */
-  doubleNextPower: boolean;
   /** Golden Boot: own moves left in which each capture earns bonus Form. 0 = off. */
   goldenBootMoves: number;
-  /** Sent off: this player's next turn is skipped and the opponent takes a Free Kick. */
-  sentOff: boolean;
   clockMs: number | null;
 }
 

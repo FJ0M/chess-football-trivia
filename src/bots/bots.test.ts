@@ -201,6 +201,11 @@ describe("trivia", () => {
     expect(share("eezy", 2)).toBeGreaterThan(0.5);
     expect(share("rookland", 0)).toBeGreaterThan(0.5);
   });
+  it("takes the free Puskás on a Hot Spot", () => {
+    const p = BOT_PROFILES.rookland;
+    const c = chooseCard(p, p.levels.medium.trivia, { cards: deal, puskasAllowed: true, form: 0, bonusRound: true }, seeded(3));
+    expect(c).toEqual({ index: 2, puskas: true });
+  });
 });
 
 describe("power-ups", () => {

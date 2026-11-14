@@ -24,12 +24,13 @@ import type {
 /** Depth of the bot's quick look at the position before it decides on a power-up. */
 const LOOK_DEPTH = 8;
 
-/** What a Hot Spot is worth to a bot in centipawns: good quizzers on their own club chase them a little. */
+/** What a Hot Spot is worth to a bot in centipawns: good quizzers chase them a little. */
 export function hotSpotValue(profile: BotProfile, level: BotLevel): number {
   if (profile.hotSpotCp !== undefined) return profile.hotSpotCp;
-  const acc = profile.levels[level].trivia.ownClubAccuracy;
-  // A Hot Spot is a club question at normal Form (playtest round 3), so it's worth less than a pawn.
-  return Math.max(0, Math.min(40, Math.round((acc - 0.5) * 100)));
+  // A Hot Spot offers a free Puskás (5 Form, no penalty if missed), so its worth follows Puskás accuracy.
+  // Still kept under half a pawn so bots don't wreck their position for it.
+  const acc = profile.levels[level].trivia.accuracy.puskas;
+  return Math.max(0, Math.min(45, Math.round(acc * 60)));
 }
 
 export interface Bot {
