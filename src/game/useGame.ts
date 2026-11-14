@@ -9,7 +9,7 @@ import { botList, importWithRetry, loadBots, type BotLike, type BotLevel, type B
 import { botPowerOptions } from "./botPowers";
 import { POWER_UP_BY_ID, POWER_UPS } from "./powerups";
 import {
-  PROMOTION_AIM, addIncrement, applyAnswer, attackedSquares, withClocksFrom, finishTurn, flipTurn, legalMoves, newGame, playMove, powerBlocked, powerCost,
+  PROMOTION_AIM, addIncrement, earnedPiece, safePromotion, applyAnswer, attackedSquares, withClocksFrom, finishTurn, flipTurn, legalMoves, newGame, playMove, powerBlocked, powerCost,
   positionOf, resign as resignRule, resolveMove, resolvePromotion, setClock, skipExtraTime, timeout, turnOf, usePowerUp, endInDraw,
   type MoveResult, type PlayerInit,
 } from "./rules";
@@ -17,7 +17,7 @@ import { QuestionBank, TIMER_MS, browserSeenStore, memorySeenStore, type Card } 
 import { CLUE_MS, WhoAmIBank, type WhoAmI } from "./whoami";
 import { DRAW_WORDS } from "./history";
 import { loadClub, loadGeneral } from "virtual:questions";
-import type { Color, GameOptions, GameState, PowerUpId, Question } from "./types";
+import type { Color, GameOptions, GameState, PowerUpId, PromoRole, Question } from "./types";
 
 export interface SetupChoice {
   options: GameOptions;
@@ -36,6 +36,8 @@ export type Phase =
       startedAt: number; limitMs: number; label: string;
     }
   | { kind: "whoami"; color: Color; set: WhoAmI; square: string; clues: number; clueAt: number; bonus: boolean }
+  /** A right "Who am I?": the player picks the earned piece or a lower one (handy when a queen would stalemate). */
+  | { kind: "promote"; color: Color; set: WhoAmI; square: string; clues: number; earned: PromoRole }
   | {
       kind: "result"; color: Color; correct: boolean; title: string; lines: string[]; options: string[]; answer: number;
       choice: number | null; explanation?: string; next: GameState; auto: boolean;
@@ -452,15 +454,10 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [go, play]);
 
-  /** A "Who am I?" guess: typed text from a player, an option index from a bot, or null when time runs out. */
-  const guess = useCallback((input: string | number | null) => {
-    const p = phaseRef.current;
-    if (p.kind !== "whoami" || !data) return;
-    const typed = typeof input === "string" ? input.trim() : null;
-    const correct = typeof input === "number" ? input === p.set.answer : typed ? data[p.color].whoami.check(p.set, typed) : false;
+  /** Ends a "Who am I?": sets the piece and shows the result. */
+  const finishWhoAmI = useCallback((p: { color: Color; set: WhoAmI; square: string; clues: number }, correct: boolean, typed: string | null, timedOut: boolean, pick?: PromoRole) => {
     const name = p.set.name ?? p.set.options[p.set.answer];
-    const choice = input === null || (typed !== null && !typed) ? null : 0;
-    const res = resolvePromotion(gameRef.current, p.square, p.clues, correct);
+    const res = resolvePromotion(gameRef.current, p.square, p.clues, correct, pick);
     setGame(res.state);
     emit({ kind: "whoami", color: p.color, correct });
     countAnswer(p.color, correct);
@@ -469,7 +466,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     const who = res.state.players[p.color].name;
     go({
       kind: "result", color: p.color, correct,
-      title: correct ? `${who} got it on clue ${p.clues}!` : choice === null ? "Time's up!" : `${who} got it wrong`,
+      title: correct ? `${who} got it on clue ${p.clues}!` : timedOut ? "Time's up!" : `${who} got it wrong`,
       lines: [
         ...(typed && !correct ? [`"${typed}" isn't right: it was ${name}`] : []),
         res.line,
@@ -479,7 +476,32 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
       next: res.state, auto: isBot(p.color), shownAt: Date.now(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [countAnswer, data, emit, go, play, react, setGame]);
+  }, [countAnswer, emit, go, play, react, setGame]);
+
+  /** A "Who am I?" guess: typed text from a player, an option index from a bot, or null when time runs out. */
+  const guess = useCallback((input: string | number | null) => {
+    const p = phaseRef.current;
+    if (p.kind !== "whoami" || !data) return;
+    const typed = typeof input === "string" ? input.trim() : null;
+    const correct = typeof input === "number" ? input === p.set.answer : typed ? data[p.color].whoami.check(p.set, typed) : false;
+    const timedOut = input === null || (typed !== null && !typed);
+    const earned = earnedPiece(p.clues);
+    if (correct && earned !== "n") {
+      // Bots take the best piece that doesn't stalemate; people choose.
+      if (isBot(p.color)) { finishWhoAmI(p, true, typed, false, safePromotion(gameRef.current, p.square, earned)); return; }
+      go({ kind: "promote", color: p.color, set: p.set, square: p.square, clues: p.clues, earned });
+      return;
+    }
+    finishWhoAmI(p, correct, typed, timedOut);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, finishWhoAmI, go]);
+
+  /** The piece a player picked after a right "Who am I?". */
+  const promote = useCallback((role: PromoRole) => {
+    const p = phaseRef.current;
+    if (p.kind !== "promote") return;
+    finishWhoAmI(p, true, null, false, role);
+  }, [finishWhoAmI]);
 
   const continueOn = useCallback(() => {
     const p = phaseRef.current;
@@ -682,7 +704,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     game, phase, note, bubble, overlay, now, ready: !!data, botMeta, engineReady: !!mod, events, ebk, runs: runs.current,
     /** White's engine score in centipawns for a position, or null (for the commentator). */
     evaluate: useCallback((fen: string) => (mod?.evaluate ? mod.evaluate(fen, game.options.chess960) : Promise.resolve(null)), [mod, game.options.chess960]),
-    move, choosePower, tapTarget, skipExtra, pickCard, answer, nextClue, guess, continueOn, kick, resign, agreeDraw,
+    move, choosePower, tapTarget, skipExtra, pickCard, answer, nextClue, guess, promote, continueOn, kick, resign, agreeDraw,
   };
 }
 

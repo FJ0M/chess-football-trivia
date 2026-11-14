@@ -44,6 +44,8 @@ When a pawn reaches the last rank, you earn your new piece with a **"Who am I?"*
 | Clue 4 | Bishop |
 | Clue 5 | Knight |
 
+A right guess earns that piece, and you may take it **or any lower piece** (Freddie, 2026-11-14), for example a rook when a queen would stalemate. The picker marks any piece that would stalemate. Bots take the best piece that doesn't stalemate.
+
 A wrong guess, or no guess by 12 seconds after the fifth clue, gives you a knight **and your opponent +2 Form**. That way a blind early guess is a real gamble. The question replaces any other trigger on that move, and it restarts the Kick-off count. About half of all "Who am I?"s are a player from your own club, where your club has clue sets.
 
 Clue sets live in `data/whoami.json`, built by `tools/build_whoami.py`: 30 Premier League players from 2000 onwards, 10 West Ham and 8 Brighton. Every clue was checked against the player's Wikipedia page on 2026-11-04. Bots aim for a piece (good quizzers a queen, poor ones a bishop or knight) and guess with their usual trivia accuracy.

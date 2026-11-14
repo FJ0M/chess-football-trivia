@@ -9,7 +9,7 @@ import type { PassAndPlayView } from "../settings/settings";
 import { useGame, cardLabel, clockOwner, RESULT_MS, RESULT_MS_HUMAN, type Phase, type SetupChoice } from "../game/useGame";
 import { FORM_CAP, POWER_UPS, POWER_UP_BY_ID, fergieMs, fmtSeconds, type PowerUpDef } from "../game/powerups";
 import {
-  KICKOFF_EVERY, PUSKAS_MISS_FORM, REWARD, comebackShift, destsFor, isPromotion, pieceAt, powerBlocked, powerCost, powerTargets, resolveMove, turnOf, WHO_AM_I_PIECES, ROLE_NAME,
+  KICKOFF_EVERY, PROMO_ORDER, PUSKAS_MISS_FORM, REWARD, promotionChoices, promotionStalemates, comebackShift, destsFor, isPromotion, pieceAt, powerBlocked, powerCost, powerTargets, resolveMove, turnOf, WHO_AM_I_PIECES, ROLE_NAME,
 } from "../game/rules";
 import { clubShort } from "../game/clubs";
 import { PowerIcon } from "./PowerIcons";
@@ -435,6 +435,30 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
     return <WhoAmIPanel g={g} phase={phase} game={game} humanToAct={humanToAct} timerStyle={timerStyle} />;
   }
 
+  if (phase.kind === "promote") {
+    const name = game.players[phase.color].name;
+    const choices = promotionChoices(phase.earned);
+    return (
+      <div className="quiz promote good">
+        <div className="meta"><span>Right on clue {phase.clues}: it was {phase.set.name ?? phase.set.options[phase.set.answer]}</span><span>{name} picks a piece</span></div>
+        <p className="fine">You earned a {ROLE_NAME[phase.earned]}. Take it, or any lower piece.</p>
+        <div className="promo-picks">
+          {PROMO_ORDER.map((r) => {
+            const ok = choices.includes(r);
+            const stale = ok && promotionStalemates(game, phase.square, r);
+            return (
+              <button key={r} type="button" disabled={!ok || !humanToAct} className={stale ? "warn" : ""} onClick={() => g.promote(r)}>
+                <span className="glyph" aria-hidden="true">{(phase.color === "white" ? PROMO_GLYPH_W : PROMO_GLYPH_B)[r]}</span>
+                <b>{ROLE_NAME[r][0].toUpperCase() + ROLE_NAME[r].slice(1)}</b>
+                {stale && <small>Stalemate!</small>}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
   if (phase.kind === "result") {
     return (
       <div className={`quiz result ${phase.correct ? "good" : "bad"}`}>
@@ -505,6 +529,9 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
   );
 }
 
+const PROMO_GLYPH_W: Record<string, string> = { q: "♕", r: "♖", b: "♗", n: "♘" };
+const PROMO_GLYPH_B: Record<string, string> = { q: "♛", r: "♜", b: "♝", n: "♞" };
+
 function WhoAmIPanel({ g, phase, game, humanToAct, timerStyle }: {
   g: G; phase: Extract<Phase, { kind: "whoami" }>; game: GameState; humanToAct: boolean; timerStyle: (startedAt: number, limit: number) => React.CSSProperties;
 }): ReactNode {
@@ -539,7 +566,7 @@ function WhoAmIPanel({ g, phase, game, humanToAct, timerStyle }: {
           {phase.clues < 5 ? `Next clue (${next}s): drops to a ${ROLE_NAME[WHO_AM_I_PIECES[phase.clues]]}` : `Last clue: ${next}s to guess`}
         </button>
       )}
-      <small className="fine">One guess. Capitals and accents don't matter, the surname is enough, and a small typo is fine. Wrong or out of time: a knight, and your opponent gets +2 Form.</small>
+      <small className="fine">One guess. Capitals and accents don't matter, the surname is enough, and a small typo is fine. Right: that piece or any lower one. Wrong or out of time: a knight, and your opponent gets +2 Form.</small>
     </div>
   );
 }
