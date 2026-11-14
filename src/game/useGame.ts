@@ -10,12 +10,16 @@ import { botPowerOptions } from "./botPowers";
 import { POWER_UP_BY_ID, POWER_UPS } from "./powerups";
 import {
   PROMOTION_AIM, addIncrement, earnedPiece, safePromotion, applyAnswer, attackedSquares, withClocksFrom, finishTurn, flipTurn, legalMoves, newGame, playMove, powerBlocked, powerCost,
-  positionOf, resign as resignRule, resolveMove, resolvePromotion, setClock, skipExtraTime, timeout, turnOf, usePowerUp, endInDraw,
+  resign as resignRule, resolveMove, resolvePromotion, setClock, skipExtraTime, timeout, turnOf, usePowerUp, endInDraw,
   type MoveResult, type PlayerInit,
 } from "./rules";
-import { QuestionBank, TIMER_MS, browserSeenStore, memorySeenStore, type Card } from "./trivia";
+import { QuestionBank, TIMER_MS, browserSeenStore, memorySeenStore } from "./trivia";
 import { CLUE_MS, WhoAmIBank, type WhoAmI } from "./whoami";
+import { RESULT_MS, RESULT_MS_HUMAN } from "./match";
 import { DRAW_WORDS } from "./history";
+import {
+  EBK_RUN, cardLabel, clockOwner, positionCheck, shootoutWinner, targetPrompt, type GameEvent, type NewEvent, type Overlay, type Phase,
+} from "./match";
 import { loadClub, loadGeneral } from "virtual:questions";
 import type { Color, GameOptions, GameState, PowerUpId, PromoRole, Question } from "./types";
 
@@ -25,50 +29,6 @@ export interface SetupChoice {
   botLevel: BotLevel;
   /** A league season match: which one, so the result is recorded against it (see season.ts). */
   season?: { key: string; kind: "league" | "cup" };
-}
-
-export type Phase =
-  | { kind: "move" }
-  | { kind: "target"; power: PowerUpId; first?: string }
-  /** Waiting on the engine for Manager's Tip or Scout Report. */
-  | { kind: "thinking"; power: PowerUpId }
-  | { kind: "cards"; color: Color; cards: Card[]; bonus: boolean; landed: string | null; label: string }
-  | {
-      kind: "question"; color: Color; q: Question; card: Card; puskas: boolean; bonus: boolean; landed: string | null;
-      startedAt: number; limitMs: number; label: string;
-    }
-  | { kind: "whoami"; color: Color; set: WhoAmI; square: string; clues: number; clueAt: number; bonus: boolean }
-  /** A right "Who am I?": the player picks the earned piece or a lower one (handy when a queen would stalemate). */
-  | { kind: "promote"; color: Color; set: WhoAmI; square: string; clues: number; earned: PromoRole }
-  | {
-      kind: "result"; color: Color; correct: boolean; title: string; lines: string[]; options: string[]; answer: number;
-      choice: number | null; explanation?: string; next: GameState; auto: boolean;
-      /** When the result appeared: it moves on by itself after RESULT_MS. */
-      shownAt: number;
-    }
-  | { kind: "shootout"; kicks: Array<{ color: Color; scored: boolean }>; q: Question; startedAt: number; choice: number | null; taker: Color }
-  | { kind: "over" };
-
-/** Things that just happened, for the animations and the commentator. Each has a unique id. */
-export type GameEvent = { id: number; at: number } & (
-  | { kind: "move"; color: Color; from: string; to: string; captured: string | null; check: boolean; castle: boolean }
-  | { kind: "power"; color: Color; power: PowerUpId; square?: string; square2?: string }
-  | { kind: "answer"; color: Color; correct: boolean; puskas: boolean; hatTrick: boolean }
-  | { kind: "whoami"; color: Color; correct: boolean }
-  | { kind: "hot-spot"; color: Color; square: string }
-  | { kind: "ebk"; color: Color }
-  | { kind: "checkmate"; winner: Color }
-  | { kind: "shootout" }
-);
-type NewEvent = GameEvent extends infer E ? E extends GameEvent ? Omit<E, "id" | "at"> : never : never;
-
-/** Right answers in a row for the Elite Ball Knowledge badge. */
-export const EBK_RUN = 10;
-
-export interface Overlay {
-  attacked?: string[];
-  tip?: [string, string];
-  scout?: string;
 }
 
 interface Banks {
@@ -114,17 +74,6 @@ function loadData(players: SetupChoice["players"]): Promise<Data> {
 }
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
-/** The result screen moves on by itself after this long (the chess clock is running). */
-export const RESULT_MS = 2500;
-/** A person gets longer to read the answer and its explanation ("Play on" moves on sooner). */
-export const RESULT_MS_HUMAN = 5000;
-/** Difficulty names, as goals: Tap-in, Highlight, Screamer, and the Puskás (the top-tier upgrade of a Screamer). */
-export const DIFF_LABEL = { easy: "Tap-in", medium: "Highlight", hard: "Screamer" } as const;
-export const TOP_TIER = "Puskás";
-
-export function cardLabel(c: Card, puskas = false): string {
-  return `${c.topic} · ${puskas ? TOP_TIER : DIFF_LABEL[c.difficulty]}`;
-}
 
 export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused = false, resume?: GameState) {
   const [game, setGameState] = useState<GameState>(() => {
@@ -708,46 +657,4 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     evaluate: useCallback((fen: string) => (mod?.evaluate ? mod.evaluate(fen, game.options.chess960) : Promise.resolve(null)), [mod, game.options.chess960]),
     move, choosePower, tapTarget, skipExtra, pickCard, answer, nextClue, guess, promote, continueOn, kick, resign, agreeDraw,
   };
-}
-
-/** Whose chess clock is running in this phase, or null when the clocks are stopped. */
-export function clockOwner(g: GameState, p: Phase): Color | null {
-  switch (p.kind) {
-    case "move": case "target": case "thinking": return turnOf(g);
-    case "cards": case "question": case "result": return p.color;
-    default: return null; // "Who am I?", shootout, game over
-  }
-}
-
-function positionCheck(g: GameState): boolean {
-  // In check if the side to move has its king attacked.
-  try {
-    return positionOf(g.fen).isCheck();
-  } catch { return false; }
-}
-
-function targetPrompt(t: string): string {
-  switch (t) {
-    case "enemy-piece": return "tap an enemy piece";
-    case "enemy-pawn": return "tap an enemy pawn";
-    case "own-pawn": return "tap one of your pawns";
-    case "own-second-rank": return "tap an empty square on your 2nd rank";
-    case "two-own-pieces": return "tap the first of two pieces to swap";
-    default: return "";
-  }
-}
-
-/** The shootout winner, or null if it isn't decided yet (5 each, then sudden death). */
-export function shootoutWinner(kicks: Array<{ color: Color; scored: boolean }>): Color | null {
-  const taken = (c: Color) => kicks.filter((k) => k.color === c).length;
-  const goals = (c: Color) => kicks.filter((k) => k.color === c && k.scored).length;
-  const w = goals("white"), b = goals("black"), tw = taken("white"), tb = taken("black");
-  if (tw <= 5 && tb <= 5) {
-    if (w > b + (5 - tb)) return "white";
-    if (b > w + (5 - tw)) return "black";
-    if (tw === 5 && tb === 5) return w > b ? "white" : b > w ? "black" : null;
-    return null;
-  }
-  if (tw === tb && w !== b) return w > b ? "white" : "black";
-  return null;
 }

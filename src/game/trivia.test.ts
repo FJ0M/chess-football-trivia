@@ -3,7 +3,7 @@ import questions from "../../data/questions.json";
 import whoami from "../../data/whoami.json";
 import { QuestionBank, browserSeenStore, seenKey, shuffleOptions } from "./trivia";
 import { WhoAmIBank, type WhoAmI } from "./whoami";
-import { shootoutWinner } from "./useGame";
+import { shootoutWinner } from "./match";
 import { CLUBS } from "./clubs";
 import type { Question } from "./types";
 

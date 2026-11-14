@@ -9,7 +9,7 @@ import { comment, judgeMove, type CommentEvent, type PendingMove } from "./comme
 import { materialCp } from "./material";
 import { POWER_UP_BY_ID } from "./powerups";
 import { ODDS_POINTS } from "./handicap";
-import type { GameEvent } from "./useGame";
+import type { GameEvent } from "./match";
 import type { Color, GameState } from "./types";
 
 export function useCommentary(

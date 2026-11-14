@@ -1,7 +1,7 @@
 // Keeps count, during a game, of the Form each side earns and their trivia score, for the game history.
 
 import { useEffect, useRef } from "react";
-import type { Phase } from "./useGame";
+import type { Phase } from "./match";
 import type { Color, GameState } from "./types";
 import { emptyStats, type MatchStats } from "./history";
 import type { Answer } from "./triviaElo";

@@ -6,7 +6,8 @@ import { memo, useEffect, useMemo, useRef, useState, type CSSProperties, type Re
 import type { GameStyle } from "../theme/themes";
 import type { SfxName } from "../audio/sfx";
 import type { PassAndPlayView } from "../settings/settings";
-import { useGame, cardLabel, clockOwner, RESULT_MS, RESULT_MS_HUMAN, type Phase, type SetupChoice } from "../game/useGame";
+import { useGame, type SetupChoice } from "../game/useGame";
+import { cardLabel, clockOwner, RESULT_MS, RESULT_MS_HUMAN, type Phase } from "../game/match";
 import { FORM_CAP, POWER_UPS, POWER_UP_BY_ID, fergieMs, fmtSeconds, type PowerUpDef } from "../game/powerups";
 import {
   SET_PIECE_EVERY, PROMO_ORDER, PUSKAS_MISS_FORM, REWARD, promotionChoices, promotionStalemates, comebackShift, destsFor, isPromotion, pieceAt, powerBlocked, powerCost, powerTargets, resolveMove, turnOf, WHO_AM_I_PIECES, ROLE_NAME,

@@ -5,7 +5,7 @@
 // None of them show when motion is off (the setting, or the phone's reduce-motion setting).
 
 import type { CSSProperties, ReactNode } from "react";
-import type { GameEvent } from "../game/useGame";
+import type { GameEvent } from "../game/match";
 import type { Color } from "../game/types";
 import { POWER_UP_BY_ID } from "../game/powerups";
 import { PowerIcon } from "./PowerIcons";
