@@ -6,8 +6,8 @@ import { memo, useEffect, useMemo, useRef, useState, type CSSProperties, type Re
 import type { GameStyle } from "../theme/themes";
 import type { SfxName } from "../audio/sfx";
 import type { PassAndPlayView } from "../settings/settings";
-import { useGame, type SetupChoice } from "../game/useGame";
-import { cardLabel, clockOwner, RESULT_MS, RESULT_MS_HUMAN, type Phase } from "../game/match";
+import { useGame } from "../game/useGame";
+import { cardLabel, clockOwner, savable, RESULT_MS, RESULT_MS_HUMAN, type Phase, type SetupChoice } from "../game/match";
 import { FORM_CAP, POWER_UPS, POWER_UP_BY_ID, fergieMs, fmtSeconds, type PowerUpDef } from "../game/powerups";
 import {
   SET_PIECE_EVERY, PROMO_ORDER, PUSKAS_MISS_FORM, REWARD, promotionChoices, promotionStalemates, comebackShift, destsFor, isPromotion, pieceAt, powerBlocked, powerCost, powerTargets, resolveMove, turnOf, WHO_AM_I_PIECES, ROLE_NAME,
@@ -59,7 +59,8 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
   latest.current = { game, phase };
   // Save the match after every finished turn, so a reload doesn't lose it.
   useEffect(() => {
-    if (phase.kind === "move" || game.outcome) saveMatch(setup, game, stats.current);
+    const save = savable({ game, phase });
+    if (save) saveMatch(setup, save, stats.current);
   }, [game.fen, game.step, game.outcome, phase.kind]); // eslint-disable-line react-hooks/exhaustive-deps
   // Leaving the app (a call, a text, the home screen) pauses the match, clocks and bots included.
   useEffect(() => {
@@ -67,8 +68,8 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
       if (!document.hidden) return;
       onPause();
       // Save the clocks as they are now too, not just as they were at the start of the turn.
-      const now = latest.current;
-      if (now.phase.kind === "move" && !now.game.outcome) saveMatch(setup, now.game, stats.current);
+      const save = savable(latest.current, true);
+      if (save) saveMatch(setup, save, stats.current);
     };
     document.addEventListener("visibilitychange", hide);
     window.addEventListener("pagehide", hide);

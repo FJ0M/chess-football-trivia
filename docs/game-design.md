@@ -204,11 +204,12 @@ The game is a static web app with no server: everything, including the bots, run
 | Chess rules | chessops | Lichess's rules library: legal moves, check, mate, draws and Chess960 castling |
 | Board | Our own tap-to-move board | Each of the ten styles in themes.css dresses the same squares and pieces |
 | Power-up rules | Our own layer on top of chessops (`src/game/rules.ts`) | Filters legal moves (frozen pieces), edits the board (Red Card, Super-Sub), flips turns (Extra Time, Free Kick) |
+| Match engine | One reducer, `step(match, action, env)` in `src/game/match.ts` | Runs the whole match (turns, Form, power-ups, questions, Who am I?, clocks, shootout, save points) as plain data in, plain data out, so it can be tested without a browser. `useGame.ts` is only the React shell: timers, downloads, bots and sounds |
 | Engine | Stockfish single-threaded WebAssembly in a Web Worker | Runs the bots and the chess hints on the device; the single-threaded build needs no special server headers |
 | Install and offline | vite-plugin-pwa (manifest, icons, service worker) | "Add to Home Screen" on iPhone, an install button on Android and computers |
 | Questions | JSON file bundled with the app | Works offline; the question bank thread fills it |
 | Saved data | Browser storage | Settings, seen questions (so they don't repeat) and stats; no accounts |
-| Tests | Vitest | Mostly for the power-up rules, which are the easiest part to break |
+| Tests | Vitest, plus a Playwright smoke test of the built app | Mostly the power-up rules and the match engine, which are the easiest parts to break |
 | Hosting | GitHub Pages with a GitHub Action | Free and deploys on every push. Needs a public repo; for a private one, Netlify or Cloudflare Pages are free alternatives |
 
 **Question format** the game expects, one entry per question:

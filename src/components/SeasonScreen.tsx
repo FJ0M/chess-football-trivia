@@ -11,7 +11,7 @@ import {
 } from "../game/season";
 import { STANDARD_POSITION } from "../game/chess960";
 import { DEFAULT_MINUTES } from "../game/powerups";
-import type { SetupChoice } from "../game/useGame";
+import type { SetupChoice } from "../game/match";
 
 const name = (id: string) => (id === YOU ? "You" : BOT_NAMES[id] ?? id);
 

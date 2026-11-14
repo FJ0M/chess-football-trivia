@@ -4,7 +4,7 @@
 
 import type { MatchStats } from "./history";
 import type { GameState } from "./types";
-import type { SetupChoice } from "./useGame";
+import type { SetupChoice } from "./match";
 
 const KEY = "cft.match.v1";
 

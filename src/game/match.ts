@@ -20,9 +20,21 @@ import {
 import { TIMER_MS, type Card, type QuestionBank } from "./trivia";
 import { CLUE_MS, type WhoAmI, type WhoAmIBank } from "./whoami";
 import { DRAW_WORDS } from "./history";
-import type { Color, GameState, PowerUpId, PromoRole, Question } from "./types";
+import { material } from "./material";
+import type { BotLevel } from "./bots";
+import type { Color, GameOptions, GameState, PowerUpId, PromoRole, Question } from "./types";
+import type { PlayerInit } from "./rules";
 
 // ---------------------------------------------------------------- state
+
+/** How a match was set up (and how a saved one is set up again). */
+export interface SetupChoice {
+  options: GameOptions;
+  players: Record<Color, PlayerInit>;
+  botLevel: BotLevel;
+  /** A league season match: which one, so the result is recorded against it (see season.ts). */
+  season?: { key: string; kind: "league" | "cup" };
+}
 
 export type Phase =
   | { kind: "move" }
@@ -121,6 +133,26 @@ export function startMatch(game: GameState, resumed = false): Match {
     runs: { white: 0, black: 0 },
     ebk: { white: false, black: false },
   };
+}
+
+// ---------------------------------------------------------------- save/resume and the season
+
+/**
+ * The game to save now, or null. A match is saved after every finished turn (back to "move")
+ * and at full time, so a reload picks up at the start of a turn, never halfway through a
+ * question. With `midTurn` (the app being hidden) the clocks as they are now are saved too,
+ * but still only while it's someone's move.
+ */
+export function savable(m: Pick<Match, "game" | "phase">, midTurn = false): GameState | null {
+  if (midTurn) return m.phase.kind === "move" && !m.game.outcome ? m.game : null;
+  return m.phase.kind === "move" || m.game.outcome ? m.game : null;
+}
+
+/** A finished match from one side's view, for the league table and the Cup: goals are pieces taken, and a shootout win counts as a win. */
+export function seasonResult(game: GameState, side: Color): { goalsFor: number; goalsAgainst: number; result: "won" | "lost" | "drawn" } {
+  const goals = material(game.captured).goals;
+  const winner = game.outcome && "winner" in game.outcome ? game.outcome.winner : null;
+  return { goalsFor: goals[side], goalsAgainst: goals[opposite(side)], result: winner === side ? "won" : winner ? "lost" : "drawn" };
 }
 
 // ---------------------------------------------------------------- actions and effects
