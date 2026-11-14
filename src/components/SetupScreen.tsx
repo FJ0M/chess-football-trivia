@@ -26,7 +26,7 @@ interface Saved {
 
 const KEY = "cft.setup.v1";
 const DEFAULTS: Saved = {
-  mode: "bot", botId: "gambit-gary", botLevel: "medium", side: "white", names: ["You", "Player 2"], clubs: ["west-ham", "brighton"],
+  mode: "bot", botId: "pawny", botLevel: "medium", side: "white", names: ["You", "Player 2"], clubs: ["west-ham", "brighton"],
   trivia: true, timed: false, minutes: DEFAULT_MINUTES, chess960: false, handicap: NO_HANDICAP,
 };
 

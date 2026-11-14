@@ -201,9 +201,9 @@ describe("Puskás sending off", () => {
 });
 
 describe("power-ups", () => {
-  it("every power-up starts locked for its cooldown, and cooldowns count down on your moves", () => {
+  it("every power-up starts locked for half its cooldown, and cooldowns count down on your moves", () => {
     let g = game();
-    expect(powerBlocked(g, "tactical-foul")).toMatch(/Ready in 10/);
+    expect(powerBlocked(g, "tactical-foul")).toMatch(/Ready in 5/);
     g = { ...g, hotSpots: [], players: { ...g.players, white: { ...g.players.white, form: 12 } } };
     for (let i = 0; i < 5; i++) for (const m of ["g1f3", "g8f6", "f3g1", "f6g8"]) g = move(g, m);
     expect(powerBlocked(g, "tactical-foul")).toBeNull();
