@@ -19,6 +19,12 @@ describe("high score: best combined rating beaten", () => {
     expect(loadScores().best).toMatchObject({ botId: "rookland", match: 1572, chess: 1600 });
   });
 
+  it("an assisted win still counts, and is marked", () => {
+    recordGame(vsBot("rookland", win), "medium", 5, { chess: 1600, triviaElo: 1269, match: 1572 }, new Date(), true);
+    expect(loadScores().best).toMatchObject({ botId: "rookland", match: 1572, assisted: true });
+    expect(loadScores().bots["rookland:medium"]).toMatchObject({ won: 1 });
+  });
+
   it("doesn't count losses or draws", () => {
     recordGame(vsBot("rookland", { kind: "checkmate", winner: "black" }), "medium", 0, { chess: 1600, triviaElo: 1269, match: 1572 });
     recordGame(vsBot("rookland", { kind: "draw", reason: "stalemate" }), "medium", 0, { chess: 1600, triviaElo: 1269, match: 1572 });

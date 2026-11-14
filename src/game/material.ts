@@ -1,5 +1,6 @@
 // The material count as a football score: each side's "bench" holds the pieces it has
-// taken off the opponent, and the scoreline is the points value of those pieces (3-1).
+// taken off the opponent. The scoreline is one goal per piece taken (Freddie, 2026-11-14),
+// so it reads like a real match (2-1); the points lead stays on the player bars.
 
 import type { Color } from "./types";
 
@@ -13,6 +14,8 @@ export interface Material {
   bench: Record<Color, BenchRole[]>;
   /** Points of the pieces each side has taken. */
   score: Record<Color, number>;
+  /** Goals: one per piece taken. */
+  goals: Record<Color, number>;
 }
 
 /** Counts each side's pieces in a FEN. */
@@ -34,7 +37,7 @@ export function material(captured: Record<Color, string[]>): Material {
   const sort = (rs: string[]) => rs.filter((r): r is BenchRole => r in START).sort((a, b) => ORDER.indexOf(a) - ORDER.indexOf(b));
   const bench = { white: sort(captured.black), black: sort(captured.white) };
   const pts = (rs: BenchRole[]) => rs.reduce((n, r) => n + PIECE_POINTS[r], 0);
-  return { bench, score: { white: pts(bench.white), black: pts(bench.black) } };
+  return { bench, score: { white: pts(bench.white), black: pts(bench.black) }, goals: { white: bench.white.length, black: bench.black.length } };
 }
 
 /** White's material lead in centipawns (negative when Black is ahead), counting promotions too. */

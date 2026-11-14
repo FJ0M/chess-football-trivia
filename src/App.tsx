@@ -7,7 +7,7 @@ import { awardBadges, type NewBadge } from "./game/badges";
 import { BadgeToast, CabinetScreen } from "./components/Cabinet";
 import { botList, loadBots } from "./game/bots";
 import { loadTriviaRating, saveTriviaRating, updateTriviaRating } from "./game/triviaElo";
-import { entryFor, recordHistory, type MatchStats } from "./game/history";
+import { entryFor, recordHistory, usedAssist, type MatchStats } from "./game/history";
 import type { SetupChoice } from "./game/useGame";
 import type { GameState } from "./game/types";
 import { clearMatch, loadMatch, matchLabel, type SavedMatch } from "./game/savedMatch";
@@ -112,7 +112,7 @@ export function App() {
             const meta = await loadBots().then((m) => botList(m).find((b) => b.id === botId)).catch(() => undefined);
             const rating = meta?.ratings?.[setup.botLevel];
             const prevBestMatch = loadScores().best?.match;
-            recordGame(g, setup.botLevel, stats.formEarned[human], rating);
+            recordGame(g, setup.botLevel, stats.formEarned[human], rating, new Date(), usedAssist(stats, human));
             const won = awardBadges({ game: g, stats, human, botMatch: rating?.match, prevBestMatch });
             if (won.length) { setNewBadges(won); play("cheer"); }
           }} />

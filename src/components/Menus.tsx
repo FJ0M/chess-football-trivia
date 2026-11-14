@@ -134,6 +134,7 @@ export function ScoresScreen({ onBack, head }: { onBack: () => void; head?: Reac
               <b>{best.match}</b>
               <span>{BOT[best.botId] ?? best.botId}{levelTag(best.botId, best.level)}</span>
               <small>Chess {best.chess} · Trivia {best.triviaElo}</small>
+              {best.assisted && <small className="assisted" title="You used Manager's Tip or VAR Review in this win">Assisted</small>}
             </>
           ) : <span>Beat a bot to set one</span>}
         </div>
@@ -179,7 +180,7 @@ function HistoryRow({ e }: { e: HistoryEntry }) {
   const kind = resultKind(e);
   const them: Color | undefined = e.you ? (e.you === "white" ? "black" : "white") : undefined;
   const title = e.you && them ? `vs ${e.names[them]}${levelTag(e.botId, e.botLevel)}` : `${e.names.white} v ${e.names.black}`;
-  const facts = [resultText(e), `${e.moves} move${e.moves === 1 ? "" : "s"}`, e.you ? `played ${e.you === "white" ? "White" : "Black"}` : "", e.chess960 ? "Chess960" : ""].filter(Boolean);
+  const facts = [resultText(e), `${e.moves} move${e.moves === 1 ? "" : "s"}`, e.you ? `played ${e.you === "white" ? "White" : "Black"}` : "", e.chess960 ? "Chess960" : "", e.assisted ? "assisted (Manager's Tip or VAR)" : ""].filter(Boolean);
   const tally = (c: Color) => `${e.quiz[c].right}/${e.quiz[c].asked}`;
   let numbers: string;
   if (!e.trivia) numbers = "Plain chess, no trivia";

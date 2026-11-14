@@ -9,7 +9,7 @@ import type { PassAndPlayView } from "../settings/settings";
 import { useGame, cardLabel, clockOwner, RESULT_MS, RESULT_MS_HUMAN, type Phase, type SetupChoice } from "../game/useGame";
 import { FORM_CAP, POWER_UPS, POWER_UP_BY_ID, fergieMs, fmtSeconds, type PowerUpDef } from "../game/powerups";
 import {
-  KICKOFF_EVERY, PROMO_ORDER, PUSKAS_MISS_FORM, REWARD, promotionChoices, promotionStalemates, comebackShift, destsFor, isPromotion, pieceAt, powerBlocked, powerCost, powerTargets, resolveMove, turnOf, WHO_AM_I_PIECES, ROLE_NAME,
+  SET_PIECE_EVERY, PROMO_ORDER, PUSKAS_MISS_FORM, REWARD, promotionChoices, promotionStalemates, comebackShift, destsFor, isPromotion, pieceAt, powerBlocked, powerCost, powerTargets, resolveMove, turnOf, WHO_AM_I_PIECES, ROLE_NAME,
 } from "../game/rules";
 import { clubShort } from "../game/clubs";
 import { PowerIcon } from "./PowerIcons";
@@ -156,7 +156,7 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
       <div className="side far">
         <div className="strip">
           <span>{game.options.chess960 ? `Chess960 · No. ${game.options.position}` : game.options.trivia ? <><em className="wide-only">Football </em>trivia</> : "Plain chess"}</span>
-          <Scoreline game={game} score={mat.score} />
+          <Scoreline game={game} score={mat.goals} />
           <span>Move {Math.ceil((game.history.length + 1) / 2)}</span>
         </div>
         {/* Flat on the table: the commentary sits on the far side, where there's room, facing the player who's waiting. */}
@@ -308,7 +308,7 @@ function Scoreline({ game, score }: { game: GameState; score: Record<Color, numb
   const w = abbr(game.players.white.name), b0 = abbr(game.players.black.name);
   const b = b0 === w ? abbr(game.players.black.name, true) : b0;
   return (
-    <span className="scoreline" aria-label={`Material score: ${game.players.white.name} ${score.white}, ${game.players.black.name} ${score.black}`}>
+    <span className="scoreline" aria-label={`Score (a goal per piece taken): ${game.players.white.name} ${score.white}, ${game.players.black.name} ${score.black}`}>
       <span>{w}</span><b>{score.white}-{score.black}</b><span>{b}</span>
     </span>
   );
@@ -523,7 +523,7 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
         <span>{game.step === "free-kick" ? "Free Kick" : game.step === "extra-time" ? "Extra Time" : phase.kind === "target" ? POWER_UP_BY_ID[phase.power].name : "Open play"}</span>
         <span>{mover.name} to move</span>
       </div>
-      <p className={`q small${phase.kind === "move" && mover.kind === "human" && game.step === "normal" ? " explainer" : ""}`}>{phase.kind === "target" ? `Pick a target to finish ${POWER_UP_BY_ID[phase.power].name}.` : mover.kind === "bot" ? `${mover.name} is thinking…` : game.step === "extra-time" ? "Second move: no captures or checks. You can skip it if it would hurt you." : game.options.trivia ? `Questions come on captures, every ${KICKOFF_EVERY}th quiet move and on Hot Spots (circled squares).` : "Plain chess: no trivia this game."}</p>
+      <p className={`q small${phase.kind === "move" && mover.kind === "human" && game.step === "normal" ? " explainer" : ""}`}>{phase.kind === "target" ? `Pick a target to finish ${POWER_UP_BY_ID[phase.power].name}.` : mover.kind === "bot" ? `${mover.name} is thinking…` : game.step === "extra-time" ? "Second move: no captures or checks. You can skip it if it would hurt you." : game.options.trivia ? `Questions come on captures, every ${SET_PIECE_EVERY}th quiet move and on Hot Spots (circled squares).` : "Plain chess: no trivia this game."}</p>
       {game.step === "extra-time" && humanToAct && phase.kind === "move" && <button type="button" className="cta" onClick={g.skipExtra}>Skip the second move</button>}
     </div>
   );

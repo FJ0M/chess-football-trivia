@@ -29,6 +29,19 @@ describe("game history", () => {
     expect(resultText(e)).toBe("Won by checkmate");
     expect(resultKind(e)).toBe("won");
     expect(entryFor(game("bot", null), stats, "medium")).toBeNull();
+    expect(e.assisted).toBeUndefined();
+  });
+
+  it("marks a game where you used Manager's Tip or VAR Review as assisted", () => {
+    const stats = emptyStats();
+    stats.feats!.white.powerUps = ["golden-boot"];
+    expect(entryFor(game("bot", { kind: "checkmate", winner: "white" }), stats, "medium")!.assisted).toBeUndefined();
+    stats.feats!.white.powerUps = ["golden-boot", "managers-tip"];
+    expect(entryFor(game("bot", { kind: "checkmate", winner: "white" }), stats, "medium")!.assisted).toBe(true);
+    // The bot's own use doesn't count against you.
+    const botOnly = emptyStats();
+    botOnly.feats!.black.powerUps = ["var-review"];
+    expect(entryFor(game("bot", { kind: "checkmate", winner: "white" }), botOnly, "medium")!.assisted).toBeUndefined();
   });
 
   it("words every ending", () => {

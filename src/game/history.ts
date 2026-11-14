@@ -35,6 +35,16 @@ export interface HistoryEntry {
   chess960: boolean;
   formEarned: Record<Color, number>;
   quiz: Record<Color, Tally>;
+  /** vs bot: you used Manager's Tip or VAR Review, so the result is marked "assisted". */
+  assisted?: boolean;
+}
+
+/** Power-ups that hand you the engine's help: wins with them still count, but are marked (Freddie, 2026-11-14). */
+export const ASSIST_POWERS: readonly string[] = ["managers-tip", "var-review"];
+
+/** Did this side use Manager's Tip or VAR Review this game? */
+export function usedAssist(stats: MatchStats, color: Color): boolean {
+  return (stats.feats?.[color]?.powerUps ?? []).some((id) => ASSIST_POWERS.includes(id));
 }
 
 const KEY = "cft.history.v1";
@@ -89,6 +99,7 @@ export function entryFor(game: GameState, stats: MatchStats, botLevel: string, a
     chess960: game.options.chess960,
     formEarned: { ...stats.formEarned },
     quiz: { white: { ...stats.trivia.white }, black: { ...stats.trivia.black } },
+    ...(you && usedAssist(stats, you) ? { assisted: true } : {}),
   };
 }
 

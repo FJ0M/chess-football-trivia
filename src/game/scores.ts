@@ -5,7 +5,7 @@ import type { GameState } from "./types";
 
 export interface Record3 { played: number; won: number; drawn: number; lost: number; streak: number; best: number; formEarned: number }
 /** The strongest bot you've beaten, by combined chess + trivia rating (the high score). */
-export interface BestWin { match: number; chess: number; triviaElo: number; botId: string; level: string; at: string }
+export interface BestWin { match: number; chess: number; triviaElo: number; botId: string; level: string; at: string; assisted?: boolean }
 export interface Scores { bots: Record<string, Record3>; local: Record<string, number>; best?: BestWin }
 
 const KEY = "cft.scores.v1";
@@ -21,8 +21,11 @@ export function loadScores(): Scores {
 
 function save(s: Scores) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch { /* ignore */ } }
 
-/** Records a finished game. `level` is the bot level for vs-bot games; `rating` is that bot's, for the high score. */
-export function recordGame(game: GameState, level: string, formEarned: number, rating?: { chess: number; triviaElo: number; match: number }, at = new Date()): Scores {
+/**
+ * Records a finished game. `level` is the bot level for vs-bot games; `rating` is that bot's, for the high score.
+ * `assisted`: you used Manager's Tip or VAR Review. The win still counts, but the best win is marked.
+ */
+export function recordGame(game: GameState, level: string, formEarned: number, rating?: { chess: number; triviaElo: number; match: number }, at = new Date(), assisted = false): Scores {
   const s = loadScores();
   const o = game.outcome;
   if (!o) return s;
@@ -38,7 +41,7 @@ export function recordGame(game: GameState, level: string, formEarned: number, r
     else if (winner === human) {
       r.won++; r.streak++; r.best = Math.max(r.best, r.streak);
       if (rating && bot.botId && (!s.best || rating.match > s.best.match)) {
-        s.best = { match: rating.match, chess: rating.chess, triviaElo: rating.triviaElo, botId: bot.botId, level, at: at.toISOString() };
+        s.best = { match: rating.match, chess: rating.chess, triviaElo: rating.triviaElo, botId: bot.botId, level, at: at.toISOString(), ...(assisted ? { assisted: true } : {}) };
       }
     }
     else { r.lost++; r.streak = 0; }

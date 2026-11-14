@@ -5,7 +5,7 @@ const START = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 describe("material", () => {
   it("is 0-0 with empty benches at kick-off", () => {
-    expect(material({ white: [], black: [] })).toEqual({ bench: { white: [], black: [] }, score: { white: 0, black: 0 } });
+    expect(material({ white: [], black: [] })).toEqual({ bench: { white: [], black: [] }, score: { white: 0, black: 0 }, goals: { white: 0, black: 0 } });
     expect(materialCp(START)).toBe(0);
   });
 
@@ -15,6 +15,7 @@ describe("material", () => {
     expect(m.bench.white).toEqual(["n", "p"]);
     expect(m.bench.black).toEqual(["p"]);
     expect(m.score).toEqual({ white: 4, black: 1 });
+    expect(m.goals).toEqual({ white: 2, black: 1 });
   });
 
   it("reads the material lead from the board, promotions included", () => {
