@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { actorOf, step, startMatch, shootoutWinner, RESULT_MS_HUMAN, RESULT_MS, KICK_PAUSE_MS, type Action, type Data, type Effect, type Env, type Match } from "./match";
+import { actorOf, savable, seasonResult, step, startMatch, shootoutWinner, RESULT_MS_HUMAN, RESULT_MS, KICK_PAUSE_MS, type Action, type Data, type Effect, type Env, type Match } from "./match";
 import { newGame, type PlayerInit } from "./rules";
 import { TIMER_MS, type Card } from "./trivia";
 import { CLUE_MS, type WhoAmI } from "./whoami";
@@ -282,5 +282,41 @@ describe("match engine: draws and the shootout", () => {
     const ten = Array.from({ length: 10 }, (_, i) => k(i % 2 ? "black" : "white", true));
     expect(shootoutWinner(ten)).toBeNull();
     expect(shootoutWinner([...ten, k("white", true), k("black", false)])).toBe("white");
+  });
+});
+
+describe("match engine: save/resume and the season", () => {
+  it("saves at the start of each turn and at full time, never halfway through a question", () => {
+    const m0 = startMatch(game());
+    expect(savable(m0)).toBe(m0.game);
+    const cards = run(m0, [{ type: "move", uci: "e2e4" }, { type: "move", uci: "d7d5" }, { type: "move", uci: "e4d5" }]).m;
+    expect(savable(cards)).toBeNull();
+    const over = run(m0, [{ type: "resign", color: "white" }]).m;
+    expect(savable(over)).toBe(over.game);
+    // Hidden mid-turn: only while it's someone's move, and not once it's over.
+    expect(savable(m0, true)).toBe(m0.game);
+    expect(savable(over, true)).toBeNull();
+  });
+
+  it("a saved match carries on from its position with a welcome back", () => {
+    const played = run(startMatch(game()), [{ type: "move", uci: "e2e4" }]).m;
+    const { step: _drop, ...old } = played.game;
+    const back = startMatch(old as GameState, true);
+    expect(back.game.fen).toBe(played.game.fen);
+    expect(back.game.step).toBe("normal");
+    expect(back.phase.kind).toBe("move");
+    expect(back.note).toMatch(/Welcome back/);
+    expect(run(back, [{ type: "move", uci: "e7e5" }]).m.note).toBe("Ryan to move");
+  });
+
+  it("season result: goals are pieces taken, and a shootout win is a win", () => {
+    let m = run(startMatch(game()), [{ type: "move", uci: "e2e4" }, { type: "move", uci: "d7d5" }, { type: "move", uci: "e4d5" }], { banks: null }).m;
+    m = run(m, [{ type: "resign", color: "black" }]).m;
+    expect(seasonResult(m.game, "white")).toEqual({ goalsFor: 1, goalsAgainst: 0, result: "won" });
+    expect(seasonResult(m.game, "black")).toEqual({ goalsFor: 0, goalsAgainst: 1, result: "lost" });
+    const shoot = { ...m.game, outcome: { kind: "shootout" as const, winner: "black" as const, score: { white: 2, black: 3 } } };
+    expect(seasonResult(shoot, "black").result).toBe("won");
+    const draw = { ...m.game, outcome: { kind: "draw" as const, reason: "agreement" as const } };
+    expect(seasonResult(draw, "white").result).toBe("drawn");
   });
 });

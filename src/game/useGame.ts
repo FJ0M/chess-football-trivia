@@ -5,25 +5,17 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { SfxName } from "../audio/sfx";
-import { botList, importWithRetry, loadBots, type BotLike, type BotLevel, type BotMeta, type BotModule, type TalkMoment } from "./bots";
+import { botList, importWithRetry, loadBots, type BotLike, type BotMeta, type BotModule, type TalkMoment } from "./bots";
 import { botPowerOptions } from "./botPowers";
 import { POWER_UPS } from "./powerups";
-import { PROMOTION_AIM, legalMoves, newGame, powerBlocked, powerCost, resolveMove, turnOf, type PlayerInit } from "./rules";
+import { PROMOTION_AIM, legalMoves, newGame, powerBlocked, powerCost, resolveMove, turnOf } from "./rules";
 import { QuestionBank, TIMER_MS, browserSeenStore, memorySeenStore } from "./trivia";
 import { WhoAmIBank, type WhoAmI } from "./whoami";
 import {
-  actorOf, positionCheck, startMatch, step, type Action, type Data, type Effect, type GameEvent, type Match, type NewEvent, type Phase,
+  actorOf, positionCheck, startMatch, step, type Action, type Data, type Effect, type GameEvent, type Match, type NewEvent, type Phase, type SetupChoice,
 } from "./match";
 import { loadClub, loadGeneral } from "virtual:questions";
-import type { Color, GameOptions, GameState, PowerUpId, PromoRole, Question } from "./types";
-
-export interface SetupChoice {
-  options: GameOptions;
-  players: Record<Color, PlayerInit>;
-  botLevel: BotLevel;
-  /** A league season match: which one, so the result is recorded against it (see season.ts). */
-  season?: { key: string; kind: "league" | "cup" };
-}
+import type { Color, GameState, PowerUpId, PromoRole, Question } from "./types";
 
 let rawPromise: Promise<{ general: Question[]; sets: WhoAmI[] }> | null = null;
 const clubPromises = new Map<string, Promise<Question[]>>();

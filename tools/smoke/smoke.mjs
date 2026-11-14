@@ -10,6 +10,7 @@
 //  3. Landing on a Hot Spot brings up the question cards.
 //  3b. A league season starts and its first fixture opens.
 //  4. If the bots download fails once, the picker still fills (retry works).
+//  5. A match saved mid-game comes back after a reload, in the same position.
 
 import { spawn } from "node:child_process";
 import { chromium } from "playwright";
@@ -127,6 +128,31 @@ try {
   const opponent = await sp.locator(".player").first().innerText();
   check(rows === 4 && opponent.includes(fixture), `a season starts in League Two and Kick off plays the fixture (${fixture})`);
   await sp.close();
+
+  // 2c. Save and resume: play a move, reload, and Resume match brings back the same position.
+  const rp = await browser.newPage({ viewport: { width: 390, height: 844 }, serviceWorkers: "block" });
+  rp.on("pageerror", (e) => errors.push(e.message));
+  await openPicker(rp);
+  await rp.getByRole("radio", { name: /Pawny Dribbles/ }).click();
+  await rp.getByRole("button", { name: "Kick off" }).click();
+  await rp.waitForSelector(".board button", { timeout: 15000 });
+  await rp.waitForTimeout(1500);
+  await rp.locator('.board button[aria-label^="e2 "]').click();
+  await rp.locator('.board button[aria-label^="e4"]').click();
+  // Wait for the bot's reply, so the save is from the start of a turn.
+  for (let i = 0; i < 40 && !/Move 2/.test(await rp.locator(".strip").innerText()); i++) await rp.waitForTimeout(500);
+  const savedBoard = await rp.$$eval(".board button", (els) => els.map((e) => e.getAttribute("aria-label")).join("|"));
+  await rp.reload({ waitUntil: "networkidle" });
+  const resumeBtn = rp.getByRole("button", { name: /Resume match/ });
+  let resumed = false;
+  if (await resumeBtn.count()) {
+    await resumeBtn.click();
+    await rp.waitForSelector(".board button", { timeout: 15000 });
+    const back = await rp.$$eval(".board button", (els) => els.map((e) => e.getAttribute("aria-label")).join("|"));
+    resumed = back === savedBoard && /e4 white pawn/.test(back);
+  }
+  check(resumed, "a match comes back after a reload with Resume match, in the same position");
+  await rp.close();
 
   // 3. The bots download fails once: the retry still fills the picker.
   const flaky = await browser.newPage({ serviceWorkers: "block" });

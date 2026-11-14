@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { clearMatch, loadMatch, matchLabel, saveMatch } from "./savedMatch";
 import { emptyStats } from "./history";
 import { newGame, playMove, finishTurn } from "./rules";
-import type { SetupChoice } from "./useGame";
+import type { SetupChoice } from "./match";
 
 function memStore() {
   const m = new Map<string, string>();

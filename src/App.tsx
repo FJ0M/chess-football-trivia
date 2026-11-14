@@ -8,13 +8,12 @@ import { BadgeToast, CabinetScreen } from "./components/Cabinet";
 import { botList, loadBots } from "./game/bots";
 import { loadTriviaRating, saveTriviaRating, updateTriviaRating } from "./game/triviaElo";
 import { entryFor, recordHistory, usedAssist, type MatchStats } from "./game/history";
-import type { SetupChoice } from "./game/useGame";
+import { seasonResult, type SetupChoice } from "./game/match";
 import type { GameState } from "./game/types";
 import { clearMatch, loadMatch, matchLabel, type SavedMatch } from "./game/savedMatch";
 import { RulesScreen } from "./components/HowToPlay";
 import { SeasonScreen } from "./components/SeasonScreen";
 import { applyResult, loadSeason, saveSeason } from "./game/season";
-import { material } from "./game/material";
 import { SettingsPanel } from "./components/SettingsPanel";
 import { getStyle } from "./theme/themes";
 import { loadStyleFonts } from "./theme/fonts";
@@ -122,11 +121,9 @@ export function App() {
             if (setup.season) {
               // A season match: goals are pieces taken; a Cup tie needs a winner (a shootout counts).
               const season = loadSeason();
-              const goals = material(g.captured).goals;
-              const them = human === "white" ? "black" : "white";
-              const winner = g.outcome && "winner" in g.outcome ? g.outcome.winner : null;
+              const r = seasonResult(g, human);
               const ratings = Object.fromEntries((await loadBots().then(botList).catch(() => [])).map((b) => [b.id, b.ratings?.medium.match ?? 1000]));
-              const next = season && applyResult(season, setup.season.key, goals[human], goals[them], winner === human ? "won" : winner ? "lost" : "drawn", ratings);
+              const next = season && applyResult(season, setup.season.key, r.goalsFor, r.goalsAgainst, r.result, ratings);
               if (next) saveSeason(next);
             }
             recordGame(g, setup.botLevel, stats.formEarned[human], rating, new Date(), usedAssist(stats, human));

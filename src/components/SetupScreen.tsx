@@ -6,7 +6,7 @@ import { ScreenHead } from "./Menus";
 import { HandicapSetup, NO_HANDICAP, sanitizeHandicap, type HandicapChoice } from "./HandicapSetup";
 import { backRank, randomPosition, STANDARD_POSITION } from "../game/chess960";
 import { botList, loadBots, type BotLevel, type BotMeta } from "../game/bots";
-import type { SetupChoice } from "../game/useGame";
+import type { SetupChoice } from "../game/match";
 import type { Color } from "../game/types";
 import { DEFAULT_MINUTES, TIME_CONTROLS, fergieMs, fmtSeconds } from "../game/powerups";
 
