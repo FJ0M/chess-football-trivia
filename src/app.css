@@ -535,6 +535,8 @@ button.htp-power:focus-visible, .htp-close:focus-visible { outline: 3px solid #1
 .screen.style-tactics .board-wrap .pc, .screen.style-tabletop .board-wrap .pc, .screen.style-sticker .board-wrap .pc { font-size: calc(min(100cqw, 100cqh) / 8 * .4); }
 .board-wrap > .whoami-stage, .board-wrap > .board-cover { place-self: stretch; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: grid; grid-template-columns: minmax(0, 1fr); align-content: safe center; }
 .board-wrap > .board-cover { z-index: 6; padding: 8px; box-sizing: border-box; background: rgba(10, 20, 30, .7); background: color-mix(in srgb, var(--drawer-bg, #0a141e) 88%, transparent); border-radius: 6px; }
+.board-wrap > .board-cover.peek { background: transparent; pointer-events: none; align-content: end; }
+.board-cover .peek-btn { justify-self: center; margin-top: 8px; pointer-events: auto; font: inherit; font-size: 14px; padding: 6px 14px; border-radius: 999px; border: 2px solid currentColor; background: var(--drawer-bg, #fff); color: inherit; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,.25); }
 .board-wrap > .board-cover.late { animation: cover-late 1.4s steps(1, end) both; }
 @keyframes cover-late { from { opacity: 0; visibility: hidden; } to { opacity: 1; visibility: visible; } }
 .app-game .screen .controls { gap: 8px; }

@@ -135,6 +135,8 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
   // "Flat on the table") questions, cards and results sit over the board instead of pushing it off the
   // screen (it isn't playable then anyway). With a second column beside the board they go there.
   const twoColumns = useMedia(TWO_COLUMNS);
+  const [peek, setPeek] = useState(false);
+  useEffect(() => { setPeek(false); }, [phase.kind]);
   const panelOnBoard = (flipMode || !twoColumns) && (phase.kind === "cards" || phase.kind === "question" || phase.kind === "result" || phase.kind === "shootout");
   const commentaryLine = line && <p className="commentary" aria-live="polite"><Mic /><span key={line.id}>{line.text}</span></p>;
 
@@ -193,7 +195,17 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
           {fx && <BoardFx events={g.events} now={g.now} orientation={orientation} />}
         </div>
         {/* After a Hot Spot the cards wait a moment, so the Scorched Turf animation shows before they cover the board. */}
-        {panelOnBoard && <div className={`board-cover${fx && phase.kind === "cards" && phase.bonus ? " late" : ""}`}><Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} /></div>}
+        {panelOnBoard && (
+          <div className={`board-cover${fx && phase.kind === "cards" && phase.bonus ? " late" : ""}${peek ? " peek" : ""}`}>
+            {!peek && <Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} />}
+            {/* The card choice depends on the position (a wrong Screamer freezes the piece you moved), so you can look first. */}
+            {phase.kind === "cards" && humanToAct && (
+              <button type="button" className="peek-btn" aria-pressed={peek} onClick={() => setPeek((v) => !v)}>
+                {peek ? "Back to the cards" : "See the board"}
+              </button>
+            )}
+          </div>
+        )}
       </div>
       <div className="side near">
         <PlayerBar game={game} color={bottom} active={active} ticking={clockOwner(game, phase)} bubble={g.bubble} bench={mat.bench[bottom]} lead={mat.score[bottom] - mat.score[top]} ebk={g.ebk[bottom]} />
