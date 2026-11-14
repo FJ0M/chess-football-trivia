@@ -105,8 +105,10 @@ export function cardLabel(c: Card, puskas = false): string {
   return `${c.topic} · ${puskas ? TOP_TIER : DIFF_LABEL[c.difficulty]}`;
 }
 
-export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused = false) {
+export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused = false, resume?: GameState) {
   const [game, setGameState] = useState<GameState>(() => {
+    // A saved match picks up where it was (the position after the last finished turn).
+    if (resume) return { ...resume, step: resume.step ?? "normal" };
     const g = newGame(setup.options, setup.players);
     // Dev only: ?fen=... starts from a position, ?form=12 unlocks everything (for testing).
     if (import.meta.env.DEV) {
@@ -123,7 +125,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     return g;
   });
   const [phase, setPhase] = useState<Phase>({ kind: "move" });
-  const [note, setNote] = useState("Kick-off! White to move");
+  const [note, setNote] = useState(resume ? "Welcome back! The match carries on where you left it" : "Kick-off! White to move");
   const [bubble, setBubble] = useState<{ color: Color; text: string } | null>(null);
   const [overlay, setOverlay] = useState<Overlay>({});
   const [data, setData] = useState<Data | null>(null);

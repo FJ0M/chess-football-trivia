@@ -10,8 +10,8 @@ import { materialCp } from "./material";
 
 const COLORS: Color[] = ["white", "black"];
 
-export function useMatchStats(game: GameState, phase: Phase): { current: MatchStats } {
-  const stats = useRef<MatchStats>(emptyStats());
+export function useMatchStats(game: GameState, phase: Phase, initial?: MatchStats): { current: MatchStats } {
+  const stats = useRef<MatchStats>(initial ?? emptyStats());
   const lastForm = useRef<Record<Color, number>>({ white: game.players.white.form, black: game.players.black.form });
   const counted = useRef(new WeakSet<object>());
   const kicks = useRef(0);
