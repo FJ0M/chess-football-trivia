@@ -7,6 +7,8 @@
 import type { CSSProperties, ReactNode } from "react";
 import type { GameEvent } from "../game/useGame";
 import type { Color } from "../game/types";
+import { POWER_UP_BY_ID } from "../game/powerups";
+import { PowerIcon } from "./PowerIcons";
 
 const FILES = "abcdefgh";
 
@@ -50,6 +52,16 @@ export function BoardFx({ events, now, orientation }: { events: GameEvent[]; now
         if (e.kind === "power" && e.power === "red-card" && e.square) {
           return <span key={e.id} className="fx-card-sq" style={at(e.square, orientation)} />;
         }
+        if (e.kind === "power" && e.square) {
+          // Every other targeted power-up: a pulse on its square (both squares for a Formation Change).
+          return (
+            <div key={e.id} className="fx-layer">
+              {[e.square, e.square2].filter((s): s is string => !!s).map((s) => (
+                <span key={s} className={`fx-pulse fx-${e.power}`} style={at(s, orientation)} />
+              ))}
+            </div>
+          );
+        }
         if (e.kind === "hot-spot") {
           return (
             // Scorched Turf (Freddie's pick, 2026-11-08): a ring of fire races out from the square
@@ -76,6 +88,14 @@ export function ScreenFx({ events, now, names }: { events: GameEvent[]; now: num
       return (
         <div key={e.id} className="fx-full fx-redcard">
           <div className="card" />
+        </div>
+      );
+    }
+    if (e.kind === "power") {
+      // Every power-up gets its name stamped across the card, with its icon.
+      return (
+        <div key={e.id} className={`fx-full fx-power fx-${e.power}`}>
+          <b className="fx-power-stamp"><PowerIcon id={e.power} className="fx-power-icon" />{POWER_UP_BY_ID[e.power].name}</b>
         </div>
       );
     }

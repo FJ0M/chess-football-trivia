@@ -48,7 +48,7 @@ export type Phase =
 /** Things that just happened, for the animations and the commentator. Each has a unique id. */
 export type GameEvent = { id: number; at: number } & (
   | { kind: "move"; color: Color; from: string; to: string; captured: string | null; check: boolean; castle: boolean }
-  | { kind: "power"; color: Color; power: PowerUpId; square?: string }
+  | { kind: "power"; color: Color; power: PowerUpId; square?: string; square2?: string }
   | { kind: "answer"; color: Color; correct: boolean; puskas: boolean; hatTrick: boolean }
   | { kind: "whoami"; color: Color; correct: boolean }
   | { kind: "hot-spot"; color: Color; square: string }
@@ -333,7 +333,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
       play("powerup");
       setNote(res.note ?? "");
       react(me, "powerUp");
-      emit({ kind: "power", color: me, power: id, square: targets[0] });
+      emit({ kind: "power", color: me, power: id, square: targets[0], square2: targets[1] });
       return res.state;
     };
     if (!POWER_UP_BY_ID[id].engine) {
@@ -616,7 +616,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
             play("powerup");
             setNote(res.note ?? "");
             talk(color, "powerUp");
-            emit({ kind: "power", color, power: id, square: targets[0] });
+            emit({ kind: "power", color, power: id, square: targets[0], square2: targets[1] });
             g = res.state;
             if (id === "managers-tip") managersTip = true;
             await wait(900);
