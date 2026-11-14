@@ -513,9 +513,42 @@ export function playMove(state: GameState, uci: string, rng: Rng = Math.random):
 export const WHO_AM_I_PIECES: PromoRole[] = ["q", "q", "r", "b", "n"];
 export const WHO_AM_I_PENALTY = 2;
 
-/** Sets the promoted piece once the "Who am I?" is over. Wrong: a knight, and the opponent gets +2 Form. */
-export function resolvePromotion(state: GameState, square: string, cluesShown: number, correct: boolean): { state: GameState; role: PromoRole; line: string } {
-  const role: PromoRole = correct ? WHO_AM_I_PIECES[Math.min(4, Math.max(0, cluesShown - 1))] : "n";
+/** Best to worst. A right answer earns a piece, and you may take it or any piece after it here. */
+export const PROMO_ORDER: PromoRole[] = ["q", "r", "b", "n"];
+
+/** The piece a right guess on this clue earns. */
+export function earnedPiece(cluesShown: number): PromoRole {
+  return WHO_AM_I_PIECES[Math.min(4, Math.max(0, cluesShown - 1))];
+}
+
+/** The pieces you may take after a right guess (Freddie, 2026-11-14): the earned one or any lower one. */
+export function promotionChoices(earned: PromoRole): PromoRole[] {
+  return PROMO_ORDER.slice(PROMO_ORDER.indexOf(earned));
+}
+
+/** Would this piece on the promotion square stalemate the opponent? */
+export function promotionStalemates(state: GameState, square: string, role: PromoRole): boolean {
+  const s = setupOf(state.fen);
+  const sq = parseSquare(square);
+  const p = sq === undefined ? undefined : s.board.get(sq);
+  if (!p || sq === undefined) return false;
+  s.board.set(sq, { role: CHAR_ROLE[role], color: p.color, promoted: true });
+  const fen = validFen(s);
+  return !!fen && positionOf(fen).isStalemate();
+}
+
+/** The best piece in the choice that doesn't stalemate (what a bot takes). */
+export function safePromotion(state: GameState, square: string, earned: PromoRole): PromoRole {
+  return promotionChoices(earned).find((r) => !promotionStalemates(state, square, r)) ?? earned;
+}
+
+/**
+ * Sets the promoted piece once the "Who am I?" is over. Right: the earned piece, or `pick` if it's a lower one.
+ * Wrong: a knight, and the opponent gets +2 Form.
+ */
+export function resolvePromotion(state: GameState, square: string, cluesShown: number, correct: boolean, pick?: PromoRole): { state: GameState; role: PromoRole; line: string } {
+  const earned = earnedPiece(cluesShown);
+  const role: PromoRole = !correct ? "n" : pick && promotionChoices(earned).includes(pick) ? pick : earned;
   const s = setupOf(state.fen);
   const sq = parseSquare(square)!;
   const p = s.board.get(sq);
@@ -526,7 +559,7 @@ export function resolvePromotion(state: GameState, square: string, cluesShown: n
     if (fen) next = { ...next, fen };
   }
   const mover = p?.color ?? opposite(turnOf(state));
-  let line = `Promoted to a ${ROLE_NAME[role]}`;
+  let line = role === earned || !correct ? `Promoted to a ${ROLE_NAME[role]}` : `Took a ${ROLE_NAME[role]} instead of a ${ROLE_NAME[earned]}`;
   if (!correct) {
     const enemy = opposite(mover);
     next = withPlayer(next, enemy, { form: addForm(next.players[enemy].form, WHO_AM_I_PENALTY) });

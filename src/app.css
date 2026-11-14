@@ -33,6 +33,12 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 .screen .quiz .answers button.right { outline: 3px solid #2e9d4f; outline-offset: -3px; }
 .screen .quiz .answers button.wrong { outline: 3px solid #d1342f; outline-offset: -3px; }
 .screen .quiz .answers button.dim { opacity: .45; }
+.screen .quiz .promo-picks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.screen .quiz .promo-picks button { font: inherit; color: inherit; display: grid; justify-items: center; gap: 2px; padding: 8px 4px; border-radius: 10px; border: 2px solid currentColor; background: transparent; cursor: pointer; }
+.screen .quiz .promo-picks button:disabled { opacity: .35; cursor: default; }
+.screen .quiz .promo-picks button.warn { border-style: dashed; }
+.screen .quiz .promo-picks .glyph { font-size: 30px; line-height: 1; }
+.screen .quiz .promo-picks small { font-size: 11px; color: #d1342f; }
 .screen .hint { margin: 0; font-size: 13px; opacity: .8; text-align: center; min-height: 1.3em; }
 
 /* Settings sheet */

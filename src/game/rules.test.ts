@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { backRank, startFen } from "./chess960";
 import {
-  applyAnswer, attackedSquares, resolvePromotion, finishTurn, firstMoveReach, legalMoves, material, newGame, pickHotSpots, playMove,
+  applyAnswer, attackedSquares, promotionChoices, promotionStalemates, resolvePromotion, safePromotion, finishTurn, firstMoveReach, legalMoves, material, newGame, pickHotSpots, playMove,
   powerBlocked, powerCost, powerTargets, resolveMove, skipExtraTime, timeout, turnOf, usePowerUp, addIncrement, withClocksFrom,
 } from "./rules";
 import { fergieMs } from "./powerups";
@@ -123,6 +123,26 @@ describe("triggers", () => {
     const wrong = resolvePromotion(low, "b8", 1, false).state;
     expect(wrong.fen.startsWith("1N2k3")).toBe(true);
     expect(wrong.players.black.form).toBe(5);
+  });
+  it("a right Who am I lets you take the earned piece or any lower one, never a better one", () => {
+    const g = at("4k3/1P6/8/8/8/8/8/4K3 w - - 0 1");
+    const r = playMove(g, "b7b8q");
+    expect(promotionChoices("r")).toEqual(["r", "b", "n"]);
+    const lower = resolvePromotion(r.state, "b8", 1, true, "b");
+    expect(lower.state.fen.startsWith("1B2k3")).toBe(true);
+    expect(lower.line).toMatch(/bishop instead of a queen/);
+    // A better piece than earned is ignored.
+    expect(resolvePromotion(r.state, "b8", 4, true, "q").state.fen.startsWith("1B2k3")).toBe(true);
+    // Wrong is always a knight.
+    expect(resolvePromotion(r.state, "b8", 1, false, "q").state.fen.startsWith("1N2k3")).toBe(true);
+  });
+  it("spots a promotion that would stalemate, and bots step down to the best piece that doesn't", () => {
+    const g = at("6Q1/8/8/8/8/8/2K5/k7 b - - 0 1");
+    expect(promotionStalemates(g, "g8", "q")).toBe(true);
+    expect(promotionStalemates(g, "g8", "r")).toBe(false);
+    expect(safePromotion(g, "g8", "q")).toBe("r");
+    // A bishop on g8 covers a2 too, so it steps down to a knight.
+    expect(safePromotion(g, "g8", "b")).toBe("n");
   });
 });
 
