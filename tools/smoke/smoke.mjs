@@ -8,6 +8,7 @@
 //  1. Play a bot lists all seven ladder bots.
 //  2. A game against a bot starts, and the bot answers your move.
 //  3. Landing on a Hot Spot brings up the question cards.
+//  3b. A league season starts and its first fixture opens.
 //  4. If the bots download fails once, the picker still fills (retry works).
 
 import { spawn } from "node:child_process";
@@ -111,6 +112,21 @@ try {
   check(botReplied, "the bot answers your move");
   check(hotSpotCards, "landing on a Hot Spot brings up the question cards");
   await page.close();
+
+  // 2b. Season: start one, and Kick off opens the first league match against the bot in the fixture.
+  const sp = await browser.newPage({ viewport: { width: 390, height: 844 }, serviceWorkers: "block" });
+  sp.on("pageerror", (e) => errors.push(e.message));
+  await sp.goto(URL);
+  await sp.getByRole("button", { name: /^Play/ }).first().click();
+  await sp.getByRole("button", { name: /Season/ }).click();
+  await sp.getByRole("button", { name: "Start the season" }).click();
+  const fixture = (await sp.locator(".next-match b").innerText()).replace(/^vs /, "");
+  const rows = await sp.locator("table.league tbody tr").count();
+  await sp.getByRole("button", { name: "Kick off" }).click();
+  await sp.waitForSelector(".board button", { timeout: 15000 });
+  const opponent = await sp.locator(".player").first().innerText();
+  check(rows === 4 && opponent.includes(fixture), `a season starts in League Two and Kick off plays the fixture (${fixture})`);
+  await sp.close();
 
   // 3. The bots download fails once: the retry still fills the picker.
   const flaky = await browser.newPage({ serviceWorkers: "block" });

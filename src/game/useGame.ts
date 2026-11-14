@@ -23,6 +23,8 @@ export interface SetupChoice {
   options: GameOptions;
   players: Record<Color, PlayerInit>;
   botLevel: BotLevel;
+  /** A league season match: which one, so the result is recorded against it (see season.ts). */
+  season?: { key: string; kind: "league" | "cup" };
 }
 
 export type Phase =

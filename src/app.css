@@ -635,3 +635,23 @@ button.htp-power:focus-visible, .htp-close:focus-visible { outline: 3px solid #1
 @media (max-height: 760px) and (orientation: portrait), (orientation: landscape) and (max-height: 500px) {
   .app-game .screen .quiz.idle .q.explainer { display: none; }
 }
+
+/* League season */
+.season .season-rules { margin: 0; padding-left: 18px; font-size: 14px; display: grid; gap: 2px; }
+.season .next-match, .season .season-verdict { display: grid; gap: 2px; padding: 12px; border-radius: 12px; border: 2px solid #18304a; background: #fff; color: #18304a; text-align: center; }
+.season .next-match small { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; opacity: .75; }
+.season .next-match b, .season .season-verdict b { font-size: 22px; line-height: 1.15; }
+.season table.league { width: 100%; border-collapse: collapse; font-size: 14px; background: #fff; color: #18304a; border-radius: 10px; overflow: hidden; }
+.season table.league th, .season table.league td { padding: 5px 4px; border-bottom: 1px solid #c9d1d4; text-align: center; }
+.season table.league th:nth-child(2), .season table.league td:nth-child(2) { text-align: left; width: 100%; }
+.season table.league tr.you td { font-weight: 700; background: #fff7a8; }
+.season table.league tr.up td:first-child { box-shadow: inset 4px 0 0 #2e9d4f; }
+.season table.league tr.down td:first-child { box-shadow: inset 4px 0 0 #d1342f; }
+.season .cup-run { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 14px; }
+.season .cup-run li b { white-space: nowrap; }
+.season .cup-run li { display: flex; gap: 8px; justify-content: space-between; padding: 6px 10px; border-radius: 10px; border: 2px solid #c9d1d4; background: #fff; color: #18304a; }
+.season .cup-run li.won { border-color: #2e9d4f; } .season .cup-run li.lost { border-color: #d1342f; }
+.season .season-results { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; font-size: 13px; }
+.season .season-results li { padding: 3px 8px; border-radius: 999px; color: #fff; background: #e0a100; }
+.season .season-results li.won { background: #2e9d4f; } .season .season-results li.lost { background: #d1342f; }
+.season .season-quit { justify-self: center; margin-top: 8px; }

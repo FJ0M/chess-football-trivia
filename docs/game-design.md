@@ -35,6 +35,24 @@ Each game also has a **Plain Chess** toggle (no trivia) and a **Timed** toggle (
 
 **The scoreline** at the top counts one goal per piece taken (Freddie, 2026-11-14), so scores look like real matches (2-1, 4-3). The material lead in points (+3 and so on) stays on the player bars.
 
+## League season
+
+Freddie picked this as the first bigger addition (2026-11-14). **Play > Season** starts in League Two and climbs four divisions (`src/game/season.ts`, `src/components/SeasonScreen.tsx`):
+
+| Division | Bots | Format |
+| --- | --- | --- |
+| League Two | Pawny, Eezy, Chillwall | Each twice (once as White, once as Black), 6 matches |
+| League One | Eezy, Chillwall, Gambit Gary | Each twice, 6 matches |
+| Championship | Gambit Gary, Mo Mate, Knightingale | Each twice, 6 matches |
+| Premier League | All seven | Each once, 7 matches |
+
+- Win 3 points, draw 1. The scoreline is pieces taken, nudged so it agrees with the result (the winner gets the winning goal if they weren't ahead; a draw is level).
+- The top two go up and the bottom one goes down (not below League Two or above the Premier League).
+- The bots' own fixtures are simulated from their combined ratings.
+- **Cup run:** three ties (quarter-final, semi-final, final) slot in between league matches, against bots drawn from the bottom, middle and top of the ladder. A Cup tie needs a winner, so a draw is a defeat (a trivia game that ends level goes to the Penalty Shootout, whose winner wins the tie).
+- Season matches always have trivia on, no clock and the standard start position. They count for high scores, history and trophies like any other bot game.
+- The season is saved on the device, and a result only counts against the match that was due, so restarting a finished match can't record it twice.
+
 ## Pawn promotion: "Who am I?"
 
 When a pawn reaches the last rank, you earn your new piece with a **"Who am I?"** about a footballer (Freddie, Nov 4, 2026). Five clues appear one at a time, hardest first, and you get **one guess**, typed in (playtest round 3). The board is hidden and both chess clocks stop while it's on. Clues show every 12 seconds, or you can tap Next clue. Capitals and accents don't matter (Paquetá, Ødegaard), the surname alone is enough, a typo or two is allowed (none for names of 3 letters or fewer, 1 up to 6, then 2), and each set lists extra accepted names (`aliases`, e.g. "Kun" for Agüero). Typing another footballer's name exactly is always wrong, so "Kane" doesn't pass for Kanté. Bots still pick from four names with their usual odds.
