@@ -180,7 +180,7 @@ export function awardBadges(info: FinishInfo, at = new Date(), storage: Store | 
 }
 
 // Trophies: one cup for each bot. The ladder bots play at one strength, so one cup each;
-// the originals have a bronze, silver and gold cup for Easy, Medium and Hard.
+// the retired originals (Ollie, Ryan, Freddie) keep any bronze, silver or gold cups already won.
 export const LADDER_CUPS: Record<string, string> = {
   pawny: "Sunday League Shield",
   eezy: "County Cup",
@@ -204,5 +204,6 @@ export function cups(scores: Scores): Cup[] {
   const originals = ORIGINALS.flatMap((id) => (["low", "medium", "hard"] as const).map((level): Cup => ({
     botId: id, name: `${BOT_NAMES[id]}'s Cup`, who: BOT_NAMES[id] ?? id, tier: LEVEL_TIER[level], level, won: winsFor(id, level),
   })));
-  return [...ladder, ...originals];
+  // The originals were retired on 2026-11-09: their cups stay in the cabinet only if they were won.
+  return [...ladder, ...originals.filter((c) => c.won > 0)];
 }

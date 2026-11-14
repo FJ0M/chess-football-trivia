@@ -73,9 +73,10 @@ describe("badges", () => {
 
   it("cups come from the high scores", () => {
     const list = cups({ bots: { "rookland:medium": { played: 2, won: 1, drawn: 0, lost: 1, streak: 0, best: 1, formEarned: 0 }, "ollie:hard": { played: 1, won: 1, drawn: 0, lost: 0, streak: 1, best: 1, formEarned: 0 } }, local: {} });
-    expect(list).toHaveLength(16);
+    // 7 ladder cups, plus only the retired originals' cups that were won.
+    expect(list).toHaveLength(8);
     expect(list.find((c) => c.botId === "rookland")).toMatchObject({ name: "League Title", won: 1, tier: "gold" });
     expect(list.find((c) => c.botId === "ollie" && c.level === "hard")).toMatchObject({ won: 1, tier: "gold" });
-    expect(list.find((c) => c.botId === "ollie" && c.level === "low")).toMatchObject({ won: 0 });
+    expect(list.find((c) => c.botId === "ollie" && c.level === "low")).toBeUndefined();
   });
 });

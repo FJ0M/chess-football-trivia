@@ -111,7 +111,7 @@ export function choosePowerUp(
   const drop = req.lastMoveEvalDrop ?? lastMoveLossCp;
 
   // Emergencies first.
-  if (has.has("var-review") && drop >= 250 && (profile.id !== "freddie" || drop >= 400)) return { id: "var-review" };
+  if (has.has("var-review") && drop >= 250) return { id: "var-review" };
   if (has.has("fergie-time") && req.timed && (req.clockMs ?? Infinity) < 60000) return { id: "fergie-time" };
   if (req.inCheck) return null;
 

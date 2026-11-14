@@ -1,14 +1,11 @@
 import { combinedRating, triviaEloFromAccuracy } from "../game/triviaElo";
-import type { BotId, BotLevel, BotProfile, ChessStrength, ClassicBotId, LadderBotId, TriviaSkill } from "./types";
+import type { BotId, BotLevel, BotProfile, ChessStrength, LadderBotId, TriviaSkill } from "./types";
 
-// The three bots are mirror images: Ollie out-quizzes you, Freddie out-plays
-// you, Ryan does a bit of both. Each has low, medium and hard levels. Medium is
-// the version in the design doc; low and hard move chess strength and trivia
-// together so the character stays the same.
+// The Elo ladder: one bot at each of 400 to 1600 chess Elo, one level each.
+// (The original three, Ollie, Ryan and Freddie, were retired on 2026-11-09.)
 //
-// Chess ratings are what the playtest measured (tools/playtest, docs/bots.md):
-// 400 games against Stockfish 17.1 with UCI_Elo, pinned at 1320. Treat them as
-// +/-150. Retune here after playtesting with people.
+// Chess ratings are what the playtest measured (tools/playtest, docs/bots.md)
+// against Stockfish 17.1 with UCI_Elo, pinned at 1320. Treat them as +/-100.
 
 const chess = (rating: number, depth: number, multiPv: number, temperatureCp: number, blunderRate: number): ChessStrength => ({
   rating,
@@ -28,79 +25,6 @@ const trivia = (
   cardWeights: TriviaSkill["cardWeights"],
   puskasRate: number,
 ): TriviaSkill => ({ accuracy: { easy, medium, hard, puskas }, ownClubAccuracy, answerMs, cardWeights, puskasRate });
-
-const CLASSIC: Record<ClassicBotId, BotProfile> = {
-  ollie: {
-    id: "ollie",
-    name: "Ollie",
-    club: "west-ham",
-    clubName: "West Ham",
-    blurb: "Knows every answer, hangs every piece. Goes for Puskás goals and raids with his queen.",
-    style: "chaotic",
-    levels: {
-      low: {
-        chess: chess(450, 3, 5, 200, 0.45),
-        trivia: trivia(0.88, 0.78, 0.62, 0.5, 0.85, [2500, 6000], { easy: 1, medium: 3, hard: 6 }, 0.3),
-      },
-      medium: {
-        chess: chess(600, 4, 5, 160, 0.25),
-        trivia: trivia(0.95, 0.88, 0.78, 0.65, 0.9, [2000, 5000], { easy: 1, medium: 2, hard: 7 }, 0.4),
-      },
-      hard: {
-        chess: chess(900, 6, 5, 120, 0.17),
-        trivia: trivia(0.98, 0.94, 0.87, 0.78, 0.95, [1500, 4000], { easy: 0, medium: 2, hard: 8 }, 0.5),
-      },
-    },
-    favouritePowerUps: ["var-review", "managers-tip", "golden-boot", "counter-attack", "tactical-foul"],
-  },
-  ryan: {
-    id: "ryan",
-    name: "Ryan",
-    club: "west-ham",
-    clubName: "West Ham",
-    blurb: "Solid at both, unbeatable on West Ham. Turns nasty when he's ahead.",
-    style: "balanced",
-    levels: {
-      low: {
-        chess: chess(950, 5, 3, 110, 0.2),
-        trivia: trivia(0.8, 0.62, 0.45, 0.3, 0.88, [3500, 8000], { easy: 3, medium: 6, hard: 1 }, 0.1),
-      },
-      medium: {
-        chess: chess(1300, 6, 3, 80, 0.1),
-        trivia: trivia(0.88, 0.72, 0.55, 0.4, 0.92, [3000, 7500], { easy: 2, medium: 7, hard: 1 }, 0.15),
-      },
-      hard: {
-        chess: chess(1600, 8, 3, 60, 0.06),
-        trivia: trivia(0.93, 0.8, 0.66, 0.5, 0.96, [3000, 7000], { easy: 1, medium: 7, hard: 2 }, 0.2),
-      },
-    },
-    favouritePowerUps: ["tactical-foul", "red-card", "golden-boot", "park-the-bus"],
-  },
-  freddie: {
-    id: "freddie",
-    name: "Freddie",
-    club: "brighton",
-    clubName: "Brighton",
-    blurb: "Barely knows who won the league, rarely misses a tactic. Saves up and trades into endgames.",
-    style: "positional",
-    levels: {
-      low: {
-        chess: chess(1600, 8, 3, 50, 0.05),
-        trivia: trivia(0.55, 0.33, 0.18, 0.1, 0.55, [5000, 9000], { easy: 8, medium: 2, hard: 0 }, 0),
-      },
-      medium: {
-        chess: chess(1800, 8, 3, 35, 0.03),
-        trivia: trivia(0.65, 0.42, 0.25, 0.15, 0.65, [5000, 9000], { easy: 7, medium: 2, hard: 1 }, 0.05),
-      },
-      hard: {
-        chess: chess(2150, 10, 2, 20, 0.012),
-        trivia: trivia(0.72, 0.5, 0.32, 0.2, 0.72, [4500, 8500], { easy: 6, medium: 3, hard: 1 }, 0.05),
-      },
-    },
-    favouritePowerUps: ["extra-time", "super-sub", "park-the-bus", "formation-change"],
-    saveFor: { ids: ["extra-time", "super-sub"], reserve: 8 },
-  },
-};
 
 /** One strength for all three levels: ladder bots have no level picker. */
 const fixed = (c: ChessStrength, t: TriviaSkill) => ({ low: { chess: c, trivia: t }, medium: { chess: c, trivia: t }, hard: { chess: c, trivia: t } });
@@ -206,12 +130,11 @@ const LADDER: Record<LadderBotId, BotProfile> = {
   },
 };
 
-export const BOT_PROFILES: Record<BotId, BotProfile> = { ...CLASSIC, ...LADDER };
+export const BOT_PROFILES: Record<BotId, BotProfile> = LADDER;
 
-export const CLASSIC_IDS: ClassicBotId[] = ["ollie", "ryan", "freddie"];
 export const LADDER_IDS: LadderBotId[] = ["pawny", "eezy", "chillwall", "gambit-gary", "mo-mate", "knightingale", "rookland"];
-/** Ladder first, weakest to strongest, then the original three. */
-export const BOT_IDS: BotId[] = [...LADDER_IDS, ...CLASSIC_IDS];
+/** Weakest to strongest. */
+export const BOT_IDS: BotId[] = [...LADDER_IDS];
 export const BOT_LEVELS: BotLevel[] = ["low", "medium", "hard"];
 
 /** Average accuracy over easy, medium and hard questions. */

@@ -15,3 +15,7 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
+      # Plays the built app in a real browser: bot list, a bot reply, a Hot Spot question,
+      # and recovery from a failed download (playtest 2026-11-09).
+      - run: npx playwright install --with-deps chromium
+      - run: npm run smoke
