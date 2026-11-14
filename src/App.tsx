@@ -10,6 +10,7 @@ import { loadTriviaRating, saveTriviaRating, updateTriviaRating } from "./game/t
 import { entryFor, recordHistory, type MatchStats } from "./game/history";
 import type { SetupChoice } from "./game/useGame";
 import type { GameState } from "./game/types";
+import { clearMatch, loadMatch, matchLabel, type SavedMatch } from "./game/savedMatch";
 import { RulesScreen } from "./components/HowToPlay";
 import { SettingsPanel } from "./components/SettingsPanel";
 import { getStyle } from "./theme/themes";
@@ -27,6 +28,9 @@ export function App() {
   const [setup, setSetup] = useState<SetupChoice | null>(null);
   const [gameKey, setGameKey] = useState(0);
   const [paused, setPaused] = useState(false);
+  /** A match saved before the page was reloaded, offered on the main menu. */
+  const [saved, setSaved] = useState<SavedMatch | null>(() => loadMatch());
+  const [resume, setResume] = useState<SavedMatch | undefined>(undefined);
   const [newBadges, setNewBadges] = useState<NewBadge[]>([]);
   const [audioReady, setAudioReady] = useState(isAudioUnlocked());
   const style = getStyle(settings.style);
@@ -58,6 +62,7 @@ export function App() {
     document.querySelector('meta[name="theme-color"]')?.setAttribute("content", style.chrome);
   }, [style]);
 
+  const pause = useCallback(() => setPaused(true), []);
   const play = useCallback((s: SfxName) => { if (settings.sfxOn) playSfx(s, style.voice); }, [settings.sfxOn, style.voice]);
 
   return (
@@ -70,9 +75,11 @@ export function App() {
         </button>
       </header>}
       {screen !== "game" && <p className="tap-note" style={{ visibility: audioReady ? "hidden" : "visible" }}>Tap anywhere to turn on sound</p>}
-      {screen === "menu" && <MainMenu onPlay={() => setScreen("play")} onAchievements={() => setScreen("achievements")} onSettings={() => setOpen(true)} />}
+      {screen === "menu" && <MainMenu
+        resume={saved ? { label: matchLabel(saved), onResume: () => { setSetup(saved.setup); setResume(saved); setGameKey((k) => k + 1); setPaused(true); setScreen("game"); } } : undefined}
+        onPlay={() => setScreen("play")} onAchievements={() => setScreen("achievements")} onSettings={() => setOpen(true)} />}
       {screen === "play" && <PlayMenu onPick={(m) => { setMode(m); setScreen("setup"); }} onRules={() => setScreen("rules")} onBack={() => setScreen("menu")} />}
-      {screen === "setup" && <SetupScreen mode={mode} onBack={() => setScreen("play")} onStart={(s) => { setSetup(s); setGameKey((k) => k + 1); setPaused(false); setScreen("game"); }} />}
+      {screen === "setup" && <SetupScreen mode={mode} onBack={() => setScreen("play")} onStart={(s) => { clearMatch(); setSaved(null); setResume(undefined); setSetup(s); setGameKey((k) => k + 1); setPaused(false); setScreen("game"); }} />}
       {screen === "achievements" && (() => {
         const back = () => setScreen("menu");
         const head = <AchievementsHead tab={tab} onTab={setTab} onBack={back} />;
@@ -82,8 +89,8 @@ export function App() {
       })()}
       {screen === "rules" && <RulesScreen onBack={() => setScreen("play")} />}
       {screen === "game" && setup && (
-        <GameScreen key={gameKey} style={style} play={play} setup={setup} view={settings.passAndPlayView} motion={!settings.reduceMotion} commentary={settings.commentary} paused={paused || open}
-          onPause={() => setPaused(true)} onExit={() => setScreen("menu")}
+        <GameScreen key={gameKey} resume={resume} style={style} play={play} setup={setup} view={settings.passAndPlayView} motion={!settings.reduceMotion} commentary={settings.commentary} paused={paused || open}
+          onPause={pause} onExit={() => { setSaved(loadMatch()); setScreen("menu"); }}
           onFinish={async (g: GameState, stats: MatchStats) => {
             const human = g.players.white.kind === "human" ? "white" : "black";
             const entry = entryFor(g, stats, setup.botLevel);
@@ -101,7 +108,7 @@ export function App() {
           }} />
       )}
       {screen === "game" && paused && !open && (
-        <PauseMenu onResume={() => setPaused(false)} onRestart={() => { setGameKey((k) => k + 1); setPaused(false); }} onSettings={() => setOpen(true)} onQuit={() => { setPaused(false); setScreen("menu"); }} />
+        <PauseMenu onResume={() => setPaused(false)} onRestart={() => { clearMatch(); setResume(undefined); setGameKey((k) => k + 1); setPaused(false); }} onSettings={() => setOpen(true)} onQuit={() => { setPaused(false); setSaved(loadMatch()); setScreen("menu"); }} />
       )}
       {newBadges.length > 0 && !(screen === "achievements" && tab === "cabinet") && (
         <BadgeToast badges={newBadges} onOpen={() => { setNewBadges([]); setPaused(false); setTab("cabinet"); setScreen("achievements"); }} onClose={() => setNewBadges([])} />

@@ -59,7 +59,11 @@ function Doodles() {
 
 export const GAME_NAME = "They Think It's Checkmate\u2026";
 
-export function MainMenu({ onPlay, onAchievements, onSettings }: { onPlay: () => void; onAchievements: () => void; onSettings: () => void }) {
+export function MainMenu({ onPlay, onAchievements, onSettings, resume }: {
+  onPlay: () => void; onAchievements: () => void; onSettings: () => void;
+  /** A match saved before the page reloaded. */
+  resume?: { label: string; onResume: () => void };
+}) {
   return (
     <nav className="menu main-menu" aria-label="Main menu">
       <Doodles />
@@ -69,7 +73,8 @@ export function MainMenu({ onPlay, onAchievements, onSettings }: { onPlay: () =>
         <p>Chess, football trivia, and power-ups</p>
       </div>
       <div className="menu-btns">
-        <MenuButton icon="play" title="Play" sub="vs bots or a mate" primary onClick={onPlay} />
+        {resume && <MenuButton icon="resume" title="Resume match" sub={resume.label} primary onClick={resume.onResume} />}
+        <MenuButton icon="play" title="Play" sub="vs bots or a mate" primary={!resume} onClick={onPlay} />
         <MenuButton icon="cup" title="Achievements" sub="Trophies, records, and history" onClick={onAchievements} />
         <MenuButton icon="cog" title="Settings" sub="Look, sound, and music" onClick={onSettings} />
       </div>

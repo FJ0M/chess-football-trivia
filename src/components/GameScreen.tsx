@@ -16,6 +16,7 @@ import { PowerIcon } from "./PowerIcons";
 import { ODDS_NAME } from "../game/handicap";
 import { useMatchStats } from "../game/useMatchStats";
 import { DRAW_WORDS, type MatchStats } from "../game/history";
+import { saveMatch, type SavedMatch } from "../game/savedMatch";
 import { CLUE_MS } from "../game/whoami";
 import { TIMER_MS } from "../game/trivia";
 import type { Color, GameState, Outcome, PowerUpId } from "../game/types";
@@ -39,12 +40,33 @@ interface Props {
   onPause: () => void;
   onExit: () => void;
   onFinish: (game: GameState, stats: MatchStats) => void;
+  /** A saved match to carry on with. */
+  resume?: SavedMatch;
 }
 
-export function GameScreen({ style, play, setup, view, motion = true, commentary = true, paused, onPause, onExit, onFinish }: Props) {
-  const g = useGame(setup, play, paused);
+export function GameScreen({ style, play, setup, view, motion = true, commentary = true, paused, onPause, onExit, onFinish, resume }: Props) {
+  const g = useGame(setup, play, paused, resume?.game);
   const { game, phase } = g;
-  const stats = useMatchStats(game, phase);
+  const stats = useMatchStats(game, phase, resume?.stats);
+  const latest = useRef({ game, phase });
+  latest.current = { game, phase };
+  // Save the match after every finished turn, so a reload doesn't lose it.
+  useEffect(() => {
+    if (phase.kind === "move" || game.outcome) saveMatch(setup, game, stats.current);
+  }, [game.fen, game.step, game.outcome, phase.kind]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Leaving the app (a call, a text, the home screen) pauses the match, clocks and bots included.
+  useEffect(() => {
+    const hide = () => {
+      if (!document.hidden) return;
+      onPause();
+      // Save the clocks as they are now too, not just as they were at the start of the turn.
+      const now = latest.current;
+      if (now.phase.kind === "move" && !now.game.outcome) saveMatch(setup, now.game, stats.current);
+    };
+    document.addEventListener("visibilitychange", hide);
+    window.addEventListener("pagehide", hide);
+    return () => { document.removeEventListener("visibilitychange", hide); window.removeEventListener("pagehide", hide); };
+  }, [onPause]);
   const [sel, setSel] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<"resign" | "draw" | null>(null);
 
