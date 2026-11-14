@@ -1,6 +1,7 @@
 // The Look setting: a small preview drawn in the chosen style (board, capture highlight and question text), with arrows to step through all ten styles.
 
-import type { KeyboardEvent } from "react";
+import { useEffect, type KeyboardEvent } from "react";
+import { loadAllFonts } from "../theme/fonts";
 import { STYLES, type GameStyle, type StyleId } from "../theme/themes";
 import { MarkerArrow } from "./GameScreen";
 
@@ -45,6 +46,8 @@ function StylePreview({ style }: { style: GameStyle }) {
 }
 
 export function StylePicker({ value, defaultId, onChange }: { value: StyleId; defaultId: StyleId; onChange: (id: StyleId) => void }) {
+  // The previews show every look, so they need every look's fonts.
+  useEffect(() => { loadAllFonts(); }, []);
   const idx = Math.max(0, STYLES.findIndex((s) => s.id === value));
   const s = STYLES[idx];
   const step = (d: number) => onChange(STYLES[(idx + d + STYLES.length) % STYLES.length].id);

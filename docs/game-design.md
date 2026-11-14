@@ -175,7 +175,7 @@ Every bot (ladder and originals) also plays the game around the chess (review bu
 
 ## Tech stack and deployment
 
-The game is a static web app with no server: everything, including the bots, runs on the player's device, and it works offline once installed. That makes it free to host and as easy as possible to deploy.
+The game is a static web app with no server: everything, including the bots, runs on the player's device, and it works offline once installed. That makes it free to host and as easy as possible to deploy. A service worker (`public/sw.js`) keeps the game, Stockfish and the fonts cached after the first visit, so it opens and plays with no signal. The question bank is split at build time (`vite.config.ts`) into the general questions plus one small file per club, so a game downloads about 170 kB of questions instead of 1.3 MB, and each look loads only its own fonts (`src/theme/fonts.ts`).
 
 | Part | Choice | Why |
 | --- | --- | --- |

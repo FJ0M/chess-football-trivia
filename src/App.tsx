@@ -14,6 +14,7 @@ import { clearMatch, loadMatch, matchLabel, type SavedMatch } from "./game/saved
 import { RulesScreen } from "./components/HowToPlay";
 import { SettingsPanel } from "./components/SettingsPanel";
 import { getStyle } from "./theme/themes";
+import { loadStyleFonts } from "./theme/fonts";
 import { loadSettings, saveSettings, type Settings } from "./settings/settings";
 import { isAudioUnlocked, setMusicVolume, setSfxVolume, unlockAudio } from "./audio/engine";
 import { music } from "./audio/music";
@@ -58,6 +59,7 @@ export function App() {
   }, [audioReady, settings.musicOn, track]);
 
   useEffect(() => {
+    loadStyleFonts(style.id);
     document.documentElement.dataset.style = style.id;
     document.querySelector('meta[name="theme-color"]')?.setAttribute("content", style.chrome);
   }, [style]);
