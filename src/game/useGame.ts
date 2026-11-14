@@ -16,6 +16,7 @@ import {
 import { QuestionBank, TIMER_MS, browserSeenStore, memorySeenStore, type Card } from "./trivia";
 import { CLUE_MS, WhoAmIBank, type WhoAmI } from "./whoami";
 import { DRAW_WORDS } from "./history";
+import { loadClub, loadGeneral } from "virtual:questions";
 import type { Color, GameOptions, GameState, PowerUpId, Question } from "./types";
 
 export interface SetupChoice {
@@ -73,17 +74,31 @@ interface Banks {
 /** Each side draws from its own banks, so each human player has their own "seen" list. */
 type Data = Record<Color, Banks>;
 
-let rawPromise: Promise<{ questions: Question[]; sets: WhoAmI[] }> | null = null;
+let rawPromise: Promise<{ general: Question[]; sets: WhoAmI[] }> | null = null;
+const clubPromises = new Map<string, Promise<Question[]>>();
+/** One club's questions, downloaded on first use (the bank is split per club, see vite.config.ts). */
+function clubQuestions(club: string | null): Promise<Question[]> {
+  if (!club) return Promise.resolve([]);
+  let p = clubPromises.get(club);
+  if (!p) {
+    p = importWithRetry(() => loadClub(club));
+    clubPromises.set(club, p);
+    p.catch(() => clubPromises.delete(club));
+  }
+  return p;
+}
 function loadData(players: SetupChoice["players"]): Promise<Data> {
   if (!rawPromise) {
-    rawPromise = importWithRetry(() => Promise.all([import("../../data/questions.json"), import("../../data/whoami.json")])).then(([q, w]) => ({
-      questions: (q.default as { questions: Question[] }).questions,
+    rawPromise = importWithRetry(() => Promise.all([loadGeneral(), import("../../data/whoami.json")])).then(([general, w]) => ({
+      general,
       sets: (w.default as { sets: WhoAmI[] }).sets,
     }));
     // Don't remember a failed download: the next game (or retry) tries again.
     rawPromise.catch(() => { rawPromise = null; });
   }
-  return rawPromise.then(({ questions, sets }) => {
+  const clubs = [...new Set([players.white.club, players.black.club])];
+  return Promise.all([rawPromise, ...clubs.map(clubQuestions)]).then(([{ general, sets }, ...clubSets]) => {
+    const questions = [...general, ...clubSets.flat()];
     const banks = (c: Color): Banks => {
       const p = players[c];
       // Bots don't need to remember what they've been asked between games.

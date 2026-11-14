@@ -40,7 +40,8 @@ async function openPicker(page, { load = true } = {}) {
 
 try {
   // 1. The bot list.
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  // The offline cache (sw.js) is checked on its own at the end; here it would hide the network.
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 }, serviceWorkers: "block" });
   page.on("pageerror", (e) => errors.push(e.message));
   await openPicker(page);
   await page.waitForSelector(".bot-card", { timeout: 15000 });
@@ -112,7 +113,7 @@ try {
   await page.close();
 
   // 3. The bots download fails once: the retry still fills the picker.
-  const flaky = await browser.newPage();
+  const flaky = await browser.newPage({ serviceWorkers: "block" });
   let failedOnce = false;
   // The bots are their own chunk: any index-*.js that index.html doesn't load directly.
   const html = await (await fetch(URL)).text();
@@ -136,6 +137,40 @@ try {
   await flaky.waitForSelector(".bot-card", { timeout: 15000 }).catch(() => undefined);
   check(failedOnce && didReload && (await flaky.locator(".bot-card").count()) === 7, `after a failed bots download the game reloads itself and the bots are back${failedOnce ? "" : " (no failure was injected)"}`);
   await flaky.close();
+
+  // 4. Offline: after one visit, the game opens and a bot plays with no connection.
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const off = await ctx.newPage();
+  await openPicker(off);
+  await off.getByRole("radio", { name: /Pawny Dribbles/ }).click();
+  await off.getByRole("button", { name: /Kick off/ }).click();
+  await off.waitForSelector(".board .sq", { timeout: 15000 });
+  await off.waitForTimeout(3000);
+  await off.waitForFunction(() => !!navigator.serviceWorker.controller, null, { timeout: 15000 }).catch(() => undefined);
+  await ctx.setOffline(true);
+  await off.reload().catch(() => undefined);
+  await off.waitForTimeout(1500);
+  const offlineMenu = await off.getByRole("button", { name: /^Play/ }).count();
+  let offlineBot = false;
+  if (offlineMenu) {
+    await openPicker(off, { load: false });
+    await off.getByRole("radio", { name: /Pawny Dribbles/ }).click();
+    await off.getByRole("button", { name: /Kick off/ }).click();
+    await off.waitForSelector(".board .sq", { timeout: 15000 });
+    await off.waitForTimeout(2000);
+    await off.locator('button.sq[aria-label^="d2"]').click();
+    await off.locator('button.sq[aria-label^="d4"]').click();
+    for (let i = 0; i < 40 && !offlineBot; i++) {
+      const card = off.locator(".qcard:not([disabled])").first();
+      if (await card.count()) await card.click();
+      const answer = off.locator(".answers button:not([disabled])").first();
+      if (await answer.count()) await answer.click();
+      offlineBot = /Move 2/.test(await off.locator(".strip").innerText());
+      if (!offlineBot) await off.waitForTimeout(500);
+    }
+  }
+  check(offlineMenu > 0 && offlineBot, "offline after one visit: the game opens and the bot plays");
+  await ctx.close();
 
   check(errors.length === 0, `no page errors${errors.length ? `: ${errors.join("; ")}` : ""}`);
 } finally {
