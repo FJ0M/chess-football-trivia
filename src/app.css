@@ -322,6 +322,24 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
   background: repeating-linear-gradient(45deg, transparent 0 5px, rgba(255,255,255,.85) 5px 6.5px), repeating-linear-gradient(-45deg, transparent 0 5px, rgba(255,255,255,.85) 5px 6.5px);
   animation: net .6s ease-out .3s both; }
 @keyframes net { from { transform: scale(.4); opacity: 0; } 40% { transform: scale(1.18) perspective(60px) translateZ(-6px); opacity: 1; } 70% { transform: scale(.96); } to { transform: scale(1.05); opacity: 0; } }
+/* The piece that just moved slides in from its old square (one square = an eighth of the board). */
+.board-wrap .pc.slide { animation: piece-slide .2s cubic-bezier(.25,.8,.3,1) both; z-index: 4; }
+.board-wrap .sq:has(.pc.slide) { z-index: 3; }
+@keyframes piece-slide { from { translate: calc(var(--dx) * min(100cqw, 100cqh) / 8) calc(var(--dy) * min(100cqw, 100cqh) / 8); } }
+.form-meter .num { position: relative; }
+.form-pop { position: absolute; left: 50%; bottom: 100%; translate: -50% 0; font-size: 18px; font-weight: 800; color: #2e9d4f; text-shadow: 0 1px 0 #fff; pointer-events: none; animation: form-pop 1.3s ease-out both; }
+@keyframes form-pop { from { transform: translateY(8px) scale(.6); opacity: 0; } 20% { transform: translateY(0) scale(1.15); opacity: 1; } 70% { opacity: 1; } to { transform: translateY(-22px) scale(1); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .form-pop { animation: none; } }
+.fx-pulse { position: absolute; width: 12.5%; height: 12.5%; box-sizing: border-box; border-radius: 50%; border: 4px solid var(--fx-c, #ffd23f); animation: fx-pulse 1s ease-out both; }
+.fx-pulse.fx-tactical-foul { --fx-c: #8fd8ff; background: rgba(143,216,255,.35); border-radius: 12%; }
+.fx-pulse.fx-super-sub { --fx-c: #ffd23f; }
+.fx-pulse.fx-substitution { --fx-c: #4ad66d; }
+.fx-pulse.fx-counter-attack { --fx-c: #ff8a3d; }
+.fx-pulse.fx-formation-change { --fx-c: #b98cff; }
+@keyframes fx-pulse { from { transform: scale(.4); opacity: 1; } 60% { opacity: 1; } to { transform: scale(1.5); opacity: 0; } }
+.fx-power { display: grid; place-items: center; pointer-events: none; }
+.fx-power-stamp { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: rgba(17,17,17,.82); color: #fff; font-family: "Permanent Marker", "Kalam", cursive; font-weight: 400; font-size: clamp(18px, 5.5vw, 28px); white-space: nowrap; animation: stamp .45s cubic-bezier(.2,1.6,.4,1) both, fade-late 1.3s forwards; }
+.fx-power-icon { width: 1.2em; height: 1.2em; }
 .fx-card-sq { position: absolute; width: 12.5%; height: 12.5%; background: rgba(209,52,47,.65); animation: flash .9s ease-out both; }
 /* Hot Spot: Scorched Turf. Everything sits on one square and spreads out from it. */
 .fx-scorch { position: absolute; width: 12.5%; height: 12.5%; }
@@ -535,6 +553,8 @@ button.htp-power:focus-visible, .htp-close:focus-visible { outline: 3px solid #1
 .screen.style-tactics .board-wrap .pc, .screen.style-tabletop .board-wrap .pc, .screen.style-sticker .board-wrap .pc { font-size: calc(min(100cqw, 100cqh) / 8 * .4); }
 .board-wrap > .whoami-stage, .board-wrap > .board-cover { place-self: stretch; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: grid; grid-template-columns: minmax(0, 1fr); align-content: safe center; }
 .board-wrap > .board-cover { z-index: 6; padding: 8px; box-sizing: border-box; background: rgba(10, 20, 30, .7); background: color-mix(in srgb, var(--drawer-bg, #0a141e) 88%, transparent); border-radius: 6px; }
+.board-wrap > .board-cover.peek { background: transparent; pointer-events: none; align-content: end; }
+.board-cover .peek-btn { justify-self: center; margin-top: 8px; pointer-events: auto; font: inherit; font-size: 14px; padding: 6px 14px; border-radius: 999px; border: 2px solid currentColor; background: var(--drawer-bg, #fff); color: inherit; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,.25); }
 .board-wrap > .board-cover.late { animation: cover-late 1.4s steps(1, end) both; }
 @keyframes cover-late { from { opacity: 0; visibility: hidden; } to { opacity: 1; visibility: visible; } }
 .app-game .screen .controls { gap: 8px; }

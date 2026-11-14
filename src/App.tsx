@@ -20,6 +20,9 @@ import { isAudioUnlocked, setMusicVolume, setSfxVolume, unlockAudio } from "./au
 import { music } from "./audio/music";
 import { playSfx, type SfxName } from "./audio/sfx";
 
+/** Vibration patterns (ms) for the moments that matter. */
+const BUZZ: Partial<Record<SfxName, number | number[]>> = { capture: 25, check: [20, 40, 20], wrong: 90, correct: 15, fulltime: [60, 60, 120] };
+
 export function App() {
   const [settings, setSettings] = useState<Settings>(() => loadSettings());
   const [open, setOpen] = useState(false);
@@ -65,7 +68,12 @@ export function App() {
   }, [style]);
 
   const pause = useCallback(() => setPaused(true), []);
-  const play = useCallback((s: SfxName) => { if (settings.sfxOn) playSfx(s, style.voice); }, [settings.sfxOn, style.voice]);
+  const play = useCallback((s: SfxName) => {
+    if (settings.sfxOn) playSfx(s, style.voice);
+    // A little buzz on phones that support it (Android), unless motion is turned down.
+    const buzz = settings.reduceMotion ? undefined : BUZZ[s];
+    if (buzz) try { navigator.vibrate?.(buzz); } catch { /* not supported */ }
+  }, [settings.sfxOn, settings.reduceMotion, style.voice]);
 
   return (
     <div className={`app${screen === "menu" ? " app-menu" : screen === "game" ? " app-game" : ""}`}>

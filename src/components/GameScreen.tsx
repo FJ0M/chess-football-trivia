@@ -2,7 +2,7 @@
 // Class names (.board, .sq, .pc, .quiz, .powers, .pw, .player) are the ones every
 // style in themes.css dresses up.
 
-import { memo, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { memo, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import type { GameStyle } from "../theme/themes";
 import type { SfxName } from "../audio/sfx";
 import type { PassAndPlayView } from "../settings/settings";
@@ -130,11 +130,22 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
   const line = useCommentary(board0, g.events, commentary && phase.kind !== "whoami", names, g.evaluate);
   const osReduce = usePrefersReducedMotion();
   const fx = motion && !osReduce;
+  // The piece that just moved slides in from where it came from (squares across and down, as drawn).
+  const slide = useMemo(() => {
+    if (!fx || !game.lastMove) return null;
+    const [from, to] = game.lastMove;
+    const sign = orientation === "white" ? 1 : -1;
+    const dx = (FILES.indexOf(from[0]) - FILES.indexOf(to[0])) * sign;
+    const dy = (Number(to[1]) - Number(from[1])) * sign;
+    return dx || dy ? ({ "--dx": dx, "--dy": dy } as CSSProperties) : null;
+  }, [game.lastMove, orientation, fx]);
   const flipMode = local && view === "flip";
   // The screen never scrolls, so where there's only one column (phones and tablets held upright, and
   // "Flat on the table") questions, cards and results sit over the board instead of pushing it off the
   // screen (it isn't playable then anyway). With a second column beside the board they go there.
   const twoColumns = useMedia(TWO_COLUMNS);
+  const [peek, setPeek] = useState(false);
+  useEffect(() => { setPeek(false); }, [phase.kind]);
   const panelOnBoard = (flipMode || !twoColumns) && (phase.kind === "cards" || phase.kind === "question" || phase.kind === "result" || phase.kind === "shootout");
   const commentaryLine = line && <p className="commentary" aria-live="polite"><Mic /><span key={line.id}>{line.text}</span></p>;
 
@@ -179,7 +190,7 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
             return (
               <button key={sq} type="button" className={cls} onClick={() => tap(sq)} aria-label={`${sq}${p ? ` ${p.color} ${ROLE_NAME[p.role]}` : ""}`}>
                 {game.hotSpots.includes(sq) && <HotSpotIcon />}
-                {p && <span className={`pc ${p.color === "white" ? "w" : "b"}`}>{GLYPH[p.role]}{"︎"}</span>}
+                {p && <span className={`pc ${p.color === "white" ? "w" : "b"}${slide && last && last[1] === sq ? " slide" : ""}`} style={slide && last && last[1] === sq ? slide : undefined}>{GLYPH[p.role]}{"︎"}</span>}
                 {isDest && <span className={p ? "dot cap" : "dot"} />}
                 {rankMark && <span className="coord rank" aria-hidden="true">{rankMark}</span>}
                 {fileMark && <span className="coord file" aria-hidden="true">{fileMark}</span>}
@@ -193,7 +204,17 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
           {fx && <BoardFx events={g.events} now={g.now} orientation={orientation} />}
         </div>
         {/* After a Hot Spot the cards wait a moment, so the Scorched Turf animation shows before they cover the board. */}
-        {panelOnBoard && <div className={`board-cover${fx && phase.kind === "cards" && phase.bonus ? " late" : ""}`}><Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} /></div>}
+        {panelOnBoard && (
+          <div className={`board-cover${fx && phase.kind === "cards" && phase.bonus ? " late" : ""}${peek ? " peek" : ""}`}>
+            {!peek && <Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} />}
+            {/* The card choice depends on the position (a wrong Screamer freezes the piece you moved), so you can look first. */}
+            {phase.kind === "cards" && humanToAct && (
+              <button type="button" className="peek-btn" aria-pressed={peek} onClick={() => setPeek((v) => !v)}>
+                {peek ? "Back to the cards" : "See the board"}
+              </button>
+            )}
+          </div>
+        )}
       </div>
       <div className="side near">
         <PlayerBar game={game} color={bottom} active={active} ticking={clockOwner(game, phase)} bubble={g.bubble} bench={mat.bench[bottom]} lead={mat.score[bottom] - mat.score[top]} ebk={g.ebk[bottom]} />
@@ -575,6 +596,19 @@ function hasTargets(game: GameState, id: PowerUpId): boolean {
  */
 const PowerBar = memo(function PowerBar({ game, phase, color, enabled, onPick, play }: { game: GameState; phase: Phase; color: Color; enabled: boolean; onPick: (id: PowerUpId) => void; play: (s: SfxName) => void }): ReactNode {
   const me = game.players[color];
+  // "+3" floats up from the meter whenever this player's Form goes up.
+  const [pop, setPop] = useState<{ n: number; id: number } | null>(null);
+  const lastForm = useRef({ color, form: me.form });
+  useEffect(() => {
+    const prev = lastForm.current;
+    lastForm.current = { color, form: me.form };
+    if (prev.color === color && me.form > prev.form) setPop({ n: me.form - prev.form, id: Date.now() });
+  }, [me.form, color]);
+  useEffect(() => {
+    if (!pop) return;
+    const t = setTimeout(() => setPop(null), 1400);
+    return () => clearTimeout(t);
+  }, [pop]);
   const myTurn = turnOf(game) === color;
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState<PowerUpId | null>(null);
@@ -598,7 +632,7 @@ const PowerBar = memo(function PowerBar({ game, phase, color, enabled, onPick, p
     <>
       <span className="label">{label}</span>
       <span className="pips" aria-hidden="true">{Array.from({ length: FORM_CAP }, (_, i) => <i key={i} className={i < me.form ? "on" : ""} />)}</span>
-      <b className="num">{me.form}<small>/{FORM_CAP}</small></b>
+      <b className="num">{me.form}<small>/{FORM_CAP}</small>{pop && <span key={pop.id} className="form-pop" aria-hidden="true">+{pop.n}</span>}</b>
     </>
   );
 
