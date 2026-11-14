@@ -15,7 +15,7 @@ import { clubShort } from "../game/clubs";
 import { PowerIcon } from "./PowerIcons";
 import { ODDS_NAME } from "../game/handicap";
 import { useMatchStats } from "../game/useMatchStats";
-import type { MatchStats } from "../game/history";
+import { DRAW_WORDS, type MatchStats } from "../game/history";
 import { CLUE_MS } from "../game/whoami";
 import { TIMER_MS } from "../game/trivia";
 import type { Color, GameState, Outcome, PowerUpId } from "../game/types";
@@ -503,7 +503,7 @@ function outcomeText(game: GameState, o: Outcome): string {
     case "resign": return `${n(o.winner)} wins by resignation.`;
     case "timeout": return `${n(o.winner)} wins on time.`;
     case "shootout": return `${n(o.winner)} wins the Penalty Shootout ${o.score[o.winner]}-${o.score[o.winner === "white" ? "black" : "white"]}.`;
-    case "draw": return `It's a draw (${o.reason}).`;
+    case "draw": return `It's a draw (${DRAW_WORDS[o.reason] ?? o.reason}).`;
   }
 }
 

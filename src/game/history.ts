@@ -101,8 +101,9 @@ export function recordHistory(entry: HistoryEntry, storage: Store | undefined = 
 
 export function clearHistory(storage: Store | undefined = safeStorage()) { save([], storage); }
 
-const DRAW_WORDS: Record<string, string> = {
-  stalemate: "stalemate", repetition: "repetition", "fifty-moves": "the 50-move rule", insufficient: "not enough pieces", agreement: "agreement",
+/** Plain words for each kind of draw. */
+export const DRAW_WORDS: Record<string, string> = {
+  stalemate: "stalemate", repetition: "repetition", "fifty-moves": "the 50-move rule", insufficient: "not enough pieces", agreement: "agreement", "timeout-insufficient": "time ran out, but the other side couldn't mate",
 };
 const WIN_WORDS: Record<string, string> = { checkmate: "checkmate", resign: "resignation", timeout: "time", shootout: "penalties" };
 

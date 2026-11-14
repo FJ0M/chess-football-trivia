@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { backRank, startFen } from "./chess960";
 import {
   applyAnswer, attackedSquares, resolvePromotion, finishTurn, firstMoveReach, legalMoves, material, newGame, pickHotSpots, playMove,
-  powerBlocked, powerCost, powerTargets, resolveMove, skipExtraTime, turnOf, usePowerUp, addIncrement, withClocksFrom,
+  powerBlocked, powerCost, powerTargets, resolveMove, skipExtraTime, timeout, turnOf, usePowerUp, addIncrement, withClocksFrom,
 } from "./rules";
 import { fergieMs } from "./powerups";
 import type { GameOptions, GameState } from "./types";
@@ -440,5 +440,33 @@ describe("game end", () => {
     const g = at("7k/5Q2/6K1/8/8/8/8/8 b - - 0 1");
     expect(finishTurn(g).state.pendingDraw).toBe("stalemate");
     expect(finishTurn({ ...g, options: { ...g.options, trivia: false } }).state.outcome).toEqual({ kind: "draw", reason: "stalemate" });
+  });
+});
+
+describe("review fixes (2026-11-14)", () => {
+  it("a flag fall is a draw when the other side can't mate", () => {
+    const bare = at("8/8/8/8/8/8/8/k6K w - - 0 1");
+    expect(timeout(bare, "white").pendingDraw).toBe("timeout-insufficient");
+    expect(timeout(bare, "white").outcome).toBeNull();
+    const knight = at("8/8/8/8/8/8/n7/k6K w - - 0 1");
+    expect(timeout(knight, "white").pendingDraw).toBe("timeout-insufficient");
+    const queen = at("8/8/8/8/8/8/q7/k6K w - - 0 1");
+    expect(timeout(queen, "white").outcome).toEqual({ kind: "timeout", winner: "black" });
+    const plain = at("8/8/8/8/8/8/8/k6K w - - 0 1", { trivia: false });
+    expect(timeout(plain, "white").outcome).toEqual({ kind: "draw", reason: "timeout-insufficient" });
+  });
+
+  it("Red Card can't open a line onto your own king", () => {
+    const g = at("4r1k1/8/8/4p3/8/8/8/4K3 w - - 0 1");
+    expect(usePowerUp(g, "red-card", ["e5"]).error).toMatch(/own king/);
+    expect(powerTargets(g, "red-card")).not.toContain("e5");
+  });
+
+  it("pawn changes from power-ups reset the 50-move count", () => {
+    const g = at("4k3/pppp4/8/8/8/8/1PPP4/4K3 w - - 37 40");
+    const withCap = { ...g, captured: { ...g.captured, white: ["p"] } };
+    expect(usePowerUp(withCap, "substitution", ["a2"]).state.fen.split(" ")[4]).toBe("0");
+    expect(usePowerUp(g, "red-card", ["a7"]).state.fen.split(" ")[4]).toBe("0");
+    expect(usePowerUp(g, "super-sub", ["b2"]).state.fen.split(" ")[4]).toBe("0");
   });
 });

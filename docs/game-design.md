@@ -31,7 +31,7 @@ There are two ways to play, and both use the same rules.
 
 Each game also has a **Plain Chess** toggle (no trivia) and a **Timed** toggle (3, 5, 10, 15 or 30 minutes each, shown on stadium-style scoreboard clocks), so it works for a quick game or a serious one. In a timed game the clock of whoever has to act **always runs**: while choosing a move, picking a card, answering, reading the result (which moves on by itself after 2.5 seconds) and while the engine thinks for a power-up. It stops only for a "Who am I?", the Penalty Shootout and the pause menu. Every move adds **3 seconds** to the mover's clock.
 
-**Winning.** Checkmate wins, as normal. Resigning is allowed. A draw of any kind (stalemate, repetition, 50 moves, agreement) goes to a **Penalty Shootout**: five questions each, alternating, best score wins, sudden death if level. Rules that only exist because of power-ups are listed with each power-up below; nothing can capture or remove a king or queen directly.
+**Winning.** Checkmate wins, as normal. Running out of time loses, unless the other side has nothing left to mate with (a lone king, or king and knight or bishop), which is a draw, as in normal chess. Resigning is allowed. A draw of any kind (stalemate, repetition, 50 moves, agreement) goes to a **Penalty Shootout**: five questions each, alternating, best score wins, sudden death if level. Rules that only exist because of power-ups are listed with each power-up below; nothing can capture or remove a king or queen directly.
 
 ## Pawn promotion: "Who am I?"
 

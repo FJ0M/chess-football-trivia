@@ -15,6 +15,7 @@ import {
 } from "./rules";
 import { QuestionBank, TIMER_MS, browserSeenStore, memorySeenStore, type Card } from "./trivia";
 import { CLUE_MS, WhoAmIBank, type WhoAmI } from "./whoami";
+import { DRAW_WORDS } from "./history";
 import type { Color, GameOptions, GameState, PowerUpId, Question } from "./types";
 
 export interface SetupChoice {
@@ -224,6 +225,25 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
   }, [talk]);
 
   // ------------------------------------------------------------ ending a turn
+  /** A drawn game goes to a Penalty Shootout. Without the questions (still downloading) it just ends as a draw. */
+  const startShootout = useCallback((state: GameState) => {
+    const reason = state.pendingDraw;
+    if (!reason) return;
+    if (!data) {
+      setGame({ ...state, pendingDraw: null, outcome: { kind: "draw", reason } });
+      play("fulltime");
+      go({ kind: "over" });
+      return;
+    }
+    setGame(state);
+    setNote(reason === "timeout-insufficient"
+      ? "Time's up, but there's nothing left to mate with, so it goes to a Penalty Shootout!"
+      : `It's a draw (${DRAW_WORDS[reason] ?? reason}), so it goes to a Penalty Shootout!`);
+    emit({ kind: "shootout" });
+    play("kickoff");
+    go({ kind: "shootout", kicks: [], q: data.white.bank.any("medium"), startedAt: Date.now(), choice: null, taker: "white" });
+  }, [data, emit, go, play, setGame]);
+
   const endTurn = useCallback((state: GameState) => {
     const { state: next, notes } = finishTurn(state);
     setGame(next);
@@ -237,17 +257,11 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
       go({ kind: "over" });
       return;
     }
-    if (next.pendingDraw && data) {
-      setNote(`It's a draw (${next.pendingDraw}), so it goes to a Penalty Shootout!`);
-      emit({ kind: "shootout" });
-      play("kickoff");
-      go({ kind: "shootout", kicks: [], q: data.white.bank.any("medium"), startedAt: Date.now(), choice: null, taker: "white" });
-      return;
-    }
+    if (next.pendingDraw) { startShootout(next); return; }
     if (!notes.length) setNote(`${next.players[turnOf(next)].name} to move`);
     if (positionCheck(next)) play("check");
     go({ kind: "move" });
-  }, [data, emit, go, play, react, setGame]);
+  }, [emit, go, play, react, setGame, startShootout]);
 
   // ------------------------------------------------------------ moves
   const afterMove = useCallback((res: MoveResult, mover: Color) => {
@@ -314,7 +328,9 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     const back = phaseRef.current;
     go({ kind: "thinking", power: id });
     setNote(`${POWER_UP_BY_ID[id].name}: thinking…`);
-    mod.bestMove(fen, g.options.chess960).then((best) => {
+    // Manager's Tip only looks at moves the game allows right now (a frozen piece or Park the Bus can rule out the engine's favourite).
+    const allowed = id === "managers-tip" ? legalMoves(g).moves : undefined;
+    mod.bestMove(fen, g.options.chess960, undefined, allowed).then((best) => {
       if (!alive.current) return;
       const legal = best ? (id === "scout-report" ? best : resolveMove(gameRef.current, best)) : null;
       if (!legal) { go(back.kind === "target" ? { kind: "move" } : back); setNote(`${POWER_UP_BY_ID[id].name}: the gaffer's stumped, so no Form spent`); return; }
@@ -489,13 +505,11 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
 
   const agreeDraw = useCallback(() => {
     const g = endInDraw(gameRef.current, "agreement");
-    endTurnDraw(g);
-    function endTurnDraw(s: GameState) {
-      setGame(s);
-      if (s.outcome) { play("fulltime"); go({ kind: "over" }); return; }
-      if (data) { setNote("Draw agreed. Penalty Shootout!"); go({ kind: "shootout", kicks: [], q: data.white.bank.any("medium"), startedAt: Date.now(), choice: null, taker: "white" }); }
-    }
-  }, [data, go, play, setGame]);
+    if (g.pendingDraw) { startShootout(g); return; }
+    setGame(g);
+    play("fulltime");
+    go({ kind: "over" });
+  }, [go, play, setGame, startShootout]);
 
   // ------------------------------------------------------------ timers (question clock, clues, chess clock)
   useEffect(() => {
@@ -530,7 +544,9 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
     if (!c) return;
     const left = (g.players[c].clockMs ?? 0) - dt;
     if (left <= 0) {
-      setGame(timeout(setClock(g, c, 0), c));
+      const out = timeout(setClock(g, c, 0), c);
+      if (out.pendingDraw) { startShootout(out); return; }
+      setGame(out);
       play("fulltime");
       go({ kind: "over" });
     } else setGame(setClock(g, c, left));
@@ -569,10 +585,13 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
           fen: g.fen, color, form: g.players[color].form, available, inCheck: positionCheck(g), timed: g.options.timed, clockMs: g.players[color].clockMs ?? undefined,
           options: botPowerOptions(g),
         });
+        // The engine took a while to plan, and the clock ran meanwhile: apply the power-up to the
+        // live game, not the copy from before the planning, or the bot's clock would jump back.
+        if (!still()) return;
         if (choice && available.some((a) => a.id === choice.id)) {
           const id = choice.id as PowerUpId;
           const targets = [choice.target, choice.target2].filter((t): t is string => !!t);
-          const res = usePowerUp(g, id, targets);
+          const res = usePowerUp(gameRef.current, id, targets);
           if (!res.error) {
             setGame(res.state);
             play("powerup");
