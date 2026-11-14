@@ -47,7 +47,7 @@ export interface PlayerState {
   formCarry?: number;
   /** Own moves left before each power-up can be used again. 0 = ready. */
   cooldowns: Record<PowerUpId, number>;
-  /** Moves made since the last question (Kick-off fires on the 4th quiet move). */
+  /** Moves made since the last question (a Set piece question fires on the 5th quiet move). */
   kickoffCount: number;
   rightStreak: number;
   wrongStreak: number;
@@ -146,4 +146,4 @@ export type Trigger =
   | { kind: "promotion"; role: PromoRole; square: string; bonus: boolean }
   | { kind: "hot-spot"; square: string }
   | { kind: "capture" }
-  | { kind: "kickoff" };
+  | { kind: "set-piece" };

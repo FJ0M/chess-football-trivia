@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { backRank, startFen } from "./chess960";
 import {
-  applyAnswer, attackedSquares, promotionChoices, promotionStalemates, resolvePromotion, safePromotion, finishTurn, firstMoveReach, legalMoves, material, newGame, pickHotSpots, playMove,
+  applyAnswer, attackedSquares, promotionChoices, promotionStalemates, resolvePromotion, safePromotion, finishTurn, firstMoveReach, legalMoves, material, newGame, pickHotSpots, pieceAt, playMove,
   powerBlocked, powerCost, powerTargets, resolveMove, skipExtraTime, timeout, turnOf, usePowerUp, addIncrement, withClocksFrom,
 } from "./rules";
 import { fergieMs } from "./powerups";
@@ -87,22 +87,36 @@ describe("Hot Spots", () => {
 });
 
 describe("triggers", () => {
-  it("fires Kick-off on every 4th quiet move", () => {
+  it("fires a Set piece on every 5th quiet move", () => {
     let g: GameState = { ...game(), hotSpots: [] };
     const kinds: string[] = [];
-    for (const m of ["g1f3", "g8f6", "f3g1", "f6g8", "g1f3", "g8f6", "f3g1", "f6g8", "g1f3", "g8f6"]) {
+    for (const m of ["g1f3", "g8f6", "f3g1", "f6g8", "g1f3", "g8f6", "f3g1", "f6g8", "g1f3", "g8f6", "f3g1", "f6g8"]) {
       const r = playMove(g, resolveMove(g, m)!);
       kinds.push(r.trigger.kind);
       g = finishTurn(r.state).state;
     }
-    expect(kinds).toEqual(["none", "none", "none", "none", "none", "none", "kickoff", "kickoff", "none", "none"]);
+    expect(kinds).toEqual(["none", "none", "none", "none", "none", "none", "none", "none", "set-piece", "set-piece", "none", "none"]);
   });
-  it("a Who am I? restarts the Kick-off count, so a kick-off can't follow straight after", () => {
+  it("a Who am I? restarts the Set piece count, so a Set piece can't follow straight after", () => {
     let g = at("4k3/1P6/8/8/8/8/8/4K3 w - - 0 1");
     g = { ...g, players: { ...g.players, white: { ...g.players.white, kickoffCount: 3 } } };
     const r = playMove(g, "b7b8q");
     expect(r.trigger.kind).toBe("promotion");
     expect(r.state.players.white.kickoffCount).toBe(0);
+  });
+  it("Hot Spots come on after each side's 3rd move, on empty squares, one per half", () => {
+    let g: GameState = game();
+    expect(g.hotSpots).toEqual([]);
+    for (const m of ["e2e4", "e7e5", "g1f3", "b8c6", "f1c4"]) {
+      g = finishTurn(playMove(g, resolveMove(g, m)!).state).state;
+      expect(g.hotSpots).toEqual([]);
+    }
+    g = finishTurn(playMove(g, resolveMove(g, "g8f6")!).state).state;
+    expect(g.hotSpots).toHaveLength(2);
+    const ranks = g.hotSpots.map((s) => Number(s[1])).sort();
+    expect(ranks[0]).toBeLessThanOrEqual(4);
+    expect(ranks[1]).toBeGreaterThanOrEqual(5);
+    for (const s of g.hotSpots) expect(pieceAt(g.fen, s)).toBeNull();
   });
   it("a capture triggers a question", () => {
     let g = at("4k3/8/8/3p4/4P3/8/8/4K3 w - - 0 1");

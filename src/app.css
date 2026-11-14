@@ -211,6 +211,7 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 .score-card { display: grid; gap: 1px; padding: 10px; border-radius: 10px; border: 2px solid #c9d1d4; background: #fff; color: #18304a; min-width: 0; }
 .score-card b { font-size: 26px; line-height: 1.1; }
 .score-card small { font-size: 12px; opacity: .75; }
+.score-card small.assisted { justify-self: center; padding: 1px 8px; border-radius: 999px; border: 1px solid currentColor; opacity: 1; }
 .score-card span { font-size: 14px; overflow-wrap: break-word; }
 .row-btns { display: flex; gap: 8px; }
 

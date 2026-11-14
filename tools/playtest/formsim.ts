@@ -62,7 +62,7 @@ function playGame(players: Record<Color, Player>, rng: () => number, maxPlies = 
     g = r.state;
     moves[color]++;
     const t = r.trigger;
-    if (t.kind === "hot-spot" || t.kind === "capture" || t.kind === "kickoff") {
+    if (t.kind === "hot-spot" || t.kind === "capture" || t.kind === "set-piece") {
       questions[color]++;
       if (t.kind === "hot-spot") hot[color]++;
       const difficulty: Difficulty = me.pick === "easy" ? "easy" : "hard";

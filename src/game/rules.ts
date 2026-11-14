@@ -85,14 +85,15 @@ function newPlayer(p: PlayerInit, timed: boolean, minutes: number): PlayerState 
   };
 }
 
-export function newGame(options: GameOptions, players: Record<Color, PlayerInit>, rng: Rng = Math.random): GameState {
+export function newGame(options: GameOptions, players: Record<Color, PlayerInit>, _rng: Rng = Math.random): GameState {
   const handicap = options.mode === "local" && isActive(options.handicap) ? options.handicap : null;
   const fen = handicap ? applyOdds(startFen(options.chess960 ? options.position : 518), handicap) : startFen(options.chess960 ? options.position : 518);
   return {
     options,
     fen,
     players: { white: newPlayer(players.white, options.timed, options.minutes ?? DEFAULT_MINUTES), black: newPlayer(players.black, options.timed, options.minutes ?? DEFAULT_MINUTES) },
-    hotSpots: options.trivia ? pickHotSpots(fen, rng) : [],
+    // Hot Spots come on after each side's 3rd move (see playMove).
+    hotSpots: [],
     frozen: [],
     parkTheBus: null,
     captured: { white: [], black: [] },
@@ -155,6 +156,23 @@ function pickFrom<T>(list: T[], rng: Rng): T | undefined {
 
 /** Hot Spots per half of the board (2 in all). They stay put until someone lands on one. */
 export const HOT_SPOTS_PER_HALF = 1;
+/** Hot Spots come onto the board once each side has made this many moves (Freddie, 2026-11-14), so no opening is rewarded. */
+export const HOT_SPOTS_AFTER_MOVES = 3;
+
+/** Places the Hot Spots mid-game: one empty square per half, preferring squares no piece can reach next move. */
+export function placeHotSpots(fen: string, rng: Rng): string[] {
+  const reach = reachNow(fen);
+  const spots: string[] = [];
+  for (const half of ["white", "black"] as Color[]) {
+    for (let i = 0; i < HOT_SPOTS_PER_HALF; i++) {
+      const empty = emptySquaresInHalf(fen, half, new Set(spots));
+      const quiet = empty.filter((sq) => !reach.has(sq));
+      const sq = pickFrom(quiet.length ? quiet : empty, rng);
+      if (sq) spots.push(sq);
+    }
+  }
+  return spots;
+}
 
 export function pickHotSpots(fen: string, rng: Rng): string[] {
   const exclude = firstMoveReach(fen);
@@ -391,7 +409,8 @@ function withPlayer(state: GameState, color: Color, patch: Partial<PlayerState>)
 const addForm = (form: number, n: number) => Math.max(0, Math.min(FORM_CAP, form + n));
 
 /** A question on every 4th quiet move (no capture, no Hot Spot). */
-export const KICKOFF_EVERY = 4;
+/** A Set piece question comes on every 5th quiet move (Freddie, 2026-11-14; it was "Kick-off", every 4th). */
+export const SET_PIECE_EVERY = 5;
 
 const PIECE_POINTS: Record<string, number> = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
 
@@ -493,14 +512,18 @@ export function playMove(state: GameState, uci: string, rng: Rng = Math.random):
     } else if (state.step === "normal" && !ended) {
       if (onSpot) trigger = { kind: "hot-spot", square: landed };
       else if (capturedPiece) trigger = { kind: "capture" };
-      else if (next.players[mover].kickoffCount >= KICKOFF_EVERY) trigger = { kind: "kickoff" };
+      else if (next.players[mover].kickoffCount >= SET_PIECE_EVERY) trigger = { kind: "set-piece" };
     }
     // Hot Spots stay put until used; a used one jumps to a new square in the same half.
     if (onSpot && (trigger.kind === "hot-spot" || trigger.kind === "promotion")) {
       next = { ...next, hotSpots: relocateHotSpot(next, landed, rng) };
     }
-    // Any question (a "Who am I?" too) restarts the Kick-off count.
+    // Any question (a "Who am I?" too) restarts the Set piece count.
     if (trigger.kind !== "none") next = withPlayer(next, mover, { kickoffCount: 0 });
+    if (!next.hotSpots.length && next.history.length >= 2 * HOT_SPOTS_AFTER_MOVES && !ended) {
+      const spots = placeHotSpots(next.fen, rng);
+      if (spots.length) next = { ...next, hotSpots: spots, log: [...next.log, "The Hot Spots are on the pitch"] };
+    }
   }
 
   return { state: next, trigger, san, captured: capturedPiece ? ROLE_CHAR[capturedPiece.role] : null, check, landed };
@@ -786,7 +809,7 @@ export function usePowerUp(state: GameState, id: PowerUpId, targets: string[] = 
       const caps = [...state.captured[color]];
       caps.splice(caps.indexOf("p"), 1);
       next = { ...next, fen, captured: { ...next.captured, [color]: caps } };
-      note = `Substitution: ${me.name} brings a pawn back on ${targets[0]}`;
+      note = `Back from Injury: ${me.name} brings a pawn back on ${targets[0]}`;
       break;
     }
     case "golden-boot":
@@ -869,7 +892,7 @@ export function usePowerUp(state: GameState, id: PowerUpId, targets: string[] = 
   return { state: next, note };
 }
 
-/** Squares the given side attacks (Assistant's Flag). */
+/** Squares the given side attacks (Video Analysis). */
 export function attackedSquares(fen: string, by: Color): string[] {
   const pos = positionOf(fen);
   const out: string[] = [];

@@ -36,7 +36,7 @@ export function RulesScreen({ onBack }: { onBack: () => void }) {
       <div className="htp-tiles three">
         <div className="htp-tile"><span className="htp-sq hot" aria-hidden="true"><i /></span><b>Hot Spot</b><small>Land on a circled square: pick one of 3 cards</small></div>
         <div className="htp-tile"><span className="htp-sq cap" aria-hidden="true">✕</span><b>Capture</b><small>Take a piece: pick one of 3 cards</small></div>
-        <div className="htp-tile"><span className="htp-sq ko" aria-hidden="true">4</span><b>Kick-off</b><small>Every 4th quiet move</small></div>
+        <div className="htp-tile"><span className="htp-sq ko" aria-hidden="true">5</span><b>Set piece</b><small>Every 5th quiet move</small></div>
       </div>
 
       <h3>Pick a card: harder pays more</h3>
