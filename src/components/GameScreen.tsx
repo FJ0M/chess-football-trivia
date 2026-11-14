@@ -6,7 +6,7 @@ import { memo, useEffect, useMemo, useRef, useState, type ReactNode } from "reac
 import type { GameStyle } from "../theme/themes";
 import type { SfxName } from "../audio/sfx";
 import type { PassAndPlayView } from "../settings/settings";
-import { useGame, cardLabel, clockOwner, RESULT_MS, type Phase, type SetupChoice } from "../game/useGame";
+import { useGame, cardLabel, clockOwner, RESULT_MS, RESULT_MS_HUMAN, type Phase, type SetupChoice } from "../game/useGame";
 import { FORM_CAP, POWER_UPS, POWER_UP_BY_ID, fergieMs, fmtSeconds, type PowerUpDef } from "../game/powerups";
 import {
   KICKOFF_EVERY, REWARD, comebackShift, destsFor, isPromotion, pieceAt, powerBlocked, powerCost, powerTargets, resolveMove, turnOf, WHO_AM_I_PIECES, ROLE_NAME,
@@ -424,7 +424,7 @@ function Panel({ g, phase, game, humanToAct, onExit }: { g: G; phase: Phase; gam
         </div>
         <ul className="lines">{phase.lines.map((l) => <li key={l}>{l}</li>)}</ul>
         {phase.explanation && <p className="explain">{phase.explanation}</p>}
-        <div className="timer live" style={timerStyle(phase.shownAt, RESULT_MS)} />
+        <div className="timer live" style={timerStyle(phase.shownAt, phase.auto ? RESULT_MS : RESULT_MS_HUMAN)} />
         {!phase.auto && <button type="button" className="cta" onClick={g.continueOn}>Play on</button>}
       </div>
     );

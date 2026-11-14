@@ -97,6 +97,8 @@ function loadData(players: SetupChoice["players"]): Promise<Data> {
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 /** The result screen moves on by itself after this long (the chess clock is running). */
 export const RESULT_MS = 2500;
+/** A person gets longer to read the answer and its explanation ("Play on" moves on sooner). */
+export const RESULT_MS_HUMAN = 5000;
 /** Difficulty names, as goals: Tap-in, Highlight, Screamer, and the Puskás (the top-tier upgrade of a Screamer). */
 export const DIFF_LABEL = { easy: "Tap-in", medium: "Highlight", hard: "Screamer" } as const;
 export const TOP_TIER = "Puskás";
@@ -527,7 +529,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
       if (left <= 0) answer(null);
     }
     if (p.kind === "whoami" && !isBot(p.color) && now - p.clueAt >= CLUE_MS) nextClue();
-    if (p.kind === "result" && now - p.shownAt >= RESULT_MS) continueOn();
+    if (p.kind === "result" && now - p.shownAt >= (p.auto ? RESULT_MS : RESULT_MS_HUMAN)) continueOn();
     if (p.kind === "shootout" && p.choice === null && !isBot(p.taker) && now - p.startedAt > TIMER_MS.normal) kick(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [now]);

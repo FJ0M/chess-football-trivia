@@ -56,9 +56,13 @@ export const POWER_UPS: PowerUpDef[] = [
 
 export const POWER_UP_BY_ID = Object.fromEntries(POWER_UPS.map((p) => [p.id, p])) as Record<PowerUpId, PowerUpDef>;
 
-/** Cooldowns at the start of a game: every power-up starts locked for its cooldown. */
+/**
+ * Cooldowns at the start of a game: every power-up starts locked for half its cooldown
+ * (rounded up), so there's something to spend Form on in the opening (review, 2026-11-14).
+ */
+export const START_COOLDOWN_SHARE = 0.5;
 export function startingCooldowns(): Record<PowerUpId, number> {
-  return Object.fromEntries(POWER_UPS.map((p) => [p.id, p.cooldown])) as Record<PowerUpId, number>;
+  return Object.fromEntries(POWER_UPS.map((p) => [p.id, Math.ceil(p.cooldown * START_COOLDOWN_SHARE)])) as Record<PowerUpId, number>;
 }
 
 export const FORM_CAP = 12;
