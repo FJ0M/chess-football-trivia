@@ -36,6 +36,15 @@ export function SettingsPanel({ settings, onChange, onClose, play }: Props) {
           <input type="range" id="sfx-volume" aria-label="Sound effects volume" min={0} max={1} step={0.05} value={settings.sfxVolume} disabled={!settings.sfxOn}
             onChange={(e) => set("sfxVolume", Number(e.target.value))} onPointerUp={() => play("move")} />
         </div>
+        <div className="row">
+          <label className="toggle" htmlFor="crowd-on">
+            <input type="checkbox" id="crowd-on" checked={settings.crowdOn} disabled={!settings.sfxOn} onChange={(e) => set("crowdOn", e.target.checked)} />
+            <span>Crowd</span>
+          </label>
+          <input type="range" id="crowd-volume" aria-label="Crowd volume" min={0} max={1} step={0.05} value={settings.crowdVolume} disabled={!settings.sfxOn || !settings.crowdOn}
+            onChange={(e) => set("crowdVolume", Number(e.target.value))} />
+        </div>
+        <p className="sheet-note">The murmur, clapping and "oohs" from the stands during a match. It quietens while a question is up.</p>
         <details className="sounds">
           <summary>Hear every sound</summary>
           <div className="sound-grid">
@@ -62,6 +71,11 @@ export function SettingsPanel({ settings, onChange, onClose, play }: Props) {
             {TRACKS.map((t) => <option key={t.id} value={t.id}>{t.name}: {t.mood}</option>)}
           </select>
         </label>
+        <label className="toggle" htmlFor="menu-music">
+          <input type="checkbox" id="menu-music" checked={settings.menuMusic} disabled={!settings.musicOn} onChange={(e) => set("menuMusic", e.target.checked)} />
+          <span>Walk-out music on the menus</span>
+        </label>
+        <p className="sheet-note">Plays Tunnel Walk on the menus and switches to your match track at kick-off.</p>
 
         <h3>Match</h3>
         <label className="toggle" htmlFor="commentary-on">

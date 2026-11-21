@@ -6,6 +6,8 @@ interface Engine {
   ctx: AudioContext;
   sfx: GainNode;
   music: GainNode;
+  /** The crowd atmosphere in a match. */
+  crowd: GainNode;
   noise: AudioBuffer;
 }
 
@@ -13,6 +15,10 @@ let engine: Engine | null = null;
 let unlocked = false;
 let sfxLevel = 0.8;
 let musicLevel = 0.4;
+let crowdLevel = 0.5;
+/** Music and crowd drop while a question is up, so you can think. */
+let ducked = false;
+const DUCK = 0.35;
 
 function create(): Engine | null {
   const Ctor = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
@@ -24,10 +30,13 @@ function create(): Engine | null {
   master.connect(ctx.destination);
   const sfx = ctx.createGain();
   const music = ctx.createGain();
+  const crowd = ctx.createGain();
   sfx.gain.value = sfxLevel;
-  music.gain.value = musicLevel;
+  music.gain.value = musicLevel * (ducked ? DUCK : 1);
+  crowd.gain.value = crowdLevel * (ducked ? DUCK : 1);
   sfx.connect(master);
   music.connect(master);
+  crowd.connect(master);
 
   // Two seconds of white noise, reused for whistles, crowds, hats and swishes.
   const noise = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
@@ -38,7 +47,7 @@ function create(): Engine | null {
     if (document.hidden) void ctx.suspend();
     else if (unlocked) void ctx.resume();
   });
-  return { ctx, sfx, music, noise };
+  return { ctx, sfx, music, crowd, noise };
 }
 
 export function getEngine(): Engine | null {
@@ -65,7 +74,23 @@ export function setSfxVolume(v: number): void {
 
 export function setMusicVolume(v: number): void {
   musicLevel = v;
-  if (engine) engine.music.gain.setTargetAtTime(v, engine.ctx.currentTime, 0.05);
+  if (engine) engine.music.gain.setTargetAtTime(v * (ducked ? DUCK : 1), engine.ctx.currentTime, 0.05);
+}
+
+export function setCrowdVolume(v: number): void {
+  crowdLevel = v;
+  if (engine) engine.crowd.gain.setTargetAtTime(v * (ducked ? DUCK : 1), engine.ctx.currentTime, 0.1);
+}
+
+/** Turns the music and the crowd down (true) or back up (false). */
+export function setDucked(on: boolean): void {
+  if (ducked === on) return;
+  ducked = on;
+  if (!engine) return;
+  const k = on ? DUCK : 1;
+  const t = engine.ctx.currentTime;
+  engine.music.gain.setTargetAtTime(musicLevel * k, t, on ? 0.15 : 0.4);
+  engine.crowd.gain.setTargetAtTime(crowdLevel * k, t, on ? 0.15 : 0.4);
 }
 
 export const midiToHz = (m: number): number => 440 * Math.pow(2, (m - 69) / 12);

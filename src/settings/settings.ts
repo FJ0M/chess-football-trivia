@@ -9,6 +9,11 @@ export interface Settings {
   musicVolume: number;
   /** "match" plays the track that goes with the chosen style. */
   musicTrack: "match" | MusicTrackId;
+  /** The walk-out anthem on the menus; off plays the match track everywhere. */
+  menuMusic: boolean;
+  /** Crowd atmosphere from the stands during a match. */
+  crowdOn: boolean;
+  crowdVolume: number;
   /** Pass and Play: "flip" = Flat on the table (the whole screen turns to face whoever is up), "hand-over" = Pass the phone (only the board flips). */
   passAndPlayView: PassAndPlayView;
   /** Turns off the celebrations and board animations (the phone's own reduce-motion setting does too). */
@@ -31,6 +36,9 @@ export const DEFAULT_SETTINGS: Settings = {
   musicOn: true,
   musicVolume: 0.35,
   musicTrack: "match",
+  menuMusic: true,
+  crowdOn: true,
+  crowdVolume: 0.5,
   passAndPlayView: "flip",
   reduceMotion: false,
   commentary: true,
@@ -54,6 +62,9 @@ export function sanitize(raw: unknown): Settings {
     musicOn: typeof r.musicOn === "boolean" ? r.musicOn : d.musicOn,
     musicVolume: clamp01(r.musicVolume, d.musicVolume),
     musicTrack: track,
+    menuMusic: typeof r.menuMusic === "boolean" ? r.menuMusic : d.menuMusic,
+    crowdOn: typeof r.crowdOn === "boolean" ? r.crowdOn : d.crowdOn,
+    crowdVolume: clamp01(r.crowdVolume, d.crowdVolume),
     passAndPlayView: VIEWS.includes(r.passAndPlayView as PassAndPlayView) ? (r.passAndPlayView as PassAndPlayView)
       : RETIRED_VIEWS.get(r.passAndPlayView) ?? d.passAndPlayView,
     reduceMotion: typeof r.reduceMotion === "boolean" ? r.reduceMotion : d.reduceMotion,

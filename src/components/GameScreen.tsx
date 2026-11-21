@@ -5,6 +5,7 @@
 import { memo, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import type { GameStyle } from "../theme/themes";
 import type { SfxName } from "../audio/sfx";
+import { setDucked } from "../audio/engine";
 import type { PassAndPlayView } from "../settings/settings";
 import { useGame } from "../game/useGame";
 import { cardLabel, clockOwner, savable, RESULT_MS, RESULT_MS_HUMAN, type Phase, type SetupChoice } from "../game/match";
@@ -150,6 +151,10 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
   const twoColumns = useMedia(TWO_COLUMNS);
   const [peek, setPeek] = useState(false);
   useEffect(() => { setPeek(false); }, [phase.kind]);
+  // Music and crowd drop while a question, a "Who am I?" or a penalty is up.
+  const thinking = phase.kind === "question" || phase.kind === "whoami" || phase.kind === "shootout";
+  useEffect(() => { setDucked(thinking); }, [thinking]);
+  useEffect(() => () => setDucked(false), []);
   const panelOnBoard = (flipMode || !twoColumns) && (phase.kind === "cards" || phase.kind === "question" || phase.kind === "result" || phase.kind === "shootout");
   const commentaryLine = line && <p className="commentary" aria-live="polite"><Mic /><span key={line.id}>{line.text}</span></p>;
 

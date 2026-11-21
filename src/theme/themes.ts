@@ -16,7 +16,7 @@ export type StyleId =
 /** Which synth voice the sound effects use for this style. */
 export type SoundVoice = "marker" | "warm" | "chip" | "crisp";
 
-export type MusicTrackId = "training-ground" | "under-the-lights" | "page-302" | "half-time";
+export type MusicTrackId = "training-ground" | "under-the-lights" | "page-302" | "half-time" | "tunnel-walk";
 
 export interface GameStyle {
   id: StyleId;

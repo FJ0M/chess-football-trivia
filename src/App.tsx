@@ -18,12 +18,13 @@ import { SettingsPanel } from "./components/SettingsPanel";
 import { getStyle } from "./theme/themes";
 import { loadStyleFonts } from "./theme/fonts";
 import { loadSettings, saveSettings, type Settings } from "./settings/settings";
-import { isAudioUnlocked, setMusicVolume, setSfxVolume, unlockAudio } from "./audio/engine";
-import { music } from "./audio/music";
+import { isAudioUnlocked, setCrowdVolume, setDucked, setMusicVolume, setSfxVolume, unlockAudio } from "./audio/engine";
+import { MENU_TRACK, music } from "./audio/music";
+import { crowdReact, startCrowd, stopCrowd } from "./audio/crowd";
 import { playSfx, type SfxName } from "./audio/sfx";
 
 /** Vibration patterns (ms) for the moments that matter. */
-const BUZZ: Partial<Record<SfxName, number | number[]>> = { capture: 25, check: [20, 40, 20], wrong: 90, correct: 15, fulltime: [60, 60, 120] };
+const BUZZ: Partial<Record<SfxName, number | number[]>> = { capture: 25, bigCapture: [25, 30, 40], check: [20, 40, 20], wrong: 90, correct: 15, fulltime: [60, 60, 120], redCard: [30, 40, 30] };
 
 export function App() {
   const [settings, setSettings] = useState<Settings>(() => loadSettings());
@@ -55,13 +56,39 @@ export function App() {
   useEffect(() => { saveSettings(settings); }, [settings]);
   useEffect(() => { setSfxVolume(settings.sfxOn ? settings.sfxVolume : 0); }, [settings.sfxOn, settings.sfxVolume]);
   useEffect(() => { setMusicVolume(settings.musicVolume); }, [settings.musicVolume]);
+  useEffect(() => { setCrowdVolume(settings.sfxOn ? settings.crowdVolume : 0); }, [settings.sfxOn, settings.crowdVolume]);
 
-  const track = settings.musicTrack === "match" ? style.music : settings.musicTrack;
+  // The walk-out anthem plays on the menus; the match track plays in a match.
+  const matchTrack = settings.musicTrack === "match" ? style.music : settings.musicTrack;
+  const inMatch = screen === "game";
+  const track = !inMatch && settings.menuMusic ? MENU_TRACK : matchTrack;
   useEffect(() => {
     if (!audioReady) return;
     if (settings.musicOn) music.play(track);
     else music.stop();
   }, [audioReady, settings.musicOn, track]);
+
+  // The crowd is only there during a match, and goes quiet on the pause menu.
+  const crowdOn = audioReady && inMatch && settings.sfxOn && settings.crowdOn && !paused && !open;
+  useEffect(() => {
+    if (crowdOn) startCrowd();
+    else stopCrowd();
+  }, [crowdOn]);
+  useEffect(() => () => stopCrowd(), []);
+  useEffect(() => { if (!inMatch) setDucked(false); }, [inMatch]);
+
+  // A soft click on menu buttons (the board has its own sounds).
+  const sfxOn = settings.sfxOn;
+  const voice = style.voice;
+  useEffect(() => {
+    if (inMatch || !sfxOn) return;
+    const click = (e: MouseEvent) => {
+      const b = (e.target as Element | null)?.closest?.("button, [role=button], summary");
+      if (b && !(b as HTMLButtonElement).disabled && !b.closest(".sound-grid")) playSfx("tap", voice);
+    };
+    document.addEventListener("click", click, true);
+    return () => document.removeEventListener("click", click, true);
+  }, [inMatch, sfxOn, voice]);
 
   useEffect(() => {
     loadStyleFonts(style.id);
@@ -74,7 +101,7 @@ export function App() {
   /** Leaving a match: season games go back to the season, the rest to the main menu. */
   const leave = () => { setSaved(loadMatch()); setScreen(setup?.season ? "season" : "menu"); };
   const play = useCallback((s: SfxName) => {
-    if (settings.sfxOn) playSfx(s, style.voice);
+    if (settings.sfxOn) { playSfx(s, style.voice); crowdReact(s); }
     // A little buzz on phones that support it (Android), unless motion is turned down.
     const buzz = settings.reduceMotion ? undefined : BUZZ[s];
     if (buzz) try { navigator.vibrate?.(buzz); } catch { /* not supported */ }
@@ -128,7 +155,7 @@ export function App() {
             }
             recordGame(g, BOT_LEVEL, stats.formEarned[human], rating, new Date(), usedAssist(stats, human));
             const won = awardBadges({ game: g, stats, human, botMatch: rating?.match, prevBestMatch });
-            if (won.length) { setNewBadges(won); play("cheer"); }
+            if (won.length) { setNewBadges(won); setTimeout(() => play("badge"), 2600); }
           }} />
       )}
       {screen === "game" && paused && !open && (

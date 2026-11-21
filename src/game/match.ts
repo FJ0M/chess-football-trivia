@@ -9,7 +9,7 @@
 // useGame.ts is the React shell around it: timers, downloads, bots and sounds.
 
 import { opposite } from "chessops/util";
-import type { SfxName } from "../audio/sfx";
+import { POWER_SFX, type SfxName } from "../audio/sfx";
 import type { TalkMoment } from "./bots";
 import { POWER_UP_BY_ID } from "./powerups";
 import {
@@ -248,6 +248,15 @@ export function shootoutWinner(kicks: Array<{ color: Color; scored: boolean }>):
   return null;
 }
 
+/** The sound after the final whistle, heard from the person's side: one person against a bot hears a win or a loss. */
+export function endSound(g: GameState): SfxName {
+  const o = g.outcome;
+  if (!o || o.kind === "draw") return "draw";
+  const humans = (["white", "black"] as Color[]).filter((c) => g.players[c].kind === "human");
+  if (humans.length === 1 && humans[0] !== o.winner) return "lose";
+  return "win";
+}
+
 export function positionCheck(g: GameState): boolean {
   // In check if the side to move has its king attacked.
   try {
@@ -287,6 +296,11 @@ class Turn {
     if (other) this.talk(opposite(actor), other);
   }
   private isBot(c: Color) { return this.g.players[c].kind === "bot"; }
+  /** The final whistle, then the crowd: a roar if you won, a groan if a bot beat you, applause for a draw. */
+  private finalWhistle() {
+    this.sfx("fulltime");
+    this.sfx(endSound(this.g), 1300);
+  }
   private get banks() { return this.env.banks; }
 
   run(a: Action): void {
@@ -322,7 +336,7 @@ class Turn {
     if (!reason) return;
     if (!this.banks) {
       this.setGame({ ...state, pendingDraw: null, outcome: { kind: "draw", reason } });
-      this.sfx("fulltime");
+      this.finalWhistle();
       this.go({ kind: "over" });
       return;
     }
@@ -341,7 +355,7 @@ class Turn {
     this.overlay({});
     if (notes.length) this.note(notes.join(". "));
     if (next.outcome) {
-      this.sfx("fulltime");
+      this.finalWhistle();
       if (next.outcome.kind === "checkmate") this.emit({ kind: "checkmate", winner: next.outcome.winner });
       const w = "winner" in next.outcome ? next.outcome.winner : null;
       if (w) { this.react(w, "win"); this.react(opposite(w), "loss"); }
@@ -368,9 +382,10 @@ class Turn {
     const r = { ...res, state: addIncrement(res.state, mover) };
     this.setGame(r.state);
     this.overlay({});
-    this.sfx(r.captured ? "capture" : "move");
+    const castle = r.san.startsWith("O-O");
+    this.sfx(r.captured === "q" || r.captured === "r" ? "bigCapture" : r.captured ? "capture" : castle ? "castle" : "move");
     const lm = r.state.lastMove;
-    if (lm) this.emit({ kind: "move", color: mover, from: lm[0], to: lm[1], captured: r.captured, check: r.check, castle: r.san.startsWith("O-O") });
+    if (lm) this.emit({ kind: "move", color: mover, from: lm[0], to: lm[1], captured: r.captured, check: r.check, castle });
     if (r.captured) this.react(mover, "capture", "lostPiece");
     const name = r.state.players[mover].name;
     const t = r.trigger;
@@ -399,6 +414,7 @@ class Turn {
     const res = usePowerUp(this.g, id, targets);
     this.setGame(res.state);
     this.sfx("powerup");
+    this.sfx(POWER_SFX[id], 250);
     this.note(res.note ?? "");
     this.talk(me, "powerUp");
     this.emit({ kind: "power", color: me, power: id, square: targets[0], square2: targets[1] });
@@ -597,7 +613,7 @@ class Turn {
     const p = this.p;
     if (p.kind !== "shootout" || p.choice !== null || !this.banks) return;
     const scored = choice === p.q.answer && this.env.now - p.startedAt <= TIMER_MS.normal + 250;
-    this.sfx(scored ? "cheer" : "groan");
+    this.sfx(scored ? "cheer" : "save");
     const kicks = [...p.kicks, { color: p.taker, scored }];
     this.go({ ...p, choice: choice ?? -1, kicks });
     this.fx.push({ kind: "later", delayMs: KICK_PAUSE_MS, action: { type: "kick-settle" } });
@@ -611,7 +627,7 @@ class Turn {
     if (winner) {
       const score = { white: kicks.filter((k) => k.color === "white" && k.scored).length, black: kicks.filter((k) => k.color === "black" && k.scored).length };
       this.setGame({ ...this.g, pendingDraw: null, outcome: { kind: "shootout", winner, score } });
-      this.sfx("fulltime");
+      this.finalWhistle();
       this.talk(winner, "win");
       this.talk(opposite(winner), "loss");
       this.go({ kind: "over" });
@@ -625,7 +641,7 @@ class Turn {
 
   private resign(c: Color) {
     this.setGame(resignRule(this.g, c));
-    this.sfx("fulltime");
+    this.finalWhistle();
     this.talk(opposite(c), "win");
     this.go({ kind: "over" });
   }
@@ -634,7 +650,7 @@ class Turn {
     const g = endInDraw(this.g, "agreement");
     if (g.pendingDraw) { this.startShootout(g); return; }
     this.setGame(g);
-    this.sfx("fulltime");
+    this.finalWhistle();
     this.go({ kind: "over" });
   }
 
@@ -660,7 +676,7 @@ class Turn {
       const out = timeout(setClock(g, c, 0), c);
       if (out.pendingDraw) { this.startShootout(out); return; }
       this.setGame(out);
-      this.sfx("fulltime");
+      this.finalWhistle();
       this.go({ kind: "over" });
     } else this.setGame(setClock(g, c, left));
   }
