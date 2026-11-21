@@ -657,7 +657,7 @@ const PowerBar = memo(function PowerBar({ game, phase, color, enabled, onPick, p
   const def = pending ? POWER_UP_BY_ID[pending] : null;
   const pendingCost = pending ? powerCost(game, color, pending) : 0;
   const pendingBlocked = useMemo(() => (pending ? powerBlocked(game, pending) ?? (hasTargets(game, pending) ? null : "No valid target right now") : null), [game, pending]);
-  const ready = enabled ? list.filter((p) => !powerBlocked(game, p.id) && !(me.cooldowns[p.id] > 0) && me.form >= powerCost(game, color, p.id)).length : 0;
+  const ready = enabled ? list.filter((p) => !powerBlocked(game, p.id)).length : 0;
   const label = (me.kind === "human" && game.options.mode === "bot") || me.name.toLowerCase() === "you" ? "Your Form" : `${me.name}'s Form`;
   const close = () => { setOpen(false); setPending(null); };
   const meter = (

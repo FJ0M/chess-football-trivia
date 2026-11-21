@@ -38,10 +38,10 @@ export interface BotLike {
 
 export interface BotModule {
   createBot(id: BotId, level?: BotLevel): BotLike;
-  BOTS: BotMeta[] | Record<string, BotMeta>;
+  BOTS: BotMeta[];
   bestMove(fen: string, chess960?: boolean, depth?: number, searchMoves?: string[]): Promise<string | null>;
   /** A quick engine score from White's side, in centipawns (for the commentator). */
-  evaluate?(fen: string, chess960?: boolean): Promise<number | null>;
+  evaluate(fen: string, chess960?: boolean): Promise<number | null>;
 }
 
 // ---------------------------------------------------------------- loading
@@ -97,5 +97,5 @@ export function resetBotsForTest(): void {
 }
 
 export function botList(mod: BotModule): BotMeta[] {
-  return Array.isArray(mod.BOTS) ? mod.BOTS : Object.values(mod.BOTS);
+  return mod.BOTS;
 }

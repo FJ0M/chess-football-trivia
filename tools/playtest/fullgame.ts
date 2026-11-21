@@ -66,12 +66,12 @@ async function makeFullPlayer(name: string, seed: number): Promise<FullPlayer> {
   let sf: UciEngine | null = null;
   let base: BotProfile;
   let level: BotLevel = "medium";
-  let id: BotId = "ryan";
+  let id: BotId = "gambit-gary";
   if (chessSpec.startsWith("sf-")) {
     sf = nodeEngine();
     await sf.setOption("UCI_LimitStrength", true);
     await sf.setOption("UCI_Elo", Number(chessSpec.slice(3)));
-    base = BOT_PROFILES.ryan;
+    base = BOT_PROFILES["gambit-gary"];
   } else {
     [id, level] = parseBotSpec(chessSpec);
     base = BOT_PROFILES[id];

@@ -121,7 +121,7 @@ export function choosePowerUp(
     if (!has.has(id)) continue;
     if (id === "var-review") continue; // only after a blunder (above)
     const cost = has.get(id)!;
-    // Freddie keeps a reserve for the big ones.
+    // Some bots (Knightingale, Rookland) keep a reserve for the big ones.
     if (profile.saveFor && !profile.saveFor.ids.includes(id) && req.form - cost < profile.saveFor.reserve) continue;
     // Park the Bus only when under pressure.
     if (id === "park-the-bus" && (req.evalCp ?? 0) > -150) continue;

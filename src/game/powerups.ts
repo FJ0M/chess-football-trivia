@@ -1,4 +1,4 @@
-// Power-up, chess hint and trivia hint definitions. Prices were rebalanced after
+// Power-up and chess hint definitions. Prices were rebalanced after
 // playtest round 3 (see docs/game-design.md); tune further in playtesting.
 
 import type { PowerUpId } from "./types";
