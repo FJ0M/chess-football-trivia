@@ -175,7 +175,7 @@ Every bot runs on Stockfish with its strength capped, then picks among the engin
 
 ## The Elo ladder
 
-Playtest round 3 (Freddie, 7 Nov 2026) added one bot at each of 400, 600, 800, 1000, 1200, 1400 and 1600 chess Elo, so there is always a next rung to beat. Each is a made-up character with a pun name; four are loosely inspired by footballers known for loving chess (Eze, Chilwell, Salah and Haaland), with no real names. Ladder bots have one strength each, so the setup screen hides the level picker for them. Their trivia varies on purpose, so the combined rating doesn't just follow the chess.
+Playtest round 3 (Freddie, 7 Nov 2026) added one bot at each of 400, 600, 800, 1000, 1200, 1400 and 1600 chess Elo, so there is always a next rung to beat. Each is a made-up character with a pun name; four are loosely inspired by footballers known for loving chess (Eze, Chilwell, Salah and Haaland), with no real names. Ladder bots have one strength each, so there is no level picker (the code for Easy, Medium and Hard levels was removed on 2026-11-21; games are still filed under the old "medium" key so high scores add up). Their trivia varies on purpose, so the combined rating doesn't just follow the chess.
 
 | Elo | Bot | Club | Style | Trivia | Spends Form on |
 | --- | --- | --- | --- | --- | --- |

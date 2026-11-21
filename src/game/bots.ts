@@ -6,7 +6,6 @@ import type { Difficulty, PromoRole } from "./types";
 
 export type BotId =
   | "pawny" | "eezy" | "chillwall" | "gambit-gary" | "mo-mate" | "knightingale" | "rookland";
-export type BotLevel = "low" | "medium" | "hard";
 export type TalkMoment = "start" | "capture" | "lostPiece" | "oppWrong" | "ownRight" | "ownWrong" | "powerUp" | "hotSpot" | "win" | "loss";
 
 /** The Elo ladder bots: one strength each, so no level is shown for them. */
@@ -22,9 +21,7 @@ export const BOT_NAMES: Record<string, string> = {
 export interface BotRatingMeta { chess: number; trivia: number; triviaElo: number; match: number }
 export interface BotMeta {
   id: BotId; name: string; club: string; blurb: string;
-  /** One strength only (the Elo ladder): no level picker. */
-  fixedLevel?: boolean;
-  ratings?: Record<BotLevel, BotRatingMeta>;
+  rating: BotRatingMeta;
 }
 
 export interface BotLike {
@@ -37,7 +34,7 @@ export interface BotLike {
 }
 
 export interface BotModule {
-  createBot(id: BotId, level?: BotLevel): BotLike;
+  createBot(id: BotId): BotLike;
   BOTS: BotMeta[];
   bestMove(fen: string, chess960?: boolean, depth?: number, searchMoves?: string[]): Promise<string | null>;
   /** A quick engine score from White's side, in centipawns (for the commentator). */

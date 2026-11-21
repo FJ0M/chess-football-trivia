@@ -93,7 +93,7 @@ async function play(sides: Record<Color, Side>, rng: () => number) {
 }
 
 async function main() {
-  const [id, level] = parseBotSpec(spec);
+  const id = parseBotSpec(spec);
   const rng = mulberry32(Number(seedArg));
   const eA = nodeEngine(), eB = nodeEngine();
   let smartScore = 0;
@@ -101,8 +101,8 @@ async function main() {
   let leads = 0, leaderWins = 0;
   for (let i = 0; i < GAMES; i++) {
     const smartWhite = i % 2 === 0;
-    const smart: Side = { bot: createBotWith(id, level, eA, rng), engine: eA, smart: true };
-    const old: Side = { bot: createBotWith(id, level, eB, rng), engine: eB, smart: false };
+    const smart: Side = { bot: createBotWith(id, eA, rng), engine: eA, smart: true };
+    const old: Side = { bot: createBotWith(id, eB, rng), engine: eB, smart: false };
     const sides = smartWhite ? { white: smart, black: old } : { white: old, black: smart };
     const r = await play(sides, rng);
     const s = smartWhite ? r.white : 1 - r.white;

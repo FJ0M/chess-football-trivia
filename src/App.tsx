@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { GameScreen } from "./components/GameScreen";
 import { SetupScreen } from "./components/SetupScreen";
 import { AchievementsHead, GAME_NAME, HistoryScreen, MainMenu, PauseMenu, PlayMenu, ScoresScreen, type AchievementsTab } from "./components/Menus";
-import { loadScores, recordGame } from "./game/scores";
+import { BOT_LEVEL, loadScores, recordGame } from "./game/scores";
 import { awardBadges, type NewBadge } from "./game/badges";
 import { BadgeToast, CabinetScreen } from "./components/Cabinet";
 import { botList, loadBots } from "./game/bots";
@@ -109,24 +109,24 @@ export function App() {
           onPause={pause} onExit={leave} exitLabel={setup.season ? "Back to the season" : undefined}
           onFinish={async (g: GameState, stats: MatchStats) => {
             const human = g.players.white.kind === "human" ? "white" : "black";
-            const entry = entryFor(g, stats, setup.botLevel);
+            const entry = entryFor(g, stats, BOT_LEVEL);
             if (entry) recordHistory(entry);
-            if (g.options.mode !== "bot") { recordGame(g, setup.botLevel, stats.formEarned[human]); return; }
+            if (g.options.mode !== "bot") { recordGame(g, BOT_LEVEL, stats.formEarned[human]); return; }
             // Your trivia Elo moves with your answers against bots (Pass and Play shares a device, so it doesn't count).
             if (stats.answers[human].length) saveTriviaRating(updateTriviaRating(loadTriviaRating(), stats.answers[human]));
             const botId = g.players[human === "white" ? "black" : "white"].botId;
             const meta = await loadBots().then((m) => botList(m).find((b) => b.id === botId)).catch(() => undefined);
-            const rating = meta?.ratings?.[setup.botLevel];
+            const rating = meta?.rating;
             const prevBestMatch = loadScores().best?.match;
             if (setup.season) {
               // A season match: goals are pieces taken; a Cup tie needs a winner (a shootout counts).
               const season = loadSeason();
               const r = seasonResult(g, human);
-              const ratings = Object.fromEntries((await loadBots().then(botList).catch(() => [])).map((b) => [b.id, b.ratings?.medium.match ?? 1000]));
+              const ratings = Object.fromEntries((await loadBots().then(botList).catch(() => [])).map((b) => [b.id, b.rating.match]));
               const next = season && applyResult(season, setup.season.key, r.goalsFor, r.goalsAgainst, r.result, ratings);
               if (next) saveSeason(next);
             }
-            recordGame(g, setup.botLevel, stats.formEarned[human], rating, new Date(), usedAssist(stats, human));
+            recordGame(g, BOT_LEVEL, stats.formEarned[human], rating, new Date(), usedAssist(stats, human));
             const won = awardBadges({ game: g, stats, human, botMatch: rating?.match, prevBestMatch });
             if (won.length) { setNewBadges(won); play("cheer"); }
           }} />

@@ -9,6 +9,12 @@ export interface BestWin { match: number; chess: number; triviaElo: number; botI
 export interface Scores { bots: Record<string, Record3>; local: Record<string, number>; best?: BestWin }
 
 const KEY = "cft.scores.v1";
+
+/**
+ * Every bot plays at one strength now. Games are still filed under "medium" so records from
+ * before the Easy/Medium/Hard levels went keep adding up (the retired bots' records keep their levels).
+ */
+export const BOT_LEVEL = "medium";
 const empty = (): Record3 => ({ played: 0, won: 0, drawn: 0, lost: 0, streak: 0, best: 0, formEarned: 0 });
 
 export function loadScores(): Scores {

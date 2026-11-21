@@ -28,7 +28,7 @@ Calibrated on 7 Nov 2026 with `tools/playtest/match.ts`: 410 games in the final 
 
 The same fit re-measured the original bots as a check: Ollie 541 / 812 / 1059, Ryan 1026 / 1389 / 1561, Freddie low 1769. That's within about 150 of the table below everywhere, so their numbers stay as they are.
 
-Ladder bots run the same code as the originals. What differs is in the profile: `fixedLevel` (all three levels identical, level picker hidden), `thinkMs`, `promotionAim` and, optionally, `hotSpotCp`.
+Ladder bots run the same code as the originals. What differs is in the profile: one `chess` strength and one `trivia` skill each (the Easy/Medium/Hard levels were removed on 2026-11-21), `thinkMs`, `promotionAim` and, optionally, `hotSpotCp`.
 
 ## Playing the game around the chess (review bug 10)
 

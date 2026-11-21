@@ -68,7 +68,7 @@ describe("move picking", () => {
       { uci: "a1a8", scoreCp: MATE_CP - 1, depth: 4, multipv: 1 },
       { uci: "a1a2", scoreCp: 500, depth: 4, multipv: 2 },
     ];
-    const strength = BOT_PROFILES.pawny.levels.medium.chess;
+    const strength = BOT_PROFILES.pawny.chess;
     for (let s = 1; s < 50; s++) {
       const pick = pickMove({ pos, lines, allowed: legalMoves(pos), strength, style: "chaotic", rng: seeded(s) });
       expect(pick.uci).toBe("a1a8");
@@ -82,7 +82,7 @@ describe("move picking", () => {
       { uci: "d2d4", scoreCp: 35, depth: 8, multipv: 2 },
     ];
     for (let s = 1; s < 50; s++) {
-      const pick = pickMove({ pos, lines, allowed: ["d2d4", "a2a3"], strength: BOT_PROFILES.pawny.levels.medium.chess, style: "chaotic", rng: seeded(s) });
+      const pick = pickMove({ pos, lines, allowed: ["d2d4", "a2a3"], strength: BOT_PROFILES.pawny.chess, style: "chaotic", rng: seeded(s) });
       expect(["d2d4", "a2a3"]).toContain(pick.uci);
     }
   });
@@ -94,7 +94,7 @@ describe("move picking", () => {
       { uci: "d2d4", scoreCp: 39, depth: 14, multipv: 2 },
     ];
     for (let s = 1; s < 30; s++) {
-      expect(pickMove({ pos, lines, allowed: legalMoves(pos), strength: { ...BOT_PROFILES.rookland.levels.medium.chess, temperatureCp: 0, blunderRate: 0 }, style: "positional", rng: seeded(s) }).uci).toBe("e2e4");
+      expect(pickMove({ pos, lines, allowed: legalMoves(pos), strength: { ...BOT_PROFILES.rookland.chess, temperatureCp: 0, blunderRate: 0 }, style: "positional", rng: seeded(s) }).uci).toBe("e2e4");
     }
   });
 
@@ -110,7 +110,7 @@ describe("move picking", () => {
       for (let s = 1; s <= 400; s++) {
         const p = BOT_PROFILES[id];
         // Same strength for both, so only the style differs.
-        const strength = { ...BOT_PROFILES["mo-mate"].levels.medium.chess, blunderRate: 0 };
+        const strength = { ...BOT_PROFILES["mo-mate"].chess, blunderRate: 0 };
         if (pickMove({ pos, lines, allowed: legalMoves(pos), strength, style: p.style, rng: seeded(s) }).uci === "e4d5") n++;
       }
       return n / 400;
@@ -123,7 +123,7 @@ describe("move picking", () => {
 describe("bot.chooseMove", () => {
   it("passes restricted moves to the engine as searchmoves", async () => {
     const engine = fakeEngine();
-    const bot = createBotWith("mo-mate", "medium", engine, seeded(3));
+    const bot = createBotWith("mo-mate", engine, seeded(3));
     const res = await bot.chooseMove({ fen: START, allowedMoves: ["g1f3", "b1c3"] });
     expect(["g1f3", "b1c3"]).toContain(res.uci);
     expect((engine.calls[0] as { searchMoves: string[] }).searchMoves).toEqual(["g1f3", "b1c3"]);
@@ -133,14 +133,14 @@ describe("bot.chooseMove", () => {
     // Chess960: king b1, rook a1; castling queenside is the only legal-and-offered move.
     const fen = "rk6/8/8/8/8/8/8/RK6 w Aa - 0 1";
     const engine = fakeEngine([{ uci: "b1a1", scoreCp: 0, depth: 6, multipv: 1 }]);
-    const bot = createBotWith("rookland", "medium", engine, seeded(1));
+    const bot = createBotWith("rookland", engine, seeded(1));
     const res = await bot.chooseMove({ fen, chess960: true });
     expect(res.uci).toBe("b1a1");
   });
 
   it("skips the engine when only one move is allowed", async () => {
     const engine = fakeEngine();
-    const bot = createBotWith("pawny", "medium", engine, seeded(1));
+    const bot = createBotWith("pawny", engine, seeded(1));
     expect((await bot.chooseMove({ fen: START, allowedMoves: ["a2a3"] })).uci).toBe("a2a3");
     expect(engine.calls).toHaveLength(0);
   });
@@ -158,28 +158,28 @@ describe("trivia", () => {
     const p = BOT_PROFILES[id];
     const rng = seeded(7);
     let right = 0;
-    for (let i = 0; i < 4000; i++) if (answerQuestion(p, p.levels.medium.trivia, { question, puskas }, rng).choice === question.answer) right++;
+    for (let i = 0; i < 4000; i++) if (answerQuestion(p, p.trivia, { question, puskas }, rng).choice === question.answer) right++;
     return right / 4000;
   }
 
   it("answers about as often as its profile says", () => {
     for (const id of LADDER_IDS) {
       const avg = (rate(id, q("easy")) + rate(id, q("medium")) + rate(id, q("hard"))) / 3;
-      expect(Math.abs(avg - triviaAccuracy(BOT_PROFILES[id].levels.medium.trivia))).toBeLessThan(0.03);
+      expect(Math.abs(avg - triviaAccuracy(BOT_PROFILES[id].trivia))).toBeLessThan(0.03);
     }
   });
 
   it("knows its own club best", () => {
     const p = BOT_PROFILES["mo-mate"];
-    expect(answerChance(p, p.levels.medium.trivia, { question: q("hard", p.club) })).toBeGreaterThan(answerChance(p, p.levels.medium.trivia, { question: q("hard") }));
+    expect(answerChance(p, p.trivia, { question: q("hard", p.club) })).toBeGreaterThan(answerChance(p, p.trivia, { question: q("hard") }));
   });
 
   it("answers inside the timer, and faster on a Puskás", () => {
     const p = BOT_PROFILES.rookland;
     const rng = seeded(2);
     for (let i = 0; i < 200; i++) {
-      expect(answerQuestion(p, p.levels.medium.trivia, { question: q("hard") }, rng).delayMs).toBeLessThan(10000);
-      expect(answerQuestion(p, p.levels.medium.trivia, { question: q("hard"), puskas: true }, rng).delayMs).toBeLessThan(8000);
+      expect(answerQuestion(p, p.trivia, { question: q("hard") }, rng).delayMs).toBeLessThan(10000);
+      expect(answerQuestion(p, p.trivia, { question: q("hard"), puskas: true }, rng).delayMs).toBeLessThan(8000);
     }
   });
 
@@ -195,7 +195,7 @@ describe("trivia", () => {
       const p = BOT_PROFILES[id];
       const rng = seeded(6);
       let n = 0;
-      for (let i = 0; i < 1000; i++) if (chooseCard(p, p.levels.medium.trivia, { cards: general, puskasAllowed: true, form: 0 }, rng).index === diff) n++;
+      for (let i = 0; i < 1000; i++) if (chooseCard(p, p.trivia, { cards: general, puskasAllowed: true, form: 0 }, rng).index === diff) n++;
       return n / 1000;
     };
     expect(share("eezy", 2)).toBeGreaterThan(0.5);
@@ -203,7 +203,7 @@ describe("trivia", () => {
   });
   it("takes the free Puskás on a Hot Spot", () => {
     const p = BOT_PROFILES.rookland;
-    const c = chooseCard(p, p.levels.medium.trivia, { cards: deal, puskasAllowed: true, form: 0, bonusRound: true }, seeded(3));
+    const c = chooseCard(p, p.trivia, { cards: deal, puskasAllowed: true, form: 0, bonusRound: true }, seeded(3));
     expect(c).toEqual({ index: 2, puskas: true });
   });
 });
@@ -266,7 +266,7 @@ describe("trash talk", () => {
 describe("promotion", () => {
   it("aims for the piece its profile says", () => {
     const e = fakeEngine();
-    for (const id of LADDER_IDS) expect(createBotWith(id, "medium", e).promotionPick()).toBe(BOT_PROFILES[id].promotionAim?.medium ?? "r");
+    for (const id of LADDER_IDS) expect(createBotWith(id, e).promotionPick()).toBe(BOT_PROFILES[id].promotionAim ?? "r");
   });
 });
 
@@ -279,23 +279,17 @@ describe("ratings", () => {
 });
 
 describe("the Elo ladder", () => {
-  it("has one bot at each of 400 to 1600 chess Elo, each with a single level", () => {
-    expect(LADDER_IDS.map((id) => BOT_PROFILES[id].levels.medium.chess.rating)).toEqual([400, 600, 800, 1000, 1200, 1400, 1600]);
-    for (const id of LADDER_IDS) {
-      const p = BOT_PROFILES[id];
-      expect(p.fixedLevel).toBe(true);
-      expect(p.levels.low).toEqual(p.levels.medium);
-      expect(p.levels.hard).toEqual(p.levels.medium);
-    }
+  it("has one bot at each of 400 to 1600 chess Elo", () => {
+    expect(LADDER_IDS.map((id) => BOT_PROFILES[id].chess.rating)).toEqual([400, 600, 800, 1000, 1200, 1400, 1600]);
     expect(BOT_IDS).toEqual(LADDER_IDS);
   });
 
   it("answers inside the 10-second question timer", () => {
-    for (const id of LADDER_IDS) expect(BOT_PROFILES[id].levels.medium.trivia.answerMs[1]).toBeLessThanOrEqual(8000);
+    for (const id of LADDER_IDS) expect(BOT_PROFILES[id].trivia.answerMs[1]).toBeLessThanOrEqual(8000);
   });
 
   it("gets more patient at chess as the Elo goes up", () => {
-    const blunders = LADDER_IDS.map((id) => BOT_PROFILES[id].levels.medium.chess.blunderRate);
+    const blunders = LADDER_IDS.map((id) => BOT_PROFILES[id].chess.blunderRate);
     for (let i = 1; i < blunders.length; i++) expect(blunders[i]).toBeLessThanOrEqual(blunders[i - 1]);
   });
 });
@@ -354,8 +348,8 @@ describe("the game around the chess", () => {
     const losing = fakeEngine([{ uci: "b1c3", scoreCp: -400, depth: 8, multipv: 1 }]);
     const level = fakeEngine([{ uci: "b1c3", scoreCp: 20, depth: 8, multipv: 1 }]);
     const req = { fen, form: 6, available: [{ id: "park-the-bus", cost: 2 }] };
-    expect(await createBotWith("chillwall", "medium", losing, () => 0).choosePowerUp(req)).toEqual({ id: "park-the-bus" });
-    expect(await createBotWith("chillwall", "medium", level, () => 0).choosePowerUp(req)).toBeNull();
+    expect(await createBotWith("chillwall", losing, () => 0).choosePowerUp(req)).toEqual({ id: "park-the-bus" });
+    expect(await createBotWith("chillwall", level, () => 0).choosePowerUp(req)).toBeNull();
   });
 });
 
@@ -367,7 +361,7 @@ describe("human-like mistakes", () => {
     const lines = [{ uci: "f1b5", scoreCp: 40 }, { uci: "d2d4", scoreCp: 35 }, { uci: "f3g5", scoreCp: -60 }];
     let kingWalks = 0, fromLines = 0;
     for (let s = 1; s <= 400; s++) {
-      const ctx = { pos, lines: [], allowed, strength: BOT_PROFILES.pawny.levels.medium.chess, style: "chaotic" as const, rng: seeded(s) };
+      const ctx = { pos, lines: [], allowed, strength: BOT_PROFILES.pawny.chess, style: "chaotic" as const, rng: seeded(s) };
       const u = humanMistake(ctx, lines, "f1b5", 40);
       expect(u).not.toBe("f1b5");
       if (u === "e1e2") kingWalks++;

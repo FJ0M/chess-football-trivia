@@ -5,7 +5,7 @@ import { ClubPicker } from "./ClubPicker";
 import { ScreenHead } from "./Menus";
 import { HandicapSetup, NO_HANDICAP, sanitizeHandicap, type HandicapChoice } from "./HandicapSetup";
 import { backRank, randomPosition, STANDARD_POSITION } from "../game/chess960";
-import { botList, loadBots, type BotLevel, type BotMeta } from "../game/bots";
+import { botList, loadBots, type BotMeta } from "../game/bots";
 import type { SetupChoice } from "../game/match";
 import type { Color } from "../game/types";
 import { DEFAULT_MINUTES, TIME_CONTROLS, fergieMs, fmtSeconds } from "../game/powerups";
@@ -13,7 +13,6 @@ import { DEFAULT_MINUTES, TIME_CONTROLS, fergieMs, fmtSeconds } from "../game/po
 interface Saved {
   mode: "bot" | "local";
   botId: string;
-  botLevel: BotLevel;
   side: Color | "random";
   names: [string, string];
   clubs: [string, string];
@@ -26,7 +25,7 @@ interface Saved {
 
 const KEY = "cft.setup.v1";
 const DEFAULTS: Saved = {
-  mode: "bot", botId: "pawny", botLevel: "medium", side: "white", names: ["You", "Player 2"], clubs: ["west-ham", "brighton"],
+  mode: "bot", botId: "pawny", side: "white", names: ["You", "Player 2"], clubs: ["west-ham", "brighton"],
   trivia: true, timed: false, minutes: DEFAULT_MINUTES, chess960: false, handicap: NO_HANDICAP,
 };
 
@@ -55,9 +54,7 @@ export function SetupScreen({ mode, onStart, onBack }: { mode: "bot" | "local"; 
   useEffect(() => { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch { /* ignore */ } }, [s]);
 
   const bot = bots.find((b) => b.id === s.botId) ?? bots[0];
-  /** Ladder bots have one strength, filed under "medium". */
-  const level: BotLevel = bot?.fixedLevel ? "medium" : s.botLevel;
-  const rating = bot?.ratings?.[level];
+  const rating = bot?.rating;
 
   function start() {
     const side: Color = s.side === "random" ? (Math.random() < 0.5 ? "white" : "black") : s.side;
@@ -72,7 +69,7 @@ export function SetupScreen({ mode, onStart, onBack }: { mode: "bot" | "local"; 
     } else {
       players = { white: human(0), black: human(1) };
     }
-    onStart({ options, players, botLevel: level });
+    onStart({ options, players });
   }
 
   const clubSelect = (i: 0 | 1) => (
@@ -102,7 +99,7 @@ export function SetupScreen({ mode, onStart, onBack }: { mode: "bot" | "local"; 
               <div className="bot-list" role="radiogroup" aria-label={`Opponent: ${title}`}>
                 {list.map((b) => (
                   <button key={b.id} type="button" role="radio" aria-checked={bot?.id === b.id} className={`bot-card${bot?.id === b.id ? " on" : ""}`} onClick={() => set("botId", b.id)}>
-                    <span className={`badge${b.fixedLevel ? " elo" : ""}`}>{b.fixedLevel ? b.ratings?.medium.chess ?? b.name[0] : b.name[0]}</span>
+                    <span className="badge elo">{b.rating.chess}</span>
                     <strong>{b.name}</strong>
                   </button>
                 ))}
@@ -114,15 +111,6 @@ export function SetupScreen({ mode, onStart, onBack }: { mode: "bot" | "local"; 
               <b>{bot.name}</b>{rating ? ` · Chess ${rating.chess} · Trivia ${rating.triviaElo ?? "?"} · Combined ${rating.match}` : ""}<br />
               {bot.blurb}
             </p>
-          )}
-          {!bot?.fixedLevel && (
-            <div className="seg small" role="radiogroup" aria-label="Bot level">
-              {(["low", "medium", "hard"] as BotLevel[]).map((l) => (
-                <button key={l} type="button" role="radio" aria-checked={s.botLevel === l} className={s.botLevel === l ? "on" : ""} onClick={() => set("botLevel", l)}>
-                  {l === "low" ? "Easy" : l === "medium" ? "Medium" : "Hard"}
-                </button>
-              ))}
-            </div>
           )}
           <h3>You</h3>
           <div className="field"><span>Your club</span>{clubSelect(0)}</div>

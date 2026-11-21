@@ -12,7 +12,6 @@ function memStore() {
 const setup: SetupChoice = {
   options: { mode: "bot", trivia: true, timed: true, minutes: 10, chess960: false, position: 518 },
   players: { white: { name: "You", kind: "human", club: "west-ham" }, black: { name: "Pawny Dribbles", kind: "bot", botId: "pawny", club: "stockport" } },
-  botLevel: "medium",
 };
 
 describe("saved match", () => {

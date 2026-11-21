@@ -171,7 +171,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
       setMod(m);
       for (const c of ["white", "black"] as Color[]) {
         const p = setup.players[c];
-        if (p.kind === "bot" && p.botId) bots.current[c] = m.createBot(p.botId as never, setup.botLevel);
+        if (p.kind === "bot" && p.botId) bots.current[c] = m.createBot(p.botId as never);
       }
       for (const c of ["white", "black"] as Color[]) talk(c, "start");
     }, () => {

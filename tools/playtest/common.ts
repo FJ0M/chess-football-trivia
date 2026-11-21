@@ -3,7 +3,8 @@
 import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
 import { UciEngine, type Transport } from "../../src/bots/engine";
-import type { BotId, BotLevel } from "../../src/bots/types";
+import { BOT_PROFILES } from "../../src/bots/profiles";
+import type { BotId } from "../../src/bots/types";
 
 const require = createRequire(import.meta.url);
 const ENGINE_JS = require.resolve("stockfish/src/stockfish-17.1-lite-single-03e3232.js");
@@ -33,10 +34,10 @@ export function nodeEngine(): UciEngine {
   return new UciEngine(transport);
 }
 
-/** "<bot>-<level>", or just "<bot>" for a ladder bot (one level). Bot ids can contain hyphens. */
-export function parseBotSpec(spec: string): [BotId, BotLevel] {
-  const m = /^(.*)-(low|medium|hard)$/.exec(spec);
-  return m ? [m[1] as BotId, m[2] as BotLevel] : [spec as BotId, "medium"];
+/** A bot id such as "mo-mate" (bots have one strength each). */
+export function parseBotSpec(spec: string): BotId {
+  if (!(spec in BOT_PROFILES)) throw new Error(`Unknown bot "${spec}": use one of ${Object.keys(BOT_PROFILES).join(", ")}`);
+  return spec as BotId;
 }
 
 export function mulberry32(seed: number) {

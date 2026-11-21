@@ -28,7 +28,6 @@ export function seasonSetup(s: Season, bots: BotMeta[]): SetupChoice | null {
   return {
     options: { mode: "bot", trivia: true, timed: false, minutes: DEFAULT_MINUTES, chess960: false, position: STANDARD_POSITION, handicap: null },
     players: color === "white" ? { white: me, black: them } : { white: them, black: me },
-    botLevel: "medium",
     season: { key: matchKey(s, m), kind: m.kind },
   };
 }

@@ -6,7 +6,7 @@ afterEach(() => resetBotsForTest());
 /** createBot with a do-nothing engine, so no Stockfish worker is started in tests. */
 const noEngine = { analyse: async () => [] };
 const make = (mod: Awaited<ReturnType<typeof loadBots>>, id: string) =>
-  (mod.createBot as unknown as (id: string, level: string, engine: unknown) => { promotionPick(): string })(id, "medium", noEngine);
+  (mod.createBot as unknown as (id: string, engine: unknown) => { promotionPick(): string })(id, noEngine);
 
 describe("the bot picker list (playtest 2026-11-09: 'where have all the bots gone?')", () => {
   it("loads all seven ladder bots, weakest first, and none of the retired three", async () => {
@@ -14,8 +14,7 @@ describe("the bot picker list (playtest 2026-11-09: 'where have all the bots gon
     expect(list.map((b) => b.id)).toEqual([...LADDER_BOT_IDS]);
     for (const b of list) {
       expect(b.name).toBe(BOT_NAMES[b.id]);
-      expect(b.fixedLevel).toBe(true);
-      expect(b.ratings?.medium.chess).toBeGreaterThan(0);
+      expect(b.rating.chess).toBeGreaterThan(0);
     }
     expect(list.map((b) => b.id)).not.toContain("ryan");
   });

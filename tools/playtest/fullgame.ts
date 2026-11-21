@@ -6,9 +6,9 @@
 //   npx vite-node tools/playtest/fullgame.ts -- <config.json> <out.json>
 //
 // config: { "pairs": [[a, b], ...], "games": 10, "seed": 1 }
-// A player is "<bot>-<level>" (that bot, chess and trivia), or
-// "<chess>+<trivia>" where <chess> is "<bot>-<level>" or "sf-<elo>" and
-// <trivia> is "<bot>-<level>" or "acc-<percent>" (a flat trivia player who
+// A player is "<bot>" (that bot, chess and trivia), or
+// "<chess>+<trivia>" where <chess> is "<bot>" or "sf-<elo>" and
+// <trivia> is "<bot>" or "acc-<percent>" (a flat trivia player who
 // gets that share of medium questions right).
 
 import { readFileSync, writeFileSync } from "node:fs";
@@ -20,7 +20,7 @@ import { createBotWith, type Bot } from "../../src/bots/bot";
 import type { UciEngine } from "../../src/bots/engine";
 import { legalMoves, moveFeatures, normaliseUci } from "../../src/bots/movePicker";
 import { BOT_PROFILES } from "../../src/bots/profiles";
-import type { BotId, BotLevel, BotProfile, Difficulty, PowerUpId, TriviaSkill } from "../../src/bots/types";
+import type { BotId, BotProfile, Difficulty, PowerUpId, TriviaSkill } from "../../src/bots/types";
 import { chess960Fen, mulberry32, nodeEngine, parseBotSpec } from "./common";
 import type { GameResult } from "./match";
 
@@ -65,7 +65,6 @@ async function makeFullPlayer(name: string, seed: number): Promise<FullPlayer> {
   const engine = nodeEngine();
   let sf: UciEngine | null = null;
   let base: BotProfile;
-  let level: BotLevel = "medium";
   let id: BotId = "gambit-gary";
   if (chessSpec.startsWith("sf-")) {
     sf = nodeEngine();
@@ -73,23 +72,22 @@ async function makeFullPlayer(name: string, seed: number): Promise<FullPlayer> {
     await sf.setOption("UCI_Elo", Number(chessSpec.slice(3)));
     base = BOT_PROFILES["gambit-gary"];
   } else {
-    [id, level] = parseBotSpec(chessSpec);
+    id = parseBotSpec(chessSpec);
     base = BOT_PROFILES[id];
   }
   let trivia: TriviaSkill;
   if (triviaSpec.startsWith("acc-")) trivia = triviaFromAccuracy(Number(triviaSpec.slice(4)) / 100);
   else {
-    const [tid, tl] = parseBotSpec(triviaSpec);
-    trivia = BOT_PROFILES[tid].levels[tl].trivia;
+    trivia = BOT_PROFILES[parseBotSpec(triviaSpec)].trivia;
   }
   const profile: BotProfile = {
     ...base,
     // A neutral spender for custom players; real bots keep their own habits.
     ...(name.includes("+") ? { favouritePowerUps: ["tactical-foul", "red-card", "golden-boot", "super-sub", "extra-time", "managers-tip"], saveFor: undefined } : {}),
     club: "test-club",
-    levels: { ...base.levels, [level]: { chess: base.levels[level].chess, trivia } },
+    trivia,
   };
-  const bot = createBotWith(id, level, engine, mulberry32(seed), profile);
+  const bot = createBotWith(id, engine, mulberry32(seed), profile);
   return { name, bot, sf, engine, club: "test-club" };
 }
 
