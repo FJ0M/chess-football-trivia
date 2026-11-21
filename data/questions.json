@@ -577,7 +577,7 @@
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "Crouch scored 53 headers.",
+      "explanation": "Crouch passed Alan Shearer's record of 46 headed goals in May 2015.",
       "source": "https://en.wikipedia.org/wiki/Peter_Crouch"
     },
     {
@@ -616,19 +616,19 @@
     },
     {
       "id": "goa-0020",
-      "question": "Which two players share the record for most assists in a Premier League season (20)?",
+      "question": "Who set a new record for assists in a Premier League season, with 21 in 2025-26?",
       "options": [
-        "Thierry Henry and Frank Lampard",
-        "Cesc Fàbregas and Kevin De Bruyne",
-        "Mohamed Salah and Ryan Giggs",
-        "Thierry Henry and Kevin De Bruyne"
+        "Thierry Henry",
+        "Kevin De Bruyne",
+        "Mohamed Salah",
+        "Bruno Fernandes"
       ],
       "answer": 3,
       "difficulty": "hard",
       "topic": "Goals & records",
       "club": null,
       "verified": true,
-      "explanation": "Henry did it in 2002-03, De Bruyne in 2019-20.",
+      "explanation": "He beat the 20 set by Thierry Henry in 2002-03 and equalled by De Bruyne in 2019-20.",
       "source": "https://en.wikipedia.org/wiki/Premier_League_records_and_statistics"
     },
     {
@@ -1257,7 +1257,7 @@
       "topic": "Transfers",
       "club": null,
       "verified": true,
-      "explanation": "The fee was about £115m.",
+      "explanation": "The fee was about £115m. Alexander Isak's £125m move to Liverpool beat it in 2025.",
       "source": "https://en.wikipedia.org/wiki/Mois%C3%A9s_Caicedo"
     },
     {
@@ -1564,7 +1564,7 @@
       "club": null,
       "verified": true,
       "explanation": "Suárez was banned for 10 games.",
-      "source": "https://en.wikipedia.org/wiki/Luis_Su%C3%A1rez"
+      "source": "https://en.wikipedia.org/wiki/Luis_Su%C3%A1rez_(Uruguayan_footballer)"
     },
     {
       "id": "mom-0002",
@@ -1717,7 +1717,7 @@
       "club": null,
       "verified": true,
       "explanation": "Highbury was converted into flats.",
-      "source": "https://en.wikipedia.org/wiki/Highbury"
+      "source": "https://en.wikipedia.org/wiki/Arsenal_Stadium"
     },
     {
       "id": "clu-0002",
@@ -2362,7 +2362,7 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "The fee of around £105m was a British record at the time.",
+      "explanation": "Arsenal paid a club-record £100m for him.",
       "source": "https://en.wikipedia.org/wiki/Declan_Rice"
     },
     {
@@ -2702,7 +2702,7 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "Antonio joined from Nottingham Forest in 2015.",
+      "explanation": "Antonio scored 68 Premier League goals for West Ham between 2015 and 2025.",
       "source": "https://en.wikipedia.org/wiki/Michail_Antonio"
     },
     {
@@ -3042,7 +3042,7 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "A statue of him stands outside the London Stadium.",
+      "explanation": "A statue of him stands outside Wembley Stadium.",
       "source": "https://en.wikipedia.org/wiki/Bobby_Moore"
     },
     {
@@ -3553,7 +3553,7 @@
       "club": null,
       "verified": true,
       "explanation": "He was named PFA Player of the Year.",
-      "source": "https://en.wikipedia.org/wiki/Luis_Su%C3%A1rez"
+      "source": "https://en.wikipedia.org/wiki/Luis_Su%C3%A1rez_(Uruguayan_footballer)"
     },
     {
       "id": "goa-0028",
@@ -3910,7 +3910,7 @@
       "club": null,
       "verified": true,
       "explanation": "He arrived on the same day Fernando Torres left for Chelsea.",
-      "source": "https://en.wikipedia.org/wiki/Luis_Su%C3%A1rez"
+      "source": "https://en.wikipedia.org/wiki/Luis_Su%C3%A1rez_(Uruguayan_footballer)"
     },
     {
       "id": "tra-0027",
@@ -4403,7 +4403,7 @@
       "club": null,
       "verified": true,
       "explanation": "Suárez joined Barcelona the following year.",
-      "source": "https://en.wikipedia.org/wiki/Luis_Su%C3%A1rez"
+      "source": "https://en.wikipedia.org/wiki/Luis_Su%C3%A1rez_(Uruguayan_footballer)"
     },
     {
       "id": "mom-0013",
@@ -4471,7 +4471,7 @@
       "club": null,
       "verified": true,
       "explanation": "Arsenal won 4-2 and Thierry Henry scored a hat-trick.",
-      "source": "https://en.wikipedia.org/wiki/Highbury"
+      "source": "https://en.wikipedia.org/wiki/Arsenal_Stadium"
     },
     {
       "id": "mom-0017",
@@ -4658,7 +4658,7 @@
       "club": null,
       "verified": true,
       "explanation": "They left Goodison Park after 133 years.",
-      "source": "https://en.wikipedia.org/wiki/Everton_F.C."
+      "source": "https://en.wikipedia.org/wiki/Hill_Dickinson_Stadium"
     },
     {
       "id": "clu-0023",
@@ -5099,7 +5099,7 @@
       "topic": "West Ham moments",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He remains the only man to score a World Cup final hat-trick for England.",
+      "explanation": "It was the first hat-trick ever scored in a World Cup final.",
       "source": "https://en.wikipedia.org/wiki/1966_FIFA_World_Cup_final"
     },
     {
@@ -5252,7 +5252,7 @@
       "topic": "West Ham players",
       "club": "west-ham",
       "verified": true,
-      "explanation": "He was named Hammer of the Year in his first season.",
+      "explanation": "He won two Eredivisie titles with Ajax.",
       "source": "https://en.wikipedia.org/wiki/Mohammed_Kudus"
     },
     {
@@ -5780,7 +5780,7 @@
       "club": null,
       "verified": true,
       "explanation": "FIFA banned him from all football-related activity for four months.",
-      "source": "https://en.wikipedia.org/wiki/Luis_Su%C3%A1rez"
+      "source": "https://en.wikipedia.org/wiki/Luis_Su%C3%A1rez_(Uruguayan_footballer)"
     },
     {
       "id": "wor-0017",
@@ -7974,6 +7974,805 @@
       "verified": true,
       "explanation": "He is the only Norwegian with 100 Premier League goals.",
       "source": "https://en.wikipedia.org/wiki/List_of_footballers_with_100_or_more_Premier_League_goals"
+    },
+    {
+      "id": "tit-0035",
+      "question": "Which club won the 2025-26 Premier League?",
+      "options": [
+        "Manchester City",
+        "Arsenal",
+        "Liverpool",
+        "Manchester United"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "Title races",
+      "club": null,
+      "verified": true,
+      "explanation": "It was Arsenal's first league title since the 2003-04 Invincibles.",
+      "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_Premier_League"
+    },
+    {
+      "id": "tit-0036",
+      "question": "Who managed Arsenal to the 2025-26 Premier League title?",
+      "options": [
+        "Mikel Arteta",
+        "Pep Guardiola",
+        "Unai Emery",
+        "Arne Slot"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Title races",
+      "club": null,
+      "verified": true,
+      "explanation": "He was also named Premier League Manager of the Season.",
+      "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_Premier_League"
+    },
+    {
+      "id": "tit-0037",
+      "question": "Which club finished second to Arsenal in 2025-26?",
+      "options": [
+        "Manchester United",
+        "Manchester City",
+        "Aston Villa",
+        "Liverpool"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Title races",
+      "club": null,
+      "verified": true,
+      "explanation": "City finished seven points behind, on 78.",
+      "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_Premier_League"
+    },
+    {
+      "id": "tit-0038",
+      "question": "How many points did Arsenal finish on when winning the 2025-26 title?",
+      "options": [
+        "82",
+        "89",
+        "85",
+        "91"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "Title races",
+      "club": null,
+      "verified": true,
+      "explanation": "They won 26, drew 7 and lost 5.",
+      "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_Premier_League"
+    },
+    {
+      "id": "tit-0039",
+      "question": "Where did defending champions Liverpool finish in 2025-26?",
+      "options": [
+        "3rd",
+        "4th",
+        "7th",
+        "5th"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "Title races",
+      "club": null,
+      "verified": true,
+      "explanation": "Fifth was still a Champions League place, thanks to an extra spot for English clubs.",
+      "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_Premier_League"
+    },
+    {
+      "id": "tit-0040",
+      "question": "Which newly promoted club finished seventh in 2025-26 and qualified for the Europa League?",
+      "options": [
+        "Burnley",
+        "Ipswich Town",
+        "Leeds United",
+        "Sunderland"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Title races",
+      "club": null,
+      "verified": true,
+      "explanation": "It equalled the best finish by a promoted side, matching Wolves in 2018-19.",
+      "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_Premier_League"
+    },
+    {
+      "id": "goa-0033",
+      "question": "Who won the 2025-26 Premier League Golden Boot?",
+      "options": [
+        "Igor Thiago",
+        "Antoine Semenyo",
+        "Ollie Watkins",
+        "Erling Haaland"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "Goals & records",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored 27 goals, his third Golden Boot in four seasons.",
+      "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_Premier_League"
+    },
+    {
+      "id": "goa-0034",
+      "question": "Which Brentford striker was second in the 2025-26 scoring charts with 22 goals?",
+      "options": [
+        "Igor Thiago",
+        "Yoane Wissa",
+        "Kevin Schade",
+        "Bryan Mbeumo"
+      ],
+      "answer": 0,
+      "difficulty": "medium",
+      "topic": "Goals & records",
+      "club": null,
+      "verified": true,
+      "explanation": "Only Erling Haaland scored more.",
+      "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_Premier_League"
+    },
+    {
+      "id": "goa-0035",
+      "question": "Which Arsenal player scored a hat-trick against Tottenham in November 2025?",
+      "options": [
+        "Bukayo Saka",
+        "Viktor Gyökeres",
+        "Eberechi Eze",
+        "Kai Havertz"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "Goals & records",
+      "club": null,
+      "verified": true,
+      "explanation": "Arsenal won the north London derby 4-1.",
+      "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_Premier_League"
+    },
+    {
+      "id": "rec-0026",
+      "question": "Which goalkeeper won the Premier League Golden Glove for the third season in a row in 2025-26?",
+      "options": [
+        "Alisson Becker",
+        "Gianluigi Donnarumma",
+        "David Raya",
+        "Jordan Pickford"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "He kept 19 clean sheets for Arsenal.",
+      "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_Premier_League"
+    },
+    {
+      "id": "rec-0027",
+      "question": "Who became the Premier League's youngest ever scorer in March 2026?",
+      "options": [
+        "Chris Rigg",
+        "Ethan Nwaneri",
+        "Rio Ngumoha",
+        "Max Dowman"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "He was 16 years and 73 days old when he scored for Arsenal against Everton.",
+      "source": "https://en.wikipedia.org/wiki/Premier_League_records_and_statistics"
+    },
+    {
+      "id": "rec-0028",
+      "question": "Which player has appeared in a record 24 Premier League seasons?",
+      "options": [
+        "Ryan Giggs",
+        "James Milner",
+        "Frank Lampard",
+        "Gareth Barry"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "Record books",
+      "club": null,
+      "verified": true,
+      "explanation": "He played in every season from 2002-03 to 2025-26.",
+      "source": "https://en.wikipedia.org/wiki/Premier_League_records_and_statistics"
+    },
+    {
+      "id": "pla-0031",
+      "question": "Who was the PFA Players' Player of the Year for 2025-26?",
+      "options": [
+        "Bruno Fernandes",
+        "Erling Haaland",
+        "Bukayo Saka",
+        "Declan Rice"
+      ],
+      "answer": 0,
+      "difficulty": "easy",
+      "topic": "Legends",
+      "club": null,
+      "verified": true,
+      "explanation": "He also won the FWA award and the Premier League Player of the Season.",
+      "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_Premier_League"
+    },
+    {
+      "id": "pla-0032",
+      "question": "Which Manchester City defender was the 2025-26 PFA Young Player of the Year?",
+      "options": [
+        "Rico Lewis",
+        "Jurriën Timber",
+        "Nico O'Reilly",
+        "Myles Lewis-Skelly"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Legends",
+      "club": null,
+      "verified": true,
+      "explanation": "He was also the Premier League's Young Player of the Season.",
+      "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_Premier_League"
+    },
+    {
+      "id": "tra-0041",
+      "question": "Alexander Isak broke the British transfer record in 2025 when he joined which club?",
+      "options": [
+        "Chelsea",
+        "Arsenal",
+        "Liverpool",
+        "Manchester City"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Transfers",
+      "club": null,
+      "verified": true,
+      "explanation": "Liverpool paid Newcastle about £125m.",
+      "source": "https://en.wikipedia.org/wiki/Alexander_Isak"
+    },
+    {
+      "id": "tra-0042",
+      "question": "Antoine Semenyo joined Manchester City during 2025-26 from which club?",
+      "options": [
+        "Brentford",
+        "Crystal Palace",
+        "Bournemouth",
+        "Brighton"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "Transfers",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored the winner for City in the 2026 FA Cup final.",
+      "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_Premier_League"
+    },
+    {
+      "id": "mom-0021",
+      "question": "Which club were relegated first from the Premier League in 2025-26?",
+      "options": [
+        "West Ham United",
+        "Tottenham Hotspur",
+        "Burnley",
+        "Wolves"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "Big moments",
+      "club": null,
+      "verified": true,
+      "explanation": "It ended Wolves' eight-year stay in the top flight.",
+      "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_Premier_League"
+    },
+    {
+      "id": "mom-0022",
+      "question": "Arsenal beat which team on the final day of 2025-26 before lifting the trophy?",
+      "options": [
+        "Burnley",
+        "Brighton",
+        "Everton",
+        "Crystal Palace"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Big moments",
+      "club": null,
+      "verified": true,
+      "explanation": "Arsenal won 2-1 away from home.",
+      "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_Premier_League"
+    },
+    {
+      "id": "mom-0023",
+      "question": "Which brand replaced Nike as the Premier League ball supplier in 2025-26?",
+      "options": [
+        "Umbro",
+        "Adidas",
+        "Mitre",
+        "Puma"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Big moments",
+      "club": null,
+      "verified": true,
+      "explanation": "Nike had made the ball since 2000-01.",
+      "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_Premier_League"
+    },
+    {
+      "id": "clu-0029",
+      "question": "What is the sponsored name of Everton's new stadium at Bramley-Moore Dock?",
+      "options": [
+        "Royal Liver Stadium",
+        "Mersey Arena",
+        "Hill Dickinson Stadium",
+        "Dixie Dean Stadium"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "Clubs & grounds",
+      "club": null,
+      "verified": true,
+      "explanation": "Everton moved there from Goodison Park in 2025.",
+      "source": "https://en.wikipedia.org/wiki/Hill_Dickinson_Stadium"
+    },
+    {
+      "id": "clu-0030",
+      "question": "From 2025-26, Goodison Park became the home ground of which team?",
+      "options": [
+        "Liverpool Women",
+        "Everton Women",
+        "Tranmere Rovers",
+        "Everton Under-21s"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "Clubs & grounds",
+      "club": null,
+      "verified": true,
+      "explanation": "It became the UK's largest dedicated women's football stadium.",
+      "source": "https://en.wikipedia.org/wiki/Everton_F.C."
+    },
+    {
+      "id": "cup-0036",
+      "question": "Who won the 2026 FA Cup?",
+      "options": [
+        "Arsenal",
+        "Chelsea",
+        "Manchester City",
+        "Crystal Palace"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "Cups & Europe",
+      "club": null,
+      "verified": true,
+      "explanation": "City beat Chelsea 1-0 at Wembley.",
+      "source": "https://en.wikipedia.org/wiki/2026_FA_Cup_final"
+    },
+    {
+      "id": "cup-0037",
+      "question": "Who scored the winner in the 2026 FA Cup final?",
+      "options": [
+        "Erling Haaland",
+        "Cole Palmer",
+        "Phil Foden",
+        "Antoine Semenyo"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "Cups & Europe",
+      "club": null,
+      "verified": true,
+      "explanation": "He flicked in a cross from Erling Haaland.",
+      "source": "https://en.wikipedia.org/wiki/2026_FA_Cup_final"
+    },
+    {
+      "id": "cup-0038",
+      "question": "Manchester City beat which team in the 2026 League Cup final?",
+      "options": [
+        "Newcastle United",
+        "Liverpool",
+        "Arsenal",
+        "Chelsea"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Cups & Europe",
+      "club": null,
+      "verified": true,
+      "explanation": "City won 2-0 at Wembley.",
+      "source": "https://en.wikipedia.org/wiki/2026_EFL_Cup_final"
+    },
+    {
+      "id": "cup-0039",
+      "question": "Who headed both goals for Manchester City in the 2026 League Cup final?",
+      "options": [
+        "Erling Haaland",
+        "Nico O'Reilly",
+        "Rayan Cherki",
+        "Rodri"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "Cups & Europe",
+      "club": null,
+      "verified": true,
+      "explanation": "Both came within four minutes of the second half.",
+      "source": "https://en.wikipedia.org/wiki/2026_EFL_Cup_final"
+    },
+    {
+      "id": "cup-0040",
+      "question": "Which English club won the 2026 Europa League?",
+      "options": [
+        "Tottenham Hotspur",
+        "Nottingham Forest",
+        "Manchester United",
+        "Aston Villa"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "Cups & Europe",
+      "club": null,
+      "verified": true,
+      "explanation": "It was Villa's first trophy for 30 years.",
+      "source": "https://en.wikipedia.org/wiki/2026_UEFA_Europa_League_final"
+    },
+    {
+      "id": "cup-0041",
+      "question": "Which club did Aston Villa beat 3-0 in the 2026 Europa League final?",
+      "options": [
+        "Lyon",
+        "Porto",
+        "Real Betis",
+        "SC Freiburg"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "Cups & Europe",
+      "club": null,
+      "verified": true,
+      "explanation": "Tielemans, Buendía and Rogers scored in Istanbul.",
+      "source": "https://en.wikipedia.org/wiki/2026_UEFA_Europa_League_final"
+    },
+    {
+      "id": "cup-0042",
+      "question": "Which English club won the 2026 Conference League?",
+      "options": [
+        "Brighton",
+        "Fulham",
+        "Crystal Palace",
+        "Chelsea"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Cups & Europe",
+      "club": null,
+      "verified": true,
+      "explanation": "Jean-Philippe Mateta scored the only goal against Rayo Vallecano.",
+      "source": "https://en.wikipedia.org/wiki/2026_UEFA_Conference_League_final"
+    },
+    {
+      "id": "cup-0043",
+      "question": "Which club beat Arsenal on penalties in the 2026 Champions League final?",
+      "options": [
+        "Real Madrid",
+        "Bayern Munich",
+        "Paris Saint-Germain",
+        "Barcelona"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "Cups & Europe",
+      "club": null,
+      "verified": true,
+      "explanation": "It finished 1-1 in Budapest; Kai Havertz scored for Arsenal.",
+      "source": "https://en.wikipedia.org/wiki/2026_UEFA_Champions_League_final"
+    },
+    {
+      "id": "cup-0044",
+      "question": "Who scored twice for Chelsea in the 2025 Club World Cup final?",
+      "options": [
+        "Nicolas Jackson",
+        "Cole Palmer",
+        "Enzo Fernández",
+        "João Pedro"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "Cups & Europe",
+      "club": null,
+      "verified": true,
+      "explanation": "Chelsea beat Paris Saint-Germain 3-0 in New Jersey.",
+      "source": "https://en.wikipedia.org/wiki/2025_FIFA_Club_World_Cup_final"
+    },
+    {
+      "id": "wor-0031",
+      "question": "Which country won the 2026 World Cup?",
+      "options": [
+        "Argentina",
+        "Spain",
+        "France",
+        "England"
+      ],
+      "answer": 1,
+      "difficulty": "easy",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "They beat Argentina 1-0 after extra time in the final.",
+      "source": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup"
+    },
+    {
+      "id": "wor-0032",
+      "question": "Which three countries hosted the 2026 World Cup?",
+      "options": [
+        "USA, Canada and Jamaica",
+        "Mexico, Canada and Cuba",
+        "USA, Mexico and Costa Rica",
+        "USA, Mexico and Canada"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "It was the first World Cup with three hosts.",
+      "source": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup"
+    },
+    {
+      "id": "wor-0033",
+      "question": "Who scored the winner in the 2026 World Cup final?",
+      "options": [
+        "Lamine Yamal",
+        "Ferran Torres",
+        "Mikel Oyarzabal",
+        "Nico Williams"
+      ],
+      "answer": 1,
+      "difficulty": "medium",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "He scored in extra time after a Nico Williams header.",
+      "source": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_final"
+    },
+    {
+      "id": "wor-0034",
+      "question": "Who won the Golden Boot at the 2026 World Cup with 10 goals?",
+      "options": [
+        "Harry Kane",
+        "Lionel Messi",
+        "Kylian Mbappé",
+        "Erling Haaland"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "He also became the World Cup's all-time top scorer.",
+      "source": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup"
+    },
+    {
+      "id": "wor-0035",
+      "question": "Where did England finish at the 2026 World Cup?",
+      "options": [
+        "Quarter-finals",
+        "Runners-up",
+        "Third",
+        "Fourth"
+      ],
+      "answer": 2,
+      "difficulty": "medium",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "They beat France 6-4 in the third-place match.",
+      "source": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup"
+    },
+    {
+      "id": "wor-0036",
+      "question": "Who won the Golden Ball as the best player at the 2026 World Cup?",
+      "options": [
+        "Lionel Messi",
+        "Lamine Yamal",
+        "Kylian Mbappé",
+        "Rodri"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "He captained Spain to the title.",
+      "source": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup"
+    },
+    {
+      "id": "wor-0037",
+      "question": "Who scored a hat-trick for England against France in the 2026 World Cup third-place match?",
+      "options": [
+        "Anthony Gordon",
+        "Harry Kane",
+        "Bukayo Saka",
+        "Jude Bellingham"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "England won 6-4 in Miami.",
+      "source": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup"
+    },
+    {
+      "id": "wor-0038",
+      "question": "Which team knocked England out in the 2026 World Cup semi-final?",
+      "options": [
+        "France",
+        "Argentina",
+        "Brazil",
+        "Spain"
+      ],
+      "answer": 1,
+      "difficulty": "hard",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "Argentina came from behind to win 2-1 in Atlanta.",
+      "source": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup"
+    },
+    {
+      "id": "wor-0039",
+      "question": "How many teams played at the 2026 World Cup?",
+      "options": [
+        "32",
+        "40",
+        "48",
+        "64"
+      ],
+      "answer": 2,
+      "difficulty": "hard",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "It was the first World Cup with more than 32 teams.",
+      "source": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup"
+    },
+    {
+      "id": "wor-0040",
+      "question": "Which stadium hosted the 2026 World Cup final?",
+      "options": [
+        "Rose Bowl",
+        "Estadio Azteca",
+        "AT&T Stadium",
+        "MetLife Stadium"
+      ],
+      "answer": 3,
+      "difficulty": "hard",
+      "topic": "World Cup",
+      "club": null,
+      "verified": true,
+      "explanation": "It was called New York New Jersey Stadium during the tournament.",
+      "source": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_final"
+    },
+    {
+      "id": "whu-0084",
+      "question": "Which forward joined West Ham from Hull City in 2020 and became club captain in 2024?",
+      "options": [
+        "Tomáš Souček",
+        "Lucas Paquetá",
+        "Jarrod Bowen",
+        "Michail Antonio"
+      ],
+      "answer": 2,
+      "difficulty": "easy",
+      "topic": "West Ham players",
+      "club": "west-ham",
+      "verified": true,
+      "explanation": "He was also Hammer of the Year in 2023-24.",
+      "source": "https://en.wikipedia.org/wiki/Jarrod_Bowen"
+    },
+    {
+      "id": "whu-0085",
+      "question": "Who was West Ham's manager when they were relegated in 2025-26?",
+      "options": [
+        "David Moyes",
+        "Graham Potter",
+        "Julen Lopetegui",
+        "Nuno Espírito Santo"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "West Ham bosses",
+      "club": "west-ham",
+      "verified": true,
+      "explanation": "Nuno had replaced Graham Potter in September 2025.",
+      "source": "https://en.wikipedia.org/wiki/West_Ham_United_F.C."
+    },
+    {
+      "id": "whu-0086",
+      "question": "Which former Burnley boss became West Ham manager in November 2026?",
+      "options": [
+        "Sam Allardyce",
+        "Vincent Kompany",
+        "Sean Dyche",
+        "Scott Parker"
+      ],
+      "answer": 3,
+      "difficulty": "easy",
+      "topic": "West Ham bosses",
+      "club": "west-ham",
+      "verified": true,
+      "explanation": "Parker had led Burnley to promotion in 2024-25.",
+      "source": "https://en.wikipedia.org/wiki/Scott_Parker"
+    },
+    {
+      "id": "whu-0087",
+      "question": "On the final day of 2025-26, which London rival's win sent West Ham down?",
+      "options": [
+        "Chelsea",
+        "Crystal Palace",
+        "Fulham",
+        "Tottenham Hotspur"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "West Ham moments",
+      "club": "west-ham",
+      "verified": true,
+      "explanation": "West Ham beat Leeds 3-0 but went down with 39 points.",
+      "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_Premier_League"
+    },
+    {
+      "id": "whu-0088",
+      "question": "West Ham's 2025-26 relegation was their first since which season?",
+      "options": [
+        "2010-11",
+        "2006-07",
+        "2012-13",
+        "2002-03"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "West Ham moments",
+      "club": "west-ham",
+      "verified": true,
+      "explanation": "They had spent 14 seasons in a row in the Premier League.",
+      "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_West_Ham_United_F.C._season"
+    },
+    {
+      "id": "whu-0089",
+      "question": "Which Czech billionaire became West Ham's largest owner, with 43% of the club?",
+      "options": [
+        "Pavel Horský",
+        "Tripp Smith",
+        "David Sullivan",
+        "Daniel Křetínský"
+      ],
+      "answer": 3,
+      "difficulty": "medium",
+      "topic": "West Ham bosses",
+      "club": "west-ham",
+      "verified": true,
+      "explanation": "He first bought 27% of the club in November 2021.",
+      "source": "https://en.wikipedia.org/wiki/West_Ham_United_F.C."
+    },
+    {
+      "id": "whu-0090",
+      "question": "Who scored West Ham's first league goal of 2025-26, in a 5-1 home defeat by Chelsea?",
+      "options": [
+        "Lucas Paquetá",
+        "Jarrod Bowen",
+        "Crysencio Summerville",
+        "Tomáš Souček"
+      ],
+      "answer": 0,
+      "difficulty": "hard",
+      "topic": "West Ham moments",
+      "club": "west-ham",
+      "verified": true,
+      "explanation": "West Ham had lost their opening game 3-0 at Sunderland.",
+      "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_West_Ham_United_F.C._season"
     },
     {
       "id": "brighton-0001",

@@ -24,10 +24,11 @@ Each question:
 - `source` is the page each question was checked against. Every question has one.
   - Club questions: every fact was read from that page on 2026-11-04; nothing was written from memory.
   - Round 3 general questions (ids `wor-`, `eur-`, `int-`, `str-`, `rec-`, and `tit-0034`, `goa-0031`, `goa-0032`, `pla-0029`, `pla-0030`, `man-0029`, `man-0030`, `mom-0020`): each fact was read on its page on 2026-11-07, and questions were reworded until the page supported every detail.
-  - The first 324 general and West Ham questions were written from memory with spot checks. Their `source` is the most relevant Wikipedia article, added on 2026-11-07 but not yet re-read line by line.
+  - The first 324 general and West Ham questions were written from memory, then re-read against their `source` page on 2026-11-21. Wrong or out-of-date ones were fixed (the assists record, Declan Rice's fee, Bobby Moore's statue, Kudus's Hammer of the Year, Crouch's header count) and pages that were disambiguation or district pages were replaced.
+  - 2025-26 questions (the season, the 2026 finals, the 2026 World Cup and West Ham's relegation, the last 47 general entries): each fact was read on its page on 2026-11-21.
 - Clubs: all 92 clubs in the 2026-27 Premier League, Championship, League One and League Two. Each has at least 10 questions per difficulty, so a player who picks their club always gets tailored cards. West Ham's club questions are the 83 West Ham questions in the general bank.
 - Scope: Premier League from 2000-01 onwards, plus a few all-time records, West Ham history, and the World Cup, Euros, Copa América, Nations League and Africa Cup of Nations since 2000.
-- Facts current to the 2024-25 season (round 3 questions to November 2026; nothing about the 2026 World Cup's results). Questions about "records" may go stale; check them each season.
+- Facts current to November 2026, including the 2025-26 season and the 2026 World Cup. Questions about "records" may go stale; check them each season.
 
 ## Who am I? (pawn promotion)
 
