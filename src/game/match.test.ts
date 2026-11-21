@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { actorOf, savable, seasonResult, step, startMatch, shootoutWinner, RESULT_MS_HUMAN, RESULT_MS, KICK_PAUSE_MS, type Action, type Data, type Effect, type Env, type Match } from "./match";
+import { actorOf, endSound, savable, seasonResult, step, startMatch, shootoutWinner, RESULT_MS_HUMAN, RESULT_MS, KICK_PAUSE_MS, type Action, type Data, type Effect, type Env, type Match } from "./match";
 import { newGame, type PlayerInit } from "./rules";
 import { TIMER_MS, type Card } from "./trivia";
 import { CLUE_MS, type WhoAmI } from "./whoami";
@@ -318,5 +318,26 @@ describe("match engine: save/resume and the season", () => {
     expect(seasonResult(shoot, "black").result).toBe("won");
     const draw = { ...m.game, outcome: { kind: "draw" as const, reason: "agreement" as const } };
     expect(seasonResult(draw, "white").result).toBe("drawn");
+  });
+});
+
+describe("match engine: sounds", () => {
+  it("plays the final whistle, then a win or a loss from the person's side against a bot", () => {
+    const vsBot = startMatch(game({ mode: "bot" }, bot("Pawny")));
+    const lost = run(vsBot, [{ type: "resign", color: "white" }]);
+    expect(sounds(lost.fx)).toEqual(["fulltime", "lose"]);
+    const won = run(vsBot, [{ type: "resign", color: "black" }]);
+    expect(sounds(won.fx)).toEqual(["fulltime", "win"]);
+  });
+
+  it("cheers whoever wins Pass and Play, and applauds a draw", () => {
+    const g = game();
+    expect(endSound({ ...g, outcome: { kind: "checkmate", winner: "black" } })).toBe("win");
+    expect(endSound({ ...g, outcome: { kind: "draw", reason: "stalemate" } })).toBe("draw");
+  });
+
+  it("gives castling its own sound", () => {
+    const m = startMatch(at("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1", { trivia: false }));
+    expect(sounds(run(m, [{ type: "move", uci: "e1g1" }]).fx)).toContain("castle");
   });
 });

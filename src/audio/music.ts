@@ -1,4 +1,4 @@
-// Background music: four original looping tracks played by a small step
+// Background music: five original looping tracks played by a small step
 // sequencer on the Web Audio clock. No audio files and no licensed tunes.
 
 import { getEngine, midiToHz } from "./engine";
@@ -69,7 +69,20 @@ export const TRACKS: TrackDef[] = [
     sound: { pad: "sine", lead: "sine", bass: "triangle", filter: 3000, organ: true },
     level: { pad: 0.06, lead: 0.07, bass: 0.2, drums: 0.3 },
   },
+  {
+    id: "tunnel-walk", name: "Tunnel Walk", mood: "Walk-out anthem, for the menus", bpm: 92,
+    chords: [["D3", "F#3", "A3", "D4"], ["C#3", "E3", "A3", "C#4"], ["D3", "F#3", "B3", "D4"], ["D3", "G3", "B3", "D4"]],
+    bass: ["D2", "A2", "B2", "G2"],
+    lead: ["F#5 - - E5 D5 - A4 -", "C#5 - - D5 E5 - - .", "D5 - B4 - F#5 - E5 D5", "D5 - - - B4 - - .", "F#5 - - E5 D5 - A5 -", "G5 - - F#5 E5 - C#5 -", "D5 - E5 - F#5 - B4 -", "A4 - - - - - . ."],
+    kick: "x.......x.x.....", snare: "....x.......x..x", hat: "..x...x...x...x.",
+    bassSteps: [0, 6, 8, 14], pad: "hold",
+    sound: { pad: "sawtooth", lead: "sawtooth", bass: "triangle", filter: 1100 },
+    level: { pad: 0.03, lead: 0.05, bass: 0.17, drums: 0.45 },
+  },
 ];
+
+/** The track that plays on the menus when "Walk-out music on the menus" is on. */
+export const MENU_TRACK: MusicTrackId = "tunnel-walk";
 
 const NOTE: Record<string, number> = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
 export function noteToMidi(name: string): number {
@@ -153,6 +166,8 @@ class Player {
   private step = 0;
   private nextTime = 0;
   private timer: number | null = null;
+  /** This track's own volume, so a change of track fades instead of cutting off. */
+  private out: GainNode | null = null;
 
   get current(): MusicTrackId | null {
     return this.track?.id ?? null;
@@ -166,6 +181,10 @@ class Player {
     this.track = TRACKS.find((t) => t.id === id) ?? TRACKS[0];
     this.lead = parseLead(this.track.lead);
     this.step = 0;
+    this.out = e.ctx.createGain();
+    this.out.gain.setValueAtTime(0.0001, e.ctx.currentTime);
+    this.out.gain.exponentialRampToValueAtTime(1, e.ctx.currentTime + 0.8);
+    this.out.connect(e.music);
     this.nextTime = e.ctx.currentTime + 0.1;
     this.timer = window.setInterval(() => this.schedule(), 25);
   }
@@ -174,16 +193,24 @@ class Player {
     if (this.timer !== null) window.clearInterval(this.timer);
     this.timer = null;
     this.track = null;
+    const out = this.out;
+    this.out = null;
+    const e = getEngine();
+    if (out && e) {
+      out.gain.cancelScheduledValues(e.ctx.currentTime);
+      out.gain.setTargetAtTime(0.0001, e.ctx.currentTime, 0.15);
+      setTimeout(() => out.disconnect(), 1000);
+    }
   }
 
   private schedule(): void {
     const e = getEngine();
     const tr = this.track;
-    if (!e || !tr) return;
+    if (!e || !tr || !this.out) return;
     const stepDur = 60 / tr.bpm / 4;
     const loopSteps = tr.lead.length * 16;
     while (this.nextTime < e.ctx.currentTime + 0.15) {
-      this.playStep(e.ctx, e.music, e.noise, tr, this.step % loopSteps, this.nextTime, stepDur);
+      this.playStep(e.ctx, this.out, e.noise, tr, this.step % loopSteps, this.nextTime, stepDur);
       this.step++;
       this.nextTime += stepDur;
     }
