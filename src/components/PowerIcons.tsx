@@ -1,4 +1,4 @@
-// Icons for power-ups and trivia hints: 24x24 line drawings in currentColor,
+// Icons for power-ups and chess hints: 24x24 line drawings in currentColor,
 // so every visual style colours them through its own `.pw svg` rule.
 
 import type { ReactNode } from "react";

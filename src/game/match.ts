@@ -81,7 +81,7 @@ export interface Overlay {
 export interface Match {
   game: GameState;
   phase: Phase;
-  /** The line under the board ("Ryan to move", "Free Kick to Ollie"…). */
+  /** The line under the board ("Player 2 to move", "Free Kick to Pawny Dribbles"…). */
   note: string;
   overlay: Overlay;
   /** Right answers in a row for each side (unlike rightStreak, this doesn't reset at a hat-trick). */
@@ -446,13 +446,8 @@ class Turn {
   }
 
   private botPower(color: Color, id: PowerUpId, targets: string[]) {
-    const res = usePowerUp(this.g, id, targets);
-    if (res.error) return;
-    this.setGame(res.state);
-    this.sfx("powerup");
-    this.note(res.note ?? "");
-    this.talk(color, "powerUp");
-    this.emit({ kind: "power", color, power: id, square: targets[0], square2: targets[1] });
+    if (usePowerUp(this.g, id, targets).error) return;
+    this.commitPower(color, id, targets);
   }
 
   private skipExtra() {

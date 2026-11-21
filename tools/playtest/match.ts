@@ -3,8 +3,8 @@
 //
 //   npx vite-node tools/playtest/match.ts -- <config.json> <out.json>
 //
-// config: { "pairs": [["ollie-low","ryan-low"], ...], "games": 10, "seed": 1 }
-// Players are "<bot>-<level>", "<ladder bot>" or "sf-<elo>" (Stockfish with UCI_LimitStrength).
+// config: { "pairs": [["pawny","eezy"], ["rookland","sf-1600"], ...], "games": 10, "seed": 1 }
+// Players are "<ladder bot>" or "sf-<elo>" (Stockfish with UCI_LimitStrength).
 
 import { readFileSync, writeFileSync } from "node:fs";
 import { makeFen } from "chessops/fen";

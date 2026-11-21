@@ -87,7 +87,7 @@ export function moveFeatures(pos: Chess, uci: string): MoveFeatures {
 export function styleBonus(style: ChessStyle, f: MoveFeatures, evalCp: number, fullmoves: number): number {
   switch (style) {
     case "chaotic": {
-      // Ollie: grabs every capture, loves an early queen raid and a cheeky check.
+      // Pawny, Eezy: grab every capture, love an early queen raid and a cheeky check.
       let b = 0;
       if (f.capture) b += 60;
       if (f.queenMove && fullmoves <= 12) b += 50;
@@ -96,12 +96,12 @@ export function styleBonus(style: ChessStyle, f: MoveFeatures, evalCp: number, f
       return b;
     }
     case "balanced": {
-      // Ryan: sensible, but turns aggressive once he's ahead.
+      // Gambit Gary, Mo Mate, Rookland: sensible, but turn aggressive once ahead.
       if (evalCp > 150) return (f.capture ? 40 : 0) + (f.check ? 35 : 0);
       return f.castle ? 15 : 0;
     }
     case "positional": {
-      // Freddie: castles early, avoids pointless checks, trades down when ahead.
+      // Chillwall, Knightingale: castle early, avoid pointless checks, trade down when ahead.
       let b = f.castle ? 25 : 0;
       if (f.check) b -= 10;
       if (evalCp > 100 && f.capture && Math.abs(f.capturedValue - f.moverValue) <= 60) b += 40;

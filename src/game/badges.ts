@@ -65,7 +65,7 @@ export interface Feats {
   clubRight: number;
   /** Clubs this player got a question right about. */
   clubsRight: string[];
-  /** Power-ups used (not trivia hints). */
+  /** Power-ups used. */
   powerUps: string[];
   /** Furthest behind on material, in centipawns from this side's view (negative = behind). */
   worstCp: number;

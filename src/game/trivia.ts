@@ -1,5 +1,5 @@
-// The question bank: dealing the three cards, drawing questions that haven't been
-// seen yet, and the trivia hints.
+// The question bank: dealing the three cards and drawing questions that haven't been
+// seen yet.
 
 import { clubShort } from "./clubs";
 import type { Difficulty, Question } from "./types";

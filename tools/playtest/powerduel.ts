@@ -6,7 +6,7 @@
 //
 //   npx vite-node tools/playtest/powerduel.ts -- <bot> [games=20] [seed=1]
 //
-// <bot> is "<bot>-<level>" or a ladder bot id, e.g. "ryan-medium" or "mo-mate".
+// <bot> is a ladder bot id, e.g. "mo-mate".
 
 import { createBotWith, type Bot } from "../../src/bots/bot";
 import type { UciEngine } from "../../src/bots/engine";
@@ -18,7 +18,7 @@ import {
 import type { Color, Difficulty, GameState, PowerUpId } from "../../src/game/types";
 import { mulberry32, nodeEngine, parseBotSpec } from "./common";
 
-const [spec = "ryan-medium", gamesArg = "20", seedArg = "1"] = process.argv.slice(2).filter((a) => a !== "--");
+const [spec = "gambit-gary", gamesArg = "20", seedArg = "1"] = process.argv.slice(2).filter((a) => a !== "--");
 const GAMES = Number(gamesArg);
 const MAX_PLIES = 200;
 

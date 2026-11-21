@@ -317,7 +317,7 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
   return {
     game, phase, note: match.note, bubble, overlay: match.overlay, now, ready: !!data, botMeta, engineReady: !!mod, events, ebk: match.ebk, runs: match.runs,
     /** White's engine score in centipawns for a position, or null (for the commentator). */
-    evaluate: useCallback((fen: string) => (mod?.evaluate ? mod.evaluate(fen, game.options.chess960) : Promise.resolve(null)), [mod, game.options.chess960]),
+    evaluate: useCallback((fen: string) => (mod ? mod.evaluate(fen, game.options.chess960) : Promise.resolve(null)), [mod, game.options.chess960]),
     ...actions,
   };
 }

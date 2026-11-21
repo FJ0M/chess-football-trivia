@@ -601,7 +601,7 @@ export const PROMOTION_AIM: Record<PromoRole, { clues: number; difficulty: Diffi
 
 export interface TurnInfo {
   state: GameState;
-  /** Messages for the commentary line, e.g. "Free Kick to Ryan". */
+  /** Messages for the commentary line, e.g. "Free Kick to Player 2". */
   notes: string[];
 }
 
@@ -992,7 +992,7 @@ export function applyAnswer(state: GameState, a: AnswerCtx): AnswerOutcome {
 
 export { CHAR_ROLE, ROLE_CHAR };
 
-/** Spends Form on a trivia hint. */
+/** Takes Form off a player (never below 0). */
 export function spendForm(state: GameState, color: Color, n: number): GameState {
   return withPlayer(state, color, { form: Math.max(0, state.players[color].form - n) });
 }
@@ -1032,8 +1032,10 @@ export function withClocksFrom(next: GameState, live: GameState): GameState {
   };
 }
 
-/** Extra Time's second move is optional: passing hands the turn back as if it had not been played. */
-/** Returns the position to hand to finishTurn, with the turn back with the opponent. */
+/**
+ * Extra Time's second move is optional: passing hands the turn back as if it had not been played.
+ * Returns the position to hand to finishTurn, with the turn back with the opponent.
+ */
 export function skipExtraTime(state: GameState): GameState | null {
   if (state.step !== "extra-time" || state.outcome) return null;
   const fen = flipTurn(state.fen);
