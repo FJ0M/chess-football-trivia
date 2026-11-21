@@ -4,7 +4,6 @@
 /** The Elo ladder: one bot at each of 400 to 1600 chess Elo, one level each. */
 export type LadderBotId = "pawny" | "eezy" | "chillwall" | "gambit-gary" | "mo-mate" | "knightingale" | "rookland";
 export type BotId = LadderBotId;
-export type BotLevel = "low" | "medium" | "hard";
 export type Difficulty = "easy" | "medium" | "hard";
 export type PromotionRole = "n" | "b" | "r" | "q";
 
@@ -36,9 +35,9 @@ export type PowerUpId =
   | "scout-report"
   | "assistants-flag";
 
-/** How the bot plays chess at one level. */
+/** How the bot plays chess. */
 export interface ChessStrength {
-  /** Rough rating this level is tuned to (see docs/bots.md for how it was measured). */
+  /** Rough rating the bot is tuned to (see docs/bots.md for how it was measured). */
   rating: number;
   /** Stockfish search depth. */
   depth: number;
@@ -82,17 +81,16 @@ export interface BotProfile {
   clubName: string;
   blurb: string;
   style: ChessStyle;
-  levels: Record<BotLevel, { chess: ChessStrength; trivia: TriviaSkill }>;
+  chess: ChessStrength;
+  trivia: TriviaSkill;
   /** Power-ups in order of preference. */
   favouritePowerUps: PowerUpId[];
   /** Form the bot keeps in reserve before buying anything not on its saving list. */
   saveFor?: { ids: PowerUpId[]; reserve: number };
-  /** Ladder bots have one strength: all three levels are the same and the level picker is hidden. */
-  fixedLevel?: boolean;
   /** Pause before a move, in milliseconds. */
   thinkMs?: [number, number];
-  /** Piece the bot aims for on a promotion "Who am I?" at each level. */
-  promotionAim?: Record<BotLevel, PromotionRole>;
+  /** Piece the bot aims for on a promotion "Who am I?" (a rook if left out). */
+  promotionAim?: PromotionRole;
   /**
    * How much a Hot Spot is worth to the bot, in centipawns, when choosing a move.
    * Left out, it comes from the bot's own-club accuracy (good quizzers chase them).

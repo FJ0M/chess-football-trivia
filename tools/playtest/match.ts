@@ -57,21 +57,21 @@ async function makePlayer(name: string, seed: number): Promise<Player> {
   }
   // "<bot>@random": the same bot with the old any-legal-move mistakes, to compare against "human" ones.
   const [spec, variant] = name.split("@");
-  const [id, level] = parseBotSpec(spec);
+  const id = parseBotSpec(spec);
   const base = BOT_PROFILES[id];
   // "<bot>@b0.6": the same bot with a different mistake rate, for tuning.
-  const tweak = (chess: BotProfile["levels"]["low"]["chess"]) =>
+  const tweak = (chess: BotProfile["chess"]) =>
     variant === "random" ? { ...chess, blunderStyle: "random" as const }
       : variant?.startsWith("b") ? { ...chess, blunderRate: Number(variant.slice(1)) } : chess;
   const profile: BotProfile = variant
-    ? { ...base, levels: Object.fromEntries(Object.entries(base.levels).map(([l, v]) => [l, { ...v, chess: tweak(v.chess) }])) as BotProfile["levels"] }
+    ? { ...base, chess: tweak(base.chess) }
     : base;
-  let bot: Bot = createBotWith(id, level, engine, mulberry32(seed), profile);
+  let bot: Bot = createBotWith(id, engine, mulberry32(seed), profile);
   return {
     name,
     move: async (fen) => (await bot.chooseMove({ fen })).uci,
     newGame: async () => {
-      bot = createBotWith(id, level, engine, mulberry32(seed++), profile);
+      bot = createBotWith(id, engine, mulberry32(seed++), profile);
       await engine.newGame();
     },
     close: () => engine.close(),

@@ -9,7 +9,6 @@ import type {
   AnswerRequest,
   AnswerResult,
   BotId,
-  BotLevel,
   BotProfile,
   CardChoice,
   CardRequest,
@@ -25,17 +24,16 @@ import type {
 const LOOK_DEPTH = 8;
 
 /** What a Hot Spot is worth to a bot in centipawns: good quizzers chase them a little. */
-export function hotSpotValue(profile: BotProfile, level: BotLevel): number {
+export function hotSpotValue(profile: BotProfile): number {
   if (profile.hotSpotCp !== undefined) return profile.hotSpotCp;
   // A Hot Spot offers a free Puskás (5 Form, no penalty if missed), so its worth follows Puskás accuracy.
   // Still kept under half a pawn so bots don't wreck their position for it.
-  const acc = profile.levels[level].trivia.accuracy.puskas;
+  const acc = profile.trivia.accuracy.puskas;
   return Math.max(0, Math.min(45, Math.round(acc * 60)));
 }
 
 export interface Bot {
   readonly profile: BotProfile;
-  readonly level: BotLevel;
   chooseMove(req: MoveRequest): Promise<MoveResult>;
   chooseCard(req: CardRequest): CardChoice;
   answer(req: AnswerRequest): AnswerResult;
@@ -51,15 +49,14 @@ export interface Bot {
 
 export function createBotWith(
   id: BotId,
-  level: BotLevel,
   engine: Analyser,
   rng: Rng = Math.random,
   /** Override the profile (the playtest uses this to try custom strengths). */
   profile: BotProfile = BOT_PROFILES[id],
 ): Bot {
-  const { chess, trivia } = profile.levels[level];
+  const { chess, trivia } = profile;
   const talker = new Talker(id, profile.clubName, rng);
-  const hotSpotCp = hotSpotValue(profile, level);
+  const hotSpotCp = hotSpotValue(profile);
   let lastLossCp = 0;
   /** Eval the bot expected after its own last move, from its side. */
   let expectedCp: number | null = null;
@@ -68,7 +65,6 @@ export function createBotWith(
 
   return {
     profile,
-    level,
 
     async chooseMove(req) {
       const pos = positionFromFen(req.fen);
@@ -161,7 +157,7 @@ export function createBotWith(
       }
     },
 
-    promotionPick: () => profile.promotionAim?.[level] ?? "r",
+    promotionPick: () => profile.promotionAim ?? "r",
     say: (moment) => talker.say(moment),
   };
 }

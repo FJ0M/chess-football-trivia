@@ -5,18 +5,18 @@ import { BOT_PROFILES } from "./profiles";
 import { getSharedEngine, type Analyser } from "./engine";
 import { parseSquare } from "chessops/util";
 import { normaliseUci, positionFromFen } from "./movePicker";
-import type { BotId, BotLevel } from "./types";
+import type { BotId } from "./types";
 
 export type { Bot } from "./bot";
 export type * from "./types";
-export { BOTS, BOT_IDS, BOT_LEVELS, BOT_PROFILES, LADDER_IDS, matchRating, triviaAccuracy, triviaElo, type BotRating } from "./profiles";
+export { BOTS, BOT_IDS, BOT_PROFILES, LADDER_IDS, matchRating, triviaAccuracy, triviaElo, type BotRating } from "./profiles";
 export { TALK } from "./talk";
 
 /** Creates a bot. Stockfish starts in a Web Worker the first time any bot or hint needs it. */
-export function createBot(id: BotId, level: BotLevel = "medium", engine?: Analyser): Bot {
+export function createBot(id: BotId, engine?: Analyser): Bot {
   // A retired bot (Ollie, Ryan, Freddie) from an old saved setup plays as Gambit Gary.
   const known: BotId = id in BOT_PROFILES ? id : "gambit-gary";
-  return createBotWith(known, level, engine ?? getSharedEngine());
+  return createBotWith(known, engine ?? getSharedEngine());
 }
 
 /**

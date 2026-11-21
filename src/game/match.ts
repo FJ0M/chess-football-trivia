@@ -21,7 +21,6 @@ import { TIMER_MS, type Card, type QuestionBank } from "./trivia";
 import { CLUE_MS, type WhoAmI, type WhoAmIBank } from "./whoami";
 import { DRAW_WORDS } from "./history";
 import { material } from "./material";
-import type { BotLevel } from "./bots";
 import type { Color, GameOptions, GameState, PowerUpId, PromoRole, Question } from "./types";
 import type { PlayerInit } from "./rules";
 
@@ -31,7 +30,6 @@ import type { PlayerInit } from "./rules";
 export interface SetupChoice {
   options: GameOptions;
   players: Record<Color, PlayerInit>;
-  botLevel: BotLevel;
   /** A league season match: which one, so the result is recorded against it (see season.ts). */
   season?: { key: string; kind: "league" | "cup" };
 }
