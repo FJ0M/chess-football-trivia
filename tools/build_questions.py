@@ -586,6 +586,11 @@ Q = [
 ("west-ham", 3, "Who scored West Ham's first league goal of 2025-26, in a 5-1 home defeat by Chelsea?", "Lucas Paquetá", ["Jarrod Bowen", "Tomáš Souček", "Crysencio Summerville"], "West Ham had lost their opening game 3-0 at Sunderland.", "https://en.wikipedia.org/wiki/2025%E2%80%9326_West_Ham_United_F.C._season"),
 ]
 
+# Second batch (2026-11-22), appended so existing ids stay stable. Same tuple format as Q.
+sys.path.insert(0, __import__("os").path.dirname(__import__("os").path.abspath(__file__)))
+from extra_general import Q2
+Q += Q2
+
 TOPICS = {"titles":"Title races","goals":"Goals & records","players":"Legends","transfers":"Transfers","managers":"Managers","moments":"Big moments","clubs":"Clubs & grounds","cups":"Cups & Europe",
           "worldcup":"World Cup","euros":"Euros","intl":"International cups","streets":"These Streets Won't Forget","records":"Record books"}
 DIFF = {1:"easy",2:"medium",3:"hard"}
@@ -615,6 +620,13 @@ def club_questions(seen):
             continue
         spec = importlib.util.spec_from_file_location(div, path)
         mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+        extra_path = os.path.join(here, "extra_" + div + ".py")
+        if os.path.exists(extra_path):  # second batch of 30 per club, appended so existing ids stay stable
+            espec = importlib.util.spec_from_file_location("extra_" + div, extra_path)
+            emod = importlib.util.module_from_spec(espec); espec.loader.exec_module(emod)
+            for ecid, eqs in emod.QUESTIONS.items():
+                assert ecid in mod.QUESTIONS, f"extra questions for unknown club {ecid}"
+                mod.QUESTIONS[ecid] = list(mod.QUESTIONS[ecid]) + list(eqs)
         for cid, qs in mod.QUESTIONS.items():
             assert cid in ALL, f"unknown club id {cid}"
             assert cid != "west-ham", "West Ham questions live in Q above"
