@@ -61,6 +61,18 @@ export function browserSeenStore(player = "Player 1", storage: Storage | undefin
   return store;
 }
 
+/**
+ * A player's own seen list plus one list shared by both players for this match,
+ * so a question asked to one player isn't asked to the other later in the game.
+ */
+export function withMatchSeen(own: SeenStore, match: SeenStore): SeenStore {
+  return {
+    has: (id) => own.has(id) || match.has(id),
+    add: (id) => { own.add(id); match.add(id); },
+    delete: (id) => { own.delete(id); match.delete(id); },
+  };
+}
+
 export function memorySeenStore(): SeenStore {
   return new Set<string>();
 }

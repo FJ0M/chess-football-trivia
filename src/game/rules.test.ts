@@ -328,6 +328,13 @@ describe("power-ups", () => {
     // Black pawn on e5 would take en passant on d5 if the d3 pawn dashed to d5: not allowed.
     expect(usePowerUp(at("4k3/8/8/4p3/8/3P4/8/4K3 w - - 0 1"), "counter-attack", ["d3"]).error).toMatch(/enemy pawn/);
   });
+  it("a pawn back from injury can't capture on the turn it comes back", () => {
+    let g = at("4k3/8/8/8/8/1p6/8/4K3 w - - 0 1");
+    g = { ...g, captured: { white: ["p"], black: [] } };
+    const sub = usePowerUp(g, "substitution", ["a2"]).state;
+    expect(legalMoves(sub).moves).not.toContain("a2b3");
+    expect(legalMoves(sub).moves).toContain("a2a3");
+  });
   it("Substitution, Super-Sub and Red Card edit the board", () => {
     let g = at("4k3/pppp4/8/8/8/8/1PPP4/4K3 w - - 0 1");
     g = { ...g, captured: { white: ["p"], black: [] } };
@@ -467,10 +474,15 @@ describe("game end", () => {
     for (const m of ["f2f3", "e7e5", "g2g4", "d8h4"]) g = move(g, m);
     expect(g.outcome).toEqual({ kind: "checkmate", winner: "black" });
   });
-  it("a draw goes to a Penalty Shootout in trivia games", () => {
+  it("stalemate is a plain draw, with no Penalty Shootout", () => {
     const g = at("7k/5Q2/6K1/8/8/8/8/8 b - - 0 1");
-    expect(finishTurn(g).state.pendingDraw).toBe("stalemate");
+    expect(finishTurn(g).state.pendingDraw ?? null).toBe(null);
+    expect(finishTurn(g).state.outcome).toEqual({ kind: "draw", reason: "stalemate" });
     expect(finishTurn({ ...g, options: { ...g.options, trivia: false } }).state.outcome).toEqual({ kind: "draw", reason: "stalemate" });
+  });
+  it("other draws go to a Penalty Shootout in trivia games", () => {
+    const g = at("8/8/8/8/8/8/8/k6K b - - 0 1");
+    expect(finishTurn(g).state.pendingDraw).toBe("insufficient");
   });
 });
 
