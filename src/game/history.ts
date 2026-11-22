@@ -133,3 +133,37 @@ export function resultKind(e: HistoryEntry): "won" | "lost" | "drawn" | "decided
   if (!e.you) return "decided";
   return e.winner === e.you ? "won" : "lost";
 }
+
+/** One pairing's Pass and Play record, from the history on this device. */
+export interface HeadToHead {
+  names: [string, string];
+  wins: [number, number];
+  draws: number;
+  quiz: [Tally, Tally];
+  /** Last five results, newest first: 0 or 1 is who won, "d" a draw. */
+  last: Array<0 | 1 | "d">;
+}
+
+/** Pass and Play records by pairing (names matched ignoring case), most games first. */
+export function headToHead(list: HistoryEntry[]): HeadToHead[] {
+  const pairs = new Map<string, HeadToHead>();
+  for (const e of list) {
+    if (e.mode !== "local") continue;
+    const [a, b] = [e.names.white, e.names.black].sort((x, y) => x.toLowerCase().localeCompare(y.toLowerCase()));
+    const key = `${a.toLowerCase()}\u0000${b.toLowerCase()}`;
+    const h = pairs.get(key) ?? { names: [a, b], wins: [0, 0], draws: 0, quiz: [{ right: 0, asked: 0 }, { right: 0, asked: 0 }], last: [] };
+    const side = (c: Color): 0 | 1 => (e.names[c].toLowerCase() === a.toLowerCase() && (e.names.white.toLowerCase() !== e.names.black.toLowerCase() || c === "white") ? 0 : 1);
+    const result = e.winner ? side(e.winner) : "d";
+    if (result === "d") h.draws++;
+    else h.wins[result]++;
+    for (const c of ["white", "black"] as const) {
+      const q = h.quiz[side(c)];
+      q.right += e.quiz[c].right;
+      q.asked += e.quiz[c].asked;
+    }
+    if (h.last.length < 5) h.last.push(result); // the list is newest first
+    pairs.set(key, h);
+  }
+  const games = (h: HeadToHead) => h.wins[0] + h.wins[1] + h.draws;
+  return [...pairs.values()].sort((x, y) => games(y) - games(x));
+}

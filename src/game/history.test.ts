@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { HISTORY_MAX, emptyStats, entryFor, loadHistory, recordHistory, resultKind, resultText } from "./history";
+import { HISTORY_MAX, emptyStats, entryFor, headToHead, loadHistory, recordHistory, resultKind, resultText } from "./history";
 import type { GameState, Outcome } from "./types";
 
 function game(mode: "bot" | "local", outcome: Outcome | null): GameState {
@@ -61,5 +61,34 @@ describe("game history", () => {
     expect(list).toHaveLength(HISTORY_MAX);
     expect(new Date(list[0].at).getMinutes()).toBe((HISTORY_MAX + 4) % 60);
     expect(loadHistory({ getItem: () => "{bad", setItem: () => {} })).toEqual([]);
+  });
+});
+
+describe("head-to-head", () => {
+  const game = (white: string, black: string, winner: "white" | "black" | null, at: string, quiz = { white: { right: 3, asked: 4 }, black: { right: 1, asked: 4 } }) => ({
+    at, mode: "local" as const, names: { white, black }, winner, how: winner ? "checkmate" : "stalemate", moves: 30, trivia: true, chess960: false,
+    formEarned: { white: 0, black: 0 }, quiz,
+  });
+
+  it("groups Pass and Play games by pairing, whoever played White", () => {
+    const list = [
+      game("Ryan", "Freddie", "white", "2026-11-22"),
+      game("freddie", "ryan", "white", "2026-11-21"),
+      game("Ryan", "Freddie", null, "2026-11-20"),
+      game("Ollie", "Ryan", "black", "2026-11-19"),
+    ];
+    const [h, other] = headToHead(list);
+    expect(h.names).toEqual(["Freddie", "Ryan"]);
+    expect(h.wins).toEqual([1, 1]);
+    expect(h.draws).toBe(1);
+    expect(h.last).toEqual([1, 0, "d"]);
+    // Freddie: 1/4 + 3/4 + 1/4 = 5/12; Ryan: 3/4 + 1/4 + 3/4 = 7/12.
+    expect(h.quiz).toEqual([{ right: 5, asked: 12 }, { right: 7, asked: 12 }]);
+    expect(other.names).toEqual(["Ollie", "Ryan"]);
+    expect(other.wins).toEqual([0, 1]);
+  });
+
+  it("ignores games against bots", () => {
+    expect(headToHead([{ ...game("You", "Pawny", "white", "2026-11-22"), mode: "bot" as const }])).toEqual([]);
   });
 });
