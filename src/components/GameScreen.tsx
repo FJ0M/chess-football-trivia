@@ -25,6 +25,7 @@ import type { Color, GameState, Outcome, PowerUpId } from "../game/types";
 import { material, type BenchRole } from "../game/material";
 import { useCommentary } from "../game/useCommentary";
 import { BoardFx, EbkBadge, ScreenFx } from "./MatchFx";
+import { markTip, seenTips, tipFor, TIP_TEXT, type TipId } from "../game/tips";
 
 const GLYPH: Record<string, string> = { k: "♚", q: "♛", r: "♜", b: "♝", n: "♞", p: "♟" };
 const FILES = "abcdefgh";
@@ -164,6 +165,13 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
   const checkSq = useMemo(() => checkedKing(board0), [board0]);
   // The cover waits a moment so the move that caused it is seen first: longer after a Hot Spot (Scorched Turf).
   const coverDelay = !fx ? "" : (phase.kind === "question" && phase.bonus) || (phase.kind === "cards" && phase.bonus) ? " late" : phase.kind === "cards" ? " late-short" : "";
+  // One-time tips for new players: each rule the first time it matters (src/game/tips.ts).
+  const [tipSeen] = useState(seenTips);
+  const [tipDone, setTipDone] = useState<TipId[]>([]);
+  const tipMe: Color | null = humans.length === 1 ? humans[0] : humanToAct ? active : null;
+  const tip = tipMe ? tipFor(board0, phase, tipMe, new Set([...tipSeen, ...tipDone])) : null;
+  // Once shown it counts as seen, so it never comes back in a later game.
+  useEffect(() => { if (tip) markTip(tip); }, [tip]);
   const commentaryLine = line && <p className="commentary" aria-live="polite"><Mic /><span key={line.id}>{line.text}</span></p>;
 
   return (
@@ -178,7 +186,7 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
         </div>
         {/* Flat on the table: the commentary sits on the far side, where there's room, facing the player who's waiting. */}
         {flipMode && commentaryLine}
-        <PlayerBar game={game} color={top} active={active} ticking={clockOwner(game, phase)} bubble={g.bubble} bench={mat.bench[top]} lead={mat.score[top] - mat.score[bottom]} ebk={g.ebk[top]} />
+        <PlayerBar game={game} color={top} active={active} ticking={clockOwner(game, phase)} bubble={g.bubble} bench={mat.bench[top]} lead={mat.score[top] - mat.score[bottom]} ebk={g.ebk[top]} style={style} />
       </div>
       {/* The board takes whatever height is left; .board-wrap is a size container, so the board is the
           largest square that fits in it. Questions and the "Who am I?" are drawn in the same space. */}
@@ -244,9 +252,15 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
         )}
       </div>
       <div className="side near">
-        <PlayerBar game={game} color={bottom} active={active} ticking={clockOwner(game, phase)} bubble={g.bubble} bench={mat.bench[bottom]} lead={mat.score[bottom] - mat.score[top]} ebk={g.ebk[bottom]} />
+        <PlayerBar game={game} color={bottom} active={active} ticking={clockOwner(game, phase)} bubble={g.bubble} bench={mat.bench[bottom]} lead={mat.score[bottom] - mat.score[top]} ebk={g.ebk[bottom]} style={style} />
 
         <div className="controls">
+          {tip && (
+            <div className="tip-bar" role="status">
+              <span>{TIP_TEXT[tip]}</span>
+              <button type="button" onClick={() => setTipDone((d) => [...d, tip])}>Got it</button>
+            </div>
+          )}
           {!flipMode && commentaryLine}
           {botTrivia ? <BotTrivia phase={phase} game={game} /> : phase.kind !== "whoami" && !panelOnBoard && <Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} exitLabel={exitLabel} />}
           {game.options.trivia && phase.kind !== "over" && phase.kind !== "shootout" && phase.kind !== "whoami" && (
@@ -332,8 +346,15 @@ function handicapTag(game: GameState, color: Color): string {
   return h.odds !== "none" ? `Gave ${h.odds === "p" ? "a pawn" : `a ${ODDS_NAME[h.odds].toLowerCase()}`}` : "";
 }
 
-function PlayerBar({ game, color, active, ticking, bubble, bench, lead, ebk }: {
-  game: GameState; color: Color; active: Color; ticking: Color | null; bubble: { color: Color; text: string } | null; bench: BenchRole[]; lead: number; ebk: boolean;
+/** "White", or "White (blue)" in a Look where White's pieces aren't white. */
+function sideName(c: Color, style: GameStyle): string {
+  const name = c === "white" ? "White" : "Black";
+  const shade = style.sides?.[c === "white" ? 0 : 1];
+  return shade ? `${name} (${shade})` : name;
+}
+
+function PlayerBar({ game, color, active, ticking, bubble, bench, lead, ebk, style }: {
+  game: GameState; color: Color; active: Color; ticking: Color | null; bubble: { color: Color; text: string } | null; bench: BenchRole[]; lead: number; ebk: boolean; style: GameStyle;
 }): ReactNode {
   const p = game.players[color];
   const status = [
@@ -346,7 +367,7 @@ function PlayerBar({ game, color, active, ticking, bubble, bench, lead, ebk }: {
       <div className="who">
         <span className="badge">{p.name[0]?.toUpperCase()}</span>
         <span className="who-text">
-          <span>{p.name}{ebk && <EbkBadge className="ebk-mini" />} <span className="tag">{color === "white" ? "White" : "Black"} · {clubShort(p.club)}{p.kind === "bot" ? " · Bot" : ""}{status.length ? ` · ${status.join(", ")}` : ""}</span></span>
+          <span>{p.name}{ebk && <EbkBadge className="ebk-mini" />} <span className="tag">{sideName(color, style)} · {clubShort(p.club)}{p.kind === "bot" ? " · Bot" : ""}{status.length ? ` · ${status.join(", ")}` : ""}</span></span>
           {/* The bench: the opponent's pieces this player has taken (they're the other colour). */}
           <span className="bench" aria-label={bench.length ? `Taken: ${bench.map((r) => ROLE_NAME[r]).join(", ")}` : "Nothing taken yet"}>
             {bench.map((r, i) => <span key={i} className={`bp ${color === "white" ? "b" : "w"}`}>{GLYPH[r]}{"︎"}</span>)}

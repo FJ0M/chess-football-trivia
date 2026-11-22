@@ -678,3 +678,13 @@ button.htp-power:focus-visible, .htp-close:focus-visible { outline: 3px solid #1
 .screen .game-actions button { min-height: 44px; min-width: 44px; padding: 8px 14px; }
 /* Board coordinates: a touch bigger with a firmer outline. */
 .sq .coord { font-size: clamp(9px, 2.5vw, 12px); -webkit-text-stroke: 3px rgba(0,0,0,.75); }
+
+/* ---- Audit 2026-11-22: tips for new players */
+.screen .tip-bar { display: flex; align-items: center; gap: 10px; padding: 8px 10px 8px 12px; border-radius: 10px; background: #fff7a8; color: #1d1d1b; font-size: 13px; line-height: 1.35; box-shadow: 0 2px 6px rgba(0,0,0,.15); }
+.screen .tip-bar span { flex: 1; }
+.screen .tip-bar button { flex: none; min-height: 44px; padding: 6px 12px; border-radius: 999px; border: 2px solid #1d1d1b; background: #fff; color: #1d1d1b; font: inherit; font-weight: 700; cursor: pointer; }
+.play-menu .new-here { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.play-menu .new-here .go { flex: 1; min-height: 48px; font-size: 16px; }
+.play-menu .new-here-x { min-width: 44px; min-height: 44px; border-radius: 50%; border: 2px solid currentColor; background: transparent; color: inherit; font-size: 20px; cursor: pointer; }
+.htp-sq.frozen { background: repeating-linear-gradient(45deg, #78c8ff 0 5px, #dff2ff 5px 10px); color: #1f5fbf; }
+.htp-big .htp-card { width: 18px; height: 26px; display: inline-block; }
