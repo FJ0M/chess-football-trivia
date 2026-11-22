@@ -123,6 +123,50 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
     }
     setSel(null);
   }
+  // Drag-to-move: press on one of your pieces and drag it to a square. A press that doesn't
+  // move far stays a tap, so tap-tap still works. The board never scrolls, so touch can drag freely.
+  const dragRef = useRef<{ from: string; x: number; y: number; moved: boolean } | null>(null);
+  const [drag, setDrag] = useState<{ from: string; dx: number; dy: number } | null>(null);
+  const dropped = useRef<string | null>(null);
+  const swallowClick = useRef(false);
+  const squareAt = (x: number, y: number) => document.elementFromPoint(x, y)?.closest("[data-sq]")?.getAttribute("data-sq") ?? null;
+  const dragHandlers = {
+    onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
+      if (phase.kind !== "move" || !humanToAct || e.button > 0) return;
+      const from = (e.target as Element).closest("[data-sq]")?.getAttribute("data-sq");
+      const piece = from ? pieceAt(game.fen, from) : null;
+      dragRef.current = from && piece?.color === turn && dests.has(from) ? { from, x: e.clientX, y: e.clientY, moved: false } : null;
+    },
+    onPointerMove(e: React.PointerEvent<HTMLDivElement>) {
+      const r = dragRef.current;
+      if (!r) return;
+      // "Flat on the table" turns the screen round for Black, so screen movement is backwards.
+      const k = flipAll ? -1 : 1;
+      const dx = (e.clientX - r.x) * k;
+      const dy = (e.clientY - r.y) * k;
+      if (!r.moved) {
+        if (Math.hypot(dx, dy) < 8) return;
+        r.moved = true;
+        e.currentTarget.setPointerCapture?.(e.pointerId);
+        if (sel !== r.from) { setSel(r.from); play("select"); }
+      }
+      setDrag({ from: r.from, dx, dy });
+    },
+    onPointerUp(e: React.PointerEvent<HTMLDivElement>) {
+      const r = dragRef.current;
+      dragRef.current = null;
+      if (!r?.moved) return;
+      setDrag(null);
+      swallowClick.current = true;
+      const to = squareAt(e.clientX, e.clientY);
+      if (to && dests.get(r.from)?.includes(to)) { dropped.current = to; tap(to); }
+    },
+    onPointerCancel() { dragRef.current = null; setDrag(null); },
+    onClickCapture(e: React.MouseEvent) {
+      // The click after a drag isn't a tap.
+      if (swallowClick.current) { swallowClick.current = false; e.stopPropagation(); }
+    },
+  };
   const [selNote, setSelNote] = useState<string | null>(null);
   useEffect(() => { setSelNote(null); }, [game, phase]);
   useEffect(() => { if (game.outcome) onFinish(game, stats.current); }, [game.outcome]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -142,6 +186,8 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
   const slide = useMemo(() => {
     if (!fx || !game.lastMove) return null;
     const [from, to] = game.lastMove;
+    // A piece you dragged is already there: no slide.
+    if (dropped.current === to) { dropped.current = null; return null; }
     const sign = orientation === "white" ? 1 : -1;
     const dx = (FILES.indexOf(from[0]) - FILES.indexOf(to[0])) * sign;
     const dy = (Number(to[1]) - Number(from[1])) * sign;
@@ -193,7 +239,7 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
       <div className="board-wrap">
         {/* During a "Who am I?" the board is hidden (and the clocks stop): it's just the footballer. */}
         {phase.kind === "whoami" && <div className="whoami-stage"><Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} exitLabel={exitLabel} /></div>}
-        <div className="board" role="grid" aria-label="Chess board" hidden={phase.kind === "whoami"}>
+        <div className={`board${drag ? " dragging" : ""}`} role="grid" aria-label="Chess board" hidden={phase.kind === "whoami"} {...dragHandlers}>
           {rows.map((r) => cols.map((c) => {
             const sq = FILES[c] + (r + 1);
             const p = board[r][c];
@@ -222,9 +268,10 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
             const fileMark = r === rows[7] ? FILES[c] : null;
             const rankMark = c === cols[0] ? String(r + 1) : null;
             return (
-              <button key={sq} type="button" className={cls} onClick={() => tap(sq)} aria-label={`${sq}${p ? ` ${p.color} ${ROLE_NAME[p.role]}` : ""}${states.length ? ` (${states.join(", ")})` : ""}`}>
+              <button key={sq} type="button" className={`${cls}${drag?.from === sq ? " drag-from" : ""}`} data-sq={sq} onClick={() => tap(sq)} aria-label={`${sq}${p ? ` ${p.color} ${ROLE_NAME[p.role]}` : ""}${states.length ? ` (${states.join(", ")})` : ""}`}>
                 {game.hotSpots.includes(sq) && <HotSpotIcon />}
-                {p && <span className={`pc ${p.color === "white" ? "w" : "b"}${slide && last && last[1] === sq ? " slide" : ""}`} style={slide && last && last[1] === sq ? slide : undefined}>{GLYPH[p.role]}{"︎"}</span>}
+                {p && <span className={`pc ${p.color === "white" ? "w" : "b"}${slide && last && last[1] === sq ? " slide" : ""}${drag?.from === sq ? " held" : ""}`}
+                  style={drag?.from === sq ? { transform: `translate(${drag.dx}px, ${drag.dy}px) scale(1.15)` } : slide && last && last[1] === sq ? slide : undefined}>{GLYPH[p.role]}{"︎"}</span>}
                 {isDest && <span className={p ? "dot cap" : "dot"} />}
                 {rankMark && <span className="coord rank" aria-hidden="true">{rankMark}</span>}
                 {fileMark && <span className="coord file" aria-hidden="true">{fileMark}</span>}

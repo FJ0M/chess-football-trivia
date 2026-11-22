@@ -213,6 +213,18 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 .score-card small { font-size: 12px; opacity: .75; }
 .score-card small.assisted { justify-self: center; padding: 1px 8px; border-radius: 999px; border: 1px solid currentColor; opacity: 1; }
 .score-card span { font-size: 14px; overflow-wrap: break-word; }
+.score-card.rating { grid-column: 1 / -1; order: -1; }
+.sparkline { width: 100%; height: 30px; color: #1f5fbf; margin: 4px 0 2px; }
+.h2h-list { display: grid; gap: 8px; }
+.h2h { display: grid; gap: 4px; padding: 10px; border-radius: 10px; border: 2px solid #c9d1d4; background: #fff; color: #18304a; }
+.h2h-names { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; }
+.h2h-names b { overflow-wrap: anywhere; }
+.h2h-names b:last-child { text-align: right; }
+.h2h-names span { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.h2h small { font-size: 12px; opacity: .75; text-align: center; }
+.h2h-last { display: flex; justify-content: center; gap: 4px; }
+.h2h-last i { font-style: normal; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 800; color: #fff; }
+.h2h-last i.a { background: #1f5fbf; } .h2h-last i.b { background: #d1342f; } .h2h-last i.d { background: #8d959c; }
 .row-btns { display: flex; gap: 8px; }
 
 .sheet.pause { gap: 8px; }
@@ -333,6 +345,11 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); transit
 /* The piece that just moved slides in from its old square (one square = an eighth of the board). */
 .board-wrap .pc.slide { animation: piece-slide .2s cubic-bezier(.25,.8,.3,1) both; z-index: 4; }
 .board-wrap .sq:has(.pc.slide) { z-index: 3; }
+/* Drag-to-move: the held piece follows the finger above everything else on the board. */
+.board-wrap .board { touch-action: none; -webkit-user-select: none; user-select: none; }
+.board-wrap .sq.drag-from { z-index: 5; }
+.board-wrap .pc.held { z-index: 5; pointer-events: none; filter: drop-shadow(0 6px 6px rgba(0,0,0,.35)); }
+.board.dragging, .board.dragging .sq { cursor: grabbing; }
 @keyframes piece-slide { from { translate: calc(var(--dx) * min(100cqw, 100cqh) / 8) calc(var(--dy) * min(100cqw, 100cqh) / 8); } }
 .form-meter .num { position: relative; }
 .form-pop { position: absolute; left: 50%; bottom: 100%; translate: -50% 0; font-size: 18px; font-weight: 800; color: #2e9d4f; text-shadow: 0 1px 0 #fff; pointer-events: none; animation: form-pop 1.3s ease-out both; }

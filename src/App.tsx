@@ -7,6 +7,7 @@ import { awardBadges, awardSeasonBadges, type NewBadge } from "./game/badges";
 import { BadgeToast, CabinetScreen } from "./components/Cabinet";
 import { botList, loadBots } from "./game/bots";
 import { loadTriviaRating, saveTriviaRating, updateTriviaRating } from "./game/triviaElo";
+import { loadChessRating, saveChessRating, updateChessRating } from "./game/chessElo";
 import { entryFor, recordHistory, usedAssist, type MatchStats } from "./game/history";
 import { seasonResult, type SetupChoice } from "./game/match";
 import type { GameState } from "./game/types";
@@ -144,6 +145,11 @@ export function App() {
             const botId = g.players[human === "white" ? "black" : "white"].botId;
             const meta = await loadBots().then((m) => botList(m).find((b) => b.id === botId)).catch(() => undefined);
             const rating = meta?.rating;
+            // Your chess rating moves too, against the bot's chess Elo.
+            if (rating) {
+              const winner = g.outcome && "winner" in g.outcome ? g.outcome.winner : null;
+              saveChessRating(updateChessRating(loadChessRating(), rating.chess, winner ? (winner === human ? 1 : 0) : 0.5, loadTriviaRating().rating));
+            }
             const prevBestMatch = loadScores().best?.match;
             let seasonBadges: NewBadge[] = [];
             if (setup.season) {

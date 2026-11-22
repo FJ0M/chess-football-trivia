@@ -2,8 +2,9 @@
 
 import { useState, type ReactNode } from "react";
 import { loadScores, resetScores } from "../game/scores";
-import { TRIVIA_WEIGHT, TRIVIA_BASE, loadTriviaRating, resetTriviaRating, triviaTitle } from "../game/triviaElo";
-import { clearHistory, loadHistory, resultKind, resultText, type HistoryEntry } from "../game/history";
+import { TRIVIA_WEIGHT, TRIVIA_BASE, combinedRating, loadTriviaRating, resetTriviaRating, triviaTitle } from "../game/triviaElo";
+import { loadChessRating, resetChessRating, trendChange } from "../game/chessElo";
+import { clearHistory, headToHead, loadHistory, resultKind, resultText, type HeadToHead, type HistoryEntry } from "../game/history";
 import type { Color } from "../game/types";
 import { BOT_NAMES, LADDER_BOT_IDS } from "../game/bots";
 import { markTip, seenTips } from "../game/tips";
@@ -128,9 +129,41 @@ export function AchievementsHead({ tab, onTab, onBack }: { tab: AchievementsTab;
   );
 }
 
+/** A small line chart of your last few combined ratings. */
+function Sparkline({ points }: { points: number[] }) {
+  if (points.length < 2) return null;
+  const lo = Math.min(...points);
+  const span = Math.max(...points) - lo || 1;
+  const d = points.map((p, i) => `${i ? "L" : "M"}${((i / (points.length - 1)) * 96 + 2).toFixed(1)} ${(26 - ((p - lo) / span) * 22).toFixed(1)}`).join("");
+  return (
+    <svg className="sparkline" viewBox="0 0 100 30" aria-hidden="true" preserveAspectRatio="none">
+      <path d={d} fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+    </svg>
+  );
+}
+
+const pctOf = (t: { right: number; asked: number }) => (t.asked ? `${Math.round((100 * t.right) / t.asked)}%` : "–");
+
+function HeadToHeadCard({ h }: { h: HeadToHead }) {
+  const mark = (r: 0 | 1 | "d") => (r === "d" ? "D" : h.names[r].slice(0, 1).toUpperCase());
+  const games = h.wins[0] + h.wins[1] + h.draws;
+  return (
+    <div className="h2h">
+      <div className="h2h-names"><b>{h.names[0]}</b><span>{h.wins[0]} – {h.wins[1]}</span><b>{h.names[1]}</b></div>
+      <small>{games} game{games === 1 ? "" : "s"}{h.draws ? ` · ${h.draws} drawn` : ""} · Trivia {pctOf(h.quiz[0])} v {pctOf(h.quiz[1])}</small>
+      <div className="h2h-last" aria-label={`Last ${h.last.length}, newest first`}>
+        {h.last.map((r, i) => <i key={i} className={r === "d" ? "d" : r === 0 ? "a" : "b"} title={r === "d" ? "Draw" : `${h.names[r]} won`}>{mark(r)}</i>)}
+      </div>
+    </div>
+  );
+}
+
 export function ScoresScreen({ onBack, head }: { onBack: () => void; head?: ReactNode }) {
   const [scores, setScores] = useState(loadScores);
   const [trivia, setTrivia] = useState(loadTriviaRating);
+  const [chess, setChess] = useState(loadChessRating);
+  const [pairs] = useState(() => headToHead(loadHistory()));
+  const change = trendChange(chess);
   const bots = Object.entries(scores.bots).sort(([a], [b]) => a.localeCompare(b));
   const best = scores.best;
   const local = Object.entries(scores.local).sort(([, a], [, b]) => b - a);
@@ -148,6 +181,17 @@ export function ScoresScreen({ onBack, head }: { onBack: () => void; head?: Reac
               {best.assisted && <small className="assisted" title="You used Manager's Tip or VAR Review in this win">Assisted</small>}
             </>
           ) : <span>Beat a bot to set one</span>}
+        </div>
+        <div className="score-card rating">
+          <small>Your rating</small>
+          <b>{combinedRating(chess.rating, trivia.rating)}</b>
+          <span>Chess {chess.rating} · Trivia {trivia.rating}</span>
+          {chess.games ? (
+            <>
+              <Sparkline points={chess.trend} />
+              <small>{change === null ? "One game in" : `${change > 0 ? "+" : ""}${change} over your last ${chess.trend.length} games`}</small>
+            </>
+          ) : <small>Moves after every game against a bot</small>}
         </div>
         <div className="score-card">
           <small>Your trivia Elo</small>
@@ -169,10 +213,11 @@ export function ScoresScreen({ onBack, head }: { onBack: () => void; head?: Reac
           </tbody>
         </table>
       ) : <p className="muted">No games against the bots yet.</p>}
-      <h3>Pass and Play wins</h3>
-      {local.length ? <ol>{local.map(([n, w]) => <li key={n}>{n}: {w}</li>)}</ol> : <p className="muted">No Pass and Play games yet.</p>}
+      <h3>Pass and Play head-to-head</h3>
+      {pairs.length ? <div className="h2h-list">{pairs.map((h) => <HeadToHeadCard key={h.names.join("|")} h={h} />)}</div>
+        : local.length ? <ol>{local.map(([n, w]) => <li key={n}>{n}: {w}</li>)}</ol> : <p className="muted">No Pass and Play games yet.</p>}
       <div className="row-btns">
-        <button type="button" className="ghost" onClick={() => { resetScores(); resetTriviaRating(); setScores(loadScores()); setTrivia(loadTriviaRating()); }}>Reset</button>
+        <button type="button" className="ghost" onClick={() => { resetScores(); resetTriviaRating(); resetChessRating(); setScores(loadScores()); setTrivia(loadTriviaRating()); setChess(loadChessRating()); }}>Reset</button>
       </div>
     </section>
   );
