@@ -40,7 +40,7 @@ export function planDepth(strength: ChessStrength): number {
 }
 
 /** Value of a node for the bot, in centipawns, by playing the bot's best moves until it's the opponent's turn. */
-async function value(engine: Analyser, node: SimNode, depth: number, plies = 0): Promise<number> {
+async function value(engine: Analyser, node: SimNode, depth: number, plies = 0, deadline = Infinity): Promise<number> {
   if (node.over) return node.over === "win" ? MATE_CP : node.over === "loss" ? -MATE_CP : 0;
   if (!node.moves.length) return 0;
   const pos = positionFromFen(node.fen);
@@ -50,12 +50,12 @@ async function value(engine: Analyser, node: SimNode, depth: number, plies = 0):
     if (!searchable.length) return 0;
     // Freezes and Park the Bus show up as moves missing from the opponent's list.
     const restricted = searchable.length < legalMoves(pos).length;
-    const lines = await engine.analyse(node.fen, { depth, multiPv: 1, searchMoves: restricted ? searchable : undefined, maxMs: 800 });
+    const lines = await engine.analyse(node.fen, { depth, multiPv: 1, searchMoves: restricted ? searchable : undefined, maxMs: stepMs(deadline) });
     return lines[0] ? -lines[0].scoreCp : 0;
   }
   let uci = node.moves[0];
   if (node.moves.length > 1 && searchable.length) {
-    const lines = await engine.analyse(node.fen, { depth, multiPv: 1, searchMoves: searchable, maxMs: 800 });
+    const lines = await engine.analyse(node.fen, { depth, multiPv: 1, searchMoves: searchable, maxMs: stepMs(deadline) });
     const best = lines[0] && normaliseUci(pos, lines[0].uci);
     if (best && node.moves.includes(best)) uci = best;
     else if (lines[0]) uci = searchable[0];
@@ -63,7 +63,20 @@ async function value(engine: Analyser, node: SimNode, depth: number, plies = 0):
   const next = node.play(uci);
   if (!next) return 0;
   if (plies >= 3) return 0;
-  return value(engine, next, depth, plies + 1);
+  return value(engine, next, depth, plies + 1, deadline);
+}
+
+/** One engine look: at most 800 ms, and never much past the deadline. */
+function stepMs(deadline: number): number {
+  return Math.max(60, Math.min(800, deadline - Date.now()));
+}
+
+/**
+ * How long a bot may spend planning a power-up (audit, 2026-11-22: it could make 100+ engine calls a turn,
+ * with its clock running). Stronger bots think a little longer.
+ */
+export function planBudgetMs(strength: ChessStrength): number {
+  return 1000 + planDepth(strength) * 100;
 }
 
 /**
@@ -79,6 +92,8 @@ export async function planPowerUp(
   extra: { id: PowerUpOption["id"]; gainCp: number; cost: number }[] = [],
 ): Promise<Planned | null> {
   const depth = planDepth(strength);
+  const deadline = Date.now() + planBudgetMs(strength);
+  const late = () => Date.now() >= deadline;
   const noiseCp = strength.temperatureCp * 0.5;
   const formCp = req.form >= FORM_CAP - 2 ? FORM_CP / 2 : FORM_CP;
   const score = (id: string, gain: number, cost: number) => {
@@ -92,9 +107,13 @@ export async function planPowerUp(
 
   if (req.options.length) {
     const quickDepth = Math.min(QUICK_DEPTH, depth);
-    const quickBase = clamp(await value(engine, req.base, quickDepth));
+    const quickBase = clamp(await value(engine, req.base, quickDepth, 0, deadline));
     const quick: { o: PowerUpOption; gain: number }[] = [];
-    for (const o of req.options) quick.push({ o, gain: clamp(await value(engine, o.node, quickDepth)) - quickBase });
+    // Out of time: judge from the options looked at so far.
+    for (const o of req.options) {
+      if (late()) break;
+      quick.push({ o, gain: clamp(await value(engine, o.node, quickDepth, 0, deadline)) - quickBase });
+    }
     // Best few by value for Form, at most two of the same power-up.
     quick.sort((a, b) => b.gain - b.o.cost * FORM_CP - (a.gain - a.o.cost * FORM_CP));
     const per = new Map<string, number>();
@@ -103,9 +122,11 @@ export async function planPowerUp(
       per.set(o.id, n + 1);
       return n < 2;
     }).slice(0, SHORTLIST);
-    const baseCp = depth === quickDepth ? quickBase : clamp(await value(engine, req.base, depth));
+    // The deeper second look only if there's time left for it.
+    const deep = depth !== quickDepth && !late();
+    const baseCp = deep ? clamp(await value(engine, req.base, depth, 0, deadline)) : quickBase;
     for (const { o, gain: g } of short) {
-      const gain = depth === quickDepth ? g : clamp(await value(engine, o.node, depth)) - baseCp;
+      const gain = deep && !late() ? clamp(await value(engine, o.node, depth, 0, deadline)) - baseCp : g;
       all.push({ choice: { id: o.id, target: o.target, target2: o.target2 }, gainCp: gain, scoreCp: score(o.id, gain, o.cost) });
     }
   }

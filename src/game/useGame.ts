@@ -325,7 +325,12 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
   return {
     game, phase, note: match.note, bubble, overlay: match.overlay, now, ready: !!data, botMeta, engineReady: !!mod, events, ebk: match.ebk, runs: match.runs,
     /** White's engine score in centipawns for a position, or null (for the commentator). */
-    evaluate: useCallback((fen: string) => (mod ? mod.evaluate(fen, game.options.chess960) : Promise.resolve(null)), [mod, game.options.chess960]),
+    evaluate: useCallback((fen: string) => {
+      if (!mod) return Promise.resolve(null);
+      // A bot is about to think: a shallow look, so the commentator doesn't hold up its move.
+      const toMove: Color = fen.split(" ")[1] === "b" ? "black" : "white";
+      return mod.evaluate(fen, game.options.chess960, setup.players[toMove].kind === "bot");
+    }, [mod, game.options.chess960]), // eslint-disable-line react-hooks/exhaustive-deps
     ...actions,
   };
 }

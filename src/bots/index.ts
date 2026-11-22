@@ -35,12 +35,13 @@ export async function bestMove(fen: string, chess960 = false, depth = 14, search
  * A quick, shallow engine score for the commentator, from White's side in centipawns.
  * Mates come back as +/-(MATE_CP - plies). Null if the engine can't say.
  */
-export async function evaluate(fen: string, _chess960 = false): Promise<number | null> {
+export async function evaluate(fen: string, _chess960 = false, quick = false): Promise<number | null> {
   // The commentator comes last: if a bot or a hint is using the engine, it goes without
   // rather than make them wait.
   if (getSharedEngine().busy) return null;
   try {
-    const lines = await getSharedEngine().analyse(fen, { depth: 10, multiPv: 1, maxMs: 700 });
+    // Quick when a bot is about to use the engine for its own move, so it isn't kept waiting (audit, 2026-11-22).
+    const lines = await getSharedEngine().analyse(fen, quick ? { depth: 6, multiPv: 1, maxMs: 120 } : { depth: 10, multiPv: 1, maxMs: 700 });
     const cp = lines[0]?.scoreCp;
     if (cp === undefined) return null;
     return fen.split(" ")[1] === "b" ? -cp : cp;

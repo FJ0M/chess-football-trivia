@@ -41,9 +41,24 @@ function splitQuestions(): Plugin {
   };
 }
 
+/**
+ * Writes asset-list.json: every built file of this version. The service worker (public/sw.js) uses it
+ * to delete files from older versions, so an installed copy doesn't grow with every update.
+ */
+function assetList(): Plugin {
+  return {
+    name: "asset-list",
+    apply: "build",
+    generateBundle(_opts, bundle) {
+      const files = Object.keys(bundle).filter((f) => f.startsWith("assets/")).sort();
+      this.emitFile({ type: "asset", fileName: "asset-list.json", source: JSON.stringify({ files }) });
+    },
+  };
+}
+
 // GitHub Pages serves the app from /chess-football-trivia/.
 export default defineConfig({
   base: "/chess-football-trivia/",
-  plugins: [react(), splitQuestions()],
+  plugins: [react(), splitQuestions(), assetList()],
   test: { environment: "jsdom" },
 } as never);
