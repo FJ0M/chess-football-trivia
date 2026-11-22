@@ -9,7 +9,7 @@ import { botList, importWithRetry, loadBots, type BotLike, type BotMeta, type Bo
 import { botPowerOptions } from "./botPowers";
 import { POWER_UPS } from "./powerups";
 import { PROMOTION_AIM, legalMoves, newGame, powerBlocked, powerCost, resolveMove, turnOf } from "./rules";
-import { QuestionBank, TIMER_MS, browserSeenStore, memorySeenStore } from "./trivia";
+import { QuestionBank, TIMER_MS, browserSeenStore, memorySeenStore, withMatchSeen } from "./trivia";
 import { WhoAmIBank, type WhoAmI } from "./whoami";
 import {
   actorOf, positionCheck, startMatch, step, type Action, type Data, type Effect, type GameEvent, type Match, type NewEvent, type Phase, type SetupChoice,
@@ -42,10 +42,12 @@ function loadData(players: SetupChoice["players"]): Promise<Data> {
   const clubs = [...new Set([players.white.club, players.black.club])];
   return Promise.all([rawPromise, ...clubs.map(clubQuestions)]).then(([{ general, sets }, ...clubSets]) => {
     const questions = [...general, ...clubSets.flat()];
+    // Shared by both sides, so no question comes up twice in one match.
+    const matchSeen = memorySeenStore();
     const banks = (c: Color): Data[Color] => {
       const p = players[c];
       // Bots don't need to remember what they've been asked between games.
-      const seen = p.kind === "human" ? browserSeenStore(p.name) : memorySeenStore();
+      const seen = withMatchSeen(p.kind === "human" ? browserSeenStore(p.name) : memorySeenStore(), matchSeen);
       return { bank: new QuestionBank(questions, seen), whoami: new WhoAmIBank(sets, seen) };
     };
     return { white: banks("white"), black: banks("black") };

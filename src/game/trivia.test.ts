@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import questions from "../../data/questions.json";
 import whoami from "../../data/whoami.json";
-import { QuestionBank, browserSeenStore, seenKey, shuffleOptions } from "./trivia";
+import { QuestionBank, browserSeenStore, memorySeenStore, seenKey, shuffleOptions, withMatchSeen } from "./trivia";
 import { WhoAmIBank, type WhoAmI } from "./whoami";
 import { shootoutWinner } from "./match";
 import { CLUBS } from "./clubs";
@@ -10,6 +10,20 @@ import type { Question } from "./types";
 const qs = (questions as { questions: Question[] }).questions;
 
 describe("question bank", () => {
+  it("never asks both players the same question in one match", () => {
+    const match = memorySeenStore();
+    const white = new QuestionBank(qs, withMatchSeen(memorySeenStore(), match));
+    const black = new QuestionBank(qs, withMatchSeen(memorySeenStore(), match));
+    const ids = new Set<string>();
+    for (let i = 0; i < 60; i++) {
+      for (const bank of [white, black]) {
+        const q = bank.draw(bank.deal(null)[i % 3]);
+        expect(ids.has(q.id)).toBe(false);
+        ids.add(q.id);
+      }
+    }
+  });
+
   it("deals one card of each difficulty, mostly general with at most one club card", () => {
     const bank = new QuestionBank(qs);
     let general = 0;

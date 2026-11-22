@@ -320,7 +320,7 @@ export function legalMoves(state: GameState): MoveFilter {
   const frozen = new Set(state.frozen.filter((f) => f.owner === turn).map((f) => f.square));
   const restricted = state.step !== "normal";
   // Extra Time: the first move can't capture either (it may give check, which cancels the second move).
-  // Formation Change, Tactical Foul and Super-Sub: no capture on the turn you use one.
+  // Formation Change, Tactical Foul, Super-Sub and Back from Injury: no capture on the turn you use one.
   const noCapture = restricted || state.extraTimePending || (!!state.powerUsedId && NO_CAPTURE_AFTER.includes(state.powerUsedId));
   const bus = state.parkTheBus === opposite(turn) ? state.parkTheBus : null;
   const busRanks = bus === "white" ? [0, 1] : bus === "black" ? [6, 7] : [];
@@ -647,7 +647,8 @@ export function finishTurn(state: GameState): TurnInfo {
 }
 
 export function endInDraw(state: GameState, reason: DrawReason): GameState {
-  if (state.options.trivia) return { ...state, pendingDraw: reason };
+  // Stalemate is just a draw, with no Penalty Shootout (Freddie, 2026-11-22 playtest).
+  if (state.options.trivia && reason !== "stalemate") return { ...state, pendingDraw: reason };
   return { ...state, outcome: { kind: "draw", reason } };
 }
 
@@ -677,7 +678,7 @@ export function comebackShift(state: GameState, color: Color): -1 | 0 {
 }
 
 /** After using one of these, your move that turn can't capture (Freddie, 2026-11-09). */
-export const NO_CAPTURE_AFTER: readonly PowerUpId[] = ["formation-change", "tactical-foul", "super-sub"];
+export const NO_CAPTURE_AFTER: readonly PowerUpId[] = ["formation-change", "tactical-foul", "super-sub", "substitution"];
 
 export function powerCost(state: GameState, color: Color, id: PowerUpId): number {
   // Comeback pricing: 1 Form cheaper when 3+ points down (never below 1).
