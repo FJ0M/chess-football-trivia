@@ -19,6 +19,13 @@ let crowdLevel = 0.5;
 /** Music and crowd drop while a question is up, so you can think. */
 let ducked = false;
 const DUCK = 0.35;
+/** And dip further for a moment under the big stings (full time, a red card, a wrong answer…). */
+let dippedUntil = 0;
+const DIP = 0.2;
+let dipTimer: ReturnType<typeof setTimeout> | undefined;
+/** The music sits a little under the effects and the crowd (audit, 2026-11-22: it was louder than the payoffs). */
+const MUSIC_TRIM = 0.7;
+const level = (): number => Math.min(ducked ? DUCK : 1, Date.now() < dippedUntil ? DIP : 1);
 
 function create(): Engine | null {
   const Ctor = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
@@ -32,8 +39,8 @@ function create(): Engine | null {
   const music = ctx.createGain();
   const crowd = ctx.createGain();
   sfx.gain.value = sfxLevel;
-  music.gain.value = musicLevel * (ducked ? DUCK : 1);
-  crowd.gain.value = crowdLevel * (ducked ? DUCK : 1);
+  music.gain.value = musicLevel * MUSIC_TRIM * level();
+  crowd.gain.value = crowdLevel * level();
   sfx.connect(master);
   music.connect(master);
   crowd.connect(master);
@@ -74,23 +81,35 @@ export function setSfxVolume(v: number): void {
 
 export function setMusicVolume(v: number): void {
   musicLevel = v;
-  if (engine) engine.music.gain.setTargetAtTime(v * (ducked ? DUCK : 1), engine.ctx.currentTime, 0.05);
+  if (engine) engine.music.gain.setTargetAtTime(v * MUSIC_TRIM * level(), engine.ctx.currentTime, 0.05);
 }
 
 export function setCrowdVolume(v: number): void {
   crowdLevel = v;
-  if (engine) engine.crowd.gain.setTargetAtTime(v * (ducked ? DUCK : 1), engine.ctx.currentTime, 0.1);
+  if (engine) engine.crowd.gain.setTargetAtTime(v * level(), engine.ctx.currentTime, 0.1);
 }
 
 /** Turns the music and the crowd down (true) or back up (false). */
 export function setDucked(on: boolean): void {
   if (ducked === on) return;
   ducked = on;
+  applyLevel(on ? 0.15 : 0.4);
+}
+
+function applyLevel(tau: number): void {
   if (!engine) return;
-  const k = on ? DUCK : 1;
+  const k = level();
   const t = engine.ctx.currentTime;
-  engine.music.gain.setTargetAtTime(musicLevel * k, t, on ? 0.15 : 0.4);
-  engine.crowd.gain.setTargetAtTime(crowdLevel * k, t, on ? 0.15 : 0.4);
+  engine.music.gain.setTargetAtTime(musicLevel * MUSIC_TRIM * k, t, tau);
+  engine.crowd.gain.setTargetAtTime(crowdLevel * k, t, tau);
+}
+
+/** Dips the music and crowd for `ms` under a big sound, then brings them back. */
+export function duckFor(ms: number): void {
+  dippedUntil = Math.max(dippedUntil, Date.now() + ms);
+  applyLevel(0.06);
+  clearTimeout(dipTimer);
+  dipTimer = setTimeout(() => applyLevel(0.6), dippedUntil - Date.now() + 20);
 }
 
 export const midiToHz = (m: number): number => 440 * Math.pow(2, (m - 69) / 12);

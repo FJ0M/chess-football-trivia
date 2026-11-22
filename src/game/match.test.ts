@@ -267,6 +267,16 @@ describe("match engine: clocks", () => {
     expect(m.game.players.white.clockMs).toBe(start - 1000);
   });
 
+  it("the last seconds of a person's question and chess clock tick", () => {
+    const capture = run(startMatch(game()), [{ type: "move", uci: "e2e4" }, { type: "move", uci: "d7d5" }, { type: "move", uci: "e4d5" }]).m;
+    const q = run(capture, [[{ type: "pick", index: 1, puskas: false }, 1000]]).m;
+    expect(sounds(run(q, [[{ type: "tick", dt: 200 }, 1000 + 5000]]).fx)).not.toContain("tick");
+    expect(sounds(run(q, [[{ type: "tick", dt: 200 }, 1000 + TIMER_MS.normal - 2900]]).fx)).toContain("tick");
+    const timed = startMatch(game({ timed: true, minutes: 1, trivia: false }));
+    expect(sounds(run(timed, [{ type: "tick", dt: 200 }]).fx)).not.toContain("tick");
+    expect(sounds(run(timed, [{ type: "tick", dt: 50_200 }]).fx)).toContain("tick");
+  });
+
   it("a tick in an untimed game with nothing due returns the same match", () => {
     const m0 = startMatch(game());
     expect(step(m0, { type: "tick", dt: 200 }, { now: 5000, banks: banks(), engineReady: true }).match).toBe(m0);

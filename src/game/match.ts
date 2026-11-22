@@ -278,6 +278,12 @@ export function targetPrompt(t: string): string {
   }
 }
 
+/** True when a countdown passes a whole second at or under `last` seconds (and hasn't run out). */
+export function crossedSecond(beforeMs: number, afterMs: number, last: number): boolean {
+  const a = Math.ceil(afterMs / 1000);
+  return afterMs > 0 && a <= last && Math.ceil(beforeMs / 1000) > a;
+}
+
 /** One step's worth of work: the match as it changes, and the effects collected on the way. */
 class Turn {
   fx: Effect[] = [];
@@ -555,6 +561,7 @@ class Turn {
     this.emit({ kind: "answer", color: p.color, correct, puskas: p.puskas, hatTrick });
     this.countAnswer(p.color, correct);
     if (correct) { this.sfx("correct"); this.sfx("form", 300); this.talk(p.color, "ownRight"); }
+    if (hatTrick) this.sfx("hatTrick", 500);
     else { this.sfx("wrong"); this.sfx("groan", 350); this.react(p.color, "ownWrong", "oppWrong"); }
     const who = out.state.players[p.color].name;
     this.go({
@@ -682,6 +689,13 @@ class Turn {
     else if (p.kind === "whoami" && !this.isBot(p.color) && now - p.clueAt >= CLUE_MS) this.nextClue();
     else if (p.kind === "result" && now - p.shownAt >= (p.auto ? RESULT_MS : RESULT_MS_HUMAN)) this.continueOn();
     else if (p.kind === "shootout" && p.choice === null && !this.isBot(p.taker) && now - p.startedAt > TIMER_MS.normal) this.kick(null);
+    // The last 3 seconds of a person's question or penalty tick away.
+    const q = this.p;
+    if ((q.kind === "question" && !this.isBot(q.color)) || (q.kind === "shootout" && q.choice === null && !this.isBot(q.taker))) {
+      const limit = q.kind === "question" ? q.limitMs : TIMER_MS.normal;
+      const left = limit - (now - q.startedAt);
+      if (crossedSecond(left + dt, left, 3)) this.sfx("tick");
+    }
 
     // Chess clock: runs for whoever has to act, through picking and answering questions and engine
     // thinking too. It stops for results, a "Who am I?", the Penalty Shootout and the pause menu.
@@ -696,7 +710,11 @@ class Turn {
       this.setGame(out);
       this.finalWhistle();
       this.go({ kind: "over" });
-    } else this.setGame(setClock(g, c, left));
+    } else {
+      this.setGame(setClock(g, c, left));
+      // A person's last 10 seconds on the chess clock tick too.
+      if (!this.isBot(c) && crossedSecond(left + dt, left, 10)) this.sfx("tick");
+    }
   }
 
   private unpause(d: number) {
