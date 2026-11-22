@@ -42,9 +42,12 @@ function loadData(players: SetupChoice["players"]): Promise<Data> {
   }
   // An Away day club for this match: one the players don't support, picked at random.
   const others = CLUBS.map((c) => c.id).filter((id) => id !== players.white.club && id !== players.black.club);
-  const awayDay = others[Math.floor(Math.random() * others.length)] ?? null;
-  const clubs = [...new Set([players.white.club, players.black.club, awayDay])];
-  return Promise.all([rawPromise, ...clubs.map(clubQuestions)]).then(([{ general, sets }, ...clubSets]) => {
+  let awayDay: string | null = others[Math.floor(Math.random() * others.length)] ?? null;
+  // The Away day club is a bonus: if its questions can't load (offline, never cached), play without it.
+  // Loaded directly, not through importWithRetry, so a failure never reloads the page.
+  const away: Promise<Question[]> = awayDay ? loadClub(awayDay).catch(() => { awayDay = null; return []; }) : Promise.resolve([]);
+  const clubs = [...new Set([players.white.club, players.black.club])];
+  return Promise.all([rawPromise, away, ...clubs.map(clubQuestions)]).then(([{ general, sets }, ...clubSets]) => {
     const questions = [...general, ...clubSets.flat()];
     // Shared by both sides, so no question comes up twice in one match.
     const matchSeen = memorySeenStore();
