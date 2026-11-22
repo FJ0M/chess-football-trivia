@@ -33,7 +33,9 @@
 .pw { display: grid; justify-items: center; gap: 3px; padding: 8px 4px; text-align: center; font-size: 11px; line-height: 1.15; }
 .pw svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .pw .cost { font-variant-numeric: tabular-nums; font-size: 10px; opacity: .8; }
-.pw.faded { opacity: .35; filter: grayscale(.6); }
+/* Faded: you can't afford it or it's cooling down. Only the picture fades, so the name and its state stay readable. */
+.pw.faded .pw-icon, .pw.faded .stars { opacity: .35; filter: grayscale(.6); }
+.pw.faded > span:not(.state):not(.stars) { opacity: .8; }
 .pw.locked { cursor: default; }
 .pw .stars { font-size: 9px; letter-spacing: 1px; line-height: 1; color: #e0a800; }
 .pw .stars .off { opacity: .25; }

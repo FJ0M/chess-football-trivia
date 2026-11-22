@@ -50,6 +50,8 @@ export type Phase =
   | {
       kind: "result"; color: Color; correct: boolean; title: string; lines: string[]; options: string[]; answer: number;
       choice: number | null; explanation?: string; next: GameState; auto: boolean;
+      /** After a "Who am I?" the new piece can give check, so the whistle waits for the result. */
+      whoami?: boolean;
       /** When the result appeared: it moves on by itself after RESULT_MS. */
       shownAt: number;
     }
@@ -107,8 +109,8 @@ export interface Env {
 
 /** Right answers in a row for the Elite Ball Knowledge badge. */
 export const EBK_RUN = 10;
-/** The result screen moves on by itself after this long (the chess clock is running). */
-export const RESULT_MS = 2500;
+/** A bot's result moves on by itself after this long (it shows as a one-line summary, not over the board). */
+export const RESULT_MS = 1500;
 /** A person gets longer to read the answer and its explanation ("Play on" moves on sooner). */
 export const RESULT_MS_HUMAN = 5000;
 /** After a penalty, the shootout waits this long before the next kick. */
@@ -218,7 +220,8 @@ export function step(match: Match, action: Action, env: Env): Step {
 export function clockOwner(g: GameState, p: Phase): Color | null {
   switch (p.kind) {
     case "move": case "target": case "thinking": return turnOf(g);
-    case "cards": case "question": case "result": return p.color;
+    case "cards": case "question": return p.color;
+    // Reading the answer is free (Freddie, 2026-11-22): the clock stops on the result screen.
     default: return null; // "Who am I?", shootout, game over
   }
 }
@@ -349,7 +352,8 @@ class Turn {
     this.go({ kind: "shootout", kicks: [], q: this.banks.white.bank.any("medium"), startedAt: this.env.now, choice: null, taker: "white" });
   }
 
-  private endTurn(state: GameState) {
+  /** `whistle`: blow for check now (false when it already went with the move). */
+  private endTurn(state: GameState, whistle = true) {
     const { state: next, notes } = finishTurn(state);
     this.setGame(next);
     this.overlay({});
@@ -364,7 +368,7 @@ class Turn {
     }
     if (next.pendingDraw) { this.startShootout(next); return; }
     if (!notes.length) this.note(`${next.players[turnOf(next)].name} to move`);
-    if (positionCheck(next)) this.sfx("check");
+    if (whistle && positionCheck(next)) this.sfx("check");
     this.go({ kind: "move" });
   }
 
@@ -391,6 +395,8 @@ class Turn {
     const t = r.trigger;
     const banks = this.banks;
     if (t.kind === "none" || !banks) { this.endTurn(r.state); return; }
+    // A capture or set piece that gives check: the whistle goes with the move, not after the question.
+    if (r.check && t.kind !== "promotion") this.sfx("check");
     if (t.kind === "promotion") {
       this.sfx("kickoff");
       this.note(`${name} reaches the end: "Who am I?" decides the new piece`);
@@ -400,11 +406,19 @@ class Turn {
       return;
     }
     const bonus = t.kind === "hot-spot";
-    if (bonus) { this.sfx("cheer"); this.talk(mover, "hotSpot"); this.emit({ kind: "hot-spot", color: mover, square: r.landed }); }
-    else this.sfx("kickoff");
-    const label = bonus ? "Hot Spot: pick a question" : t.kind === "capture" ? "Capture: pick a question" : "Set piece: pick a question";
+    const cards = banks[mover].bank.deal(r.state.players[mover].club);
+    if (bonus) {
+      // A Hot Spot's Puskás is a free shot, so it's always the right pick: straight to the question (audit, 2026-11-22).
+      this.sfx("cheer"); this.talk(mover, "hotSpot"); this.emit({ kind: "hot-spot", color: mover, square: r.landed });
+      this.note(`${name}: Hot Spot! A free Puskás`);
+      const hard = cards.find((c) => c.difficulty === "hard") ?? cards[cards.length - 1];
+      this.askQuestion(mover, { ...hard, difficulty: "hard" }, true, true, r.landed);
+      return;
+    }
+    this.sfx("kickoff");
+    const label = t.kind === "capture" ? "Capture: pick a question" : "Set piece: pick a question";
     this.note(`${name}: ${label}`);
-    this.go({ kind: "cards", color: mover, cards: banks[mover].bank.deal(r.state.players[mover].club), bonus, landed: r.landed, label });
+    this.go({ kind: "cards", color: mover, cards, bonus, landed: r.landed, label });
   }
 
   // ---- power-ups
@@ -505,11 +519,15 @@ class Turn {
     const p = this.p;
     if (p.kind !== "cards" || !this.banks) return;
     const card = p.cards[index];
-    const isPuskas = puskas && card.difficulty === "hard";
     this.sfx("select");
+    this.askQuestion(p.color, card, puskas && card.difficulty === "hard", p.bonus, p.landed);
+  }
+
+  private askQuestion(color: Color, card: Card, puskas: boolean, bonus: boolean, landed: string | null) {
+    if (!this.banks) return;
     this.go({
-      kind: "question", color: p.color, q: this.banks[p.color].bank.draw(card), card, puskas: isPuskas, bonus: p.bonus, landed: p.landed,
-      startedAt: this.env.now, limitMs: isPuskas ? TIMER_MS.puskas : TIMER_MS.normal, label: cardLabel(card, isPuskas),
+      kind: "question", color, q: this.banks[color].bank.draw(card), card, puskas, bonus, landed,
+      startedAt: this.env.now, limitMs: puskas ? TIMER_MS.puskas : TIMER_MS.normal, label: cardLabel(card, puskas),
     });
   }
 
@@ -574,7 +592,7 @@ class Turn {
       ],
       options: [name], answer: 0, choice: correct ? 0 : null,
       explanation: rest.length ? `The clues ${correct ? "you didn't need" : "still to come"}: ${rest.join(" ")}` : undefined,
-      next: res.state, auto: this.isBot(p.color), shownAt: this.env.now,
+      next: res.state, auto: this.isBot(p.color), shownAt: this.env.now, whoami: true,
     });
   }
 
@@ -603,8 +621,8 @@ class Turn {
   private continueOn() {
     const p = this.p;
     if (p.kind !== "result") return;
-    // The clocks kept running while the result showed, so keep their current time.
-    this.endTurn(withClocksFrom(p.next, this.g));
+    // Keep the clocks' current time (they ran while the question was up).
+    this.endTurn(withClocksFrom(p.next, this.g), !!p.whoami);
   }
 
   // ---- shootout
@@ -665,8 +683,8 @@ class Turn {
     else if (p.kind === "result" && now - p.shownAt >= (p.auto ? RESULT_MS : RESULT_MS_HUMAN)) this.continueOn();
     else if (p.kind === "shootout" && p.choice === null && !this.isBot(p.taker) && now - p.startedAt > TIMER_MS.normal) this.kick(null);
 
-    // Chess clock: always runs for whoever has to act, through questions, results and engine
-    // thinking too. It stops only for a "Who am I?", the Penalty Shootout and the pause menu.
+    // Chess clock: runs for whoever has to act, through picking and answering questions and engine
+    // thinking too. It stops for results, a "Who am I?", the Penalty Shootout and the pause menu.
     const g = this.g;
     if (!g.options.timed || g.outcome) return;
     const c = clockOwner(g, this.p);

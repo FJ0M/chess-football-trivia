@@ -109,6 +109,25 @@ describe("match engine: questions", () => {
     expect(m.game.fen.split(" ")[1]).toBe("b");
   });
 
+  it("a Hot Spot goes straight to a free Puskás worth 4", () => {
+    const g0 = { ...game(), hotSpots: ["e4"] };
+    let { m } = run(startMatch(g0), [{ type: "move", uci: "e2e4" }]);
+    expect(m.phase).toMatchObject({ kind: "question", puskas: true, bonus: true, limitMs: TIMER_MS.puskas });
+    ({ m } = run(m, [[{ type: "answer", choice: 2 }, 7000]]));
+    expect(m.phase).toMatchObject({ kind: "result", correct: true });
+    expect(m.game.players.white.form).toBe(4);
+  });
+
+  it("a capture that gives check blows the whistle with the move, not after the question", () => {
+    const g0 = at("4k3/8/8/4p3/8/8/4Q3/4K3 w - - 0 1");
+    const moved = run(startMatch(g0), [{ type: "move", uci: "e2e5" }]);
+    expect(moved.m.phase.kind).toBe("cards");
+    expect(sounds(moved.fx)).toContain("check");
+    const after = run(moved.m, [{ type: "pick", index: 0, puskas: false }, { type: "answer", choice: 2 }, { type: "continue" }]);
+    expect(after.m.phase.kind).toBe("move");
+    expect(sounds(after.fx)).not.toContain("check");
+  });
+
   it("a Puskás only applies to a Screamer and has the shorter timer", () => {
     expect(run(capture(), [{ type: "pick", index: 2, puskas: true }]).m.phase).toMatchObject({ kind: "question", puskas: true, limitMs: TIMER_MS.puskas });
     expect(run(capture(), [{ type: "pick", index: 0, puskas: true }]).m.phase).toMatchObject({ kind: "question", puskas: false, limitMs: TIMER_MS.normal });
@@ -236,6 +255,16 @@ describe("match engine: clocks", () => {
     m = run(m, [{ type: "tick", dt: 60_000 }]).m;
     expect(m.game.outcome).toEqual({ kind: "timeout", winner: "black" });
     expect(m.phase.kind).toBe("over");
+  });
+
+  it("the clock runs while answering but stops on the result screen", () => {
+    let m = run(startMatch(game({ timed: true, minutes: 1 })), [{ type: "move", uci: "e2e4" }, { type: "move", uci: "d7d5" }, { type: "move", uci: "e4d5" }]).m;
+    const start = m.game.players.white.clockMs!;
+    m = run(m, [{ type: "pick", index: 1, puskas: false }, { type: "tick", dt: 1000 }]).m;
+    expect(m.game.players.white.clockMs).toBe(start - 1000);
+    m = run(m, [{ type: "answer", choice: 2 }, { type: "tick", dt: 1000 }]).m;
+    expect(m.phase.kind).toBe("result");
+    expect(m.game.players.white.clockMs).toBe(start - 1000);
   });
 
   it("a tick in an untimed game with nothing due returns the same match", () => {

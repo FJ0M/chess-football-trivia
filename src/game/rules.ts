@@ -919,6 +919,8 @@ export interface AnswerCtx {
 
 /** Form for a right answer. A Hot Spot pays the same as any other question. */
 export const REWARD: Record<Difficulty | "puskas", number> = { easy: 1, medium: 2, hard: 3, puskas: 5 };
+/** A Hot Spot's free Puskás pays a little less than one you risk a booking for (audit, 2026-11-22). */
+export const HOT_SPOT_PUSKAS = 4;
 /** Answer a Screamer or Puskás inside this time for +1. */
 export const QUICK_MS = 5000;
 export const HAT_TRICK_BONUS = 2;
@@ -941,7 +943,7 @@ export function applyAnswer(state: GameState, a: AnswerCtx): AnswerOutcome {
   let next = state;
   let gained = 0;
   if (a.correct) {
-    const base = REWARD[a.puskas ? "puskas" : a.difficulty];
+    const base = a.puskas && a.bonus ? HOT_SPOT_PUSKAS : REWARD[a.puskas ? "puskas" : a.difficulty];
     gained = base;
     lines.push(`+${base} Form`);
     if (a.ms < QUICK_MS && (a.puskas || a.difficulty === "hard")) { gained += 1; lines.push("+1 quick answer"); }
