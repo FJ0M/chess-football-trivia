@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { createBotWith } from "../bots/bot";
 import type { Analyser } from "../bots/engine";
 import { legalMoves as chessMoves, materialBalance, positionFromFen } from "../bots/movePicker";
-import { planPowerUp } from "../bots/planner";
+import { planBudgetMs, planPowerUp } from "../bots/planner";
 import { BOT_PROFILES } from "../bots/profiles";
 import { parseUci } from "chessops/util";
 import { botPowerOptions } from "./botPowers";
@@ -62,6 +62,15 @@ describe("power-up planner", () => {
     expect(await plan(g)).toBeNull();
     // ...but with Form at the cap it's use it or lose it.
     expect((await plan(at(fen, 12)))?.choice).toEqual({ id: "super-sub", target: "d2" });
+  });
+
+  it("stops planning when its time is up, and still picks from what it saw", async () => {
+    const g = at("r3k2r/pppq1ppp/2n1bn2/3pp3/3PP3/2N1BN2/PPPQ1PPP/R3K2R w KQkq - 0 1", 12);
+    // A slow engine: every look takes 60 ms, so looking at everything would take well over 10 s.
+    const slow: Analyser = { analyse: async (fen, opts) => { await new Promise((r) => setTimeout(r, 60)); return greedy.analyse(fen, opts); } };
+    const t0 = Date.now();
+    await planPowerUp(slow, profile, strength, { form: 12, ...botPowerOptions(g) }, () => 0.5);
+    expect(Date.now() - t0).toBeLessThan(planBudgetMs(strength) + 600);
   });
 
   it("the bot uses the planner when the game sends options", async () => {

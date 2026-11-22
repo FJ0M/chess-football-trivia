@@ -38,7 +38,7 @@ export interface BotModule {
   BOTS: BotMeta[];
   bestMove(fen: string, chess960?: boolean, depth?: number, searchMoves?: string[]): Promise<string | null>;
   /** A quick engine score from White's side, in centipawns (for the commentator). */
-  evaluate(fen: string, chess960?: boolean): Promise<number | null>;
+  evaluate(fen: string, chess960?: boolean, quick?: boolean): Promise<number | null>;
 }
 
 // ---------------------------------------------------------------- loading

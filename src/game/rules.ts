@@ -26,8 +26,20 @@ export const ROLE_NAME: Record<string, string> = { p: "pawn", n: "knight", b: "b
 
 // ---------------------------------------------------------------- positions
 
+/**
+ * Parsed positions, by FEN. The rules ask about the same few positions many times a turn (a bot's
+ * power-up options alone used to parse about 6,000 times), so each is parsed once and copied out.
+ */
+const parsed = new Map<string, Setup>();
 export function setupOf(fen: string): Setup {
-  return parseFen(fen).unwrap();
+  let s = parsed.get(fen);
+  if (!s) {
+    s = parseFen(fen).unwrap();
+    if (parsed.size >= 64) parsed.clear();
+    parsed.set(fen, s);
+  }
+  // A copy, since callers may change the board.
+  return { ...s, board: s.board.clone(), pockets: s.pockets?.clone(), remainingChecks: s.remainingChecks?.clone() };
 }
 
 export function positionOf(fen: string): Chess {
@@ -215,15 +227,15 @@ function relocateHotSpot(state: GameState, used: string, rng: Rng): string[] {
 
 // ---------------------------------------------------------------- legal moves
 
-function isCastle(fen: string, move: NormalMove): boolean {
-  const s = setupOf(fen);
+function isCastle(fen: string | Setup, move: NormalMove): boolean {
+  const s = typeof fen === "string" ? setupOf(fen) : fen;
   const mover = s.board.get(move.from);
   const target = s.board.get(move.to);
   return mover?.role === "king" && target?.role === "rook" && target.color === mover.color;
 }
 
-function capturedSquare(fen: string, move: NormalMove): Square | null {
-  const s = setupOf(fen);
+function capturedSquare(fen: string | Setup, move: NormalMove): Square | null {
+  const s = typeof fen === "string" ? setupOf(fen) : fen;
   const mover = s.board.get(move.from);
   const target = s.board.get(move.to);
   if (target && mover && target.color !== mover.color) return move.to;
@@ -325,10 +337,11 @@ export function legalMoves(state: GameState): MoveFilter {
   const bus = state.parkTheBus === opposite(turn) ? state.parkTheBus : null;
   const busRanks = bus === "white" ? [0, 1] : bus === "black" ? [6, 7] : [];
 
+  const setup = setupOf(fen);
   const ok = (m: NormalMove) => {
     if (frozen.has(makeSquare(m.from))) return false;
-    if (isCastle(fen, m) && frozen.has(makeSquare(m.to))) return false;
-    const cap = capturedSquare(fen, m);
+    if (isCastle(setup, m) && frozen.has(makeSquare(m.to))) return false;
+    const cap = capturedSquare(setup, m);
     if (cap !== null && busRanks.includes(squareRank(cap))) return false;
     if (noCapture && cap !== null) return false;
     if (restricted && givesCheck(fen, m)) return false;
@@ -430,9 +443,10 @@ export function playMove(state: GameState, uci: string, rng: Rng = Math.random):
   const mover = turnOf(state);
   const move = parseUci(uci) as NormalMove;
   const pos = positionOf(fen);
-  const capSq = capturedSquare(fen, move);
+  const setup = setupOf(fen);
+  const capSq = capturedSquare(setup, move);
   const capturedPiece = capSq !== null ? pos.board.get(capSq) : undefined;
-  const castle = isCastle(fen, move);
+  const castle = isCastle(setup, move);
 
   let nextFen: string;
   let san: string;
