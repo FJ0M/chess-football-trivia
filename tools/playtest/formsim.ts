@@ -65,11 +65,12 @@ function playGame(players: Record<Color, Player>, rng: () => number, maxPlies = 
     if (t.kind === "hot-spot" || t.kind === "capture" || t.kind === "set-piece") {
       questions[color]++;
       if (t.kind === "hot-spot") hot[color]++;
-      const difficulty: Difficulty = me.pick === "easy" ? "easy" : "hard";
-      const puskas = me.pick === "puskas";
+      // A Hot Spot always goes straight to its free Puskás (audit, 2026-11-22).
+      const difficulty: Difficulty = me.pick === "easy" && t.kind !== "hot-spot" ? "easy" : "hard";
+      const puskas = me.pick === "puskas" || t.kind === "hot-spot";
       const before = g.players[color].form;
       const out = applyAnswer({ ...g, players: { ...g.players, [color]: { ...g.players[color], form: 0 } } }, {
-        color, difficulty, puskas, worldie: puskas, bonus: t.kind === "hot-spot", correct: rng() < me.acc, ms: 3000 + rng() * 6000, landed: r.landed,
+        color, difficulty, puskas, bonus: t.kind === "hot-spot", correct: rng() < me.acc, ms: 3000 + rng() * 6000, landed: r.landed,
       } as Parameters<typeof applyAnswer>[1]);
       earned[color] += out.formGained;
       // Keep the real Form at 0 so the cap never hides earnings; streaks and penalties still apply.

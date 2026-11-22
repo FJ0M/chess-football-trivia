@@ -34,7 +34,7 @@ export function RulesScreen({ onBack }: { onBack: () => void }) {
 
       <h3>What asks a question</h3>
       <div className="htp-tiles three">
-        <div className="htp-tile"><span className="htp-sq hot" aria-hidden="true"><i /></span><b>Hot Spot</b><small>Land on a circled square: pick one of 3 cards</small></div>
+        <div className="htp-tile"><span className="htp-sq hot" aria-hidden="true"><i /></span><b>Hot Spot</b><small>Land on a football square: a free Puskás, +4 Form</small></div>
         <div className="htp-tile"><span className="htp-sq cap" aria-hidden="true">✕</span><b>Capture</b><small>Take a piece: pick one of 3 cards</small></div>
         <div className="htp-tile"><span className="htp-sq ko" aria-hidden="true">5</span><b>Set piece</b><small>Every 5th quiet move</small></div>
       </div>
@@ -95,7 +95,7 @@ export function RulesScreen({ onBack }: { onBack: () => void }) {
       <div className="htp-tiles three">
         <div className="htp-tile"><span className="htp-big">♚</span><b>Checkmate</b><small>Wins the game</small></div>
         <div className="htp-tile"><span className="htp-big">⚽</span><b>Draw</b><small>Penalty shootout: 5 questions each</small></div>
-        <div className="htp-tile"><span className="htp-big htp-clock">+3s</span><b>Timed</b><small>Clock runs during questions. +3s a move</small></div>
+        <div className="htp-tile"><span className="htp-big htp-clock">+3s</span><b>Timed</b><small>Clock runs while you answer, stops for the result. +3s a move</small></div>
       </div>
 
       <button type="button" className="ghost" onClick={onBack}>Back to Play</button>

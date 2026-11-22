@@ -655,3 +655,26 @@ button.htp-power:focus-visible, .htp-close:focus-visible { outline: 3px solid #1
 .season .season-results li { padding: 3px 8px; border-radius: 999px; color: #fff; background: #e0a100; }
 .season .season-results li.won { background: #2e9d4f; } .season .season-results li.lost { background: #d1342f; }
 .season .season-quit { justify-self: center; margin-top: 8px; }
+
+/* ---- Audit 2026-11-22: match screen */
+/* The king in check glows red (per Look: --check), and the mated king keeps it at full time. */
+.sq.check::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; box-shadow: inset 0 0 0 2px #fff, inset 0 0 0 5px var(--check, rgb(230, 30, 30)); background: radial-gradient(circle, var(--check, rgba(230, 30, 30, .85)) 0%, color-mix(in srgb, var(--check, rgb(230, 30, 30)) 45%, transparent) 45%, transparent 75%); }
+/* A capture's cards wait a moment, so the capture itself is seen before they cover the board. */
+.board-wrap > .board-cover.late-short { animation: cover-late .8s steps(1, end) both; }
+/* A bot's question: one line under the board instead of a cover over it. */
+.screen .bot-trivia { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 6px; padding: 8px 12px; border-radius: 10px; border: 2px solid currentColor; font-size: 14px; line-height: 1.3; }
+.screen .bot-trivia.good { border-color: #2e9d4f; }
+.screen .bot-trivia.bad { border-color: #d1342f; }
+.screen .bot-trivia .bq { flex-basis: 100%; opacity: .85; font-size: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+/* Right and wrong answers carry a tick or a cross, not only a colour. */
+.screen .quiz .answers button .mark { font-style: normal; font-weight: 800; margin-left: auto; padding-left: 6px; }
+.screen .quiz .answers button.right .mark { color: #2e9d4f; }
+.screen .quiz .answers button.wrong .mark { color: #d1342f; }
+/* Each power-up tile says in words whether it's ready. */
+.screen .pw .state { font-size: 10px; font-weight: 700; line-height: 1.15; }
+.screen .pw .state.ok { color: #2e9d4f; }
+.screen .pw .state.wait { opacity: .9; }
+/* Thumb-sized game buttons. */
+.screen .game-actions button { min-height: 44px; min-width: 44px; padding: 8px 14px; }
+/* Board coordinates: a touch bigger with a firmer outline. */
+.sq .coord { font-size: clamp(9px, 2.5vw, 12px); -webkit-text-stroke: 3px rgba(0,0,0,.75); }

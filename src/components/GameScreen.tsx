@@ -8,7 +8,7 @@ import type { SfxName } from "../audio/sfx";
 import { setDucked } from "../audio/engine";
 import type { PassAndPlayView } from "../settings/settings";
 import { useGame } from "../game/useGame";
-import { cardLabel, clockOwner, savable, RESULT_MS, RESULT_MS_HUMAN, type Phase, type SetupChoice } from "../game/match";
+import { cardLabel, clockOwner, positionCheck, savable, RESULT_MS, RESULT_MS_HUMAN, type Phase, type SetupChoice } from "../game/match";
 import { FORM_CAP, POWER_UPS, POWER_UP_BY_ID, fergieMs, fmtSeconds, type PowerUpDef } from "../game/powerups";
 import {
   SET_PIECE_EVERY, PROMO_ORDER, PUSKAS_MISS_FORM, REWARD, promotionChoices, promotionStalemates, comebackShift, destsFor, isPromotion, pieceAt, powerBlocked, powerCost, powerTargets, resolveMove, turnOf, WHO_AM_I_PIECES, ROLE_NAME,
@@ -80,7 +80,9 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
   const [confirm, setConfirm] = useState<"resign" | "draw" | null>(null);
 
   const turn = turnOf(game);
-  const active: Color = "color" in phase ? phase.color : phase.kind === "shootout" ? phase.taker : turn;
+  // At full time the screen faces the winner (in "Flat on the table" that's who lifts the trophy).
+  const winner = game.outcome && "winner" in game.outcome ? game.outcome.winner : null;
+  const active: Color = "color" in phase ? phase.color : phase.kind === "shootout" ? phase.taker : phase.kind === "over" && winner ? winner : turn;
   const humans = (["white", "black"] as Color[]).filter((c) => game.players[c].kind === "human");
   const local = game.options.mode === "local";
   // "Flat on the table" turns the whole card round for Black, so the board inside is drawn from Black's side:
@@ -155,7 +157,13 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
   const thinking = phase.kind === "question" || phase.kind === "whoami" || phase.kind === "shootout";
   useEffect(() => { setDucked(thinking); }, [thinking]);
   useEffect(() => () => setDucked(false), []);
-  const panelOnBoard = (flipMode || !twoColumns) && (phase.kind === "cards" || phase.kind === "question" || phase.kind === "result" || phase.kind === "shootout");
+  // A bot's question is a one-line summary under the board, never a cover over it, so you can see what it just did.
+  const botTrivia = !humanToAct && (phase.kind === "cards" || phase.kind === "question" || phase.kind === "result");
+  const panelOnBoard = (flipMode || !twoColumns) && !botTrivia && (phase.kind === "cards" || phase.kind === "question" || phase.kind === "result" || phase.kind === "shootout");
+  // The king in check glows (and the mated king keeps glowing at full time).
+  const checkSq = useMemo(() => checkedKing(board0), [board0]);
+  // The cover waits a moment so the move that caused it is seen first: longer after a Hot Spot (Scorched Turf).
+  const coverDelay = !fx ? "" : (phase.kind === "question" && phase.bonus) || (phase.kind === "cards" && phase.bonus) ? " late" : phase.kind === "cards" ? " late-short" : "";
   const commentaryLine = line && <p className="commentary" aria-live="polite"><Mic /><span key={line.id}>{line.text}</span></p>;
 
   return (
@@ -191,13 +199,22 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
               phase.kind === "target" && phase.first === sq ? "sel" : "",
               g.overlay.attacked?.includes(sq) ? "flagged" : "",
               g.overlay.scout === sq ? "scout" : "",
+              checkSq === sq ? "check" : "",
             ].join(" ");
             const isDest = !!sel && !!dests.get(sel)?.includes(sq);
+            const states = [
+              checkSq === sq ? "in check" : "",
+              game.hotSpots.includes(sq) ? "Hot Spot" : "",
+              game.frozen.some((f) => f.square === sq) ? "frozen" : "",
+              sel === sq ? "selected" : "",
+              isDest ? (p ? "can capture here" : "can move here") : "",
+              targets.has(sq) ? "power-up target" : "",
+            ].filter(Boolean);
             // Coordinates sit inside the edge squares: files along the bottom row, ranks up the left column.
             const fileMark = r === rows[7] ? FILES[c] : null;
             const rankMark = c === cols[0] ? String(r + 1) : null;
             return (
-              <button key={sq} type="button" className={cls} onClick={() => tap(sq)} aria-label={`${sq}${p ? ` ${p.color} ${ROLE_NAME[p.role]}` : ""}`}>
+              <button key={sq} type="button" className={cls} onClick={() => tap(sq)} aria-label={`${sq}${p ? ` ${p.color} ${ROLE_NAME[p.role]}` : ""}${states.length ? ` (${states.join(", ")})` : ""}`}>
                 {game.hotSpots.includes(sq) && <HotSpotIcon />}
                 {p && <span className={`pc ${p.color === "white" ? "w" : "b"}${slide && last && last[1] === sq ? " slide" : ""}`} style={slide && last && last[1] === sq ? slide : undefined}>{GLYPH[p.role]}{"︎"}</span>}
                 {isDest && <span className={p ? "dot cap" : "dot"} />}
@@ -214,10 +231,11 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
         </div>
         {/* After a Hot Spot the cards wait a moment, so the Scorched Turf animation shows before they cover the board. */}
         {panelOnBoard && (
-          <div className={`board-cover${fx && phase.kind === "cards" && phase.bonus ? " late" : ""}${peek ? " peek" : ""}`}>
+          <div className={`board-cover${coverDelay}${peek ? " peek" : ""}`}>
             {!peek && <Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} exitLabel={exitLabel} />}
-            {/* The card choice depends on the position (a wrong Screamer freezes the piece you moved), so you can look first. */}
-            {phase.kind === "cards" && humanToAct && (
+            {/* The card choice depends on the position (a wrong Screamer freezes the piece you moved), so you can look first,
+                and while a question or its result is up the board is a tap away too. */}
+            {phase.kind !== "shootout" && (
               <button type="button" className="peek-btn" aria-pressed={peek} onClick={() => setPeek((v) => !v)}>
                 {peek ? "Back to the cards" : "See the board"}
               </button>
@@ -230,7 +248,7 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
 
         <div className="controls">
           {!flipMode && commentaryLine}
-          {phase.kind !== "whoami" && !panelOnBoard && <Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} exitLabel={exitLabel} />}
+          {botTrivia ? <BotTrivia phase={phase} game={game} /> : phase.kind !== "whoami" && !panelOnBoard && <Panel g={g} phase={phase} game={game} humanToAct={humanToAct} onExit={onExit} exitLabel={exitLabel} />}
           {game.options.trivia && phase.kind !== "over" && phase.kind !== "shootout" && phase.kind !== "whoami" && (
             <PowerBar game={board0} phase={phase} color={local ? active : humans[0] ?? turn} enabled={humanToAct && phase.kind === "move"} onPick={g.choosePower} play={play} />
           )}
@@ -255,6 +273,39 @@ export function GameScreen({ style, play, setup, view, motion = true, commentary
         </div>
       </div>
       {fx && <ScreenFx events={g.events} now={g.now} names={names} />}
+    </div>
+  );
+}
+
+/** The square of the king in check (the side to move's), or null. */
+function checkedKing(game: GameState): string | null {
+  if (!positionCheck(game)) return null;
+  const turn = turnOf(game);
+  const b = boardArray(game.fen);
+  for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) {
+    const p = b[r][c];
+    if (p && p.role === "k" && p.color === turn) return FILES[c] + (r + 1);
+  }
+  return null;
+}
+
+/** A bot's question in one line: what it went for, then whether it scored (the board stays in view). */
+function BotTrivia({ phase, game }: { phase: Phase; game: GameState }): ReactNode {
+  if (phase.kind !== "cards" && phase.kind !== "question" && phase.kind !== "result") return null;
+  const name = game.players[phase.color].name;
+  if (phase.kind === "cards") return <div className="bot-trivia" role="status"><b>{name}</b> <span>{phase.label.replace(": pick a question", "")}: picking a question…</span></div>;
+  if (phase.kind === "question") {
+    return (
+      <div className="bot-trivia" role="status">
+        <b>{name}</b> <span>goes for {/^[AEIOU]/.test(phase.label.split(" · ")[1] ?? "") ? "an" : "a"} {phase.label.split(" · ")[1] ?? phase.label}…</span>
+        <small className="bq">{phase.q.question}</small>
+      </div>
+    );
+  }
+  return (
+    <div className={`bot-trivia ${phase.correct ? "good" : "bad"}`} role="status">
+      <b>{phase.correct ? "✓" : "✗"} {name}</b> <span>{phase.correct ? "scores" : "misses"}{phase.lines.length ? `: ${phase.lines[0]}` : ""}</span>
+      <small className="bq">Answer: {phase.options[phase.answer]}</small>
     </div>
   );
 }
@@ -474,7 +525,7 @@ function Panel({ g, phase, game, humanToAct, onExit, exitLabel }: { g: G; phase:
         <div className="meta"><span>{phase.title}</span></div>
         <div className="answers">
           {phase.options.map((o, k) => (
-            <button key={k} type="button" disabled className={k === phase.answer ? "right" : k === phase.choice ? "wrong" : "dim"}><b>{"ABCD"[k]}</b><span>{o}</span></button>
+            <button key={k} type="button" disabled className={k === phase.answer ? "right" : k === phase.choice ? "wrong" : "dim"} aria-label={`${o}${k === phase.answer ? ", right answer" : k === phase.choice ? ", your answer, wrong" : ""}`}><b>{"ABCD"[k]}</b><span>{o}</span>{k === phase.answer ? <i className="mark" aria-hidden="true">✓</i> : k === phase.choice ? <i className="mark" aria-hidden="true">✗</i> : null}</button>
           ))}
         </div>
         <ul className="lines">{phase.lines.map((l) => <li key={l}>{l}</li>)}</ul>
@@ -498,6 +549,7 @@ function Panel({ g, phase, game, humanToAct, onExit, exitLabel }: { g: G; phase:
           {phase.q.options.map((o, k) => (
             <button key={k} type="button" disabled={!takerHuman || phase.choice !== null} className={phase.choice === null ? "" : k === phase.q.answer ? "right" : k === phase.choice ? "wrong" : "dim"} onClick={() => g.kick(k)}>
               <b>{"ABCD"[k]}</b><span>{o}</span>
+              {phase.choice !== null && k === phase.q.answer ? <i className="mark" aria-hidden="true">✓</i> : phase.choice !== null && k === phase.choice ? <i className="mark" aria-hidden="true">✗</i> : null}
             </button>
           ))}
         </div>
@@ -532,7 +584,7 @@ function Panel({ g, phase, game, humanToAct, onExit, exitLabel }: { g: G; phase:
         <span>{game.step === "free-kick" ? "Free Kick" : game.step === "extra-time" ? "Extra Time" : phase.kind === "target" ? POWER_UP_BY_ID[phase.power].name : "Open play"}</span>
         <span>{mover.name} to move</span>
       </div>
-      <p className={`q small${phase.kind === "move" && mover.kind === "human" && game.step === "normal" ? " explainer" : ""}`}>{phase.kind === "target" ? `Pick a target to finish ${POWER_UP_BY_ID[phase.power].name}.` : mover.kind === "bot" ? `${mover.name} is thinking…` : game.step === "extra-time" ? "Second move: no captures or checks. You can skip it if it would hurt you." : game.options.trivia ? `Questions come on captures, every ${SET_PIECE_EVERY}th quiet move and on Hot Spots (circled squares, from move 4).` : "Plain chess: no trivia this game."}</p>
+      <p className={`q small${phase.kind === "move" && mover.kind === "human" && game.step === "normal" ? " explainer" : ""}`}>{phase.kind === "target" ? `Pick a target to finish ${POWER_UP_BY_ID[phase.power].name}.` : mover.kind === "bot" ? `${mover.name} is thinking…` : game.step === "extra-time" ? "Second move: no captures or checks. You can skip it if it would hurt you." : game.options.trivia ? `Questions come on captures, every ${SET_PIECE_EVERY}th quiet move and on Hot Spots (the football squares, from move 4).` : "Plain chess: no trivia this game."}</p>
       {game.step === "extra-time" && humanToAct && phase.kind === "move" && <button type="button" className="cta" onClick={g.skipExtra}>Skip the second move</button>}
     </div>
   );
@@ -582,11 +634,13 @@ function WhoAmIPanel({ g, phase, game, humanToAct, timerStyle }: {
 
 function outcomeText(game: GameState, o: Outcome): string {
   const n = (c: Color) => game.players[c].name;
+  // "You win", not "You wins".
+  const wins = (c: Color) => `${n(c)} ${n(c).trim().toLowerCase() === "you" ? "win" : "wins"}`;
   switch (o.kind) {
-    case "checkmate": return `Checkmate! ${n(o.winner)} wins.`;
-    case "resign": return `${n(o.winner)} wins by resignation.`;
-    case "timeout": return `${n(o.winner)} wins on time.`;
-    case "shootout": return `${n(o.winner)} wins the Penalty Shootout ${o.score[o.winner]}-${o.score[o.winner === "white" ? "black" : "white"]}.`;
+    case "checkmate": return `Checkmate! ${wins(o.winner)}.`;
+    case "resign": return `${wins(o.winner)} by resignation.`;
+    case "timeout": return `${wins(o.winner)} on time.`;
+    case "shootout": return `${wins(o.winner)} the Penalty Shootout ${o.score[o.winner]}-${o.score[o.winner === "white" ? "black" : "white"]}.`;
     case "draw": return `It's a draw (${DRAW_WORDS[o.reason] ?? o.reason}).`;
   }
 }
@@ -658,7 +712,9 @@ const PowerBar = memo(function PowerBar({ game, phase, color, enabled, onPick, p
     window.addEventListener("keydown", key);
     return () => window.removeEventListener("keydown", key);
   }, [open]);
-  const list = POWER_UPS.filter((p) => !p.timedOnly || game.options.timed);
+  // Ready ones first, then the ones you're saving for, then the ones cooling down.
+  const rank = (p: PowerUpDef) => (me.cooldowns[p.id] > 0 ? 2 : me.form < powerCost(game, color, p.id) ? 1 : 0);
+  const list = POWER_UPS.filter((p) => !p.timedOnly || game.options.timed).map((p, i) => ({ p, i })).sort((a, b) => rank(a.p) - rank(b.p) || a.i - b.i).map((x) => x.p);
   const def = pending ? POWER_UP_BY_ID[pending] : null;
   const pendingCost = pending ? powerCost(game, color, pending) : 0;
   const pendingBlocked = useMemo(() => (pending ? powerBlocked(game, pending) ?? (hasTargets(game, pending) ? null : "No valid target right now") : null), [game, pending]);
@@ -709,7 +765,8 @@ const PowerBar = memo(function PowerBar({ game, phase, color, enabled, onPick, p
                     <PowerIcon id={p.id} className="pw-icon" />
                     <span>{p.name}</span>
                     <Stars n={p.stars} />
-                    <span className="cost">{cost} Form{cd > 0 ? ` · ${cd} to go` : ""}</span>
+                    <span className="cost">{cost} Form</span>
+                    <span className={`state${cd > 0 || me.form < cost ? " wait" : " ok"}`}>{cd > 0 ? `Ready in ${cd} move${cd === 1 ? "" : "s"}` : me.form < cost ? `Need ${cost - me.form} more Form` : "Ready"}</span>
                   </button>
                 );
               })}

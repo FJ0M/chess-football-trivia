@@ -54,6 +54,10 @@ function loadData(players: SetupChoice["players"]): Promise<Data> {
   });
 }
 
+/** How long a bot takes over a question card, and at most over its answer. */
+export const BOT_PICK_MS = 500;
+export const BOT_ANSWER_MS = 1200;
+
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused = false, resume?: GameState) {
@@ -263,13 +267,15 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
       if (!alive.current || pausedRef.current || live().phase.kind !== "move" || turnOf(live().game) !== color) return;
       dispatch({ type: "bot-move", color, uci });
     } else if (p.kind === "cards") {
-      await wait(1100);
+      // A bot's question is a one-line summary beside the board, so it doesn't keep the player waiting (audit, 2026-11-22).
+      await wait(BOT_PICK_MS);
       if (!still()) return;
       const c = await bot.chooseCard({ cards: p.cards, puskasAllowed: true, form: live().game.players[color].form, bonusRound: p.bonus });
       dispatch({ type: "pick", index: Math.min(2, Math.max(0, c.index)), puskas: c.puskas });
     } else if (p.kind === "question") {
       const a = await bot.answer({ question: p.q, puskas: p.puskas });
-      await wait(Math.min(a.delayMs, p.limitMs + 100));
+      // The bot's "thinking time" decides whether it beats the timer, but the player only waits a moment.
+      await wait(Math.min(a.delayMs, BOT_ANSWER_MS));
       if (!alive.current || pausedRef.current || live().phase !== p) return;
       dispatch({ type: "answer", choice: a.delayMs > p.limitMs ? null : a.choice });
     } else if (p.kind === "whoami") {

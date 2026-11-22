@@ -7,7 +7,7 @@
 // Checks:
 //  1. Play a bot lists all seven ladder bots.
 //  2. A game against a bot starts, and the bot answers your move.
-//  3. Landing on a Hot Spot brings up the question cards.
+//  3. Landing on a Hot Spot goes straight to its free Puskás.
 //  3b. A league season starts and its first fixture opens.
 //  4. If the bots download fails once, the picker still fills (retry works).
 //  5. A match saved mid-game comes back after a reload, in the same position.
@@ -63,7 +63,7 @@ try {
   while (Date.now() < deadline && !hotSpotCards) {
     // Answer any question that is ours: first card, first answer.
     const body = await page.innerText("body");
-    if (/Hot Spot: pick a question/.test(body) && /You pick\b/.test(body)) { hotSpotCards = true; break; }
+    if (/Hot Spot! A free Puskás/.test(body) && (await page.locator(".answers button:not([disabled])").count())) { hotSpotCards = true; break; }
     const card = page.locator(".qcard:not([disabled])").first();
     if (await card.count()) { await card.click(); await page.waitForTimeout(300); continue; }
     const answer = page.locator(".answers button:not([disabled])").first();
@@ -111,7 +111,7 @@ try {
     }
   }
   check(botReplied, "the bot answers your move");
-  check(hotSpotCards, "landing on a Hot Spot brings up the question cards");
+  check(hotSpotCards, "landing on a Hot Spot brings up its free Puskás");
   await page.close();
 
   // 2b. Season: start one, and Kick off opens the first league match against the bot in the fixture.
