@@ -42,7 +42,7 @@ function rhythmClap(dest: AudioNode, at: number): void {
   const beats = [0, 0.5, 1, 1.25, 1.5, 2.5, 3, 3.5, 3.75, 4];
   for (const b of beats) {
     // Each clap is a crowd of hands, a few milliseconds apart.
-    for (let i = 0; i < 6; i++) burst(dest, at + b * 0.42 + Math.random() * 0.03, 0.05, 1400 + Math.random() * 1600, 0.05, { q: 1.2 });
+    for (let i = 0; i < 6; i++) burst(dest, at + b * 0.42 + Math.random() * 0.03, 0.05, 1400 + Math.random() * 1600, 0.15, { q: 1.2 });
   }
 }
 
@@ -65,7 +65,8 @@ export function startCrowd(): void {
 
   // The murmur: four bands of noise, each drifting up and down at its own slow rate.
   const sources: AudioScheduledSourceNode[] = [];
-  [[250, 0.05, 0.13], [480, 0.04, 0.09], [800, 0.03, 0.17], [1300, 0.015, 0.07]].forEach(([freq, level, rate]) => {
+  // Four times louder than at first (audit, 2026-11-22: it sat 20 dB under the music).
+  [[250, 0.2, 0.13], [480, 0.16, 0.09], [800, 0.12, 0.17], [1300, 0.06, 0.07]].forEach(([freq, level, rate]) => {
     const src = ctx.createBufferSource();
     src.buffer = e.noise;
     src.loop = true;
@@ -91,9 +92,9 @@ export function startCrowd(): void {
     const now = getEngine()?.ctx.currentTime;
     if (now === undefined || Math.random() > 0.35) return;
     const r = Math.random();
-    if (r < 0.45) ooh(swell, now, 0.025);
+    if (r < 0.45) ooh(swell, now, 0.08);
     else if (r < 0.75) rhythmClap(swell, now);
-    else for (let i = 0; i < 30; i++) burst(swell, now + Math.random() * 1.6, 0.03, 1500 + Math.random() * 1500, 0.03);
+    else for (let i = 0; i < 30; i++) burst(swell, now + Math.random() * 1.6, 0.03, 1500 + Math.random() * 1500, 0.1);
   }, 3000);
 
   running = { sources, out, swell, timer };
@@ -131,5 +132,5 @@ export function crowdReact(s: SfxName): void {
   r.swell.gain.cancelScheduledValues(t);
   r.swell.gain.setTargetAtTime(k, t, 0.12);
   r.swell.gain.setTargetAtTime(1, t + 0.7, 0.6);
-  if (s === "check") ooh(r.swell, t + 0.15, 0.03);
+  if (s === "check") ooh(r.swell, t + 0.15, 0.1);
 }
