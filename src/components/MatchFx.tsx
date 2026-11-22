@@ -133,7 +133,8 @@ function at(sq: string, orientation: Color): CSSProperties {
   return { left: `${(x - 0.5) * 12.5}%`, top: `${(y - 0.5) * 12.5}%` };
 }
 
-const CONFETTI = ["#d1342f", "#1f5fbf", "#ffd23f", "#2e9d4f", "#ffffff", "#ff6ad5"];
+// Each look sets its own six confetti colours (--confetti-1..6 in themes.css).
+const CONFETTI = [1, 2, 3, 4, 5, 6].map((n) => `var(--confetti-${n})`);
 function confetti(i: number): CSSProperties {
   // Spread evenly with a fixed pseudo-random jitter, so it's the same each render.
   const j = (k: number) => ((i * 9301 + k * 49297) % 233280) / 233280;
