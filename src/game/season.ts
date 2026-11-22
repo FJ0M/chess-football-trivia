@@ -26,8 +26,12 @@ export const DIVISIONS: Division[] = [
   { id: "league-two", name: "League Two", bots: ["pawny", "eezy", "chillwall"], double: true },
   { id: "league-one", name: "League One", bots: ["eezy", "chillwall", "gambit-gary"], double: true },
   { id: "championship", name: "Championship", bots: ["gambit-gary", "mo-mate", "knightingale"], double: true },
-  { id: "premier-league", name: "Premier League", bots: ["pawny", "eezy", "chillwall", "gambit-gary", "mo-mate", "knightingale", "rookland"], double: false },
+  // The top five bots, home and away (audit, 2026-11-22: with Pawny and Eezy in it, nobody rated
+  // 900-1500 could ever go down, so staying up meant nothing).
+  { id: "premier-league", name: "Premier League", bots: ["chillwall", "gambit-gary", "mo-mate", "knightingale", "rookland"], double: true },
 ];
+/** The Premier League before 2026-11-22, for seasons started then. */
+const OLD_PREMIER_LEAGUE = ["pawny", "eezy", "chillwall", "gambit-gary", "mo-mate", "knightingale", "rookland"];
 
 export const YOU = "you";
 /** Top this many go up (not from the top division). */
@@ -68,6 +72,8 @@ export interface Season {
   cup: CupTie[];
   /** Out of the Cup (lost a tie). */
   cupOut: boolean;
+  /** The bots in this season's division (seasons from before 2026-11-22 don't have it). */
+  bots?: string[];
   /** Set when the last matchweek is played. */
   finished?: { position: number; move: "up" | "down" | "stay"; champions: boolean };
 }
@@ -76,6 +82,11 @@ export type Rng = () => number;
 
 export function divisionOf(id: DivisionId): Division {
   return DIVISIONS.find((d) => d.id === id) ?? DIVISIONS[0];
+}
+
+/** The bots in a season's league, as they were when it started. */
+export function botsOf(s: Season): string[] {
+  return s.bots ?? (s.division === "premier-league" ? OLD_PREMIER_LEAGUE : divisionOf(s.division).bots);
 }
 
 /** Round-robin by the circle method; teams.length must be even (a "bye" is added if not). */
@@ -103,7 +114,7 @@ export function newSeason(division: DivisionId, number: number, club = "", rng: 
   // Cup ties before about a quarter, half and three-quarters of the way through.
   const n = weeks.length;
   const cupBefore = [Math.max(1, Math.round(n / 4)), Math.round(n / 2), Math.min(n - 1, Math.round((3 * n) / 4))];
-  return { number, club, division, weeks, week: 0, cupBefore, cup: [drawCupTie(0, rng)], cupOut: false };
+  return { number, club, division, bots: d.bots, weeks, week: 0, cupBefore, cup: [drawCupTie(0, rng)], cupOut: false };
 }
 
 /** Cup opponents get stronger each round: drawn from the bottom, middle and top of the ladder. */
@@ -180,8 +191,7 @@ export function cupWon(s: Season): boolean {
 export interface Row { team: string; played: number; won: number; drawn: number; lost: number; gf: number; ga: number; points: number }
 
 export function table(s: Season): Row[] {
-  const d = divisionOf(s.division);
-  const rows = new Map<string, Row>([YOU, ...d.bots].map((t) => [t, { team: t, played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, points: 0 }]));
+  const rows = new Map<string, Row>([YOU, ...botsOf(s)].map((t) => [t, { team: t, played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, points: 0 }]));
   for (const f of s.weeks.flat()) {
     if (!f.score) continue;
     const [h, a] = f.score;
@@ -232,10 +242,54 @@ export function loadSeason(): Season | null {
 }
 
 export function saveSeason(s: Season | null) {
+  if (s?.finished) recordHonour(s);
   try {
     if (s) localStorage.setItem(KEY, JSON.stringify(s));
     else localStorage.removeItem(KEY);
   } catch { /* ignore */ }
+}
+
+// ---------------------------------------------------------------- honours
+
+/** One finished season, kept after the next one starts (audit, 2026-11-22: they used to be thrown away). */
+export interface Honour {
+  season: number;
+  division: DivisionId;
+  position: number;
+  move: "up" | "down" | "stay";
+  champions: boolean;
+  cup: boolean;
+}
+
+const HONOURS_KEY = "cft.honours.v1";
+
+export function honourOf(s: Season): Honour | null {
+  if (!s.finished) return null;
+  return { season: s.number, division: s.division, position: s.finished.position, move: s.finished.move, champions: s.finished.champions, cup: cupWon(s) };
+}
+
+export function loadHonours(): Honour[] {
+  try {
+    const raw = JSON.parse(localStorage.getItem(HONOURS_KEY) ?? "[]");
+    return Array.isArray(raw) ? raw as Honour[] : [];
+  } catch { return []; }
+}
+
+/** Adds a finished season to the honours list (once). Returns true if it's new. */
+export function recordHonour(s: Season): boolean {
+  const h = honourOf(s);
+  if (!h) return false;
+  const list = loadHonours();
+  if (list.some((x) => x.season === h.season)) return false;
+  try { localStorage.setItem(HONOURS_KEY, JSON.stringify([...list, h])); } catch { return false; }
+  return true;
+}
+
+/** "League One champions", "Promoted from League Two", "4th in the Championship"… */
+export function honourText(h: Honour): string {
+  const name = divisionOf(h.division).name;
+  const league = h.champions ? `${name} champions` : h.move === "up" ? `Promoted from ${name}` : h.move === "down" ? `Relegated from ${name}` : `${ordinal(h.position)} in ${name === "Championship" ? "the Championship" : name === "Premier League" ? "the Premier League" : name}`;
+  return h.cup ? `${league} · Cup winners` : league;
 }
 
 /** Names the match you're about to play, so a result is only recorded against that match. */

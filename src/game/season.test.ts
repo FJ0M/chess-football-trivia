@@ -1,4 +1,6 @@
+import { judgeSeason } from "./badges";
 import { describe, expect, it } from "vitest";
+import { honourText, loadHonours, recordHonour } from "./season";
 import { CUP_ROUNDS, DIVISIONS, YOU, applyResult, cupWon, fitScore, matchKey, newSeason, nextMatch, nextSeason, recordCup, recordLeague, table, type Season } from "./season";
 
 const seeded = (seed: number) => () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
@@ -27,10 +29,17 @@ describe("league season", () => {
     for (const w of s.weeks) expect(w).toHaveLength(2);
   });
 
-  it("the Premier League has all seven bots, once each", () => {
+  it("the Premier League has the top five bots, home and away", () => {
     const s = newSeason("premier-league", 1, "west-ham", seeded(2));
-    expect(s.weeks).toHaveLength(7);
-    for (const w of s.weeks) expect(w).toHaveLength(4);
+    expect(s.bots).toEqual(["chillwall", "gambit-gary", "mo-mate", "knightingale", "rookland"]);
+    expect(s.weeks).toHaveLength(10);
+    for (const w of s.weeks) expect(w).toHaveLength(3);
+  });
+
+  it("a Premier League season started before the change keeps its seven bots", () => {
+    const s = newSeason("premier-league", 1, "west-ham", seeded(2));
+    const old = { ...s, bots: undefined };
+    expect(table(old).map((r) => r.team)).toHaveLength(8);
   });
 
   it("puts Cup ties between league matches, and a lost tie knocks you out", () => {
@@ -92,5 +101,18 @@ describe("league season", () => {
     expect(fitScore(3, 1, "won")).toEqual([3, 1]);
     expect(fitScore(2, 2, "lost")).toEqual([2, 3]);
     expect(fitScore(3, 1, "drawn")).toEqual([3, 3]);
+  });
+});
+
+describe("honours", () => {
+  it("a finished season goes on the honours board once, with its badges", () => {
+    localStorage.clear();
+    const s = playOut(newSeason("league-two", 1, "west-ham", seeded(5)), true);
+    expect(recordHonour(s)).toBe(true);
+    expect(recordHonour(s)).toBe(false);
+    expect(loadHonours()).toEqual([{ season: 1, division: "league-two", position: 1, move: "up", champions: true, cup: true }]);
+    expect(honourText(loadHonours()[0])).toBe("League Two champions · Cup winners");
+    expect(judgeSeason(loadHonours()[0])).toEqual(["champions", "cup-winners", "the-double"]);
+    expect(judgeSeason({ champions: false, cup: false, move: "up", division: "championship" })).toEqual(["top-flight"]);
   });
 });
