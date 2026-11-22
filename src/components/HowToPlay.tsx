@@ -51,6 +51,16 @@ export function RulesScreen({ onBack }: { onBack: () => void }) {
       </div>
       <p className="htp-note">Wrong on a Puskás: your piece is booked and you lose 2 Form. Off a Hot Spot the Puskás is free.</p>
 
+      <h3>Cards and bookings</h3>
+      <div className="htp-tiles three">
+        <div className="htp-tile"><span className="htp-sq frozen" aria-hidden="true">♞</span><b>Booked</b><small>The piece you just moved is frozen: it can't move on your next turn</small></div>
+        <div className="htp-tile"><span className="htp-big" aria-hidden="true"><i className="htp-card yellow" /></span><b>Yellow card</b><small>2 wrong answers in a row. A right answer clears it</small></div>
+        <div className="htp-tile"><span className="htp-big" aria-hidden="true"><i className="htp-card red" /></span><b>Red card</b><small>4 wrong in a row: -3 Form</small></div>
+      </div>
+
+      <h3>The score</h3>
+      <p className="htp-note">The scoreline at the top (like 3-1) counts the pieces each side has taken, by their points: pawn 1, knight or bishop 3, rook 5, queen 9. It's for show: checkmate still wins.</p>
+
       <h3>Bonus Form</h3>
       <div className="htp-chips">
         <span><b>+1</b> hard answer in 5 sec</span>

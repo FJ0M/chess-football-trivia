@@ -6,6 +6,7 @@ import { TRIVIA_WEIGHT, TRIVIA_BASE, loadTriviaRating, resetTriviaRating, trivia
 import { clearHistory, loadHistory, resultKind, resultText, type HistoryEntry } from "../game/history";
 import type { Color } from "../game/types";
 import { BOT_NAMES, LADDER_BOT_IDS } from "../game/bots";
+import { markTip, seenTips } from "../game/tips";
 
 const LEVEL = { low: "Easy", medium: "Medium", hard: "Hard" } as Record<string, string>;
 const BOT = BOT_NAMES;
@@ -88,14 +89,23 @@ export function ScreenHead({ id, title, onBack }: { id: string; title: string; o
 }
 
 export function PlayMenu({ onPick, onSeason, onRules, onBack }: { onPick: (mode: "bot" | "local") => void; onSeason: () => void; onRules: () => void; onBack: () => void }) {
+  // A first-timer gets pointed at the rules once (audit, 2026-11-22).
+  const [newHere, setNewHere] = useState(() => !seenTips().has("how-to-play"));
+  const rules = () => { markTip("how-to-play"); onRules(); };
   return (
     <nav className="setup play-menu" aria-labelledby="play-title">
       <ScreenHead id="play-title" title="Play" onBack={onBack} />
+      {newHere && (
+        <div className="new-here" role="note">
+          <button type="button" className="go" onClick={rules}>New here? How to play (1 min)</button>
+          <button type="button" className="new-here-x" aria-label="No thanks" onClick={() => { markTip("how-to-play"); setNewHere(false); }}>×</button>
+        </div>
+      )}
       <div className="menu-btns">
         <MenuButton icon="bot" title="Play a bot" sub="Seven bots, from 400 to 1600 Elo" primary onClick={() => onPick("bot")} />
         <MenuButton icon="cup" title="Season" sub="Climb four divisions, with a Cup run" onClick={onSeason} />
         <MenuButton icon="pass" title="Pass and Play" sub="Two players, one device" onClick={() => onPick("local")} />
-        <MenuButton icon="book" title="How to play" sub="Triggers, Form, and power-ups" onClick={onRules} />
+        <MenuButton icon="book" title="How to play" sub="Triggers, Form, and power-ups" onClick={rules} />
       </div>
     </nav>
   );

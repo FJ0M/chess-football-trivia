@@ -27,12 +27,14 @@ export interface GameStyle {
   swatches: string[];
   voice: SoundVoice;
   music: MusicTrackId;
+  /** What colour White's and Black's pieces really are in this Look, when it isn't white and black. */
+  sides?: [string, string];
 }
 
 export const DEFAULT_STYLE: StyleId = "tactics";
 
 export const STYLES: GameStyle[] = [
-  { id: "tactics", name: "Tactics Board", blurb: "Magnets on the manager's whiteboard, marker-pen arrows, sticky-note questions.", chrome: "#f6f8f8", swatches: ["#f6f8f8", "#4a9a4f", "#1f5fbf", "#d1342f", "#fff7a8"], voice: "marker", music: "training-ground" },
+  { id: "tactics", name: "Tactics Board", blurb: "Magnets on the manager's whiteboard, marker-pen arrows, sticky-note questions.", chrome: "#f6f8f8", swatches: ["#f6f8f8", "#4a9a4f", "#1f5fbf", "#d1342f", "#fff7a8"], voice: "marker", music: "training-ground", sides: ["blue", "red"] },
   { id: "floodlit", name: "Floodlit Night", blurb: "A striped pitch under the lights against a navy sky.", chrome: "#070c1d", swatches: ["#070c1d", "#3f873a", "#4e9b45", "#ffe066", "#f4f4ef"], voice: "warm", music: "under-the-lights" },
   { id: "programme", name: "Matchday Programme", blurb: "Halftone sky-blue paper, slab headlines and claret blocks.", chrome: "#a9d4ee", swatches: ["#a9d4ee", "#7a263a", "#f3ead6", "#1c2a4a", "#2a0f17"], voice: "warm", music: "half-time" },
   { id: "sticker", name: "Sticker Album", blurb: "Pieces on round stickers with foil borders.", chrome: "#ffd23f", swatches: ["#ffd23f", "#ff8a3d", "#1e1240", "#46d6b4", "#ff3d7f"], voice: "crisp", music: "half-time" },
