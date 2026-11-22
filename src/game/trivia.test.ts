@@ -32,11 +32,26 @@ describe("question bank", () => {
       expect(cards.map((c) => c.difficulty)).toEqual(["easy", "medium", "hard"]);
       for (const c of cards) expect(bank.draw(c).difficulty).toBe(c.difficulty);
       // Hot Spots deal this way too, so they draw on the whole bank rather than one club's 30.
-      expect(cards.filter((c) => c.club).length).toBeLessThanOrEqual(1);
+      expect(cards.filter((c) => c.club).length).toBeLessThanOrEqual(1); // no away clubs given here
       general += cards.filter((c) => !c.club).length;
     }
     expect(general).toBeGreaterThan(750);
   });
+  it("about one deal in five has an Away day card about another club", () => {
+    const bank = new QuestionBank(qs, memorySeenStore(), Math.random, ["arsenal", "west-ham"]);
+    let away = 0;
+    for (let i = 0; i < 1000; i++) {
+      const cards = bank.deal("west-ham");
+      const a = cards.filter((c) => c.topic.startsWith("Away day"));
+      expect(a.length).toBeLessThanOrEqual(1);
+      // Never your own club as an away day.
+      for (const c of a) { expect(c.club).toBe("arsenal"); expect(bank.draw(c).club).toBe("arsenal"); }
+      away += a.length;
+    }
+    expect(away).toBeGreaterThan(130);
+    expect(away).toBeLessThan(270);
+  });
+
   it("doesn't repeat a general question until every one at that difficulty has been asked", () => {
     const bank = new QuestionBank(qs);
     for (const d of ["easy", "medium", "hard"] as const) {

@@ -1,10 +1,12 @@
 // The trophy cabinet: wooden shelves with a cup for each bot you've beaten and pin badges
-// for special feats. Badges you haven't won stay hidden as "?" until you do.
+// for special feats. Badges you haven't won show greyed out, with what they need and how close
+// you are (audit, 2026-11-22: hidden "?" badges gave nothing to aim at).
 
 import { useState, type ReactNode } from "react";
 import { ScreenHead } from "./Menus";
-import { BADGES, BADGE_BY_ID, cups, loadCabinet, tierFor, TIERS, type BadgeDef, type BadgeGroup, type Cup, type Earned, type NewBadge, type Tier } from "../game/badges";
+import { BADGES, BADGE_BY_ID, badgeProgress, cups, loadCabinet, tierFor, TIERS, type BadgeDef, type BadgeGroup, type Cup, type Earned, type NewBadge, type Tier } from "../game/badges";
 import { loadScores } from "../game/scores";
+import { honourText, loadHonours } from "../game/season";
 import { EbkBadge } from "./MatchFx";
 
 const METAL: Record<Tier, { fill: string; dark: string; light: string }> = {
@@ -12,8 +14,8 @@ const METAL: Record<Tier, { fill: string; dark: string; light: string }> = {
   silver: { fill: "#b9c2c9", dark: "#6c767e", light: "#f4f7f9" },
   gold: { fill: "#f2c230", dark: "#a5780a", light: "#fff2a8" },
 };
-const ENAMEL: Record<BadgeGroup, string> = { trivia: "#1f5fbf", chess: "#18304a", career: "#d1342f" };
-const GROUP_NAME: Record<BadgeGroup, string> = { trivia: "Trivia", chess: "Chess", career: "Power-ups and career" };
+const ENAMEL: Record<BadgeGroup, string> = { trivia: "#1f5fbf", chess: "#18304a", career: "#d1342f", season: "#7a263a" };
+const GROUP_NAME: Record<BadgeGroup, string> = { trivia: "Trivia", chess: "Chess", career: "Power-ups and career", season: "Season" };
 const TIER_NAME: Record<Tier, string> = { bronze: "Bronze", silver: "Silver", gold: "Gold" };
 const LEVEL_NAME: Record<string, string> = { low: "Easy", medium: "Medium", hard: "Hard" };
 
@@ -48,7 +50,15 @@ export function BadgePin({ def, tier, small }: { def: BadgeDef; tier?: Tier; sma
   );
 }
 
-type Pick = { kind: "badge"; def: BadgeDef; e: Earned } | { kind: "cup"; cup: Cup };
+type Pick = { kind: "badge"; def: BadgeDef; e?: Earned } | { kind: "cup"; cup: Cup };
+
+function Progress({ n, need }: { n: number; need: number }) {
+  return (
+    <span className="badge-progress" role="img" aria-label={`${n} of ${need}`}>
+      <i style={{ width: `${Math.min(100, (n / need) * 100)}%` }} /><small>{n}/{need}</small>
+    </span>
+  );
+}
 
 export function CabinetScreen({ onBack, head }: { onBack: () => void; head?: ReactNode }) {
   const [cab] = useState(loadCabinet);
@@ -59,7 +69,11 @@ export function CabinetScreen({ onBack, head }: { onBack: () => void; head?: Rea
   const originals = all.filter((c) => c.level);
   const cupsWon = all.filter((c) => c.won > 0).length;
   const found = BADGES.filter((b) => cab.earned[b.id]).length;
-  const groups: BadgeGroup[] = ["trivia", "chess", "career"];
+  const groups: BadgeGroup[] = ["trivia", "chess", "career", "season"];
+  const [honours] = useState(loadHonours);
+  const titles = honours.filter((h) => h.champions).length;
+  const cupsSeason = honours.filter((h) => h.cup).length;
+  const ups = honours.filter((h) => h.move === "up").length;
 
   return (
     <section className="setup cabinet-screen" aria-labelledby={head ? "achievements-title" : "cabinet-title"}>
@@ -75,35 +89,46 @@ export function CabinetScreen({ onBack, head }: { onBack: () => void; head?: Rea
             </button>
           ))}
         </div>
-        <div className="shelf-label">The originals</div>
-        <div className="shelf cups originals">
+        {originals.length > 0 && <div className="shelf-label">The originals</div>}
+        {originals.length > 0 && <div className="shelf cups originals">
           {originals.map((c) => (
             <button key={`${c.botId}:${c.level}`} type="button" className="cup-slot" onClick={() => setPick({ kind: "cup", cup: c })} aria-label={`${c.name}, ${LEVEL_NAME[c.level ?? ""]}: ${c.won ? `won ${c.won}` : "not won yet"}`}>
               <CupArt tier={c.tier} won={c.won > 0} />
               <span className="plaque">{c.who} · {LEVEL_NAME[c.level ?? ""]}</span>
             </button>
           ))}
+        </div>}
+        <div className="shelf-label">Season honours <span>{honours.length ? `${titles} title${titles === 1 ? "" : "s"} · ${cupsSeason} Cup${cupsSeason === 1 ? "" : "s"} · ${ups} promotion${ups === 1 ? "" : "s"}` : ""}</span></div>
+        <div className="shelf honours">
+          {honours.length ? (
+            <ol className="honours-list">
+              {[...honours].reverse().map((h) => (
+                <li key={h.season} className={h.champions || h.cup ? "won" : ""}><b>Season {h.season}</b> {honourText(h)}</li>
+              ))}
+            </ol>
+          ) : <p className="muted">Finish a Season and it goes on the honours board.</p>}
         </div>
         {groups.map((g) => {
           const list = BADGES.filter((b) => b.group === g);
           const got = list.filter((b) => cab.earned[b.id]);
-          const hidden = list.length - got.length;
+          // Won first, then the ones still to win, greyed out.
+          const order = [...got, ...list.filter((b) => !cab.earned[b.id])];
           return (
             <div key={g}>
               <div className="shelf-label">{GROUP_NAME[g]} badges <span>{got.length}/{list.length}</span></div>
               <div className="shelf pins">
-                {got.map((b) => {
+                {order.map((b) => {
                   const e = cab.earned[b.id];
+                  const prog = badgeProgress(b, cab.career);
                   return (
-                    <button key={b.id} type="button" className="pin-slot" onClick={() => setPick({ kind: "badge", def: b, e })}>
-                      <BadgePin def={b} tier={e.tier} />
+                    <button key={b.id} type="button" className={`pin-slot${e ? "" : " todo"}`} onClick={() => setPick({ kind: "badge", def: b, e })}
+                      aria-label={`${badgeName(b, e)}${e ? "" : `, not won yet: ${b.how}`}${prog ? `, ${prog.n} of ${prog.need}` : ""}`}>
+                      <BadgePin def={b} tier={e?.tier} />
                       <span className="plaque">{badgeName(b, e)}</span>
+                      {prog && <Progress n={prog.n} need={prog.need} />}
                     </button>
                   );
                 })}
-                {Array.from({ length: hidden }, (_, i) => (
-                  <div key={`h${i}`} className="pin-slot mystery" aria-label="A badge still to find"><span className="mystery-art">?</span><span className="plaque">???</span></div>
-                ))}
               </div>
             </div>
           );
@@ -131,13 +156,15 @@ function Detail({ pick, cab, onClose }: { pick: Pick; cab: ReturnType<typeof loa
     const n = def.id === "club-legend" ? cab.career.clubRight : def.id === "groundhopper" ? cab.career.clubs.length : 0;
     const t = def.tiers ? tierFor(def, n) : null;
     const nextI = t ? TIERS.indexOf(t) + 1 : 0;
+    const prog = badgeProgress(def, cab.career);
     body = (
       <>
-        <BadgePin def={def} tier={e.tier} />
-        <h2>{badgeName(def, e)}{e.tier ? ` · ${TIER_NAME[e.tier]}` : ""}</h2>
+        <span className={e ? "" : "todo"}><BadgePin def={def} tier={e?.tier} /></span>
+        <h2>{badgeName(def, e)}{e?.tier ? ` · ${TIER_NAME[e.tier]}` : ""}</h2>
         <p>{def.how}{def.tiers ? `: ${n} so far.` : "."}</p>
+        {prog && <Progress n={prog.n} need={prog.need} />}
         {def.tiers && nextI < 3 && <p className="muted">{TIER_NAME[TIERS[nextI]]} at {def.tiers[nextI]}.</p>}
-        <p className="muted">First won {date(e.first)}{e.count > 1 ? ` · won ${e.count} times, last on ${date(e.last)}` : ""}</p>
+        {e ? <p className="muted">First won {date(e.first)}{e.count > 1 ? ` · won ${e.count} times, last on ${date(e.last)}` : ""}</p> : <p className="muted">Not won yet.</p>}
       </>
     );
   }

@@ -3,7 +3,7 @@ import { GameScreen } from "./components/GameScreen";
 import { SetupScreen } from "./components/SetupScreen";
 import { AchievementsHead, GAME_NAME, HistoryScreen, MainMenu, PauseMenu, PlayMenu, ScoresScreen, type AchievementsTab } from "./components/Menus";
 import { BOT_LEVEL, loadScores, recordGame } from "./game/scores";
-import { awardBadges, type NewBadge } from "./game/badges";
+import { awardBadges, awardSeasonBadges, type NewBadge } from "./game/badges";
 import { BadgeToast, CabinetScreen } from "./components/Cabinet";
 import { botList, loadBots } from "./game/bots";
 import { loadTriviaRating, saveTriviaRating, updateTriviaRating } from "./game/triviaElo";
@@ -13,7 +13,7 @@ import type { GameState } from "./game/types";
 import { clearMatch, loadMatch, matchLabel, type SavedMatch } from "./game/savedMatch";
 import { RulesScreen } from "./components/HowToPlay";
 import { SeasonScreen } from "./components/SeasonScreen";
-import { applyResult, loadSeason, saveSeason } from "./game/season";
+import { applyResult, honourOf, loadSeason, saveSeason } from "./game/season";
 import { SettingsPanel } from "./components/SettingsPanel";
 import { getStyle } from "./theme/themes";
 import { loadStyleFonts } from "./theme/fonts";
@@ -145,6 +145,7 @@ export function App() {
             const meta = await loadBots().then((m) => botList(m).find((b) => b.id === botId)).catch(() => undefined);
             const rating = meta?.rating;
             const prevBestMatch = loadScores().best?.match;
+            let seasonBadges: NewBadge[] = [];
             if (setup.season) {
               // A season match: goals are pieces taken; a Cup tie needs a winner (a shootout counts).
               const season = loadSeason();
@@ -152,9 +153,12 @@ export function App() {
               const ratings = Object.fromEntries((await loadBots().then(botList).catch(() => [])).map((b) => [b.id, b.rating.match]));
               const next = season && applyResult(season, setup.season.key, r.goalsFor, r.goalsAgainst, r.result, ratings);
               if (next) saveSeason(next);
+              // The season just ended: titles, Cups and promotions earn season badges.
+              const h = next && !season?.finished ? honourOf(next) : null;
+              if (h) seasonBadges = awardSeasonBadges(h);
             }
             recordGame(g, BOT_LEVEL, stats.formEarned[human], rating, new Date(), usedAssist(stats, human));
-            const won = awardBadges({ game: g, stats, human, botMatch: rating?.match, prevBestMatch });
+            const won = [...awardBadges({ game: g, stats, human, botMatch: rating?.match, prevBestMatch }), ...seasonBadges];
             if (won.length) { setNewBadges(won); setTimeout(() => play("badge"), 2600); }
           }} />
       )}

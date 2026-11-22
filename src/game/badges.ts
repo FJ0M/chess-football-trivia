@@ -9,7 +9,7 @@ import { POWER_UPS } from "./powerups";
 import { BOT_NAMES, LADDER_BOT_IDS } from "./bots";
 import type { Scores } from "./scores";
 
-export type BadgeGroup = "trivia" | "chess" | "career";
+export type BadgeGroup = "trivia" | "chess" | "career" | "season";
 export type Tier = "bronze" | "silver" | "gold";
 export const TIERS: Tier[] = ["bronze", "silver", "gold"];
 
@@ -17,7 +17,7 @@ export interface BadgeDef {
   id: string;
   name: string;
   group: BadgeGroup;
-  /** How you win it, shown once you have. */
+  /** How you win it. */
   how: string;
   /** A short mark for the pin: a number, letters or a chess piece. */
   glyph: string;
@@ -43,6 +43,11 @@ export const BADGES: BadgeDef[] = [
   { id: "full-squad", name: "Full Squad", group: "career", glyph: "XI", how: "Use every power-up at least once, over all your games" },
   { id: "invincibles", name: "Invincibles", group: "career", glyph: "W10", how: "10 wins in a row without a defeat (draws don't break it)" },
   { id: "giant-killer", name: "Giant Killer", group: "career", glyph: "↑300", how: "Beat a bot rated 300 or more above your best win before it" },
+  // Season badges (audit, 2026-11-22), awarded when a season ends.
+  { id: "champions", name: "Champions", group: "season", glyph: "1st", how: "Win a league title in a Season" },
+  { id: "cup-winners", name: "Cup Winners", group: "season", glyph: "CUP", how: "Win the Cup in a Season" },
+  { id: "the-double", name: "The Double", group: "season", glyph: "×2", how: "Win the league and the Cup in the same Season" },
+  { id: "top-flight", name: "Top Flight", group: "season", glyph: "PL", how: "Win promotion to the Premier League" },
 ];
 export const BADGE_BY_ID = Object.fromEntries(BADGES.map((b) => [b.id, b])) as Record<string, BadgeDef>;
 
@@ -94,6 +99,23 @@ function saveCabinet(c: Cabinet, storage: Store | undefined) {
   try { storage?.setItem(KEY, JSON.stringify(c)); } catch { /* private browsing or storage full */ }
 }
 export function resetCabinet(storage: Store | undefined = safeStorage()) { saveCabinet({ earned: {}, career: emptyCareer() }, storage); }
+
+/**
+ * How far along a badge you build up over many games is: the count so far and the next target
+ * (null for a one-off badge, or one already at gold).
+ */
+export function badgeProgress(def: BadgeDef, career: Career): { n: number; need: number } | null {
+  const n = def.id === "club-legend" ? career.clubRight
+    : def.id === "groundhopper" ? career.clubs.length
+    : def.id === "wanderer" ? career.chess960Wins
+    : def.id === "invincibles" ? career.unbeaten
+    : def.id === "full-squad" ? career.powerUps.filter((id) => POWER_UPS.some((p) => p.id === id)).length
+    : null;
+  if (n === null) return null;
+  const targets = def.tiers ?? [def.id === "wanderer" ? 5 : def.id === "invincibles" ? 10 : POWER_UPS.length];
+  const need = targets.find((t) => n < t);
+  return need === undefined ? null : { n, need };
+}
 
 /** The tier a count reaches, or null below bronze. */
 export function tierFor(def: BadgeDef, n: number): Tier | null {
@@ -177,6 +199,31 @@ export function awardBadges(info: FinishInfo, at = new Date(), storage: Store | 
   }
   saveCabinet({ earned, career }, storage);
   return awards;
+}
+
+/** The season badges a finished season earns. */
+export function judgeSeason(h: { champions: boolean; cup: boolean; move: string; division: string }): string[] {
+  const ids: string[] = [];
+  if (h.champions) ids.push("champions");
+  if (h.cup) ids.push("cup-winners");
+  if (h.champions && h.cup) ids.push("the-double");
+  if (h.division === "championship" && h.move === "up") ids.push("top-flight");
+  return ids;
+}
+
+/** Records the badges a finished season earned and returns them. */
+export function awardSeasonBadges(h: Parameters<typeof judgeSeason>[0], at = new Date(), storage: Store | undefined = safeStorage()): NewBadge[] {
+  const ids = judgeSeason(h);
+  if (!ids.length) return [];
+  const before = loadCabinet(storage);
+  const when = at.toISOString();
+  const earned = { ...before.earned };
+  for (const id of ids) {
+    const e = earned[id];
+    earned[id] = { first: e?.first ?? when, last: when, count: (e?.count ?? 0) + 1 };
+  }
+  saveCabinet({ earned, career: before.career }, storage);
+  return ids.map((id) => ({ id, again: !!before.earned[id] }));
 }
 
 // Trophies: one cup for each bot. The ladder bots play at one strength, so one cup each;

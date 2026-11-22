@@ -688,3 +688,14 @@ button.htp-power:focus-visible, .htp-close:focus-visible { outline: 3px solid #1
 .play-menu .new-here-x { min-width: 44px; min-height: 44px; border-radius: 50%; border: 2px solid currentColor; background: transparent; color: inherit; font-size: 20px; cursor: pointer; }
 .htp-sq.frozen { background: repeating-linear-gradient(45deg, #78c8ff 0 5px, #dff2ff 5px 10px); color: #1f5fbf; }
 .htp-big .htp-card { width: 18px; height: 26px; display: inline-block; }
+
+/* ---- Audit 2026-11-22: badges still to win, with progress */
+.pin-slot.todo .pin-art, .cab-detail .todo .pin-art { filter: grayscale(1); opacity: .45; }
+.pin-slot.todo .plaque { opacity: .75; }
+.badge-progress { position: relative; display: block; width: 100%; max-width: 160px; height: 12px; margin: 4px auto 0; border-radius: 6px; background: rgba(0,0,0,.25); overflow: hidden; }
+.badge-progress i { position: absolute; inset: 0 auto 0 0; background: #2e9d4f; }
+.badge-progress small { position: relative; display: block; font-size: 9px; line-height: 12px; font-weight: 700; color: #fff; text-align: center; text-shadow: 0 1px 1px rgba(0,0,0,.6); }
+.shelf.honours { display: block; padding: 8px 12px; }
+.honours-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 14px; }
+.honours-list li b { margin-right: 6px; }
+.honours-list li.won::before { content: "🏆 "; }

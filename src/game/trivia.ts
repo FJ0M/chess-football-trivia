@@ -99,7 +99,12 @@ export class QuestionBank {
   private general = new Map<Difficulty, Map<string, Question[]>>();
   private clubs = new Map<string, Map<Difficulty, Question[]>>();
 
-  constructor(questions: Question[], private seen: SeenStore = memorySeenStore(), private rng: Rng = Math.random) {
+  /**
+   * `away`: other clubs this player can get an "Away day" card about (the opponent's club and one more,
+   * picked for the match). Audit, 2026-11-22: only your own club's questions ever came up, which left
+   * about 4,600 club questions unused and the Groundhopper badge out of reach.
+   */
+  constructor(questions: Question[], private seen: SeenStore = memorySeenStore(), private rng: Rng = Math.random, private away: string[] = []) {
     for (const d of DIFFS) this.general.set(d, new Map());
     for (const q of questions) {
       if (!q.verified) continue;
@@ -150,21 +155,27 @@ export class QuestionBank {
     return { topic: pick(topics, this.rng), difficulty, club: null };
   }
 
-  private clubCard(club: string, difficulty: Difficulty): Card {
-    return { topic: clubShort(club), difficulty, club };
+  private clubCard(club: string, difficulty: Difficulty, awayDay = false): Card {
+    return { topic: awayDay ? `Away day: ${clubShort(club)}` : clubShort(club), difficulty, club };
   }
 
   /**
    * Three cards, one of each difficulty, from the whole bank; about one deal in three
-   * swaps a card for a club card. Hot Spots deal the same way, so their questions come
-   * from the full bank and can't be learned by heart.
+   * swaps a card for your club, and about one in five swaps another for an Away day
+   * (another club). Hot Spots draw the same way, so their questions come from the full
+   * bank and can't be learned by heart.
    */
   deal(club: string | null): Card[] {
     const cards: Card[] = [];
     for (const d of DIFFS) cards.push(this.generalCard(d, cards.map((c) => c.topic)));
-    if (club && this.rng() < 1 / 3) {
-      const i = Math.floor(this.rng() * 3);
-      if (this.hasClub(club, cards[i].difficulty)) cards[i] = this.clubCard(club, cards[i].difficulty);
+    const own = club && this.rng() < 1 / 3 ? Math.floor(this.rng() * 3) : -1;
+    if (own >= 0 && this.hasClub(club, cards[own].difficulty)) cards[own] = this.clubCard(club!, cards[own].difficulty);
+    const away = this.away.filter((c) => c !== club);
+    if (away.length && this.rng() < AWAY_DAY_CHANCE) {
+      const free = [0, 1, 2].filter((i) => i !== own);
+      const i = free[Math.floor(this.rng() * free.length)];
+      const other = pick(away, this.rng);
+      if (this.hasClub(other, cards[i].difficulty)) cards[i] = this.clubCard(other, cards[i].difficulty, true);
     }
     return cards;
   }
@@ -195,3 +206,5 @@ export class QuestionBank {
 }
 
 export const TIMER_MS = { normal: 10_000, puskas: 8_000 };
+/** How often a deal includes an Away day card about another club. */
+export const AWAY_DAY_CHANCE = 0.2;

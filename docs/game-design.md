@@ -44,7 +44,7 @@ Freddie picked this as the first bigger addition (2026-11-14). **Play > Season**
 | League Two | Pawny, Eezy, Chillwall | Each twice (once as White, once as Black), 6 matches |
 | League One | Eezy, Chillwall, Gambit Gary | Each twice, 6 matches |
 | Championship | Gambit Gary, Mo Mate, Knightingale | Each twice, 6 matches |
-| Premier League | All seven | Each once, 7 matches |
+| Premier League | Chillwall, Gambit Gary, Mo Mate, Knightingale, Rookland | Each twice, 10 matches (from 2026-11-22; before that all seven, once each, and nobody rated 900-1500 could go down) |
 
 - Win 3 points, draw 1. The scoreline is pieces taken, nudged so it agrees with the result (the winner gets the winning goal if they weren't ahead; a draw is level).
 - The top two go up and the bottom one goes down (not below League Two or above the Premier League).
@@ -52,6 +52,7 @@ Freddie picked this as the first bigger addition (2026-11-14). **Play > Season**
 - **Cup run:** three ties (quarter-final, semi-final, final) slot in between league matches, against bots drawn from the bottom, middle and top of the ladder. A Cup tie needs a winner, so a draw is a defeat (a trivia game that ends level goes to the Penalty Shootout, whose winner wins the tie).
 - Season matches always have trivia on, no clock and the standard start position. They count for high scores, history and trophies like any other bot game.
 - The season is saved on the device, and a result only counts against the match that was due, so restarting a finished match can't record it twice.
+- **Honours board** (audit, 2026-11-22): every finished season is kept (`cft.honours.v1`) and shown on a Season honours shelf in the trophy cabinet: titles, promotions, relegations and Cups. Four season badges: Champions, Cup Winners, The Double and Top Flight (promoted to the Premier League).
 
 ## Pawn promotion: "Who am I?"
 
@@ -74,7 +75,7 @@ Clue sets live in `data/whoami.json`, built by `tools/build_whoami.py`: 30 Premi
 
 ## Picking your club
 
-Before each game every player picks the club they support from all 92 Premier League and EFL clubs (or none). About one deal in three (Hot Spots included) swaps a card for a club card at the same difficulty. A club with fewer than 10 questions at a difficulty falls back to general questions. Bots have clubs too (see the ladder table).
+Before each game every player picks the club they support from all 92 Premier League and EFL clubs (or none). About one deal in three swaps a card for a club card at the same difficulty. About one deal in five also swaps another card for an **Away day** card about a different club: the opponent's, or one extra club picked at random for the match (audit, 2026-11-22: only 1,043 of the 6,963 questions are general, and before this a player only ever saw their own club's share of the rest, so Groundhopper was out of reach). A club with fewer than 10 questions at a difficulty falls back to general questions. Bots have clubs too (see the ladder table).
 
 ## Menus
 

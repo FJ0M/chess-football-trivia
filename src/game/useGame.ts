@@ -15,6 +15,7 @@ import {
   actorOf, positionCheck, startMatch, step, type Action, type Data, type Effect, type GameEvent, type Match, type NewEvent, type Phase, type SetupChoice,
 } from "./match";
 import { loadClub, loadGeneral } from "virtual:questions";
+import { CLUBS } from "./clubs";
 import type { Color, GameState, PowerUpId, PromoRole, Question } from "./types";
 
 let rawPromise: Promise<{ general: Question[]; sets: WhoAmI[] }> | null = null;
@@ -39,7 +40,10 @@ function loadData(players: SetupChoice["players"]): Promise<Data> {
     // Don't remember a failed download: the next game (or retry) tries again.
     rawPromise.catch(() => { rawPromise = null; });
   }
-  const clubs = [...new Set([players.white.club, players.black.club])];
+  // An Away day club for this match: one the players don't support, picked at random.
+  const others = CLUBS.map((c) => c.id).filter((id) => id !== players.white.club && id !== players.black.club);
+  const awayDay = others[Math.floor(Math.random() * others.length)] ?? null;
+  const clubs = [...new Set([players.white.club, players.black.club, awayDay])];
   return Promise.all([rawPromise, ...clubs.map(clubQuestions)]).then(([{ general, sets }, ...clubSets]) => {
     const questions = [...general, ...clubSets.flat()];
     // Shared by both sides, so no question comes up twice in one match.
@@ -48,7 +52,9 @@ function loadData(players: SetupChoice["players"]): Promise<Data> {
       const p = players[c];
       // Bots don't need to remember what they've been asked between games.
       const seen = withMatchSeen(p.kind === "human" ? browserSeenStore(p.name) : memorySeenStore(), matchSeen);
-      return { bank: new QuestionBank(questions, seen), whoami: new WhoAmIBank(sets, seen) };
+      // Away days: the opponent's club and the match's extra club.
+      const away = [players[c === "white" ? "black" : "white"].club, awayDay].filter((x): x is string => !!x && x !== p.club);
+      return { bank: new QuestionBank(questions, seen, Math.random, away), whoami: new WhoAmIBank(sets, seen) };
     };
     return { white: banks("white"), black: banks("black") };
   });
