@@ -12,7 +12,7 @@ import type { NormalMove, Role, Square } from "chessops/types";
 import { startFen } from "./chess960";
 import { ODDS_POINTS, applyOdds, boostForm, isActive } from "./handicap";
 import {
-  DEFAULT_MINUTES, FORM_CAP, GOLDEN_BOOT_FORM, GOLDEN_BOOT_MOVES, POWER_UP_BY_ID, fergieMs, fmtSeconds, startingCooldowns,
+  DEFAULT_MINUTES, FORM_CAP, GOLDEN_BOOT_MULTIPLIER, POWER_UP_BY_ID, fergieMs, fmtSeconds, startingCooldowns,
 } from "./powerups";
 import type {
   Color, Difficulty, DrawReason, Frozen, GameOptions, GameState, MoveRecord, PlayerState, PowerUpId, PromoRole, Snapshot, Trigger,
@@ -92,7 +92,7 @@ function newPlayer(p: PlayerInit, timed: boolean, minutes: number): PlayerState 
     kickoffCount: 0,
     rightStreak: 0,
     wrongStreak: 0,
-    goldenBootMoves: 0,
+    goldenBoot: false,
     clockMs: timed ? minutes * 60 * 1000 : null,
   };
 }
@@ -331,6 +331,8 @@ export function legalMoves(state: GameState): MoveFilter {
   const raw = rawMoves(fen);
   const frozen = new Set(state.frozen.filter((f) => f.owner === turn).map((f) => f.square));
   const restricted = state.step !== "normal";
+  // Extra Time's second move is for the piece that just moved.
+  const extraFrom = state.step === "extra-time" && state.lastMove ? state.lastMove[1] : null;
   // Extra Time: the first move can't capture either (it may give check, which cancels the second move).
   // Formation Change, Tactical Foul, Super-Sub and Back from Injury: no capture on the turn you use one.
   const noCapture = restricted || state.extraTimePending || (!!state.powerUsedId && NO_CAPTURE_AFTER.includes(state.powerUsedId));
@@ -340,6 +342,7 @@ export function legalMoves(state: GameState): MoveFilter {
   const setup = setupOf(fen);
   const ok = (m: NormalMove) => {
     if (frozen.has(makeSquare(m.from))) return false;
+    if (extraFrom && makeSquare(m.from) !== extraFrom) return false;
     if (isCastle(setup, m) && frozen.has(makeSquare(m.to))) return false;
     const cap = capturedSquare(setup, m);
     if (cap !== null && busRanks.includes(squareRank(cap))) return false;
@@ -502,12 +505,7 @@ export function playMove(state: GameState, uci: string, rng: Rng = Math.random):
   const me = next.players[mover];
   const patch: Partial<PlayerState> = {};
   let log = next.log;
-  if (capturedPiece && me.goldenBootMoves > 0) {
-    patch.form = addForm(me.form, GOLDEN_BOOT_FORM);
-    log = [...log, `Golden Boot: ${me.name} +${GOLDEN_BOOT_FORM} Form for the capture`];
-  }
   if (state.step === "normal") {
-    if (me.goldenBootMoves > 0) patch.goldenBootMoves = me.goldenBootMoves - 1;
     const used = state.powerUsedId;
     const cd = { ...me.cooldowns };
     for (const id of Object.keys(cd) as PowerUpId[]) if (id !== used && cd[id] > 0) cd[id] = cd[id] - 1;
@@ -648,11 +646,11 @@ export function finishTurn(state: GameState): TurnInfo {
       if (flipped) {
         const candidate: GameState = { ...next, fen: flipped, step: "extra-time" };
         if (legalMoves(candidate).moves.length) {
-          notes.push(`Extra Time: ${state.players[mover].name} moves again (no captures or checks)`);
+          notes.push(`Extra Time: ${state.players[mover].name} moves the same piece again (no captures or checks)`);
           return { state: candidate, notes };
         }
       }
-      notes.push("Extra Time is cancelled: no quiet second move available");
+      notes.push("Extra Time is cancelled: that piece has no quiet second move");
     }
   }
 
@@ -723,6 +721,7 @@ export function powerBlocked(state: GameState, id: PowerUpId): string | null {
     return "No quiet move to start with";
   }
   if (id === "substitution" && !state.captured[color].includes("p")) return "No captured pawns to bring back";
+  if (id === "golden-boot" && me.goldenBoot) return "Already laced up";
   return null;
 }
 
@@ -828,8 +827,8 @@ export function usePowerUp(state: GameState, id: PowerUpId, targets: string[] = 
       break;
     }
     case "golden-boot":
-      next = withPlayer(next, color, { goldenBootMoves: GOLDEN_BOOT_MOVES });
-      note = `${me.name} laced up the Golden Boot: every capture in the next ${GOLDEN_BOOT_MOVES} moves is worth +${GOLDEN_BOOT_FORM} Form`;
+      next = withPlayer(next, color, { goldenBoot: true });
+      note = `${me.name} laced up the Golden Boot: their next right answer earns double Form`;
       break;
     case "formation-change": {
       const sq2 = targets[1] !== undefined ? parseSquare(targets[1]) : undefined;
@@ -885,7 +884,7 @@ export function usePowerUp(state: GameState, id: PowerUpId, targets: string[] = 
     }
     case "extra-time":
       next = { ...next, extraTimePending: true };
-      note = `${me.name} is playing Extra Time: two moves this turn`;
+      note = `${me.name} is playing Extra Time: the piece they move goes again`;
       break;
     case "assistants-flag":
     case "scout-report":
@@ -960,6 +959,8 @@ export function applyAnswer(state: GameState, a: AnswerCtx): AnswerOutcome {
     const base = a.puskas && a.bonus ? HOT_SPOT_PUSKAS : REWARD[a.puskas ? "puskas" : a.difficulty];
     gained = base;
     lines.push(`+${base} Form`);
+    // Golden Boot doubles the question's own Form, then it's used up.
+    if (me.goldenBoot) { gained += base * (GOLDEN_BOOT_MULTIPLIER - 1); lines.push(`Golden Boot: +${base * (GOLDEN_BOOT_MULTIPLIER - 1)} Form`); }
     if (a.ms < QUICK_MS && (a.puskas || a.difficulty === "hard")) { gained += 1; lines.push("+1 quick answer"); }
     let streak = me.rightStreak + 1;
     if (streak >= 3) { gained += HAT_TRICK_BONUS; streak = 0; lines.push(`Hat-trick! +${HAT_TRICK_BONUS} Form`); }
@@ -974,7 +975,7 @@ export function applyAnswer(state: GameState, a: AnswerCtx): AnswerOutcome {
       gained = boosted.gained;
       carry = boosted.carry;
     }
-    next = withPlayer(next, a.color, { form: addForm(me.form, gained), formCarry: carry, rightStreak: streak, wrongStreak: 0 });
+    next = withPlayer(next, a.color, { form: addForm(me.form, gained), formCarry: carry, rightStreak: streak, wrongStreak: 0, goldenBoot: false });
   } else {
     if (a.puskas && a.bonus) {
       // A Hot Spot's Puskás is a free shot (Freddie, 2026-11-14): no penalty, and it doesn't count towards a card.

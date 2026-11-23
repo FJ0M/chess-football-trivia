@@ -51,8 +51,8 @@ export interface PlayerState {
   kickoffCount: number;
   rightStreak: number;
   wrongStreak: number;
-  /** Golden Boot: own moves left in which each capture earns bonus Form. 0 = off. */
-  goldenBootMoves: number;
+  /** Golden Boot is laced up: the next right answer earns double Form. */
+  goldenBoot: boolean;
   clockMs: number | null;
 }
 

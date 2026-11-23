@@ -31,9 +31,8 @@ export interface PowerUpDef {
   stars: 1 | 2 | 3 | 4 | 5;
 }
 
-/** Golden Boot: how many of your moves it lasts, and the Form each capture in them earns. */
-export const GOLDEN_BOOT_MOVES = 3;
-export const GOLDEN_BOOT_FORM = 2;
+/** Golden Boot multiplies the next right answer's own Form (not its bonuses) by this. */
+export const GOLDEN_BOOT_MULTIPLIER = 2;
 
 export const POWER_UPS: PowerUpDef[] = [
   { id: "fergie-time", name: "Fergie Time", kind: "football", cost: 2, cooldown: 8, stars: 2, effect: "Adds a tenth of your starting time to your clock", target: "none", timedOnly: true },
@@ -42,11 +41,11 @@ export const POWER_UPS: PowerUpDef[] = [
   { id: "var-review", name: "VAR Review", kind: "chess", cost: 6, cooldown: 15, stars: 5, effect: "Undo your last move and the opponent's reply", rule: "Form, cooldowns, streaks and freezes go back too, and the cost comes out of the Form you had before that move", target: "none" },
   { id: "counter-attack", name: "Counter-Attack", kind: "chess", cost: 3, cooldown: 8, stars: 1, effect: "One pawn moves two squares from anywhere", rule: "Path must be clear; can't reach the 7th rank or skip past an enemy pawn", target: "own-pawn" },
   { id: "substitution", name: "Back from Injury", kind: "chess", cost: 4, cooldown: 12, stars: 3, effect: "Bring a captured pawn back on your 2nd rank", rule: "Your move this turn can't capture", target: "own-second-rank" },
-  { id: "golden-boot", name: "Golden Boot", kind: "football", cost: 2, cooldown: 8, stars: 1, effect: `Each capture in your next ${GOLDEN_BOOT_MOVES} moves earns +${GOLDEN_BOOT_FORM} Form`, rule: "This move counts as the first", target: "none" },
+  { id: "golden-boot", name: "Golden Boot", kind: "football", cost: 2, cooldown: 8, stars: 1, effect: "Your next right answer earns double Form", rule: "Doubles the question's own Form, not the bonuses. Lasts until you get one right", target: "none" },
   { id: "formation-change", name: "Formation Change", kind: "chess", cost: 6, cooldown: 12, stars: 2, effect: "Swap two of your pieces (not the king)", rule: "Not while in check, not a frozen piece, no pawn past its 5th rank, and can't give check. Your move this turn can't capture", target: "two-own-pieces" },
   { id: "super-sub", name: "Super-Sub", kind: "football", cost: 7, cooldown: 15, stars: 4, effect: "Upgrade a pawn to a knight", rule: "Your move this turn can't capture", target: "own-pawn" },
   { id: "red-card", name: "Red Card", kind: "football", cost: 5, cooldown: 15, stars: 3, effect: "Send off one enemy pawn", rule: "Not a pawn on its 6th or 7th rank", target: "enemy-pawn" },
-  { id: "extra-time", name: "Extra Time", kind: "chess", cost: 10, cooldown: 25, stars: 4, effect: "Make two moves this turn", rule: "Neither move can capture, and the second can't give check", target: "none" },
+  { id: "extra-time", name: "Extra Time", kind: "chess", cost: 6, cooldown: 14, stars: 3, effect: "The piece you move gets a second move this turn", rule: "Neither move can capture, and the second can't give check", target: "none" },
   { id: "assistants-flag", name: "Video Analysis", kind: "hint", cost: 1, cooldown: 3, stars: 1, effect: "Shows every square the opponent attacks", target: "none" },
   { id: "scout-report", name: "Scout Report", kind: "hint", cost: 2, cooldown: 4, stars: 1, effect: "Shows the piece the opponent will most likely move next", target: "none", engine: true },
   { id: "managers-tip", name: "Manager's Tip", kind: "hint", cost: 4, cooldown: 10, stars: 2, effect: "Shows the best move", target: "none", engine: true },

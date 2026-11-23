@@ -109,8 +109,6 @@ export interface MoveRequest {
   managersTip?: boolean;
   /** Hot Spot squares: the bot steers towards them if it rates its club questions. */
   hotSpots?: string[];
-  /** Golden Boot is running: captures earn Form, so the bot likes them more. */
-  goldenBoot?: boolean;
 }
 
 export interface MoveResult {

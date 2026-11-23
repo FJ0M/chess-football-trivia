@@ -93,8 +93,8 @@ function choose(id: PowerUpId, pos: Chess, me: Color): PowerUpChoice | null {
 
 /** What the bot's own look at the position found (bot.ts fills this in from the engine). */
 export interface PowerUpContext {
-  /** The engine's best move right now is a capture, so Golden Boot pays at least its cost back. */
-  bestIsCapture?: boolean;
+  /** The Form the bot expects from its next question: what Golden Boot would add. */
+  bootForm?: number;
 }
 
 export function choosePowerUp(
@@ -125,8 +125,8 @@ export function choosePowerUp(
     if (profile.saveFor && !profile.saveFor.ids.includes(id) && req.form - cost < profile.saveFor.reserve) continue;
     // Park the Bus only when under pressure.
     if (id === "park-the-bus" && (req.evalCp ?? 0) > -150) continue;
-    // Golden Boot costs 2 and pays 2 a capture, so only buy it with a good capture on the board now.
-    if (id === "golden-boot" && !ctx.bestIsCapture) continue;
+    // Golden Boot doubles the next right answer: only worth it if that answer is worth its cost.
+    if (id === "golden-boot" && (ctx.bootForm ?? 0) < cost) continue;
     const pick = choose(id as PowerUpId, pos, me);
     if (pick) return pick;
   }
