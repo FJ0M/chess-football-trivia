@@ -1,7 +1,7 @@
 import { combinedRating, triviaEloFromAccuracy } from "../game/triviaElo";
 import type { BotId, BotProfile, ChessStrength, LadderBotId, TriviaSkill } from "./types";
 
-// The Elo ladder: one bot at each of 400 to 1600 chess Elo, one strength each.
+// The Elo ladder: ten bots from 400 to 1600 chess Elo, one strength each.
 // (The original three, Ollie, Ryan and Freddie, were retired on 2026-11-09.)
 //
 // Chess ratings are what the playtest measured (tools/playtest, docs/bots.md)
@@ -26,8 +26,9 @@ const trivia = (
   puskasRate: number,
 ): TriviaSkill => ({ accuracy: { easy, medium, hard, puskas }, ownClubAccuracy, answerMs, cardWeights, puskasRate });
 
-// The Elo ladder: one made-up character at each of 400 to 1600 chess Elo, in steps
-// of 200. Four are loosely inspired by footballers known for loving chess (Eze,
+// The Elo ladder: made-up characters from 400 to 1600 chess Elo, first in steps of 200.
+// Lenny (500), Sal (900) and Barry (1300) were added on 2026-11-23 to even out the
+// steps in the combined rating (audit 2 found jumps of about +300). Four are loosely inspired by footballers known for loving chess (Eze,
 // Chilwell, Salah and Haaland); none uses a real name. Chess strengths were
 // calibrated with tools/playtest/match.ts against Stockfish's UCI_Elo (docs/bots.md).
 // Trivia varies on purpose, so the combined rating doesn't simply follow the chess.
@@ -44,6 +45,19 @@ const LADDER: Record<LadderBotId, BotProfile> = {
     favouritePowerUps: ["golden-boot", "counter-attack", "tactical-foul"],
     promotionAim: "b",
     thinkMs: [300, 1000],
+  },
+  lenny: {
+    id: "lenny",
+    name: "Lenny Longball",
+    club: "stoke",
+    clubName: "Stoke City",
+    blurb: "Old-school centre-half. Hoofs every piece up the board and hopes something lands in the box.",
+    style: "balanced",
+    chess: chess(500, 3, 5, 220, 0.47),
+    trivia: trivia(0.86, 0.66, 0.44, 0.25, 0.92, [2500, 7000], { easy: 3, medium: 5, hard: 2 }, 0.1),
+    favouritePowerUps: ["counter-attack", "red-card", "park-the-bus"],
+    promotionAim: "r",
+    thinkMs: [400, 1200],
   },
   eezy: {
     id: "eezy",
@@ -71,6 +85,19 @@ const LADDER: Record<LadderBotId, BotProfile> = {
     promotionAim: "r",
     thinkMs: [700, 2000],
   },
+  sal: {
+    id: "sal",
+    name: "Sal Safehands",
+    club: "brighton",
+    clubName: "Brighton & Hove Albion",
+    blurb: "Keeper who never leaves her line. Castles on move five and claims everything you cross in.",
+    style: "positional",
+    chess: chess(900, 4, 3, 130, 0.24),
+    trivia: trivia(0.9, 0.74, 0.55, 0.38, 0.92, [2500, 6500], { easy: 2, medium: 5, hard: 3 }, 0.15),
+    favouritePowerUps: ["park-the-bus", "var-review", "tactical-foul", "scout-report"],
+    promotionAim: "r",
+    thinkMs: [600, 1800],
+  },
   "gambit-gary": {
     id: "gambit-gary",
     name: "Gambit Gary",
@@ -96,6 +123,19 @@ const LADDER: Record<LadderBotId, BotProfile> = {
     favouritePowerUps: ["tactical-foul", "golden-boot", "super-sub", "var-review"],
     promotionAim: "r",
     thinkMs: [700, 2000],
+  },
+  barry: {
+    id: "barry",
+    name: "Barry Bubbles",
+    club: "west-ham",
+    clubName: "West Ham United",
+    blurb: "East End superfan with a season ticket since Upton Park. Throws everything forward, sings the whole time.",
+    style: "chaotic",
+    chess: chess(1300, 6, 3, 85, 0.11),
+    trivia: trivia(0.88, 0.7, 0.5, 0.32, 0.95, [2500, 6500], { easy: 2, medium: 6, hard: 2 }, 0.15),
+    favouritePowerUps: ["counter-attack", "golden-boot", "tactical-foul", "red-card"],
+    promotionAim: "q",
+    thinkMs: [500, 1500],
   },
   knightingale: {
     id: "knightingale",
@@ -129,7 +169,7 @@ const LADDER: Record<LadderBotId, BotProfile> = {
 
 export const BOT_PROFILES: Record<BotId, BotProfile> = LADDER;
 
-export const LADDER_IDS: LadderBotId[] = ["pawny", "eezy", "chillwall", "gambit-gary", "mo-mate", "knightingale", "rookland"];
+export const LADDER_IDS: LadderBotId[] = ["pawny", "lenny", "eezy", "chillwall", "sal", "gambit-gary", "mo-mate", "barry", "knightingale", "rookland"];
 /** Weakest to strongest. */
 export const BOT_IDS: BotId[] = [...LADDER_IDS];
 

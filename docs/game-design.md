@@ -41,10 +41,12 @@ Freddie picked this as the first bigger addition (2026-11-14). **Play > Season**
 
 | Division | Bots | Format |
 | --- | --- | --- |
-| League Two | Pawny, Eezy, Chillwall | Each twice (once as White, once as Black), 6 matches |
-| League One | Eezy, Chillwall, Gambit Gary | Each twice, 6 matches |
-| Championship | Gambit Gary, Mo Mate, Knightingale | Each twice, 6 matches |
-| Premier League | Chillwall, Gambit Gary, Mo Mate, Knightingale, Rookland | Each twice, 10 matches (from 2026-11-22; before that all seven, once each, and nobody rated 900-1500 could go down) |
+| League Two | Pawny, Lenny, Eezy | Each twice (once as White, once as Black), 6 matches |
+| League One | Chillwall, Sal, Gambit Gary | Each twice, 6 matches |
+| Championship | Mo Mate, Barry, Knightingale | Each twice, 6 matches |
+| Premier League | Gambit Gary, Mo Mate, Barry, Knightingale, Rookland | Each twice, 10 matches (from 2026-11-22; before that all seven, once each, and nobody rated 900-1500 could go down) |
+
+With ten bots (2026-11-23) the three lower divisions no longer share bots. A season started before 2026-11-22 keeps the bots it began with.
 
 - Win 3 points, draw 1. The scoreline is pieces taken, nudged so it agrees with the result (the winner gets the winning goal if they weren't ahead; a draw is level).
 - The top two go up and the bottom one goes down (not below League Two or above the Premier League).
@@ -79,7 +81,7 @@ Before each game every player picks the club they support from all 92 Premier Le
 
 ## Menus
 
-The game opens on a **main menu** in the Tactics Board style: Play a bot (pick one of the seven ladder bots), Pass and Play, High scores, Game history, How to play and Settings. The setup screen then takes clubs (one A to Z list of all 92 with a search box, not grouped by division, so it doesn't date when clubs go up or down), colour, and the Trivia, Timed and Chess960 toggles. During a game the **Menu** button (or the title bar) pauses everything, including clocks, question timers and bots, with Resume, Restart, Settings and Quit to menu. High scores keep your record (played, won, drawn, lost, best winning run) against each bot at each level, plus Pass and Play wins by name, on the device. The top of the page shows your **best win** (the bot with the highest combined chess + trivia rating you have beaten) (a win where you used Manager's Tip or VAR Review still counts, but is marked "Assisted" there and in Game history; Freddie, 2026-11-14) and your **trivia Elo**, which moves with your answers against bots and tops out at the title Elite Ball Knowledge (docs/bots.md). Above both sits **your rating** (audit, 2026-11-22): a chess performance Elo (starts at 1200, moves after every bot game against the bot's chess Elo) combined with your trivia Elo the same way as the bots', with a line of your last 10 and the change over them. Pass and Play shows a **head-to-head** card for each pair of names (W/D/L, each side's trivia %, last five results), built from Game history. Pieces move by tap-tap or by dragging. **Game history** lists the last 100 finished games, newest first (no replays): date, opponent and level, result and how it ended, moves, Form earned and trivia score (right/asked, including Who am I? and shootout kicks).
+The game opens on a **main menu** in the Tactics Board style: Play a bot (pick one of the ten ladder bots), Pass and Play, High scores, Game history, How to play and Settings. The setup screen then takes clubs (one A to Z list of all 92 with a search box, not grouped by division, so it doesn't date when clubs go up or down), colour, and the Trivia, Timed and Chess960 toggles. During a game the **Menu** button (or the title bar) pauses everything, including clocks, question timers and bots, with Resume, Restart, Settings and Quit to menu. High scores keep your record (played, won, drawn, lost, best winning run) against each bot at each level, plus Pass and Play wins by name, on the device. The top of the page shows your **best win** (the bot with the highest combined chess + trivia rating you have beaten) (a win where you used Manager's Tip or VAR Review still counts, but is marked "Assisted" there and in Game history; Freddie, 2026-11-14) and your **trivia Elo**, which moves with your answers against bots and tops out at the title Elite Ball Knowledge (docs/bots.md). Above both sits **your rating** (audit, 2026-11-22): a chess performance Elo (starts at 1200, moves after every bot game against the bot's chess Elo) combined with your trivia Elo the same way as the bots', with a line of your last 10 and the change over them. Pass and Play shows a **head-to-head** card for each pair of names (W/D/L, each side's trivia %, last five results), built from Game history. Pieces move by tap-tap or by dragging. **Game history** lists the last 100 finished games, newest first (no replays): date, opponent and level, result and how it ended, moves, Form earned and trivia score (right/asked, including Who am I? and shootout kicks).
 
 ## When trivia comes up
 
@@ -168,7 +170,7 @@ Each power-up shows a **value of 1 to 5 stars**: roughly how much it swings the 
 
 ## Bots
 
-The original three bots, Freddie, Ryan and Ollie (each with Easy, Medium and Hard), were retired on 2026-11-09 at Freddie's request, leaving the seven Elo ladder bots below. Their names stay in game history, and any of their cups already won stay in the trophy cabinet. A saved setup that still names one of them plays Gambit Gary.
+The original three bots, Freddie, Ryan and Ollie (each with Easy, Medium and Hard), were retired on 2026-11-09 at Freddie's request, leaving the Elo ladder bots below. Their names stay in game history, and any of their cups already won stay in the trophy cabinet. A saved setup that still names one of them plays Gambit Gary.
 
 Every bot runs on Stockfish with its strength capped, then picks among the engine's top moves with its own style and mistake rate. Each has 3 to 5 trash-talk lines for each moment (game start, capture, losing a piece, opponent's wrong answer, own right and wrong answers, power-up, Hot Spot, win and loss), shown in a speech bubble at most once every two moves.
 
@@ -178,13 +180,18 @@ Every bot runs on Stockfish with its strength capped, then picks among the engin
 
 Playtest round 3 (Freddie, 7 Nov 2026) added one bot at each of 400, 600, 800, 1000, 1200, 1400 and 1600 chess Elo, so there is always a next rung to beat. Each is a made-up character with a pun name; four are loosely inspired by footballers known for loving chess (Eze, Chilwell, Salah and Haaland), with no real names. Ladder bots have one strength each, so there is no level picker (the code for Easy, Medium and Hard levels was removed on 2026-11-21; games are still filed under the old "medium" key so high scores add up). Their trivia varies on purpose, so the combined rating doesn't just follow the chess.
 
+Three more joined on 2026-11-23 (audit 2: the combined rating jumped about +300 from Pawny to Eezy and from Chillwall to Gary, and +215 from Mo to Florence). Lenny (500), Sal (900) and Barry (1300) sit in those gaps, so every step on the ladder is now about 105 to 155 combined.
+
 | Elo | Bot | Club | Style | Trivia | Spends Form on |
 | --- | --- | --- | --- | --- | --- |
 | 400 | Pawny Dribbles | Stockport County | Chaotic Sunday-leaguer | 52% | Golden Boot, Counter-Attack |
+| 500 | Lenny Longball | Stoke City | Balanced long-ball centre-half | 65% | Counter-Attack, Red Card, Park the Bus |
 | 600 | Eezy Peasy | Crystal Palace | Chaotic flair player | 78%, goes for Screamers | Counter-Attack, Golden Boot, Manager's Tip |
 | 800 | Billy Chillwall | Chelsea | Positional, parks the bus | 61% | Park the Bus, Tactical Foul, Red Card |
+| 900 | Sal Safehands | Brighton & Hove Albion | Positional keeper, castles early | 73% | Park the Bus, VAR Review, Tactical Foul |
 | 1000 | Gambit Gary | Leicester City | Balanced pundit | 84%, goes for Screamers | Manager's Tip, Golden Boot, Red Card |
 | 1200 | Mo Mate | Liverpool | Balanced finisher | 68% | Tactical Foul, Golden Boot, Super-Sub |
+| 1300 | Barry Bubbles | West Ham United | Chaotic superfan, throws everyone forward | 69%, 95% on West Ham | Counter-Attack, Golden Boot, Tactical Foul |
 | 1400 | Florence Knightingale | Everton | Positional playmaker | 72% | Saves for Super-Sub and Extra Time |
 | 1600 | Ragnar Rookland | Manchester City | Balanced goal machine | 47% | Saves for Extra Time and Super-Sub |
 

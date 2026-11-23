@@ -5,7 +5,7 @@
 //   npm run build && npm run smoke
 //
 // Checks:
-//  1. Play a bot lists all seven ladder bots.
+//  1. Play a bot lists all ten ladder bots.
 //  2. A game against a bot starts, and the bot answers your move.
 //  3. Landing on a Hot Spot goes straight to its free Puskás.
 //  3b. A league season starts and its first fixture opens.
@@ -17,7 +17,10 @@ import { chromium } from "playwright";
 
 const PORT = 4178;
 const URL = `http://localhost:${PORT}/chess-football-trivia/`;
-const LADDER = ["Pawny Dribbles", "Eezy Peasy", "Billy Chillwall", "Gambit Gary", "Mo Mate", "Florence Knightingale", "Ragnar Rookland"];
+const LADDER = [
+  "Pawny Dribbles", "Lenny Longball", "Eezy Peasy", "Billy Chillwall", "Sal Safehands",
+  "Gambit Gary", "Mo Mate", "Barry Bubbles", "Florence Knightingale", "Ragnar Rookland",
+];
 
 const failures = [];
 const check = (ok, what) => {
@@ -48,7 +51,7 @@ try {
   await openPicker(page);
   await page.waitForSelector(".bot-card", { timeout: 15000 });
   const names = await page.$$eval(".bot-card strong", (els) => els.map((e) => e.textContent));
-  check(JSON.stringify(names) === JSON.stringify(LADDER), `bot picker lists the 7 ladder bots (got ${names.join(", ")})`);
+  check(JSON.stringify(names) === JSON.stringify(LADDER), `bot picker lists the ${LADDER.length} ladder bots (got ${names.join(", ")})`);
 
   // 2. Start against Pawny, trivia on, and play until the bot has replied and we've hit a Hot Spot.
   await page.getByRole("radio", { name: /Pawny Dribbles/ }).click();
@@ -177,7 +180,7 @@ try {
   await flaky.waitForLoadState("networkidle");
   await openPicker(flaky, { load: false });
   await flaky.waitForSelector(".bot-card", { timeout: 15000 }).catch(() => undefined);
-  check(failedOnce && didReload && (await flaky.locator(".bot-card").count()) === 7, `after a failed bots download the game reloads itself and the bots are back${failedOnce ? "" : " (no failure was injected)"}`);
+  check(failedOnce && didReload && (await flaky.locator(".bot-card").count()) === LADDER.length, `after a failed bots download the game reloads itself and the bots are back${failedOnce ? "" : " (no failure was injected)"}`);
   await flaky.close();
 
   // 4. Offline: after one visit, the game opens and a bot plays with no connection.

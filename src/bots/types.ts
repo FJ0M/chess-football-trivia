@@ -1,8 +1,9 @@
 // Shared shapes for the bots. Everything the game passes in is plain data,
 // so the bots don't depend on the game's internal state.
 
-/** The Elo ladder: one bot at each of 400 to 1600 chess Elo, one level each. */
-export type LadderBotId = "pawny" | "eezy" | "chillwall" | "gambit-gary" | "mo-mate" | "knightingale" | "rookland";
+/** The Elo ladder: ten bots from 400 to 1600 chess Elo, one level each. */
+export type LadderBotId =
+  | "pawny" | "lenny" | "eezy" | "chillwall" | "sal" | "gambit-gary" | "mo-mate" | "barry" | "knightingale" | "rookland";
 export type BotId = LadderBotId;
 export type Difficulty = "easy" | "medium" | "hard";
 export type PromotionRole = "n" | "b" | "r" | "q";

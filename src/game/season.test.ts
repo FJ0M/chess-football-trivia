@@ -4,7 +4,7 @@ import { honourText, loadHonours, recordHonour } from "./season";
 import { CUP_ROUNDS, DIVISIONS, YOU, applyResult, cupWon, fitScore, matchKey, newSeason, nextMatch, nextSeason, recordCup, recordLeague, table, type Season } from "./season";
 
 const seeded = (seed: number) => () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
-const RATINGS = { pawny: 400, eezy: 600, chillwall: 800, "gambit-gary": 1000, "mo-mate": 1200, knightingale: 1400, rookland: 1600 };
+const RATINGS = { pawny: 400, lenny: 500, eezy: 600, chillwall: 800, sal: 900, "gambit-gary": 1000, "mo-mate": 1200, barry: 1300, knightingale: 1400, rookland: 1600 };
 
 /** Plays the whole season, winning or losing every match of yours 2-1 or 1-2. */
 function playOut(s: Season, win: boolean, rng = seeded(4)): Season {
@@ -31,7 +31,7 @@ describe("league season", () => {
 
   it("the Premier League has the top five bots, home and away", () => {
     const s = newSeason("premier-league", 1, "west-ham", seeded(2));
-    expect(s.bots).toEqual(["chillwall", "gambit-gary", "mo-mate", "knightingale", "rookland"]);
+    expect(s.bots).toEqual(["gambit-gary", "mo-mate", "barry", "knightingale", "rookland"]);
     expect(s.weeks).toHaveLength(10);
     for (const w of s.weeks) expect(w).toHaveLength(3);
   });
@@ -40,6 +40,11 @@ describe("league season", () => {
     const s = newSeason("premier-league", 1, "west-ham", seeded(2));
     const old = { ...s, bots: undefined };
     expect(table(old).map((r) => r.team)).toHaveLength(8);
+  });
+
+  it("a lower-division season started before 2026-11-22 keeps the bots it began with", () => {
+    const s = newSeason("league-one", 1, "west-ham", seeded(2));
+    expect(table({ ...s, bots: undefined }).map((r) => r.team).sort()).toEqual(["chillwall", "eezy", "gambit-gary", YOU].sort());
   });
 
   it("puts Cup ties between league matches, and a lost tie knocks you out", () => {
