@@ -25,7 +25,7 @@ export interface BotMeta {
 }
 
 export interface BotLike {
-  chooseMove(req: { fen: string; chess960?: boolean; allowedMoves?: string[]; managersTip?: boolean; hotSpots?: string[]; goldenBoot?: boolean }): Promise<{ uci: string; thinkMs: number }>;
+  chooseMove(req: { fen: string; chess960?: boolean; allowedMoves?: string[]; managersTip?: boolean; hotSpots?: string[] }): Promise<{ uci: string; thinkMs: number }>;
   chooseCard(req: { cards: { topic: string; difficulty: Difficulty; club: string | null }[]; puskasAllowed: boolean; form: number; bonusRound?: boolean }): { index: number; puskas: boolean } | Promise<{ index: number; puskas: boolean }>;
   answer(req: { question: { options: string[]; answer: number; difficulty: Difficulty; club?: string | null }; puskas?: boolean }): { choice: number; delayMs: number } | Promise<{ choice: number; delayMs: number }>;
   choosePowerUp(req: { fen: string; color?: "white" | "black"; form: number; available: { id: string; cost: number }[]; inCheck?: boolean; timed?: boolean; clockMs?: number; options?: BotPowerOptions }): { id: string; target?: string; target2?: string } | null | Promise<{ id: string; target?: string; target2?: string } | null>;

@@ -263,10 +263,8 @@ export function useGame(setup: SetupChoice, play: (s: SfxName) => void, paused =
       if (!allowed.length) return;
       let uci = allowed[0];
       try {
-        const me = g.players[color];
         const res = await bot.chooseMove({
-          fen: g.fen, chess960: g.options.chess960, allowedMoves: allowed, managersTip,
-          hotSpots: g.hotSpots, goldenBoot: me.goldenBootMoves > 0,
+          fen: g.fen, chess960: g.options.chess960, allowedMoves: allowed, managersTip, hotSpots: g.hotSpots,
         });
         await wait(Math.min(res.thinkMs, 2500));
         uci = resolveMove(live().game, res.uci) ?? allowed[Math.floor(Math.random() * allowed.length)];
