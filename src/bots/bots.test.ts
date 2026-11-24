@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { createBotWith } from "./bot";
 import { MATE_CP, parseInfoLine, type Analyser, type EngineLine } from "./engine";
-import { GOLDEN_BOOT_CAPTURE_CP, legalMoves, normaliseUci, pickMove, positionFromFen } from "./movePicker";
+import { legalMoves, normaliseUci, pickMove, positionFromFen } from "./movePicker";
 import { BOTS, BOT_IDS, BOT_PROFILES, LADDER_IDS, triviaAccuracy } from "./profiles";
 import { choosePowerUp } from "./powerUps";
 import { TALK, Talker } from "./talk";
-import { answerChance, answerQuestion, chooseCard } from "./trivia";
+import { answerChance, answerQuestion, chooseCard, expectedQuestionForm } from "./trivia";
 import type { CardOffer, QuestionLike } from "./types";
 
 const START = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
@@ -327,28 +327,14 @@ describe("the game around the chess", () => {
     expect(spot).toBeLessThan(130);
   });
 
-  it("likes captures more while Golden Boot runs", () => {
-    expect(GOLDEN_BOOT_CAPTURE_CP).toBeGreaterThan(0);
-    const f = "rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR w KQkq d6 0 2";
-    const p = positionFromFen(f);
-    const l = [
-      { uci: "b1c3", scoreCp: 40, depth: 8, multipv: 1 },
-      { uci: "e4d5", scoreCp: 30, depth: 8, multipv: 2 },
-    ];
-    const count = (goldenBoot: boolean) => {
-      const rng = seeded(9);
-      let n = 0;
-      for (let i = 0; i < 200; i++) if (pickMove({ pos: p, lines: l, allowed: legalMoves(p), strength, style: "positional", rng, goldenBoot }).uci === "e4d5") n++;
-      return n;
-    };
-    expect(count(true)).toBeGreaterThan(count(false) + 50);
-  });
-
-  it("only buys Golden Boot with a capture on (it costs 2 and pays 2 a capture)", () => {
+  it("only buys Golden Boot when its next answer should be worth the cost", () => {
     const fen = "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3";
     const req = { fen, form: 6, available: [{ id: "golden-boot", cost: 2 }] };
     expect(choosePowerUp(BOT_PROFILES.eezy, req, () => 0, 0)).toBeNull();
-    expect(choosePowerUp(BOT_PROFILES.eezy, req, () => 0, 0, { bestIsCapture: true })).toEqual({ id: "golden-boot" });
+    expect(choosePowerUp(BOT_PROFILES.eezy, req, () => 0, 0, { bootForm: 1.2 })).toBeNull();
+    expect(choosePowerUp(BOT_PROFILES.eezy, req, () => 0, 0, { bootForm: 2.2 })).toEqual({ id: "golden-boot" });
+    // Good quizzers expect more from a question than poor ones.
+    expect(expectedQuestionForm(BOT_PROFILES["gambit-gary"].trivia)).toBeGreaterThan(expectedQuestionForm(BOT_PROFILES.pawny.trivia));
   });
 
   it("looks at the position before a power-up, so Park the Bus fires when it's losing (bug 10)", async () => {

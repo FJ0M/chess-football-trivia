@@ -57,3 +57,18 @@ export function answerQuestion(profile: BotProfile, skill: TriviaSkill, req: Ans
   const delayMs = Math.round((lo + rng() * (hi - lo)) * scale);
   return { choice, delayMs };
 }
+
+/** Form a question earns by difficulty, before bonuses (matches REWARD in src/game/rules.ts). */
+const CARD_FORM: Record<"easy" | "medium" | "hard", number> = { easy: 1, medium: 2, hard: 3 };
+
+/**
+ * The Form a bot expects from its next question, before bonuses. This is what Golden Boot
+ * (double the next right answer's Form) is worth to it: a weak quizzer waits longer for the
+ * right answer, which counts against it.
+ */
+export function expectedQuestionForm(skill: TriviaSkill): number {
+  const w = skill.cardWeights;
+  const total = w.easy + w.medium + w.hard;
+  if (total <= 0) return 0;
+  return (["easy", "medium", "hard"] as const).reduce((sum, d) => sum + w[d] * skill.accuracy[d] * CARD_FORM[d], 0) / total;
+}

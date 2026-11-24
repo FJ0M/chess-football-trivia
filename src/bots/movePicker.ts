@@ -123,18 +123,12 @@ export interface PickContext {
   /** Hot Spot squares that count for the bot, and what landing on one is worth to it in centipawns. */
   hotSpots?: string[];
   hotSpotCp?: number;
-  /** Golden Boot is running: each capture earns Form. */
-  goldenBoot?: boolean;
 }
 
-/** Golden Boot's +2 Form for a capture, in centipawns (1 Form is roughly a fifth of a pawn). */
-export const GOLDEN_BOOT_CAPTURE_CP = 40;
-
-/** Extra centipawns a candidate gets for the game around the chess: Hot Spots and Golden Boot captures. */
-export function gameBonus(ctx: { hotSpots?: string[]; hotSpotCp?: number; goldenBoot?: boolean }, f: MoveFeatures, uci: string): number {
+/** Extra centipawns a candidate gets for the game around the chess: Hot Spots. */
+export function gameBonus(ctx: { hotSpots?: string[]; hotSpotCp?: number }, f: MoveFeatures, uci: string): number {
   let b = 0;
   if (ctx.hotSpots?.length && ctx.hotSpotCp && !f.castle && ctx.hotSpots.includes(uci.slice(2, 4))) b += ctx.hotSpotCp;
-  if (ctx.goldenBoot && f.capture) b += GOLDEN_BOOT_CAPTURE_CP;
   return b;
 }
 

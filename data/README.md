@@ -37,4 +37,4 @@ Each question:
 
     python3 tools/build_whoami.py data/whoami.json
 
-Each set has five clues (hardest first), four `options`, the `answer` index, `club` (null for general Premier League players, or a club id for a club set) and the Wikipedia `source` every clue was checked against on 2026-11-04. v1: 30 general, 10 West Ham, 8 Brighton.
+Each set has five clues (hardest first), four `options`, the `answer` index, `club` (null for general Premier League players, or a club id for a club set) and the Wikipedia `source` every clue was checked against (v1 on 2026-11-04: 30 general, 10 West Ham, 8 Brighton; v2 on 2026-11-23: 40 more general Premier League players, 70 general in all).

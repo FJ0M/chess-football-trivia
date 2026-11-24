@@ -1104,6 +1104,946 @@
    "club": "brighton",
    "verified": true,
    "source": "https://en.wikipedia.org/wiki/Leandro_Trossard"
+  },
+  {
+   "id": "who-campbell",
+   "clues": [
+    "I was born in Plaistow, London, in 1974.",
+    "I captained Portsmouth to the FA Cup in 2008.",
+    "I scored for my club in the 2006 Champions League final.",
+    "I was one of Arsenal's Invincibles, unbeaten through the 2003-04 Premier League season.",
+    "I left Tottenham, where I was captain, on a free transfer to join their rivals Arsenal in 2001."
+   ],
+   "options": [
+    "Sol Campbell",
+    "Ledley King",
+    "Martin Keown",
+    "Philippe Senderos"
+   ],
+   "answer": 0,
+   "name": "Sol Campbell",
+   "aliases": [],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Sol_Campbell"
+  },
+  {
+   "id": "who-ashleycole",
+   "clues": [
+    "I was born in Stepney, London, in 1980.",
+    "I had a loan spell at Crystal Palace early in my career.",
+    "I later played for Roma, LA Galaxy and Derby County.",
+    "I won the FA Cup seven times, a record for a player.",
+    "I'm a left-back who left Arsenal for Chelsea in 2006."
+   ],
+   "options": [
+    "Gaël Clichy",
+    "Leighton Baines",
+    "Ashley Cole",
+    "Wayne Bridge"
+   ],
+   "answer": 2,
+   "name": "Ashley Cole",
+   "aliases": [],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Ashley_Cole"
+  },
+  {
+   "id": "who-vieira",
+   "clues": [
+    "I was born in Dakar, Senegal, in 1976.",
+    "I joined my most famous club from AC Milan in 1996.",
+    "I later won Serie A titles with Inter Milan.",
+    "As a manager I've been in charge of Nice and Crystal Palace.",
+    "I captained Arsenal's Invincibles in 2003-04."
+   ],
+   "options": [
+    "Patrick Vieira",
+    "Gilberto Silva",
+    "Claude Makélélé",
+    "Emmanuel Petit"
+   ],
+   "answer": 0,
+   "name": "Patrick Vieira",
+   "aliases": [],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Patrick_Vieira"
+  },
+  {
+   "id": "who-pires",
+   "clues": [
+    "I was born in Reims, France, in 1973.",
+    "I played for Metz and Marseille before moving to England.",
+    "I won the World Cup in 1998 and the European Championship in 2000.",
+    "I was FWA Footballer of the Year for the 2001-02 season.",
+    "I joined Arsenal in 2000, and once tried a two-man penalty with Thierry Henry against Manchester City."
+   ],
+   "options": [
+    "Fredrik Ljungberg",
+    "Robert Pirès",
+    "Thierry Henry",
+    "Sylvain Wiltord"
+   ],
+   "answer": 1,
+   "name": "Robert Pirès",
+   "aliases": [
+    "Pires"
+   ],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Robert_Pires"
+  },
+  {
+   "id": "who-torres",
+   "clues": [
+    "I was born in Fuenlabrada, Madrid, in 1984.",
+    "I was made captain of Atlético Madrid when I was 19.",
+    "I scored the only goal of the Euro 2008 final against Germany.",
+    "I joined Chelsea for a British record £50 million in January 2011.",
+    "I'm 'El Niño', and I joined Liverpool from Atlético Madrid in 2007."
+   ],
+   "options": [
+    "David Villa",
+    "Fernando Torres",
+    "Álvaro Morata",
+    "Fernando Morientes"
+   ],
+   "answer": 1,
+   "name": "Fernando Torres",
+   "aliases": [
+    "El Nino",
+    "Nando"
+   ],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Fernando_Torres"
+  },
+  {
+   "id": "who-alonso",
+   "clues": [
+    "I was born in Tolosa, Spain, in 1981.",
+    "I started at Real Sociedad and had a loan spell at Eibar.",
+    "As a manager I won the Bundesliga unbeaten with Bayer Leverkusen in 2024.",
+    "I scored from inside my own half against Newcastle in 2006.",
+    "I scored the rebound from my own saved penalty in the 2005 Champions League final for Liverpool."
+   ],
+   "options": [
+    "Javier Mascherano",
+    "Cesc Fàbregas",
+    "Xabi Alonso",
+    "Luis García"
+   ],
+   "answer": 2,
+   "name": "Xabi Alonso",
+   "aliases": [],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Xabi_Alonso"
+  },
+  {
+   "id": "who-modric",
+   "clues": [
+    "I was born in Zadar, Croatia, in 1985.",
+    "I played for Dinamo Zagreb, with loans at Zrinjski Mostar and Inter Zaprešić.",
+    "I joined AC Milan in 2025.",
+    "I won the Ballon d'Or in 2018, after captaining my country to the World Cup final.",
+    "I played for Tottenham from 2008 to 2012, then won the Champions League many times with Real Madrid."
+   ],
+   "options": [
+    "Luka Modrić",
+    "Ivan Rakitić",
+    "Mateo Kovačić",
+    "Niko Kranjčar"
+   ],
+   "answer": 0,
+   "name": "Luka Modrić",
+   "aliases": [
+    "Modric"
+   ],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Luka_Modri%C4%87"
+  },
+  {
+   "id": "who-fabregas",
+   "clues": [
+    "I was born in Arenys de Mar, Spain, in 1987.",
+    "I came through Barcelona's academy, then moved to London at 16.",
+    "As a manager I've been in charge of Como in Italy.",
+    "I set up Andrés Iniesta's winning goal in the 2010 World Cup final.",
+    "I captained Arsenal, then later won the Premier League twice with Chelsea."
+   ],
+   "options": [
+    "Xabi Alonso",
+    "Cesc Fàbregas",
+    "Mikel Arteta",
+    "Santi Cazorla"
+   ],
+   "answer": 1,
+   "name": "Cesc Fàbregas",
+   "aliases": [
+    "Fabregas",
+    "Cesc"
+   ],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Cesc_F%C3%A0bregas"
+  },
+  {
+   "id": "who-dsilva",
+   "clues": [
+    "I was born in Arguineguín, Gran Canaria, in 1986.",
+    "I played for Valencia, with loans at Eibar and Celta Vigo.",
+    "I finished my playing career at Real Sociedad.",
+    "I won the World Cup with Spain in 2010 and two European Championships.",
+    "I won four Premier League titles with Manchester City, and there's a statue of me outside the Etihad."
+   ],
+   "options": [
+    "Juan Mata",
+    "Santi Cazorla",
+    "Bernardo Silva",
+    "David Silva"
+   ],
+   "answer": 3,
+   "name": "David Silva",
+   "aliases": [
+    "Silva",
+    "Merlin"
+   ],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/David_Silva"
+  },
+  {
+   "id": "who-mane",
+   "clues": [
+    "I was born in Bambali, Senegal, in 1992.",
+    "I played for Metz and Red Bull Salzburg.",
+    "I scored the fastest hat-trick in Premier League history, for Southampton in 2015.",
+    "I scored the winning penalty in the shoot-out as Senegal won the 2021 Africa Cup of Nations.",
+    "I won the Champions League and the Premier League with Liverpool, then joined Bayern Munich."
+   ],
+   "options": [
+    "Ismaïla Sarr",
+    "Mohamed Salah",
+    "Sadio Mané",
+    "Naby Keïta"
+   ],
+   "answer": 2,
+   "name": "Sadio Mané",
+   "aliases": [
+    "Mane"
+   ],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Sadio_Man%C3%A9"
+  },
+  {
+   "id": "who-mahrez",
+   "clues": [
+    "I was born in Clichy, France, in 1991.",
+    "I played for Le Havre before moving to England in 2014.",
+    "I captained Algeria to the Africa Cup of Nations in 2019.",
+    "I was PFA Players' Player of the Year in 2016.",
+    "I won the title with Leicester in 2016, then won the treble with Manchester City."
+   ],
+   "options": [
+    "Islam Slimani",
+    "Riyad Mahrez",
+    "N'Golo Kanté",
+    "Jamie Vardy"
+   ],
+   "answer": 1,
+   "name": "Riyad Mahrez",
+   "aliases": [],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Riyad_Mahrez"
+  },
+  {
+   "id": "who-saka",
+   "clues": [
+    "I was born in Ealing, London, in 2001, to Nigerian parents.",
+    "I played a lot at left-back in my first seasons in the first team.",
+    "My penalty was saved in the Euro 2020 final shoot-out.",
+    "I was England Men's Player of the Year in 2022 and 2023.",
+    "I wear number 7 for Arsenal, and I'm also known as 'Starboy'."
+   ],
+   "options": [
+    "Bukayo Saka",
+    "Gabriel Martinelli",
+    "Jadon Sancho",
+    "Emile Smith Rowe"
+   ],
+   "answer": 0,
+   "name": "Bukayo Saka",
+   "aliases": [],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Bukayo_Saka"
+  },
+  {
+   "id": "who-odegaard",
+   "clues": [
+    "I was born in Drammen, Norway, in 1998.",
+    "I became Norway's youngest ever player, aged 15.",
+    "I joined Real Madrid as a teenager and went on loan to Heerenveen, Vitesse and Real Sociedad.",
+    "I joined Arsenal on loan in 2021, then signed permanently.",
+    "I captain both Arsenal and Norway."
+   ],
+   "options": [
+    "Kai Havertz",
+    "Declan Rice",
+    "Martin Ødegaard",
+    "Erling Haaland"
+   ],
+   "answer": 2,
+   "name": "Martin Ødegaard",
+   "aliases": [
+    "Odegaard",
+    "Martin Odegaard"
+   ],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Martin_%C3%98degaard"
+  },
+  {
+   "id": "who-bruno",
+   "clues": [
+    "I was born in Maia, Portugal, in 1994.",
+    "I started my senior career in Italy, with Novara, Udinese and Sampdoria.",
+    "I played for Sporting CP from 2017 until I moved to England in January 2020.",
+    "I set a Premier League record with 21 assists in a season.",
+    "I captain Manchester United."
+   ],
+   "options": [
+    "Bruno Fernandes",
+    "Diogo Jota",
+    "Bernardo Silva",
+    "João Moutinho"
+   ],
+   "answer": 0,
+   "name": "Bruno Fernandes",
+   "aliases": [
+    "Bruno",
+    "Bruno Fernandes"
+   ],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Bruno_Fernandes"
+  },
+  {
+   "id": "who-rashford",
+   "clues": [
+    "I was born in Manchester in 1997.",
+    "I was made an MBE for my campaign for free school meals.",
+    "I scored twice on my first-team debut, against Midtjylland in the Europa League.",
+    "I went on loan to Aston Villa in 2025, then to Barcelona.",
+    "I came through Manchester United's academy and wore their number 10."
+   ],
+   "options": [
+    "Mason Greenwood",
+    "Marcus Rashford",
+    "Jesse Lingard",
+    "Anthony Martial"
+   ],
+   "answer": 1,
+   "name": "Marcus Rashford",
+   "aliases": [],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Marcus_Rashford"
+  },
+  {
+   "id": "who-sterling",
+   "clues": [
+    "I was born in Kingston, Jamaica, in 1994.",
+    "I grew up near Wembley and started at QPR's academy.",
+    "I was FWA Footballer of the Year in 2019.",
+    "I joined Chelsea in 2022 and went on loan to Arsenal in 2024.",
+    "I left Liverpool for Manchester City in 2015 and won four Premier League titles there."
+   ],
+   "options": [
+    "Jadon Sancho",
+    "Leroy Sané",
+    "Raheem Sterling",
+    "Theo Walcott"
+   ],
+   "answer": 2,
+   "name": "Raheem Sterling",
+   "aliases": [],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Raheem_Sterling"
+  },
+  {
+   "id": "who-defoe",
+   "clues": [
+    "I was born in Beckton, London, in 1982.",
+    "On loan at Bournemouth as a teenager, I scored in 10 games in a row.",
+    "I later played for Toronto FC and Rangers.",
+    "I scored five goals in one Premier League game for Tottenham against Wigan in 2009.",
+    "I scored 162 Premier League goals for clubs including West Ham, Spurs and Sunderland."
+   ],
+   "options": [
+    "Jermain Defoe",
+    "Peter Crouch",
+    "Robbie Keane",
+    "Darren Bent"
+   ],
+   "answer": 0,
+   "name": "Jermain Defoe",
+   "aliases": [],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Jermain_Defoe"
+  },
+  {
+   "id": "who-vannistelrooy",
+   "clues": [
+    "I was born in Oss, Netherlands, in 1976.",
+    "I played for Den Bosch, Heerenveen and PSV.",
+    "I later played for Real Madrid, Hamburg and Málaga.",
+    "I managed PSV, and later Leicester City.",
+    "I won the Premier League Golden Boot with Manchester United in 2002-03."
+   ],
+   "options": [
+    "Ole Gunnar Solskjær",
+    "Dimitar Berbatov",
+    "Louis Saha",
+    "Ruud van Nistelrooy"
+   ],
+   "answer": 3,
+   "name": "Ruud van Nistelrooy",
+   "aliases": [
+    "RVN",
+    "Van Nistelrooy",
+    "Ruud"
+   ],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Ruud_van_Nistelrooy"
+  },
+  {
+   "id": "who-berbatov",
+   "clues": [
+    "I was born in Blagoevgrad, Bulgaria, in 1981.",
+    "I played for CSKA Sofia and Bayer Leverkusen.",
+    "I later played for Fulham and Monaco.",
+    "I scored five goals in one Premier League game, against Blackburn in 2010.",
+    "I moved from Tottenham to Manchester United in 2008 and shared the 2010-11 Golden Boot."
+   ],
+   "options": [
+    "Ruud van Nistelrooy",
+    "Carlos Tevez",
+    "Robbie Keane",
+    "Dimitar Berbatov"
+   ],
+   "answer": 3,
+   "name": "Dimitar Berbatov",
+   "aliases": [],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Dimitar_Berbatov"
+  },
+  {
+   "id": "who-vidic",
+   "clues": [
+    "I was born in Užice, Yugoslavia, in 1981.",
+    "I played for Red Star Belgrade and Spartak Moscow.",
+    "I finished my playing career at Inter Milan.",
+    "I was Premier League Player of the Season twice.",
+    "I joined Manchester United in January 2006 and partnered Rio Ferdinand at centre-back."
+   ],
+   "options": [
+    "Nemanja Vidić",
+    "Branislav Ivanović",
+    "Rio Ferdinand",
+    "Jaap Stam"
+   ],
+   "answer": 0,
+   "name": "Nemanja Vidić",
+   "aliases": [
+    "Vidic"
+   ],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Nemanja_Vidi%C4%87"
+  },
+  {
+   "id": "who-vandersar",
+   "clues": [
+    "I was born in Voorhout, Netherlands, in 1970.",
+    "I won the Champions League with Ajax in 1995.",
+    "I played for Juventus, then joined Fulham in 2001.",
+    "I set a Premier League record of 1,311 minutes without conceding in 2008-09.",
+    "I saved Nicolas Anelka's penalty to win the 2008 Champions League final for Manchester United."
+   ],
+   "options": [
+    "Tim Howard",
+    "Edwin van der Sar",
+    "Ben Foster",
+    "Petr Čech"
+   ],
+   "answer": 1,
+   "name": "Edwin van der Sar",
+   "aliases": [
+    "VDS",
+    "Van der Sar"
+   ],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Edwin_van_der_Sar"
+  },
+  {
+   "id": "who-makelele",
+   "clues": [
+    "I was born in Kinshasa, Zaire, in 1973.",
+    "I played for Nantes, Marseille and Celta Vigo.",
+    "I won the Champions League with Real Madrid in 2002.",
+    "I finished my playing career at Paris Saint-Germain.",
+    "A defensive midfield role is named after me, and I won two Premier League titles with Chelsea."
+   ],
+   "options": [
+    "Lassana Diarra",
+    "Michael Essien",
+    "Patrick Vieira",
+    "Claude Makélélé"
+   ],
+   "answer": 3,
+   "name": "Claude Makélélé",
+   "aliases": [
+    "Makelele"
+   ],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Claude_Mak%C3%A9l%C3%A9l%C3%A9"
+  },
+  {
+   "id": "who-cahill",
+   "clues": [
+    "I was born in Sydney in 1979.",
+    "I played for Samoa's under-20 side as a teenager.",
+    "I scored the winner in the 2004 FA Cup semi-final for Millwall.",
+    "I'm Australia's all-time top goalscorer.",
+    "I joined Everton in 2004 and celebrated goals by boxing the corner flag."
+   ],
+   "options": [
+    "Marouane Fellaini",
+    "Harry Kewell",
+    "Tim Cahill",
+    "Mile Jedinak"
+   ],
+   "answer": 2,
+   "name": "Tim Cahill",
+   "aliases": [],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Tim_Cahill"
+  },
+  {
+   "id": "who-carragher",
+   "clues": [
+    "I was born in Bootle in 1978.",
+    "I supported Everton as a boy, before joining Liverpool's academy.",
+    "I scored two own goals in one game against Manchester United in 1999.",
+    "I became a Sky Sports pundit after retiring in 2013.",
+    "I'm a one-club man who made 737 appearances for Liverpool."
+   ],
+   "options": [
+    "Sami Hyypiä",
+    "Jamie Carragher",
+    "Jamie Redknapp",
+    "Steven Gerrard"
+   ],
+   "answer": 1,
+   "name": "Jamie Carragher",
+   "aliases": [],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Jamie_Carragher"
+  },
+  {
+   "id": "who-ozil",
+   "clues": [
+    "I was born in Gelsenkirchen, Germany, in 1988.",
+    "I played for Schalke and Werder Bremen.",
+    "I won the World Cup with Germany in 2014.",
+    "I finished my career in Turkey, with Fenerbahçe and İstanbul Başakşehir.",
+    "I joined Arsenal from Real Madrid in 2013 for a club-record fee."
+   ],
+   "options": [
+    "Henrikh Mkhitaryan",
+    "Mesut Özil",
+    "Santi Cazorla",
+    "Toni Kroos"
+   ],
+   "answer": 1,
+   "name": "Mesut Özil",
+   "aliases": [
+    "Ozil"
+   ],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Mesut_%C3%96zil"
+  },
+  {
+   "id": "who-rodri",
+   "clues": [
+    "I was born in Madrid in 1996.",
+    "I played for Villarreal and Atlético Madrid.",
+    "I was player of the tournament as Spain won Euro 2024.",
+    "I won the Ballon d'Or in 2024.",
+    "I scored the winner for Manchester City in the 2023 Champions League final."
+   ],
+   "options": [
+    "İlkay Gündoğan",
+    "Sergio Busquets",
+    "Rodri",
+    "Fernandinho"
+   ],
+   "answer": 2,
+   "name": "Rodri",
+   "aliases": [
+    "Rodrigo",
+    "Rodrigo Hernandez",
+    "Rodri Hernandez"
+   ],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Rodri_(footballer,_born_1996)"
+  },
+  {
+   "id": "who-foden",
+   "clues": [
+    "I was born in Stockport in 2000.",
+    "I was player of the tournament as England won the 2017 Under-17 World Cup.",
+    "I won Premier League Young Player of the Season in 2021 and 2022.",
+    "I was FWA Footballer of the Year and Premier League Player of the Season in 2024.",
+    "I came through Manchester City's academy and won the treble with them in 2023."
+   ],
+   "options": [
+    "Phil Foden",
+    "Jack Grealish",
+    "Mason Mount",
+    "Cole Palmer"
+   ],
+   "answer": 0,
+   "name": "Phil Foden",
+   "aliases": [],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Phil_Foden"
+  },
+  {
+   "id": "who-palmer",
+   "clues": [
+    "I was born in Wythenshawe, Manchester, in 2002.",
+    "I came through Manchester City's academy.",
+    "I scored for England in the Euro 2024 final.",
+    "I scored twice in the 2025 Club World Cup final.",
+    "I joined Chelsea in 2023 and celebrate goals by crossing my arms and rubbing my shoulders."
+   ],
+   "options": [
+    "Phil Foden",
+    "Cole Palmer",
+    "Noni Madueke",
+    "Conor Gallagher"
+   ],
+   "answer": 1,
+   "name": "Cole Palmer",
+   "aliases": [],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Cole_Palmer"
+  },
+  {
+   "id": "who-trent",
+   "clues": [
+    "I was born in West Derby, Liverpool, in 1998.",
+    "My professional debut was against Tottenham in the League Cup in October 2016.",
+    "My quick corner set up Divock Origi's goal against Barcelona in 2019.",
+    "I joined Real Madrid in 2025.",
+    "I'm a right-back from Liverpool's academy who won the Champions League and Premier League with them."
+   ],
+   "options": [
+    "Kyle Walker",
+    "Trent Alexander-Arnold",
+    "Andrew Robertson",
+    "Joe Gomez"
+   ],
+   "answer": 1,
+   "name": "Trent Alexander-Arnold",
+   "aliases": [
+    "Trent",
+    "TAA",
+    "Alexander-Arnold"
+   ],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Trent_Alexander-Arnold"
+  },
+  {
+   "id": "who-robertson",
+   "clues": [
+    "I was born in Glasgow in 1994.",
+    "I was released by Celtic as a teenager and played for Queen's Park and Dundee United.",
+    "I played for Hull City before my big move in 2017.",
+    "I captain Scotland.",
+    "I won the Champions League with Liverpool in 2019, then joined Tottenham in 2026."
+   ],
+   "options": [
+    "Ben Davies",
+    "Trent Alexander-Arnold",
+    "Andrew Robertson",
+    "Kieran Tierney"
+   ],
+   "answer": 2,
+   "name": "Andrew Robertson",
+   "aliases": [
+    "Robbo",
+    "Andy Robertson"
+   ],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Andrew_Robertson"
+  },
+  {
+   "id": "who-eriksen",
+   "clues": [
+    "I was born in Middelfart, Denmark, in 1992.",
+    "I played for Ajax before moving to England in 2013.",
+    "I won Serie A with Inter Milan in 2021.",
+    "I suffered a cardiac arrest on the pitch at Euro 2020, and came back to play for Brentford.",
+    "I starred for Tottenham, and later played for Manchester United."
+   ],
+   "options": [
+    "Christian Nørgaard",
+    "Dele Alli",
+    "Pierre-Emile Højbjerg",
+    "Christian Eriksen"
+   ],
+   "answer": 3,
+   "name": "Christian Eriksen",
+   "aliases": [],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Christian_Eriksen"
+  },
+  {
+   "id": "who-zaha",
+   "clues": [
+    "I was born in Abidjan, Ivory Coast, in 1992, and grew up in Thornton Heath.",
+    "I played twice for England before switching to the Ivory Coast.",
+    "I joined Manchester United in 2013 but played only a handful of games.",
+    "I joined Galatasaray in 2023.",
+    "I came through Crystal Palace's academy and I'm one of their greatest ever players."
+   ],
+   "options": [
+    "Michael Olise",
+    "Yannick Bolasie",
+    "Wilfried Zaha",
+    "Andros Townsend"
+   ],
+   "answer": 2,
+   "name": "Wilfried Zaha",
+   "aliases": [],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Wilfried_Zaha"
+  },
+  {
+   "id": "who-keane",
+   "clues": [
+    "I was born in Dublin in 1980.",
+    "I started at Wolves and also played for Coventry, Inter Milan and Leeds.",
+    "I won three MLS Cups with LA Galaxy.",
+    "I celebrated goals with a cartwheel and a forward roll.",
+    "I'm the Republic of Ireland's all-time top scorer, and spent seven and a half years at Tottenham over two spells."
+   ],
+   "options": [
+    "Jermain Defoe",
+    "Damien Duff",
+    "Robbie Keane",
+    "Shane Long"
+   ],
+   "answer": 2,
+   "name": "Robbie Keane",
+   "aliases": [],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Robbie_Keane"
+  },
+  {
+   "id": "who-hasselbaink",
+   "clues": [
+    "I was born in Paramaribo, Suriname, in 1972.",
+    "I played for Boavista in Portugal and Atlético Madrid in Spain.",
+    "As a manager I've been in charge of Burton Albion and QPR.",
+    "I won the Premier League Golden Boot twice, with Leeds and with Chelsea.",
+    "I joined Chelsea from Atlético Madrid for a club-record £15 million in 2000."
+   ],
+   "options": [
+    "Patrick Kluivert",
+    "Gianfranco Zola",
+    "Pierre van Hooijdonk",
+    "Jimmy Floyd Hasselbaink"
+   ],
+   "answer": 3,
+   "name": "Jimmy Floyd Hasselbaink",
+   "aliases": [
+    "Jimmy Hasselbaink",
+    "Jimmy Floyd"
+   ],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Jimmy_Floyd_Hasselbaink"
+  },
+  {
+   "id": "who-okocha",
+   "clues": [
+    "I was born in Enugu, Nigeria, in 1973.",
+    "I played for Eintracht Frankfurt, Fenerbahçe and Paris Saint-Germain.",
+    "I won Olympic gold with Nigeria in 1996.",
+    "I later played for Qatar SC and Hull City.",
+    "I captained Bolton Wanderers, and fans said I was so good they named me twice."
+   ],
+   "options": [
+    "Nwankwo Kanu",
+    "Jay-Jay Okocha",
+    "El Hadji Diouf",
+    "Youri Djorkaeff"
+   ],
+   "answer": 1,
+   "name": "Jay-Jay Okocha",
+   "aliases": [
+    "Jay Jay",
+    "JJ Okocha",
+    "Okocha"
+   ],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Jay-Jay_Okocha"
+  },
+  {
+   "id": "who-park",
+   "clues": [
+    "I was born in Seoul in 1981.",
+    "I played for Kyoto Purple Sanga in Japan, then PSV Eindhoven.",
+    "I scored at three World Cups, in 2002, 2006 and 2010.",
+    "I later played for QPR, then went back to PSV on loan.",
+    "I won four Premier League titles with Manchester United and was nicknamed 'Three-Lung Park'."
+   ],
+   "options": [
+    "Ki Sung-yueng",
+    "Park Ji-sung",
+    "Son Heung-min",
+    "Lee Young-pyo"
+   ],
+   "answer": 1,
+   "name": "Park Ji-sung",
+   "aliases": [
+    "Park",
+    "Ji-sung Park",
+    "Park Jisung"
+   ],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Park_Ji-sung"
+  },
+  {
+   "id": "who-solskjaer",
+   "clues": [
+    "I was born in Kristiansund, Norway, in 1973.",
+    "I joined my most famous club from Molde in 1996.",
+    "As a manager I've been in charge of Molde and Cardiff City.",
+    "I came off the bench to score four goals against Nottingham Forest in an 8-1 win in 1999.",
+    "I scored the injury-time winner in the 1999 Champions League final, and later managed Manchester United."
+   ],
+   "options": [
+    "Ole Gunnar Solskjær",
+    "Dwight Yorke",
+    "Andy Cole",
+    "Teddy Sheringham"
+   ],
+   "answer": 0,
+   "name": "Ole Gunnar Solskjær",
+   "aliases": [
+    "Solskjaer",
+    "Ole",
+    "Ole Solskjaer"
+   ],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Ole_Gunnar_Solskj%C3%A6r"
+  },
+  {
+   "id": "who-lukaku",
+   "clues": [
+    "I was born in Antwerp in 1993.",
+    "I began my senior career at Anderlecht.",
+    "I'm Belgium's all-time top goalscorer.",
+    "I won Serie A with Inter Milan in 2021, and again with Napoli in 2025.",
+    "I scored lots of goals for Everton, played for Manchester United, and had two spells at Chelsea."
+   ],
+   "options": [
+    "Michy Batshuayi",
+    "Romelu Lukaku",
+    "Christian Benteke",
+    "Divock Origi"
+   ],
+   "answer": 1,
+   "name": "Romelu Lukaku",
+   "aliases": [],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Romelu_Lukaku"
+  },
+  {
+   "id": "who-watkins",
+   "clues": [
+    "I was born in Torquay in 1995.",
+    "I started at Exeter City and had a loan spell at Weston-super-Mare.",
+    "I scored a hat-trick against Liverpool in a 7-2 win in 2020.",
+    "I scored a late winner against the Netherlands in the Euro 2024 semi-final.",
+    "I joined Aston Villa from Brentford in 2020."
+   ],
+   "options": [
+    "Danny Ings",
+    "Dominic Calvert-Lewin",
+    "Ivan Toney",
+    "Ollie Watkins"
+   ],
+   "answer": 3,
+   "name": "Ollie Watkins",
+   "aliases": [],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Ollie_Watkins"
+  },
+  {
+   "id": "who-isak",
+   "clues": [
+    "I was born in Stockholm in 1999 and raised in Solna.",
+    "I played for AIK, Borussia Dortmund and Real Sociedad.",
+    "I scored 23 Premier League goals in 2024-25.",
+    "I scored in the 2025 League Cup final, ending Newcastle's long wait for a major trophy.",
+    "I joined Liverpool from Newcastle for a British record fee in 2025."
+   ],
+   "options": [
+    "Callum Wilson",
+    "Alexander Isak",
+    "Dejan Kulusevski",
+    "Viktor Gyökeres"
+   ],
+   "answer": 1,
+   "name": "Alexander Isak",
+   "aliases": [],
+   "club": null,
+   "verified": true,
+   "source": "https://en.wikipedia.org/wiki/Alexander_Isak"
   }
  ]
 }
