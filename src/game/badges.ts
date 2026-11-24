@@ -230,10 +230,13 @@ export function awardSeasonBadges(h: Parameters<typeof judgeSeason>[0], at = new
 // the retired originals (Ollie, Ryan, Freddie) keep any bronze, silver or gold cups already won.
 export const LADDER_CUPS: Record<string, string> = {
   pawny: "Sunday League Shield",
+  lenny: "Charity Shield",
   eezy: "County Cup",
   chillwall: "League Two Trophy",
+  sal: "Play-off Final",
   "gambit-gary": "League One Trophy",
   "mo-mate": "Championship Trophy",
+  barry: "Intertoto Cup",
   knightingale: "The Cup",
   rookland: "League Title",
 };
@@ -247,7 +250,7 @@ export function cups(scores: Scores): Cup[] {
   const winsFor = (id: string, level?: string) => Object.entries(scores.bots)
     .filter(([k]) => k.split(":")[0] === id && (!level || k.split(":")[1] === level))
     .reduce((n, [, r]) => n + (r.won ?? 0), 0);
-  const ladder = LADDER_BOT_IDS.map((id, i): Cup => ({ botId: id, name: LADDER_CUPS[id] ?? `${BOT_NAMES[id]} Cup`, who: BOT_NAMES[id] ?? id, tier: i < 2 ? "bronze" : i < 5 ? "silver" : "gold", won: winsFor(id) }));
+  const ladder = LADDER_BOT_IDS.map((id, i): Cup => ({ botId: id, name: LADDER_CUPS[id] ?? `${BOT_NAMES[id]} Cup`, who: BOT_NAMES[id] ?? id, tier: i < 3 ? "bronze" : i < 7 ? "silver" : "gold", won: winsFor(id) }));
   const originals = ORIGINALS.flatMap((id) => (["low", "medium", "hard"] as const).map((level): Cup => ({
     botId: id, name: `${BOT_NAMES[id]}'s Cup`, who: BOT_NAMES[id] ?? id, tier: LEVEL_TIER[level], level, won: winsFor(id, level),
   })));

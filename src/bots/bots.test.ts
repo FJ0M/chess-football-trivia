@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { createBotWith } from "./bot";
 import { MATE_CP, parseInfoLine, type Analyser, type EngineLine } from "./engine";
 import { legalMoves, normaliseUci, pickMove, positionFromFen } from "./movePicker";
-import { BOT_IDS, BOT_PROFILES, LADDER_IDS, triviaAccuracy } from "./profiles";
+import { BOTS, BOT_IDS, BOT_PROFILES, LADDER_IDS, triviaAccuracy } from "./profiles";
 import { choosePowerUp } from "./powerUps";
 import { TALK, Talker } from "./talk";
 import { answerChance, answerQuestion, chooseCard, expectedQuestionForm } from "./trivia";
@@ -279,13 +279,21 @@ describe("ratings", () => {
 });
 
 describe("the Elo ladder", () => {
-  it("has one bot at each of 400 to 1600 chess Elo", () => {
-    expect(LADDER_IDS.map((id) => BOT_PROFILES[id].chess.rating)).toEqual([400, 600, 800, 1000, 1200, 1400, 1600]);
+  it("has ten bots from 400 to 1600 chess Elo, weakest first", () => {
+    expect(LADDER_IDS.map((id) => BOT_PROFILES[id].chess.rating)).toEqual([400, 500, 600, 800, 900, 1000, 1200, 1300, 1400, 1600]);
     expect(BOT_IDS).toEqual(LADDER_IDS);
   });
 
   it("answers inside the 10-second question timer", () => {
     for (const id of LADDER_IDS) expect(BOT_PROFILES[id].trivia.answerMs[1]).toBeLessThanOrEqual(8000);
+  });
+
+  it("climbs evenly on the combined rating (audit 2026-11-22: no more +300 steps)", () => {
+    const match = BOTS.map((b) => b.rating.match);
+    for (let i = 1; i < match.length; i++) {
+      expect(match[i] - match[i - 1]).toBeGreaterThan(80);
+      expect(match[i] - match[i - 1]).toBeLessThan(200);
+    }
   });
 
   it("gets more patient at chess as the Elo goes up", () => {

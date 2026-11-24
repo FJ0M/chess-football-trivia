@@ -1,6 +1,6 @@
 # Bots: the Elo ladder
 
-The code is in `src/bots/`, and the game imports only `src/bots/index.ts`. There are seven bots, the **Elo ladder** (one strength each, 400 to 1600 chess Elo, profiles in `src/bots/profiles.ts`). The original three, Ollie, Ryan and Freddie, were retired on 2026-11-09; older sections below still mention them as history.
+The code is in `src/bots/`, and the game imports only `src/bots/index.ts`. There are ten bots, the **Elo ladder** (one strength each, 400 to 1600 chess Elo, profiles in `src/bots/profiles.ts`). The original three, Ollie, Ryan and Freddie, were retired on 2026-11-09; older sections below still mention them as history.
 
 ## How a bot plays
 
@@ -15,12 +15,17 @@ The code is in `src/bots/`, and the game imports only `src/bots/index.ts`. There
 | Target | Bot | Measured | Engine setup (depth, lines, temperature, blunder rate) | Style |
 | --- | --- | --- | --- | --- |
 | 400 | Pawny Dribbles | 439 | 2, 6, 240 cp, 62% | chaotic |
+| 500 | Lenny Longball | 535 | 3, 5, 220 cp, 47% | balanced |
 | 600 | Eezy Peasy | 596 | 3, 5, 200 cp, 38% | chaotic |
 | 800 | Billy Chillwall | 801 | 4, 4, 150 cp, 31% | positional |
+| 900 | Sal Safehands | 934 | 4, 3, 130 cp, 24% | positional |
 | 1000 | Gambit Gary | 1050 | 5, 3, 115 cp, 16% | balanced |
 | 1200 | Mo Mate | 1256 | 6, 3, 95 cp, 12% | balanced |
+| 1300 | Barry Bubbles | 1364 | 6, 3, 85 cp, 11% | chaotic |
 | 1400 | Florence Knightingale | 1393 | 7, 3, 75 cp, 8% | positional |
 | 1600 | Ragnar Rookland | 1622 | 8, 3, 60 cp, 6.5% | balanced |
+
+**Filling the gaps (23 Nov 2026).** Audit 2 found the combined rating climbing unevenly, with steps of about +300 from Pawny to Eezy and from Chillwall to Gary, and +215 from Mo to Florence. Lenny Longball (500), Sal Safehands (900) and Barry Bubbles (1300) fill them. Each was tuned only against its two neighbours with `tools/playtest/match.ts` (half Chess960), three or four rounds of 40 to 80 games, changing the mistake rate with the `<bot>@b0.4` player until the score against the neighbours' measured ratings came out near the target. Final rounds: Lenny 52.5/100 against Pawny and Eezy (535), Sal 41/80 against Chillwall and Gary (934), Barry 44.5/80 against Mo and Florence (1364). Treat them as ±100, like the rest. Trivia was then set so each lands halfway between its neighbours on the combined rating, and a test now checks that every step is between 80 and 200.
 
 Calibrated on 7 Nov 2026 with `tools/playtest/match.ts`: 410 games in the final fit (16 to 20 games per pairing, half of them Chess960), against neighbouring ladder bots, the original bots and Stockfish at `UCI_Elo 1320` (pinned to 1320 in `ratings.py`). Three rounds: Eezy, Chillwall and Rookland came out 100 to 200 too strong in the first round and were retuned. Treat every number as ±100. Stockfish's Elo setting can't go below 1320, so the bottom of the ladder hangs off the chain Pawny → Ollie low → Eezy → Ollie medium → Chillwall → Ollie hard / Ryan low → sf-1320. That's the main source of error at 400 to 800.
 
@@ -85,10 +90,13 @@ Going from 35% to 95% (650 trivia Elo) was worth about 240 chess Elo, so 0.36 ch
 | Bot | Chess | Trivia Elo | Combined |
 | --- | --- | --- | --- |
 | Pawny Dribbles | 400 | 1317 | 388 |
+| Lenny Longball | 500 | 1461 | 539 |
 | Eezy Peasy | 600 | 1609 | 691 |
 | Billy Chillwall | 800 | 1411 | 821 |
+| Sal Safehands | 900 | 1547 | 969 |
 | Gambit Gary | 1000 | 1699 | 1122 |
 | Mo Mate | 1200 | 1490 | 1249 |
+| Barry Bubbles | 1300 | 1505 | 1354 |
 | Florence Knightingale | 1400 | 1532 | 1464 |
 | Ragnar Rookland | 1600 | 1269 | 1572 |
 | Ollie (low) | 450 | 1584 | 532 |

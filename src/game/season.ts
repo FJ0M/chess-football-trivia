@@ -2,7 +2,7 @@
 // with a league table, promotion and relegation, and a cup run alongside.
 //
 // Each division is a small league: you plus a few bots. You play every bot in it twice,
-// once as White and once as Black (the Premier League, with all seven bots, once each).
+// once as White and once as Black (the Premier League has five).
 // The bots' own fixtures are simulated from their combined ratings. Win 3 points, draw 1,
 // and goals are the match scoreline (one per piece taken). The top two go up, the
 // bottom one goes down. Three Cup ties come between league matches, against bots drawn
@@ -23,15 +23,21 @@ export interface Division {
 
 /** Bottom to top. Overlaps are fine: each season is played in one division. */
 export const DIVISIONS: Division[] = [
-  { id: "league-two", name: "League Two", bots: ["pawny", "eezy", "chillwall"], double: true },
-  { id: "league-one", name: "League One", bots: ["eezy", "chillwall", "gambit-gary"], double: true },
-  { id: "championship", name: "Championship", bots: ["gambit-gary", "mo-mate", "knightingale"], double: true },
+  { id: "league-two", name: "League Two", bots: ["pawny", "lenny", "eezy"], double: true },
+  { id: "league-one", name: "League One", bots: ["chillwall", "sal", "gambit-gary"], double: true },
+  { id: "championship", name: "Championship", bots: ["mo-mate", "barry", "knightingale"], double: true },
   // The top five bots, home and away (audit, 2026-11-22: with Pawny and Eezy in it, nobody rated
-  // 900-1500 could ever go down, so staying up meant nothing).
-  { id: "premier-league", name: "Premier League", bots: ["chillwall", "gambit-gary", "mo-mate", "knightingale", "rookland"], double: true },
+  // 900-1500 could ever go down, so staying up meant nothing). With ten bots (2026-11-23) the
+  // three lower divisions no longer overlap, and the top five start at Gambit Gary.
+  { id: "premier-league", name: "Premier League", bots: ["gambit-gary", "mo-mate", "barry", "knightingale", "rookland"], double: true },
 ];
-/** The Premier League before 2026-11-22, for seasons started then. */
-const OLD_PREMIER_LEAGUE = ["pawny", "eezy", "chillwall", "gambit-gary", "mo-mate", "knightingale", "rookland"];
+/** The divisions before 2026-11-22, for seasons started then (they didn't store their bots). */
+const OLD_DIVISION_BOTS: Record<DivisionId, string[]> = {
+  "league-two": ["pawny", "eezy", "chillwall"],
+  "league-one": ["eezy", "chillwall", "gambit-gary"],
+  championship: ["gambit-gary", "mo-mate", "knightingale"],
+  "premier-league": ["pawny", "eezy", "chillwall", "gambit-gary", "mo-mate", "knightingale", "rookland"],
+};
 
 export const YOU = "you";
 /** Top this many go up (not from the top division). */
@@ -86,7 +92,7 @@ export function divisionOf(id: DivisionId): Division {
 
 /** The bots in a season's league, as they were when it started. */
 export function botsOf(s: Season): string[] {
-  return s.bots ?? (s.division === "premier-league" ? OLD_PREMIER_LEAGUE : divisionOf(s.division).bots);
+  return s.bots ?? OLD_DIVISION_BOTS[s.division] ?? divisionOf(s.division).bots;
 }
 
 /** Round-robin by the circle method; teams.length must be even (a "bye" is added if not). */
@@ -119,9 +125,9 @@ export function newSeason(division: DivisionId, number: number, club = "", rng: 
 
 /** Cup opponents get stronger each round: drawn from the bottom, middle and top of the ladder. */
 const CUP_POOLS: string[][] = [
-  ["pawny", "eezy", "chillwall", "gambit-gary"],
-  ["chillwall", "gambit-gary", "mo-mate", "knightingale"],
-  ["mo-mate", "knightingale", "rookland"],
+  ["pawny", "lenny", "eezy", "chillwall", "sal"],
+  ["chillwall", "sal", "gambit-gary", "mo-mate", "barry"],
+  ["mo-mate", "barry", "knightingale", "rookland"],
 ];
 
 function drawCupTie(round: number, rng: Rng): CupTie {

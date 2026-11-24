@@ -1,6 +1,6 @@
 # They Think It's Checkmate…
 
-A chess game where football trivia (the Premier League from 2000/01, plus questions about the club you support) earns you Form to spend on power-ups. Play the seven ladder bots, a league season, or pass and play on one device. Built as an installable web app (PWA) for phone, tablet and computer.
+A chess game where football trivia (the Premier League from 2000/01, plus questions about the club you support) earns you Form to spend on power-ups. Play the ten ladder bots, a league season, or pass and play on one device. Built as an installable web app (PWA) for phone, tablet and computer.
 
 - [Game design](docs/game-design.md)
 - [Research: existing chess x trivia games](https://claude.ai/artifact/288D72mj429RgxhCALFLa8)

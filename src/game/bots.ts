@@ -5,17 +5,17 @@ import type { BotPowerOptions } from "./botPowers";
 import type { Difficulty, PromoRole } from "./types";
 
 export type BotId =
-  | "pawny" | "eezy" | "chillwall" | "gambit-gary" | "mo-mate" | "knightingale" | "rookland";
+  | "pawny" | "lenny" | "eezy" | "chillwall" | "sal" | "gambit-gary" | "mo-mate" | "barry" | "knightingale" | "rookland";
 export type TalkMoment = "start" | "capture" | "lostPiece" | "oppWrong" | "ownRight" | "ownWrong" | "powerUp" | "hotSpot" | "win" | "loss";
 
 /** The Elo ladder bots: one strength each, so no level is shown for them. */
-export const LADDER_BOT_IDS: readonly string[] = ["pawny", "eezy", "chillwall", "gambit-gary", "mo-mate", "knightingale", "rookland"];
+export const LADDER_BOT_IDS: readonly string[] = ["pawny", "lenny", "eezy", "chillwall", "sal", "gambit-gary", "mo-mate", "barry", "knightingale", "rookland"];
 
 /** Display names, for screens that don't load the bots (high scores, history). Ollie, Ryan and Freddie were retired on 2026-11-09 but stay here for old history. */
 export const BOT_NAMES: Record<string, string> = {
   ollie: "Ollie", ryan: "Ryan", freddie: "Freddie",
-  pawny: "Pawny Dribbles", eezy: "Eezy Peasy", chillwall: "Billy Chillwall", "gambit-gary": "Gambit Gary",
-  "mo-mate": "Mo Mate", knightingale: "Florence Knightingale", rookland: "Ragnar Rookland",
+  pawny: "Pawny Dribbles", lenny: "Lenny Longball", eezy: "Eezy Peasy", chillwall: "Billy Chillwall", sal: "Sal Safehands", "gambit-gary": "Gambit Gary",
+  "mo-mate": "Mo Mate", barry: "Barry Bubbles", knightingale: "Florence Knightingale", rookland: "Ragnar Rookland",
 };
 
 export interface BotRatingMeta { chess: number; trivia: number; triviaElo: number; match: number }

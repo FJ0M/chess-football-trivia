@@ -9,7 +9,7 @@ const make = (mod: Awaited<ReturnType<typeof loadBots>>, id: string) =>
   (mod.createBot as unknown as (id: string, engine: unknown) => { promotionPick(): string })(id, noEngine);
 
 describe("the bot picker list (playtest 2026-11-09: 'where have all the bots gone?')", () => {
-  it("loads all seven ladder bots, weakest first, and none of the retired three", async () => {
+  it("loads all ten ladder bots, weakest first, and none of the retired three", async () => {
     const list = botList(await loadBots());
     expect(list.map((b) => b.id)).toEqual([...LADDER_BOT_IDS]);
     for (const b of list) {
@@ -58,7 +58,7 @@ describe("downloading parts of the game", () => {
     expect(await caught).toBeInstanceOf(Error);
     vi.useRealTimers();
     const list = botList(await loadBots());
-    expect(list).toHaveLength(7);
+    expect(list).toHaveLength(LADDER_BOT_IDS.length);
     err.mockRestore();
   });
 });
