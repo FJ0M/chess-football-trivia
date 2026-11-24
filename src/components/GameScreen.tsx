@@ -406,7 +406,7 @@ function PlayerBar({ game, color, active, ticking, bubble, bench, lead, ebk, sty
   const p = game.players[color];
   const status = [
     p.wrongStreak >= 2 ? "Yellow card" : "",
-    p.goldenBootMoves > 0 ? `Golden Boot (${p.goldenBootMoves})` : "",
+    p.goldenBoot ? "Golden Boot: next right answer x2" : "",
     handicapTag(game, color),
   ].filter(Boolean);
   return (
@@ -652,7 +652,7 @@ function Panel({ g, phase, game, humanToAct, onExit, exitLabel }: { g: G; phase:
         <span>{game.step === "free-kick" ? "Free Kick" : game.step === "extra-time" ? "Extra Time" : phase.kind === "target" ? POWER_UP_BY_ID[phase.power].name : "Open play"}</span>
         <span>{mover.name} to move</span>
       </div>
-      <p className={`q small${phase.kind === "move" && mover.kind === "human" && game.step === "normal" ? " explainer" : ""}`}>{phase.kind === "target" ? `Pick a target to finish ${POWER_UP_BY_ID[phase.power].name}.` : mover.kind === "bot" ? `${mover.name} is thinking…` : game.step === "extra-time" ? "Second move: no captures or checks. You can skip it if it would hurt you." : game.options.trivia ? `Questions come on captures, every ${SET_PIECE_EVERY}th quiet move and on Hot Spots (the football squares, from move 4).` : "Plain chess: no trivia this game."}</p>
+      <p className={`q small${phase.kind === "move" && mover.kind === "human" && game.step === "normal" ? " explainer" : ""}`}>{phase.kind === "target" ? `Pick a target to finish ${POWER_UP_BY_ID[phase.power].name}.` : mover.kind === "bot" ? `${mover.name} is thinking…` : game.step === "extra-time" ? "Second move for the same piece: no captures or checks. You can skip it if it would hurt you." : game.options.trivia ? `Questions come on captures, every ${SET_PIECE_EVERY}th quiet move and on Hot Spots (the football squares, from move 4).` : "Plain chess: no trivia this game."}</p>
       {game.step === "extra-time" && humanToAct && phase.kind === "move" && <button type="button" className="cta" onClick={g.skipExtra}>Skip the second move</button>}
     </div>
   );

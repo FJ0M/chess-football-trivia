@@ -61,7 +61,7 @@ async function play(sides: Record<Color, Side>, rng: () => number) {
     if (dash) uci = dash;
     else {
       try {
-        const r = await side.bot.chooseMove({ fen: g.fen, allowedMoves: allowed, managersTip: g.powerUsedId === "managers-tip", hotSpots: g.hotSpots, goldenBoot: g.players[color].goldenBootMoves > 0 });
+        const r = await side.bot.chooseMove({ fen: g.fen, allowedMoves: allowed, managersTip: g.powerUsedId === "managers-tip", hotSpots: g.hotSpots });
         if (allowed.includes(r.uci)) uci = r.uci;
       } catch { /* keep the first legal move */ }
     }

@@ -89,7 +89,7 @@ const ICONS: Record<string, ReactNode> = {
       <path d="M19 2.5l.7 1.6 1.7.2-1.3 1.1.4 1.7-1.5-.9-1.5.9.4-1.7-1.3-1.1 1.7-.2z" style={F} />
     </>
   ),
-  // Fast-forward: two moves in one turn.
+  // Fast-forward: one piece moves twice in one turn.
   "extra-time": (
     <>
       <path d="M3 6l8 6-8 6zM12 6l8 6-8 6z" />

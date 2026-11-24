@@ -4,7 +4,7 @@ import { BOT_PROFILES } from "./profiles";
 import { choosePowerUp } from "./powerUps";
 import { FORM_CP, planPowerUp } from "./planner";
 import { Talker } from "./talk";
-import { answerQuestion, chooseCard } from "./trivia";
+import { answerQuestion, chooseCard, expectedQuestionForm } from "./trivia";
 import type {
   AnswerRequest,
   AnswerResult,
@@ -96,7 +96,7 @@ export function createBotWith(
       }
       const pick = pickMove({
         pos, lines, allowed, strength: chess, style: profile.style, rng, forceBest: req.managersTip,
-        hotSpots: req.hotSpots, hotSpotCp, goldenBoot: req.goldenBoot,
+        hotSpots: req.hotSpots, hotSpotCp,
       });
       lastLossCp = pick.lossCp;
       expectedCp = pick.scoreCp;
@@ -112,10 +112,9 @@ export function createBotWith(
 
     async choosePowerUp(req) {
       if (req.available.length === 0) return null;
-      // Look at the position first, so the bot knows the score (Park the Bus, VAR, playing safe)
-      // and whether a capture is on (Golden Boot). The game may pass the eval in instead.
+      // Look at the position first, so the bot knows the score (Park the Bus, VAR, playing safe).
+      // The game may pass the eval in instead.
       let evalCp = req.evalCp;
-      let bestIsCapture = false;
       /** How much better the engine's top move is than its second: what Manager's Tip saves a bot that might miss it. */
       let onlyMoveGap = 0;
       try {
@@ -123,9 +122,6 @@ export function createBotWith(
         const best = lines[0];
         if (best) {
           evalCp ??= best.scoreCp;
-          const pos = positionFromFen(req.fen);
-          const uci = normaliseUci(pos, best.uci);
-          bestIsCapture = !!uci && moveFeatures(pos, uci).capture;
           if (lines[1]) onlyMoveGap = Math.min(600, Math.max(0, best.scoreCp - lines[1].scoreCp));
         }
       } catch {
@@ -136,7 +132,9 @@ export function createBotWith(
       const swing = expectedCp !== null && evalCp !== undefined ? expectedCp - evalCp : 0;
       const drop = req.lastMoveEvalDrop ?? Math.max(lastLossCp, swing);
       const full = { ...req, evalCp, lastMoveEvalDrop: drop };
-      if (!req.options) return choosePowerUp(profile, full, rng, lastLossCp, { bestIsCapture });
+      // Golden Boot doubles the next right answer, so it's worth about one question's Form.
+      const bootForm = expectedQuestionForm(trivia);
+      if (!req.options) return choosePowerUp(profile, full, rng, lastLossCp, { bootForm });
 
       // The game gave us every option: try them all with the engine and buy the best value.
       if (req.timed && (req.clockMs ?? Infinity) < 60000 && req.available.some((a) => a.id === "fergie-time")) return { id: "fergie-time" };
@@ -146,14 +144,13 @@ export function createBotWith(
       const tip = cost("managers-tip");
       const mistakes = Math.min(1, chess.blunderRate * 2 + chess.temperatureCp / 200);
       if (tip !== undefined && onlyMoveGap > 0) extra.push({ id: "managers-tip", gainCp: Math.round(onlyMoveGap * mistakes), cost: tip });
-      // Golden Boot pays Form back for captures: worth it when a capture is on, and exchanges usually bring more.
       const boot = cost("golden-boot");
-      if (boot !== undefined && bestIsCapture) extra.push({ id: "golden-boot", gainCp: Math.round(2 * 1.5 * FORM_CP), cost: boot });
+      if (boot !== undefined) extra.push({ id: "golden-boot", gainCp: Math.round(bootForm * FORM_CP), cost: boot });
       try {
         const planned = await planPowerUp(engine, profile, chess, { form: req.form, base: req.options.base, options: req.options.options }, rng, extra);
         return planned?.choice ?? null;
       } catch {
-        return choosePowerUp(profile, full, rng, lastLossCp, { bestIsCapture });
+        return choosePowerUp(profile, full, rng, lastLossCp, { bootForm });
       }
     },
 

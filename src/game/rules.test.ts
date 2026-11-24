@@ -363,22 +363,23 @@ describe("power-ups", () => {
     expect(usePowerUp(frozen, "formation-change", ["a2", "b5"]).error).toMatch(/frozen/);
     expect(powerBlocked(at("4k3/8/8/1N6/8/8/P7/r3K3 w - - 0 1"), "formation-change")).toMatch(/check/);
   });
-  it("Golden Boot: +2 Form for each capture over your next 3 moves", () => {
-    let g = at("4k3/8/8/p1p1p3/1P1P1P2/8/8/4K3 w - - 0 1");
+  it("Golden Boot doubles the next right answer's own Form, then it's used up", () => {
+    let g = at("4k3/8/8/8/8/8/PPPP4/4K3 w - - 0 1");
     g = { ...g, players: { ...g.players, white: { ...g.players.white, form: 2 } } };
     g = usePowerUp(g, "golden-boot").state;
     expect(g.players.white.form).toBe(0);
-    g = move(g, "b4a5");
-    expect(g.players.white.form).toBe(2);
-    g = move(g, "e8e7");
-    g = move(g, "d4c5");
-    expect(g.players.white.form).toBe(4);
-    g = move(g, "e7e8");
-    g = move(g, "e1e2");
-    g = move(g, "e8e7");
-    expect(g.players.white.goldenBootMoves).toBe(0);
-    g = move(g, "f4e5");
-    expect(g.players.white.form).toBe(4);
+    expect(g.players.white.goldenBoot).toBe(true);
+    expect(powerBlocked({ ...g, powerUsed: false, players: { ...g.players, white: { ...g.players.white, form: 5, cooldowns: { ...g.players.white.cooldowns, "golden-boot": 0 } } } }, "golden-boot")).toMatch(/laced/);
+    const ctx = { color: "white" as const, difficulty: "medium" as const, puskas: false, bonus: false, ms: 9000, landed: null };
+    // A wrong answer doesn't use it up.
+    const wrong = applyAnswer(g, { ...ctx, correct: false }).state;
+    expect(wrong.players.white.goldenBoot).toBe(true);
+    const right = applyAnswer(wrong, { ...ctx, correct: true }).state;
+    expect(right.players.white.form).toBe(4);
+    expect(right.players.white.goldenBoot).toBe(false);
+    // Bonuses aren't doubled: a quick Screamer is 3 doubled plus 1.
+    expect(applyAnswer(g, { ...ctx, difficulty: "hard", correct: true, ms: 2000 }).state.players.white.form).toBe(7);
+    expect(applyAnswer(right, { ...ctx, correct: true }).state.players.white.form).toBe(6);
   });
   it("Extra Time: neither move can capture", () => {
     let g = at("4k3/8/8/3p4/4P3/8/8/4K3 w - - 0 1");
@@ -390,11 +391,25 @@ describe("power-ups", () => {
   it("Extra Time gives a second, quiet move", () => {
     let g = at("4k3/pppppppp/8/8/8/8/PPPPPPPP/4K3 w - - 0 1");
     g = usePowerUp(g, "extra-time").state;
-    g = move(g, "e2e4");
+    g = move(g, "e2e3");
     expect(turnOf(g)).toBe("white");
     expect(g.step).toBe("extra-time");
-    g = move(g, "d2d4");
+    // Only the piece that just moved can go again.
+    expect(legalMoves(g).moves).toEqual(["e3e4"]);
+    g = move(g, "e3e4");
     expect(turnOf(g)).toBe("black");
+  });
+  it("Extra Time is cancelled when the moved piece has no quiet second move", () => {
+    let g = at("4k3/8/8/8/8/3p4/P7/4K3 w - - 0 1");
+    g = usePowerUp(g, "extra-time").state;
+    // The a-pawn steps to a3, then a4 is free: it goes again.
+    expect(finishTurn(playMove(g, "a2a3", () => 0.5).state).state.step).toBe("extra-time");
+    let blocked = at("4k3/8/8/8/p7/8/P7/4K3 w - - 0 1");
+    blocked = usePowerUp(blocked, "extra-time").state;
+    const done = finishTurn(playMove(blocked, "a2a3", () => 0.5).state);
+    expect(done.state.step).toBe("normal");
+    expect(turnOf(done.state)).toBe("black");
+    expect(done.notes.join(" ")).toMatch(/no quiet second move/);
   });
   it("Extra Time's second move can be skipped, handing the turn back", () => {
     let g = at("4k3/pppppppp/8/8/8/8/PPPPPPPP/4K3 w - - 0 1");

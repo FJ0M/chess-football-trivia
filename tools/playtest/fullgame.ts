@@ -34,7 +34,7 @@ const POWER_UPS: Record<string, { cost: number; cooldown: number }> = {
   "managers-tip": { cost: 4, cooldown: 10 },
   "super-sub": { cost: 7, cooldown: 15 },
   "red-card": { cost: 5, cooldown: 15 },
-  "extra-time": { cost: 10, cooldown: 25 },
+  "extra-time": { cost: 6, cooldown: 14 },
 };
 const REWARD: Record<Difficulty | "puskas", number> = { easy: 1, medium: 2, hard: 3, puskas: 5 };
 const FORM_CAP = 12;
@@ -97,8 +97,8 @@ interface Side {
   streak: number;
   cooldown: Record<string, number>;
   frozen: Square | null;
-  /** Own moves left on a Golden Boot (+2 per capture). */
-  goldenBoot: number;
+  /** Golden Boot laced up: the next right answer's Form is doubled. */
+  goldenBoot: boolean;
   skipNext: boolean;
   lastEval: number;
   stats: { questions: number; right: number; formEarned: number; powerUps: Record<string, number> };
@@ -110,7 +110,7 @@ const newSide = (): Side => ({
   streak: 0,
   cooldown: Object.fromEntries(Object.entries(POWER_UPS).map(([k, v]) => [k, v.cooldown])),
   frozen: null,
-  goldenBoot: 0,
+  goldenBoot: false,
   skipNext: false,
   lastEval: 0,
   stats: { questions: 0, right: 0, formEarned: 0, powerUps: {} },
@@ -233,7 +233,10 @@ export async function playFullGame(white: FullPlayer, black: FullPlayer, startFe
     if (right) {
       side.stats.right++;
       side.streak++;
-      let n = REWARD[pick.puskas ? "puskas" : card.difficulty] * (bonus ? 2 : 1);
+      const base = REWARD[pick.puskas ? "puskas" : card.difficulty];
+      let n = base * (bonus ? 2 : 1);
+      // Golden Boot: the question's own Form again, once.
+      if (side.goldenBoot) { n += base; side.goldenBoot = false; }
       if (ans.delayMs < 5000 && (pick.puskas || card.difficulty === "hard")) n++;
       if (side.streak % 3 === 0) n += 2;
       award(side, n);
@@ -307,7 +310,7 @@ export async function playFullGame(white: FullPlayer, black: FullPlayer, startFe
             tip = true;
             break;
           case "golden-boot":
-            side.goldenBoot = 3;
+            side.goldenBoot = true;
             break;
           case "extra-time":
             extraTime = true;
@@ -334,8 +337,6 @@ export async function playFullGame(white: FullPlayer, black: FullPlayer, startFe
     if (frozenThisTurn !== null && side.frozen === frozenThisTurn) side.frozen = null;
     side.sinceQuestion++;
 
-    if (f.capture && side.goldenBoot > 0) award(side, 2);
-    if (!freeKick && side.goldenBoot > 0) side.goldenBoot--;
     if (!freeKick && !pos.isEnd()) {
       if (hot.has(to)) {
         ask(c, to, true);
@@ -349,7 +350,8 @@ export async function playFullGame(white: FullPlayer, black: FullPlayer, startFe
       const back = withTurn(pos, c);
       if (back) {
         pos = back;
-        const second = allowedFor(c, true);
+        // Extra Time: the same piece moves again.
+        const second = allowedFor(c, true).filter((u) => u.slice(0, 2) === moves[moves.length - 1].slice(2, 4));
         if (second.length) play(await chessMove(c, second, false));
         const fwd = withTurn(pos, opposite(c));
         if (fwd) pos = fwd;
